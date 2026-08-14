@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lamplighters | Game Mockup v3 | Mike Sell for Congress</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;font-size:14px;line-height:1.55;}
+
+/* Review shell */
+.hero{background:linear-gradient(135deg,#002d5b 0%,#064e3b 100%);padding:34px 24px 30px;}
+.hero-eye{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;font-family:'avenir-light';}
+.hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;margin-bottom:8px;}
+.hero p{font-size:13px;color:rgba(255,255,255,0.68);max-width:660px;}
+.pa-tabs{background:#fff;border-bottom:1.5px solid #e5e7eb;padding:0 12px;display:flex;gap:4px;overflow-x:auto;position:sticky;top:0;z-index:50;}
+.pa-tab{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;padding:12px 14px;border:none;background:none;border-bottom:2px solid transparent;color:#9ca3af;cursor:pointer;white-space:nowrap;}
+.pa-tab.active{color:#059669;border-bottom-color:#059669;}
+.pa-section{display:none;}
+.pa-section.active{display:block;}
+main{padding:24px 20px 56px;max-width:900px;margin:0 auto;}
+.sec-hd{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #059669;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:22px;}
+.sec-hd-title{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#002d5b;}
+.sec-hd-sub{font-family:'avenir-light';font-size:11px;color:#6b7280;margin-top:2px;}
+
+/* Phone */
+.phone{width:390px;max-width:100%;margin:0 auto;background:#0b1220;border-radius:34px;padding:10px;box-shadow:0 18px 44px rgba(0,45,91,0.35);}
+.night{background:radial-gradient(120% 90% at 50% 0%, #0d2242 0%, #061325 55%, #040d1a 100%);border-radius:26px;overflow:hidden;min-height:660px;display:flex;flex-direction:column;position:relative;}
+
+/* Animations = the point */
+@keyframes flicker{0%,100%{opacity:1;}45%{opacity:0.55;}52%{opacity:0.9;}60%{opacity:0.5;}}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:0.9;}50%{transform:scale(1.15);opacity:1;}}
+@keyframes fogdrift{0%{transform:translateX(0);}50%{transform:translateX(16px);}100%{transform:translateX(0);}}
+@keyframes sweep{0%{transform:rotate(-28deg);}50%{transform:rotate(24deg);}100%{transform:rotate(-28deg);}}
+@keyframes bloom{0%{transform:scale(0.9);}60%{transform:scale(1.25);}100%{transform:scale(1);}}
+@keyframes twinkle{0%,100%{opacity:0.35;}50%{opacity:0.9;}}
+
+.gamebar{padding:16px 16px 10px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:5;}
+.gamebar .glogo{font-family:'clarendon-w01-medium',serif;font-size:16px;color:#fcd34d;text-shadow:0 0 14px rgba(252,211,77,0.5);}
+.gchip{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(252,211,77,0.35);border-radius:12px;padding:4px 10px;color:#fcd34d;}
+.gbody{padding:12px 14px 16px;flex:1;position:relative;z-index:5;}
+
+.gcard{background:rgba(10,26,51,0.75);border:1px solid rgba(52,211,153,0.22);border-radius:14px;padding:13px 15px;margin-bottom:12px;backdrop-filter:blur(2px);}
+.gcard .glbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#5eead4;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;opacity:0.8;}
+.gtext{font-size:12px;color:#cbd5e1;}
+.gbig{font-family:'clarendon-w01-medium',serif;font-size:22px;color:#fcd34d;}
+.gbtn{display:block;width:100%;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#04101f;background:linear-gradient(135deg,#fcd34d,#f59e0b);border:none;border-radius:14px;padding:14px;cursor:pointer;margin-top:10px;box-shadow:0 0 22px rgba(245,158,11,0.35);}
+.gbtn.mint{background:linear-gradient(135deg,#34D399,#059669);color:#04101f;box-shadow:0 0 22px rgba(52,211,153,0.3);}
+.gbtn.ghost{background:none;color:#5eead4;border:1.5px solid rgba(94,234,212,0.5);box-shadow:none;}
+.gsub{font-size:10px;color:#7c93b5;margin-top:6px;text-align:center;}
+
+.lamp{filter:drop-shadow(0 0 6px rgba(252,211,77,0.9));}
+.lamp.dim{animation:flicker 2.6s infinite;filter:drop-shadow(0 0 3px rgba(252,211,77,0.45));}
+.fog{animation:fogdrift 9s ease-in-out infinite;}
+.beam{animation:sweep 7s ease-in-out infinite;transform-origin:center bottom;}
+.beam2{animation:sweep 9s ease-in-out infinite;transform-origin:center bottom;animation-delay:1.5s;}
+.star{animation:twinkle 3.5s infinite;}
+.bigflame{animation:breathe 2.8s ease-in-out infinite;transform-origin:center;}
+
+.banner{background:linear-gradient(90deg,rgba(245,158,11,0.16),rgba(245,158,11,0.03));border:1px solid rgba(252,211,77,0.4);border-radius:12px;padding:9px 13px;font-size:11px;color:#fde68a;margin-bottom:12px;font-family:'avenir-heavy',Arial,sans-serif;}
+.torchband{background:linear-gradient(90deg,rgba(52,211,153,0.18),rgba(52,211,153,0.03));border:1px solid rgba(52,211,153,0.45);border-radius:12px;padding:9px 13px;font-size:11px;color:#a7f3d0;margin-bottom:12px;font-family:'avenir-heavy',Arial,sans-serif;}
+.grow{display:flex;gap:10px;}
+.grow .gcard{flex:1;margin-bottom:0;}
+
+.shopitem{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(94,234,212,0.12);}
+.shopitem:last-child{border-bottom:none;}
+.shopico{width:40px;height:40px;border-radius:12px;background:rgba(252,211,77,0.1);border:1px solid rgba(252,211,77,0.35);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.shopname{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#e2e8f0;}
+.shopsub{font-size:10px;color:#7c93b5;}
+.cost{font-family:'clarendon-w01-medium',serif;font-size:13px;color:#fcd34d;margin-left:auto;white-space:nowrap;}
+
+.crewrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(94,234,212,0.12);font-size:12px;color:#e2e8f0;}
+.crewrow:last-child{border-bottom:none;}
+.crewname{font-family:'avenir-heavy',Arial,sans-serif;flex:1;}
+.beambar{height:7px;border-radius:5px;background:rgba(255,255,255,0.08);width:110px;overflow:hidden;}
+.beambar>div{height:100%;background:linear-gradient(90deg,#fcd34d,#f59e0b);border-radius:5px;box-shadow:0 0 8px rgba(252,211,77,0.8);}
+
+/* Friend view */
+.fv-lamp-wrap{text-align:center;margin:8px 0 4px;}
+.fv-count{font-size:11px;color:#94a3b8;text-align:center;}
+.fvh{font-family:'clarendon-w01-medium',serif;font-size:22px;color:#fff;text-align:center;margin-top:6px;}
+.fvsub{font-size:13px;color:#94a3b8;text-align:center;margin:8px 18px 4px;}
+.fvnote{font-size:9.5px;color:#64748b;text-align:center;margin-top:14px;line-height:1.6;}
+.fvlink{text-align:center;margin-top:12px;}
+.fvlink a{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#34D399;text-decoration:none;}
+
+/* Share card */
+.sharecard{background:radial-gradient(130% 100% at 50% 0%, #0d2242 0%, #061325 60%, #030b16 100%);border-radius:26px;min-height:660px;padding:28px 24px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.sc-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#5eead4;}
+.sc-big{font-family:'clarendon-w01-medium',serif;font-size:34px;color:#fcd34d;line-height:1.15;text-shadow:0 0 24px rgba(252,211,77,0.45);}
+.sc-mid{font-size:14px;color:#cbd5e1;margin-top:8px;}
+.sc-foot{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#fff;}
+.sc-sl{font-size:10px;color:#7c93b5;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
+
+.note-strip{background:#ecfdf5;border:1.5px solid #a7f3d0;border-radius:10px;padding:10px 14px;font-size:11px;color:#065f46;margin:0 auto 18px;max-width:390px;}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;margin-top:40px;}
+.footer p{font-size:11px;color:rgba(255,255,255,0.5);}
+.footer a{color:#34D399;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress | FL-CD4 | Game Mockup v3</div>
+  <h1>Lamplighters</h1>
+  <p>The district is dark. Your friends are the lamps. A game first: a world, a job to do inside it, chance, weather, crews, and a finale on election night. Everything moves, so give each screen a second to breathe.</p>
+</div>
+
+<div class="pa-tabs">
+  <button class="pa-tab active" onclick="switchTab('map',this)">Night Map</button>
+  <button class="pa-tab" onclick="switchTab('finder',this)">Lamp Finder</button>
+  <button class="pa-tab" onclick="switchTab('constellation',this)">My Constellation</button>
+  <button class="pa-tab" onclick="switchTab('light',this)">Light a Lamp</button>
+  <button class="pa-tab" onclick="switchTab('friend',this)">Friend View</button>
+  <button class="pa-tab" onclick="switchTab('sparks',this)">Sparks</button>
+  <button class="pa-tab" onclick="switchTab('watch',this)">Night Watch</button>
+  <button class="pa-tab" onclick="switchTab('crews',this)">Crews</button>
+  <button class="pa-tab" onclick="switchTab('share',this)">Share Card</button>
+</div>
+
+<main>
+
+<!-- NIGHT MAP -->
+<section id="map" class="pa-section active">
+  <div class="sec-hd"><div class="sec-hd-title">The Night Map: you open into a world, not a dashboard</div><div class="sec-hd-sub">Every light is a real conversation. Fog covers what the campaign has not reached. Lighthouse beams sweep from Mayport and Amelia Island. Tonight's bonus zone glows on arrival.</div></div>
+  <div class="phone"><div class="night">
+    <div class="gamebar"><div class="glogo">🏮 Lamplighters</div><div class="gchip">✨ 12 Sparks</div></div>
+    <div class="gbody">
+      <div class="torchband">🔥 You carry the Torch tonight, RiverRat904. One lamp keeps Crew Duval's 3x glow alive.</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+        <span class="gchip" style="border-color:rgba(252,211,77,0.7);">🏮 Lamps</span>
+        <span class="gchip" style="opacity:0.55;">🌫️ Fog</span>
+        <span class="gchip" style="opacity:0.55;">🗼 Beams</span>
+        <span class="gchip" style="border-color:rgba(52,211,153,0.7);color:#34D399;">💧 My Reach</span>
+      </div>
+      <div class="gcard" style="padding:6px;">
+        <svg viewBox="0 0 340 290" style="width:100%;display:block;">
+          <path d="M160 18 L305 18 L315 82 L230 98 L160 78 Z" fill="#0e2c52" stroke="#1d4570" stroke-width="1"/>
+          <path d="M62 88 L230 98 L315 82 L310 168 L210 184 L72 172 Z" fill="#10315c" stroke="#1d4570" stroke-width="1"/>
+          <path d="M72 172 L168 180 L158 252 L58 246 Z" fill="#0e2c52" stroke="#1d4570" stroke-width="1"/>
+          <path d="M168 180 L310 168 L305 246 L158 252 Z" fill="#0c2748" stroke="#1d4570" stroke-width="1"/>
+          <path d="M205 98 Q215 145 195 184" fill="none" stroke="#38bdf8" stroke-width="3.5" opacity="0.5"/>
+          <g class="beam2" style="transform-origin:295px 30px;"><path d="M295 30 L245 130 L345 130 Z" fill="url(#bg1)" opacity="0.5"/></g>
+          <g class="beam" style="transform-origin:222px 100px;"><path d="M222 100 L172 210 L272 210 Z" fill="url(#bg1)" opacity="0.55"/></g>
+          <defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fcd34d" stop-opacity="0.85"/><stop offset="100%" stop-color="#fcd34d" stop-opacity="0"/>
+          </linearGradient></defs>
+          <text x="295" y="26" text-anchor="middle" font-size="12">🗼</text>
+          <text x="222" y="96" text-anchor="middle" font-size="12">🗼</text>
+          <circle class="lamp" cx="150" cy="128" r="3.5" fill="#fcd34d"/><circle class="lamp" cx="176" cy="140" r="3.5" fill="#fcd34d"/>
+          <circle class="lamp" cx="130" cy="150" r="3.5" fill="#fcd34d"/><circle class="lamp" cx="196" cy="122" r="3.5" fill="#fcd34d"/>
+          <circle class="lamp" cx="240" cy="140" r="3.5" fill="#fcd34d"/><circle class="lamp" cx="110" cy="132" r="3.5" fill="#fcd34d"/>
+          <circle class="lamp" cx="105" cy="205" r="3.5" fill="#fcd34d"/><circle class="lamp" cx="128" cy="218" r="3.5" fill="#fcd34d"/>
+          <circle class="lamp" cx="265" cy="55" r="3.5" fill="#fcd34d"/><circle class="lamp dim" cx="222" cy="212" r="3.5" fill="#fcd34d"/>
+          <circle class="lamp dim" cx="90" cy="155" r="3.5" fill="#fcd34d"/>
+          <circle class="lamp" cx="160" cy="205" r="5" fill="#34D399" style="filter:drop-shadow(0 0 8px rgba(52,211,153,0.9));"/>
+          <g class="fog"><ellipse cx="80" cy="105" rx="46" ry="20" fill="#94a3b8" opacity="0.16"/><ellipse cx="255" cy="225" rx="52" ry="22" fill="#94a3b8" opacity="0.18"/><ellipse cx="195" cy="45" rx="40" ry="16" fill="#94a3b8" opacity="0.14"/></g>
+          <circle cx="125" cy="212" r="16" fill="none" stroke="#34D399" stroke-width="1.2" opacity="0.6" class="star"/>
+          <text x="125" y="245" text-anchor="middle" font-size="8" fill="#5eead4" font-family="Arial">DOUBLE GLOW: ORANGE PARK</text>
+          <circle cx="160" cy="205" r="14" fill="none" stroke="#34D399" stroke-width="1" opacity="0.5" class="star"/>
+          <circle cx="160" cy="205" r="24" fill="none" stroke="#34D399" stroke-width="0.8" opacity="0.3" class="star" style="animation-delay:1s;"/>
+          <circle cx="176" cy="140" r="12" fill="none" stroke="#34D399" stroke-width="0.8" opacity="0.35" class="star" style="animation-delay:0.5s;"/>
+          <g>
+            <rect x="18" y="264" width="14" height="22" fill="#0e2440"/><rect x="36" y="256" width="12" height="30" fill="#122b4c"/>
+            <rect x="52" y="268" width="16" height="18" fill="#0e2440"/><rect x="72" y="250" width="12" height="36" fill="#122b4c"/>
+            <rect x="88" y="262" width="14" height="24" fill="#0e2440"/><rect x="106" y="255" width="12" height="31" fill="#122b4c"/>
+            <rect x="122" y="266" width="16" height="20" fill="#0e2440"/><rect x="142" y="248" width="12" height="38" fill="#122b4c"/>
+            <rect x="158" y="260" width="14" height="26" fill="#0e2440"/><rect x="176" y="253" width="12" height="33" fill="#122b4c"/>
+            <rect x="192" y="265" width="16" height="21" fill="#0e2440"/><rect x="212" y="251" width="12" height="35" fill="#122b4c"/>
+            <rect x="228" y="261" width="14" height="25" fill="#0e2440"/><rect x="246" y="256" width="12" height="30" fill="#122b4c"/>
+            <rect x="262" y="267" width="16" height="19" fill="#0e2440"/><rect x="282" y="252" width="12" height="34" fill="#122b4c"/>
+            <rect x="298" y="263" width="14" height="23" fill="#0e2440"/><rect x="316" y="258" width="10" height="28" fill="#122b4c"/>
+            <rect x="39" y="260" width="3" height="3" fill="#fcd34d" class="star"/><rect x="75" y="255" width="3" height="3" fill="#fcd34d" class="star" style="animation-delay:1.2s;"/>
+            <rect x="109" y="260" width="3" height="3" fill="#fcd34d" class="star" style="animation-delay:0.6s;"/><rect x="145" y="253" width="3" height="3" fill="#fcd34d" class="star" style="animation-delay:1.8s;"/>
+            <rect x="179" y="258" width="3" height="3" fill="#fcd34d" class="star" style="animation-delay:0.3s;"/><rect x="215" y="256" width="3" height="3" fill="#fcd34d" class="star" style="animation-delay:2.2s;"/>
+            <rect x="249" y="261" width="3" height="3" fill="#fcd34d" class="star" style="animation-delay:0.9s;"/><rect x="285" y="257" width="3" height="3" fill="#fcd34d" class="star" style="animation-delay:1.5s;"/>
+          </g>
+        </svg>
+        <div class="gtext" style="font-size:9px;text-align:center;color:#5eead4;padding:2px 0 4px;">THE SKYLINE LIGHTS UP AS THE DISTRICT DOES · 8 OF 24 WINDOWS LIT</div>
+      </div>
+      <div class="grow">
+        <div class="gcard"><div class="glbl">District lit</div><div class="gbig">2,317 🏮</div><div class="gtext" style="font-size:10px;">Fog: 66% and burning off</div></div>
+        <div class="gcard"><div class="glbl">Your flame</div><div class="gbig">Lantern</div><div class="gtext" style="font-size:10px;">Next: Torch</div></div>
+      </div>
+      <button class="gbtn">🔥 Light a lamp</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- LAMP FINDER -->
+<section id="finder" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">The Lamp Finder: the voter file as a slot machine</div><div class="sec-hd-sub">Type three names you know, or connect contacts and just pull. Every reel lands on a next step. Nothing typed or pulled is ever stored.</div></div>
+  <div class="phone"><div class="night">
+    <div class="gamebar"><div class="glogo">🎰 Lamp Finder</div><div class="gchip">3 reels loaded</div></div>
+    <div class="gbody">
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="gbtn ghost" style="margin-top:0;padding:9px;font-size:11px;border-color:rgba(252,211,77,0.6);color:#fcd34d;">✍️ Name Pull</button>
+        <button class="gbtn ghost" style="margin-top:0;padding:9px;font-size:11px;">📇 Contact Pull</button>
+      </div>
+      <div class="gcard" style="border-color:rgba(252,211,77,0.45);">
+        <div class="glbl" style="color:#fcd34d;">Tonight's pull</div>
+        <div class="shopitem">
+          <div class="shopico bigflame">🏮</div>
+          <div><div class="shopname">Sarah P. · Fleming Island</div><div class="shopsub">JACKPOT. An unlit lamp. Nobody has reached her</div></div>
+          <div class="cost">Light it →</div>
+        </div>
+        <div class="shopitem">
+          <div class="shopico">✨</div>
+          <div><div class="shopname">Tanya W. · Riverside</div><div class="shopsub">Already glowing. Another Lamplighter got there first</div></div>
+          <div class="cost">Add your voice →</div>
+        </div>
+        <div class="shopitem">
+          <div class="shopico">🌫️</div>
+          <div><div class="shopname">Mike R. · Ocala</div><div class="shopsub">Beyond the fog line. Out of district</div></div>
+          <div class="cost">Make them a Booster →</div>
+        </div>
+      </div>
+      <button class="gbtn">🎰 Pull again · 3 more names</button>
+      <div class="gsub">Contact Pull deals your next three on the spot, then lets them go. Nothing is saved. Fast Mode skips the show and goes straight to sending.</div>
+      <div class="gcard" style="margin-top:12px;">
+        <div class="glbl">Range badges · one simple ask</div>
+        <div class="gtext" style="font-size:11px;">Turn on location to unlock Across the River, County Line, and Long Haul (25+ miles). Distance is figured on your phone. We keep the badge, never the location.</div>
+        <button class="gbtn mint" style="padding:10px;font-size:11px;">📍 Unlock Range badges</button>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- CONSTELLATION -->
+<section id="constellation" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">My Constellation: your friends as a named sky</div><div class="sec-hd-sub">Players name their constellation and screenshot it unprompted. Dimming lamps invite a friendly second conversation, which is where persuasion actually lives.</div></div>
+  <div class="phone"><div class="night">
+    <div class="gamebar"><div class="glogo">The Mandarin Cluster</div><div class="gchip">14 lamps</div></div>
+    <div class="gbody">
+      <div class="gcard" style="padding:6px;">
+        <svg viewBox="0 0 340 250" style="width:100%;display:block;">
+          <circle class="star" cx="30" cy="30" r="1.3" fill="#e2e8f0"/><circle class="star" cx="310" cy="50" r="1.2" fill="#e2e8f0" style="animation-delay:1s;"/>
+          <circle class="star" cx="70" cy="210" r="1.2" fill="#e2e8f0" style="animation-delay:2s;"/><circle class="star" cx="290" cy="200" r="1.4" fill="#e2e8f0" style="animation-delay:0.5s;"/>
+          <polyline points="80,90 130,60 190,84 240,58 292,96" fill="none" stroke="#fcd34d" stroke-width="0.8" opacity="0.35"/>
+          <polyline points="80,90 118,140 170,168 236,150 292,96" fill="none" stroke="#fcd34d" stroke-width="0.8" opacity="0.35"/>
+          <circle class="lamp" cx="80" cy="90" r="5" fill="#fcd34d"/><circle class="lamp" cx="130" cy="60" r="5" fill="#fcd34d"/>
+          <circle class="lamp" cx="190" cy="84" r="5" fill="#fcd34d"/><circle class="lamp" cx="240" cy="58" r="5" fill="#fcd34d"/>
+          <circle class="lamp" cx="292" cy="96" r="5" fill="#fcd34d"/><circle class="lamp" cx="118" cy="140" r="5" fill="#fcd34d"/>
+          <circle class="lamp" cx="236" cy="150" r="5" fill="#fcd34d"/>
+          <circle class="lamp" cx="170" cy="168" r="7" fill="#34D399" style="filter:drop-shadow(0 0 10px rgba(52,211,153,0.9));"/>
+          <circle class="lamp dim" cx="60" cy="180" r="5" fill="#fcd34d"/><circle class="lamp dim" cx="300" cy="180" r="5" fill="#fcd34d"/>
+          <text x="170" y="192" text-anchor="middle" font-size="8" fill="#5eead4" font-family="Arial">SAM · JOINED YOUR CREW</text>
+          <text x="60" y="200" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="Arial">flickering</text>
+          <text x="300" y="200" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="Arial">flickering</text>
+        </svg>
+      </div>
+      <div class="gcard">
+        <div class="glbl">Two lamps are flickering</div>
+        <div class="gtext">It has been a few weeks since you talked with Maria and Deshawn. One warm tap suggests an easy check-in. Tending relights the lamp and shields it for a month.</div>
+        <button class="gbtn ghost">🕯️ Tend your lamps</button>
+      </div>
+      <div class="grow">
+        <div class="gcard"><div class="glbl">Ripple</div><div class="gbig">2 deep</div><div class="gtext" style="font-size:10px;">Sam lit 6 of her own</div></div>
+        <div class="gcard"><div class="glbl">Lamp style</div><div class="gbig">🫙</div><div class="gtext" style="font-size:10px;">Mason Jar equipped</div></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- LIGHT A LAMP -->
+<section id="light" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Light a Lamp: the send flow, reframed as the core verb</div><div class="sec-hd-sub">Same legal mechanics as before: their own Messages app, their own words, their own number. The game just makes striking the match feel like the point.</div></div>
+  <div class="phone"><div class="night">
+    <div class="gamebar"><div class="glogo">🏮 Light a lamp</div><div class="gchip">for Sarah P.</div></div>
+    <div class="gbody">
+      <div class="gcard">
+        <div class="glbl">The unlit lamp</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="font-size:30px;opacity:0.45;">🏮</div>
+          <div><div class="shopname">Sarah P. · Fleming Island</div><div class="shopsub">A district voter and your cookout friend. Her lamp is waiting.</div></div>
+        </div>
+      </div>
+      <div class="gcard" style="border-color:rgba(252,211,77,0.4);">
+        <div class="glbl" style="color:#fcd34d;">Your message · in your words ✏️</div>
+        <div class="gtext" style="color:#e2e8f0;">Hey Sarah, random but real: I'm playing a game where I light a lamp on a map of our district every time a friend hears me out. Mike Sell is running for Congress as an independent and I think he's worth 2 minutes of your time. Tap this and my lamp lights for real: mikesell.org/f/8f3k</div>
+      </div>
+      <div class="gcard">
+        <div class="gtext" style="font-size:11px;">💡 Edited messages burn twice as bright. Telling her about the lamp is allowed, encouraged, and honestly the fun part.</div>
+      </div>
+      <button class="gbtn">🔥 Strike the match</button>
+      <div class="gsub">Opens your own Messages app. Your phone sends it. The game never does.</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- FRIEND VIEW -->
+<section id="friend" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Friend View: one tap, one lamp, zero questions</div><div class="sec-hd-sub">The vote method question is gone. The page asks nothing and collects nothing. The tap itself is the friend's first move in the game, and it feels good.</div></div>
+  <div class="note-strip">The only record created on this page: "lamp 8f3k, lit." No name, no email, no phone, no questions asked.</div>
+  <div class="phone"><div class="night" style="justify-content:center;padding:26px 20px;">
+    <div class="fvh">Alex is trying to light a lamp<br>in your name.</div>
+    <div class="fvsub">Fair warning: this is a game, and your tap is the only thing in the world that can light it.</div>
+    <div class="fv-lamp-wrap">
+      <div class="bigflame" style="font-size:74px;filter:drop-shadow(0 0 30px rgba(252,211,77,0.8));">🏮</div>
+    </div>
+    <button class="gbtn" style="animation:bloom 0.6s ease-out;">🔥 Light the lamp</button>
+    <div class="fv-count" style="margin-top:12px;">You just lit a lamp in Fleming Island.<br>2,317 are burning across the district tonight.</div>
+    <button class="gbtn mint" style="margin-top:16px;">🏮 Become a Lamplighter</button>
+    <div class="gsub">You and Alex both glow brighter.</div>
+    <div class="fvlink"><a href="https://mikesell.org">Meet Mike Sell → mikesell.org</a></div>
+    <div class="fvnote">We store one thing: that this lamp was lit.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+  </div></div>
+</section>
+
+<!-- SPARKS -->
+<section id="sparks" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Sparks: chance, treasure, and a shop with nothing to buy but delight</div><div class="sec-hd-sub">Sparks drop by chance when friends light lamps. All cosmetic or boost, nothing of monetary value, nothing purchasable with money. The slot machine only pays in glow.</div></div>
+  <div class="phone"><div class="night">
+    <div class="gamebar"><div class="glogo">✨ Sparks</div><div class="gchip">You hold 12</div></div>
+    <div class="gbody">
+      <div class="banner">✨ A Spark dropped when Sam lit her lamp last night. Lucky you.</div>
+      <div class="gcard">
+        <div class="glbl">Boosts</div>
+        <div class="shopitem"><div class="shopico">🌟</div><div><div class="shopname">Double Glow</div><div class="shopsub">Your next lamp burns twice as bright for your crew</div></div><div class="cost">✨ 3</div></div>
+        <div class="shopitem"><div class="shopico">🛡️</div><div><div class="shopname">Hurricane Glass</div><div class="shopsub">Shield one lamp from dimming for two weeks</div></div><div class="cost">✨ 4</div></div>
+        <div class="shopitem"><div class="shopico">📡</div><div><div class="shopname">Crew Flare</div><div class="shopsub">Extend your lighthouse beam for a night</div></div><div class="cost">✨ 5</div></div>
+      </div>
+      <div class="gcard">
+        <div class="glbl">Lamp styles for your constellation</div>
+        <div class="shopitem"><div class="shopico">🫙</div><div><div class="shopname">Mason Jar</div><div class="shopsub">Equipped</div></div><div class="cost">owned</div></div>
+        <div class="shopitem"><div class="shopico">⚓</div><div><div class="shopname">Shrimp Boat Light</div><div class="shopsub">Mayport special</div></div><div class="cost">✨ 6</div></div>
+        <div class="shopitem"><div class="shopico">🎃</div><div><div class="shopname">Jack o' Lantern</div><div class="shopsub">October only, then gone forever</div></div><div class="cost">✨ 8</div></div>
+        <div class="shopitem"><div class="shopico">🌊</div><div><div class="shopname">River Glass</div><div class="shopsub">Rare drop only. Cannot be bought</div></div><div class="cost">luck</div></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- NIGHT WATCH -->
+<section id="watch" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">The Night Watch: the 20-second daily ritual</div><div class="sec-hd-sub">Sweep your beam once each evening. Get the forecast, find tonight's Double Glow zone, see the weather coming. One glance, one small decision.</div></div>
+  <div class="phone"><div class="night">
+    <div class="gamebar"><div class="glogo">🗼 Night Watch</div><div class="gchip">Sun, Aug 9</div></div>
+    <div class="gbody">
+      <div class="gcard" style="text-align:center;padding:22px 15px;">
+        <div class="bigflame" style="font-size:44px;">🗼</div>
+        <div class="gtext" style="margin-top:8px;">Hold to sweep your beam across the district</div>
+        <button class="gbtn ghost" style="max-width:220px;margin:12px auto 0;">👆 Sweep the beam</button>
+      </div>
+      <div class="gcard">
+        <div class="glbl">Tonight's forecast</div>
+        <div class="shopitem"><div class="shopico">🌟</div><div><div class="shopname">Double Glow: Orange Park</div><div class="shopsub">Lamps lit there burn 2x tonight</div></div></div>
+        <div class="shopitem"><div class="shopico">🌫️</div><div><div class="shopname">Fog Bank warning: Thursday</div><div class="shopsub">District-wide dimming event. Crews, get ready to relight</div></div></div>
+        <div class="shopitem"><div class="shopico">🔥</div><div><div class="shopname">The Torch passes at midnight</div><div class="shopsub">Tonight it is yours. Tomorrow, MayportMo</div></div></div>
+      </div>
+      <div class="gcard"><div class="glbl">Watch streak</div><div class="gbig">🕯️ 4 weeks</div><div class="gtext" style="font-size:10px;">Hurricane Glass active: one missed week will not break it</div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- CREWS -->
+<section id="crews" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Crews: four lighthouses, one crown beam</div><div class="sec-hd-sub">County crews power real local lighthouses. Brightest crew each month earns First Light: Mike comes to their neighborhood for coffee, and their beam wears the crown.</div></div>
+  <div class="phone"><div class="night">
+    <div class="gamebar"><div class="glogo">🗼 Crews</div><div class="gchip">Crew Duval</div></div>
+    <div class="gbody">
+      <div class="torchband">🔥 Torch Relay: Day 9 alive. Crew glow at 3x. Tonight's bearer: you.</div>
+      <div class="gcard">
+        <div class="glbl">Beam standings · August</div>
+        <div class="crewrow"><span>👑</span><span class="crewname">Crew Duval · St. Johns Light</span><div class="beambar"><div style="width:92%"></div></div></div>
+        <div class="crewrow"><span>🗼</span><span class="crewname">Crew Clay · Black Creek Beacon</span><div class="beambar"><div style="width:64%"></div></div></div>
+        <div class="crewrow"><span>🗼</span><span class="crewname">Crew St. Johns · River Light</span><div class="beambar"><div style="width:58%"></div></div></div>
+        <div class="crewrow"><span>🗼</span><span class="crewname">Crew Nassau · Amelia Island Light</span><div class="beambar"><div style="width:31%"></div></div></div>
+        <div class="gtext" style="font-size:10px;margin-top:8px;">First Light prize: Mike brings coffee to the winning crew's neighborhood, Sept 5.</div>
+      </div>
+      <div class="gcard">
+        <div class="glbl">Your Watch · 20 Lamplighters · resets Monday</div>
+        <div class="crewrow"><span>1</span><span class="crewname">MandarinMary</span><span class="cost">610</span></div>
+        <div class="crewrow"><span>2</span><span class="crewname">OrangeParkOllie</span><span class="cost">545</span></div>
+        <div class="crewrow" style="color:#34D399;"><span>3</span><span class="crewname">RiverRat904 (you) ▲</span><span class="cost">540</span></div>
+        <div class="crewrow"><span>4</span><span class="crewname">FernandinaFinn</span><span class="cost">520</span></div>
+        <div class="gtext" style="font-size:10px;margin-top:8px;">🏅 This week's Keeper of the Flame (most consistent): BaldwinBee. Effort, not totals.</div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- SHARE CARD -->
+<section id="share" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Share Card: a constellation, not a report card</div><div class="sec-hd-sub">A night sky with your named constellation is a feed-stopper the way a Wordle grid is: instantly recognizable, spoiler-free, and nobody's name on it but yours.</div></div>
+  <div class="phone"><div class="sharecard">
+    <div>
+      <div class="sc-eye">Lamplighters · My August</div>
+      <div class="sc-big" style="margin-top:12px;">The Mandarin<br>Cluster</div>
+      <div class="sc-mid">14 lamps burning · Fleming Island to Fernandina · 2 ripples deep</div>
+    </div>
+    <svg viewBox="0 0 340 180" style="width:100%;">
+      <circle class="star" cx="40" cy="40" r="1.3" fill="#e2e8f0"/><circle class="star" cx="300" cy="30" r="1.2" fill="#e2e8f0" style="animation-delay:1.2s;"/>
+      <circle class="star" cx="250" cy="160" r="1.2" fill="#e2e8f0" style="animation-delay:2s;"/>
+      <polyline points="60,110 110,70 170,95 230,60 290,105" fill="none" stroke="#fcd34d" stroke-width="0.8" opacity="0.4"/>
+      <polyline points="60,110 120,145 190,155 250,135 290,105" fill="none" stroke="#fcd34d" stroke-width="0.8" opacity="0.4"/>
+      <circle class="lamp" cx="60" cy="110" r="5" fill="#fcd34d"/><circle class="lamp" cx="110" cy="70" r="5" fill="#fcd34d"/>
+      <circle class="lamp" cx="170" cy="95" r="5" fill="#fcd34d"/><circle class="lamp" cx="230" cy="60" r="5" fill="#fcd34d"/>
+      <circle class="lamp" cx="290" cy="105" r="5" fill="#fcd34d"/><circle class="lamp" cx="120" cy="145" r="5" fill="#fcd34d"/>
+      <circle class="lamp" cx="190" cy="155" r="6" fill="#34D399" style="filter:drop-shadow(0 0 9px rgba(52,211,153,0.9));"/>
+      <circle class="lamp" cx="250" cy="135" r="5" fill="#fcd34d"/>
+    </svg>
+    <div>
+      <div class="sc-mid" style="margin-bottom:10px;">2,317 lamps burning in FL-CD4 tonight.</div>
+      <div class="sc-foot">Not Left. Not Right. Forward.</div>
+      <div class="sc-sl">mikesell.org · Paid for by Mike Sell for Congress</div>
+    </div>
+  </div></div>
+  <div style="max-width:390px;margin:14px auto 0;"><button class="pa-tab" style="display:block;width:100%;background:#002d5b;color:#fff;border-radius:12px;padding:14px;font-size:13px;">⬆ Share to your story</button></div>
+</section>
+
+</main>
+
+<div class="footer">
+  <p>Lamplighters · Game mockup v3 · August 9, 2026 · Built for review, no live data. County shapes and lighthouse positions are illustrative.<br>
+  Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234 · <a href="https://mikesell.org">mikesell.org</a></p>
+</div>
+
+<script>
+function switchTab(id, btn){
+  document.querySelectorAll('.pa-section').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.pa-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>

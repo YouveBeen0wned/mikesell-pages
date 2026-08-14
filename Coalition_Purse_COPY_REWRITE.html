@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse the Purse: Mike Sell for Congress FL-CD4 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
+.hero{background:linear-gradient(135deg,#002d5b 0%,#064e3b 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;}
+.hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;position:relative;}
+.hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;line-height:1.2;margin-bottom:8px;position:relative;}
+.hero h1 span{color:#fff;}
+.hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;max-width:600px;position:relative;}
+.hero-stats{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px;position:relative;}
+.hero-stats>div{min-width:120px;max-width:180px;}
+.hero-stat-val{font-family:'clarendon-w01-medium',serif;font-size:22px;color:#34D399;line-height:1;}
+.hero-stat-lbl{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:rgba(255,255,255,0.45);margin-top:3px;letter-spacing:0.04em;line-height:1.45;}
+.pa-tabs{background:#fff;border-bottom:1.5px solid #e5e7eb;padding:0 12px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;}
+.pa-tabs::-webkit-scrollbar{display:none;}
+.pa-tab{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;font-weight:400;letter-spacing:0.04em;padding:10px 16px;border:none;border-bottom:2px solid transparent;background:transparent;color:#9ca3af;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.pa-tab:hover{color:#374151;}
+.pa-tab.active{color:#059669;border-bottom-color:#059669;}
+.pa-section{display:none;}
+.pa-section.active{display:block;}
+.main{padding:20px 20px 56px;}
+.sec-hd{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #059669;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:20px;}
+.sec-hd-title{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#002d5b;margin-bottom:3px;}
+.sec-hd-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px;}
+.metric{background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:13px 15px;}
+.metric .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;}
+.metric .val{font-family:'clarendon-w01-medium',serif;font-size:22px;line-height:1.1;color:#002d5b;}
+.metric .sub{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#9ca3af;margin-top:3px;}
+.metric.danger .val{color:#dc2626;}
+.metric.warn .val{color:#d97706;}
+.metric.success .val{color:#059669;}
+.chart-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;padding:18px 20px;margin-bottom:18px;}
+.chart-card .ct{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#002d5b;margin-bottom:3px;}
+.chart-card .ct-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;margin-bottom:12px;line-height:1.5;}
+.chart-wrap{position:relative;width:100%;}
+.ch-leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.ch-leg-i{display:flex;align-items:center;gap:5px;font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#6b7280;}
+.ch-sw{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.src-note{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#9ca3af;margin-top:10px;line-height:1.55;}
+.callout{background:#fef9ec;border-left:3px solid #d97706;border-radius:0 8px 8px 0;padding:12px 15px;margin-bottom:18px;}
+.callout p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#78350f;line-height:1.65;}
+.callout-purple{background:#ecfdf5;border-left:3px solid #059669;border-radius:0 8px 8px 0;padding:12px 15px;margin-bottom:18px;}
+.callout-purple p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#065f46;line-height:1.65;}
+.cut-list{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;margin-bottom:18px;}
+.cut-row{display:flex;align-items:flex-start;gap:0;padding:13px 16px;border-bottom:1.5px solid #f3f4f6;}
+.cut-row:last-child{border-bottom:none;}
+.cut-badge-col{width:90px;min-width:90px;flex-shrink:0;padding-right:12px;padding-top:2px;}
+.cut-badge{font-family:'avenir-heavy',Arial,sans-serif;font-size:8px;font-weight:400;padding:2px 6px;border-radius:10px;letter-spacing:0.04em;display:block;text-align:center;width:100%;}
+.badge-red{background:rgba(220,38,38,0.09);color:#b91c1c;}
+.badge-amber{background:rgba(217,119,6,0.10);color:#92400e;}
+.badge-blue{background:rgba(37,99,235,0.09);color:#1d4ed8;}
+.badge-green{background:rgba(5,150,105,0.09);color:#065f46;}
+.cut-text h5{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;font-weight:400;color:#002d5b;margin-bottom:3px;}
+.cut-text p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;}
+.sh-label{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;margin-top:24px;padding-bottom:6px;border-bottom:1.5px solid #e2e8f0;display:block;}
+.opp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:12px;margin-bottom:20px;}
+.opp-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;padding:15px;display:flex;flex-direction:column;}
+.opp-tag{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:10px;letter-spacing:0.04em;}
+.tag-invest{background:rgba(5,150,105,0.10);color:#065f46;}
+.tag-reclaim{background:rgba(37,99,235,0.09);color:#1d4ed8;}
+.tag-defund{background:rgba(220,38,38,0.09);color:#b91c1c;}
+.tag-reform{background:rgba(5,150,105,0.10);color:#065f46;}
+.opp-card h4{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;font-weight:400;color:#002d5b;margin-bottom:5px;line-height:1.3;}
+.opp-dollar{font-family:'clarendon-w01-medium',serif;font-size:13px;color:#059669;margin:3px 0 8px;}
+.opp-card p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;flex:1;}
+.counter{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #002d5b;border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:24px;display:flex;gap:10px;align-items:flex-start;}
+.counter-lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#002d5b;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;margin-top:1px;flex-shrink:0;}
+.counter p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;margin:0;}
+.flow-wrap{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;padding:18px 20px;margin-bottom:18px;}
+.flow-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.flow-box{background:#f5f7fa;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;min-width:110px;}
+.flow-box .fb-lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.04em;}
+.flow-box .fb-val{font-family:'clarendon-w01-medium',serif;font-size:16px;color:#002d5b;margin-top:2px;}
+.flow-arrow{font-size:18px;color:#059669;opacity:0.6;}
+.flow-note{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#9ca3af;margin-top:10px;line-height:1.55;}
+.legend-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;padding:11px 14px;}
+.source-block{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;padding:15px 18px;margin-bottom:14px;}
+.source-block h3{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.source-block ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.source-block li{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.source-block a{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#059669;text-decoration:none;}
+.source-block a:hover{text-decoration:underline;}
+.src-tier{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 7px;border-radius:4px;flex-shrink:0;}
+.tier-p{background:rgba(5,150,105,0.10);color:#065f46;}
+.tier-s{background:#f3f4f6;color:#6b7280;border:1px solid #e2e8f0;}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
+.footer a{color:#34D399;text-decoration:none;}
+@media(max-width:520px){.flow-row{flex-direction:column;gap:4px;}.flow-arrow{transform:rotate(90deg);}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+  <h1>The Hidden <span>Money Trail.</span></h1>
+  <p>Washington sends billions to Florida. We're showing you exactly where it goes. And where it should go instead.</p>
+  <div class="hero-stats">
+    <div><div class="hero-stat-val">$7.0T</div><div class="hero-stat-lbl">Federal budget FY2025</div></div>
+    <div><div class="hero-stat-val">$1.9T</div><div class="hero-stat-lbl">Hidden tax breaks in the federal code</div></div>
+    <div><div class="hero-stat-val">1.5M</div><div class="hero-stat-lbl">Floridians projected to lose health coverage</div></div>
+    <div><div class="hero-stat-val">$37.9B</div><div class="hero-stat-lbl">Federal dollars in Florida's state budget</div></div>
+  </div>
+</div>
+
+<div class="pa-tabs">
+  <button class="pa-tab active" onclick="switchTab('cuts',this)">OBBBA Cuts</button>
+  <button class="pa-tab" onclick="switchTab('doge',this)">DOGE Reversal</button>
+  <button class="pa-tab" onclick="switchTab('opps',this)">Opportunities</button>
+  <button class="pa-tab" onclick="switchTab('taxexp',this)">Tax Expenditures</button>
+  <button class="pa-tab" onclick="switchTab('federal',this)">Federal Budget</button>
+  <button class="pa-tab" onclick="switchTab('florida',this)">Florida</button>
+  <button class="pa-tab" onclick="switchTab('jacksonville',this)">FL-CD4</button>
+  <button class="pa-tab" onclick="switchTab('sources',this)">Sources</button>
+</div>
+
+<div class="main">
+
+<!-- ══ OBBBA CUTS ══ -->
+<div id="pa-cuts" class="pa-section active">
+  <div class="sec-hd">
+    <div class="sec-hd-title">One Big Beautiful Bill Act (OBBBA) cuts: what Florida stands to lose</div>
+    <div class="sec-hd-sub">Florida has the highest health coverage enrollment in the nation. More Floridians are at risk from this bill than residents of any other state.</div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The biggest risk isn't Medicaid.</strong> It's health insurance premiums. About 1.4 million Floridians are about to lose the financial help they need to pay for their health coverage. That's 93% of the total projected coverage loss, driven by the expiration of enhanced subsidies through the Affordable Care Act (ACA) Marketplace. Florida never expanded Medicaid, so most Floridians don't have a Medicaid safety net to fall back on. When their subsidies end, many will simply go uninsured. Source: KFF / Florida Policy Institute (Aug 2025).</p>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric danger"><div class="lbl">Floridians projected to lose coverage, 93% through ACA Marketplace subsidy expiration</div><div class="val">1.5M</div><div class="sub">Range 1.1M–1.9M (FPI/KFF). Not a Medicaid story. A premium affordability story.</div></div>
+    <div class="metric danger"><div class="lbl">FL uninsured rate projected</div><div class="val">16.7%</div><div class="sub">Up from a historic low of 10.7%</div></div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric danger"><div class="lbl">New annual grocery program bill handed to Florida</div><div class="val">$1.4B</div><div class="sub">$1.2B in benefits + $205M in admin, due by 2028. Florida has never owed this before.</div></div>
+    <div class="metric danger"><div class="lbl">Share of grocery benefit costs Florida must now fund</div><div class="val">25%</div><div class="sub">Federal government covered 100% of SNAP benefits since the program began. That ends in 2027.</div></div>
+    <div class="metric warn"><div class="lbl">FL admin cost for running SNAP: new obligation</div><div class="val">$205M</div><div class="sub">Up from ~$89M. Florida now pays 75% of admin costs instead of 50%. More than doubled.</div></div>
+  </div>
+
+  <div class="sh-label">What the bill cuts: program by program</div>
+  <div class="cut-list">
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">ACA Marketplace</div></div>
+      <div class="cut-text">
+        <h5>Health insurance subsidies end. Florida is the most exposed state in the nation.</h5>
+        <p>4.7 million Floridians buy insurance through the ACA Marketplace. 97% of them receive a subsidy to make it affordable. When those subsidies expire, premiums will more than double for many families. Florida didn't expand Medicaid, so there is no backup for people who get priced out. Source: KFF, PolitiFact confirmed.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Medicaid</div></div>
+      <div class="cut-text">
+        <h5>Work requirements added, with limited impact on Florida specifically</h5>
+        <p>The bill adds work requirements and more frequent eligibility checks for Medicaid. Because Florida never expanded Medicaid, the impact here is smaller than in states that did. RAND's analysis found Florida sees less than 0.5% change to its Medicaid budget. Source: RAND RRA4098-1 (Feb 2026).</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">SNAP</div></div>
+      <div class="cut-text">
+        <h5>For the first time in history, states must pay part of the grocery bill</h5>
+        <p>The Supplemental Nutrition Assistance Program (SNAP) has always been fully federally funded for benefits. That changes in 2027. Florida will owe 25% of the cost of the actual food benefits, plus a larger share of admin costs. The total: <strong>roughly $1.4 billion a year by 2028.</strong> Work requirements now extend to age 64. Source: CBO, FPI, WUSF.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Education</div></div>
+      <div class="cut-text">
+        <h5>COVID school relief money is gone. No replacement is coming.</h5>
+        <p>Federal emergency education funds from the pandemic have been spent. Florida's $3.9 billion federal education budget now has no emergency cushion. Title I funding for low-income schools faces flat appropriations with no new backstop in place.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-blue">Housing</div></div>
+      <div class="cut-text">
+        <h5>$7.2 billion added nationally for housing in FY2026. FL-CD4 keeps leaving it on the table.</h5>
+        <p>Federal housing dollars actually increased. But FL-CD4 consistently under-applies for HOME matching funds and competitive grants. The money is there. The applications aren't being written. This is a Purse opportunity. Source: Bipartisan Policy Center THUD analysis.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">Florida's exposure by program</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>High impact</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#d97706;"></div>Moderate impact</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Limited impact (Florida didn't expand Medicaid)</div>
+    </div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="obbbaChart"></canvas></div>
+    <div class="src-note">Bar length = relative impact score (0–100), not a dollar figure. Hover for the actual number. Sources: KFF (ACA); CBO pub. 61367 / FPI (SNAP); RAND RRA4098-1 (Medicaid)</div>
+  </div>
+</div>
+
+<!-- ══ DOGE REVERSAL ══ -->
+<div id="pa-doge" class="pa-section">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Department of Government Efficiency (DOGE): what was cut, what it cost, and what we get back if we fix it</div>
+    <div class="sec-hd-sub">DOGE called this budget reform. In practice, it cut the staff who process your Social Security check, audit the wealthy, and protect you from predatory lenders.</div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric danger"><div class="lbl">Social Security backlog growth</div><div class="val">+94%</div><div class="sub">After 7,000+ staff were cut</div></div>
+    <div class="metric danger"><div class="lbl">Taxes going uncollected each year</div><div class="val">$160B</div><div class="sub">IRS enforcement gutted</div></div>
+    <div class="metric danger"><div class="lbl">Consumer Financial Protection Bureau (CFPB) complaint cases resolved</div><div class="val">1%</div><div class="sub">Down from 20% before the cuts. Staff reduced from ~1,700 to about 50.</div></div>
+    <div class="metric danger"><div class="lbl">U.S. Agency for International Development (USAID) annual budget eliminated</div><div class="val">$7B/yr</div><div class="sub">Disease surveillance and export markets gone</div></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Why this is a money story, not just a politics story:</strong> DOGE moved money away from services working Floridians depend on. The question is not whether it cut spending. It did. The question is who absorbed those cuts. And what it would cost to undo the damage.</p>
+  </div>
+
+  <div class="callout-purple">
+    <p><strong>Not everything DOGE touched was wrong.</strong> Some of it was overdue. IT consolidation across 600 payroll systems, selling empty federal office buildings, and auditing overseas programs that hadn't been reviewed in years. Those belong in the Keep column. The Purse plan is not against efficiency. It is against cutting the services working people depend on while leaving corporate tax breaks untouched. The Keep items are at the bottom of this tab.</p>
+  </div>
+
+  <div class="sh-label">Cuts to reverse: what they cost and what they return</div>
+  <div class="cut-list">
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">Reverse</div></div>
+      <div class="cut-text">
+        <h5>4 million living Americans were marked deceased. Their Social Security was cut off.</h5>
+        <p>The Social Security Administration (SSA), the agency that sends retirement and disability checks, lost more than 7,000 employees. The backlog for new claims grew 94%. Four million living Americans were incorrectly marked as deceased, with no automatic fix. In FL-CD4, where 18% of residents are over 65, the average wait for a disability decision is now 7+ months. Appeals can take 4 to 5 years. These are people who already paid in. <strong>Cost to restore SSA staffing: ~$800M per year.</strong></p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">Reverse</div></div>
+      <div class="cut-text">
+        <h5>Every $1 spent on IRS enforcement returns $5 to $9. We stopped spending it.</h5>
+        <p>Thousands of IRS agents were cut. The Congressional Budget Office (CBO) shows a $5–$9 return on every $1 invested in tax enforcement. The cuts protect complex, high-income filers most. Florida's share of federal program funding is tied to national revenue. Less collection means less money for Medicaid, schools, and roads in FL-CD4. <strong>Restoring enforcement staffing pays for itself within 18 months.</strong></p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">Reverse</div></div>
+      <div class="cut-text">
+        <h5>The CFPB returned $21 billion to consumers over its lifetime. Now it's shut down.</h5>
+        <p>The Consumer Financial Protection Bureau (CFPB) was cut from ~1,700 staff to a skeleton crew. Before the cuts, it resolved 20% of consumer complaints filed, including against predatory lenders, debt collectors, and credit bureaus. That rate is now under 1%. In a district where median household income is $62,000, a wrong credit report or an illegal fee can be the difference between qualifying for a mortgage or not. <strong>Full restoration costs ~$700M per year. Estimated annual return to consumers: $3–5 billion.</strong></p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">Reverse</div></div>
+      <div class="cut-text">
+        <h5>USAID is gone. So is the early-warning system for the next pandemic.</h5>
+        <p>Over 90% of U.S. Agency for International Development (USAID) programs were cut, including Centers for Disease Control (CDC) disease surveillance that caught outbreaks before they crossed borders, agricultural programs that built export markets for American farmers, and democracy programs that reduced the conditions that create refugee crises. <strong>The annual budget was $7 billion. Less than 0.1% of federal spending.</strong> Naval Station Mayport's mission depends on the regional stability that USAID helped maintain.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">Reverse</div></div>
+      <div class="cut-text">
+        <h5>Half of the Department of Education's staff is gone. Duval's schools feel it.</h5>
+        <p>Roughly 50% of Education Department staff were cut. Civil rights enforcement, special education monitoring, and student loan oversight all depend on people who no longer have jobs. In Duval County, where Title I funding supports more than 60% of public schools, reduced federal oversight means reduced accountability for how those dollars are spent. <strong>Cost to restore: ~$900M per year.</strong></p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">Reverse</div></div>
+      <div class="cut-text">
+        <h5>VA benefits staff was cut. The people waiting longest to hear back are veterans.</h5>
+        <p>DOGE cut staff at the Department of Veterans Affairs (VA) who handle benefits processing, IT support, and benefits coordination. Northeast Florida has one of the highest concentrations of military families in the country. NAS Jacksonville, Naval Station Mayport, and Blount Island Command are all in or adjacent to FL-CD4. <strong>Cutting the staff who process earned veteran benefits is not efficiency. It's a broken promise to the people who served.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh-label">Legal guardrails: what needs to be written into law before any future "efficiency" review</div>
+  <div class="cut-list">
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Guardrail</div></div>
+      <div class="cut-text">
+        <h5>Anyone accessing federal databases must have a security clearance and tell Congress first</h5>
+        <p>DOGE operatives accessed Social Security, Internal Revenue Service (IRS), and other federal databases without confirmed security clearances and without the 72-hour congressional notification the law already requires. Whistleblowers at the Social Security Administration (SSA) estimated a 65% chance of a catastrophic data breach. 14 lawsuits were filed across 8 agencies. Fix: security clearance required, agency IG approval required, public annual audit required.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Guardrail</div></div>
+      <div class="cut-text">
+        <h5>Firing more than 100 federal workers at once requires a 60-day public review</h5>
+        <p>DOGE carried out mass layoffs across dozens of agencies without following existing federal workforce reduction rules. Courts blocked many of them. Fix: any reduction of more than 100 employees in a single agency requires a 60-day review period and a public impact assessment. Workers separated illegally get reinstated with back pay.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Guardrail</div></div>
+      <div class="cut-text">
+        <h5>Congress voted to spend the money. The president doesn't get to unspend it.</h5>
+        <p>The Impoundment Control Act of 1974 was written specifically to prevent presidents from freezing money Congress already approved. DOGE froze and cancelled congressionally approved funds across education, housing, foreign aid, and research. Fix: Congress should have legal standing to sue when approved funds are frozen. Frozen funds must be released automatically 30 days after a court order with no active appeal.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Guardrail</div></div>
+      <div class="cut-text">
+        <h5>Government contracts go to the best bid, not to companies run by friends</h5>
+        <p>Multiple contracts were cancelled during DOGE operations and replaced with no-bid awards to companies with financial ties to DOGE-affiliated individuals. Fix: a mandatory audit of every contract cancelled and replaced. Zero tolerance for no-bid awards without independent inspector general certification.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh-label">Cuts worth keeping, with conditions</div>
+  <div class="cut-list">
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-blue">Keep</div></div>
+      <div class="cut-text">
+        <h5>The federal government runs 600 separate payroll systems. That's fixable.</h5>
+        <p>Decades of agency-by-agency tech buying created real redundancy. Consolidating payroll, HR, and records management saves money without cutting any services. Condition: do it through proper procurement, require competitive bidding, and publish a public dashboard showing actual savings.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-blue">Keep</div></div>
+      <div class="cut-text">
+        <h5>Federal office buildings are sitting empty. Sell them.</h5>
+        <p>The government manages a real estate portfolio where many buildings are 20–30% utilized, especially after remote work became permanent. Selling underused properties is straightforward. Condition: fair-market-value certification on every sale. Proceeds go to deficit reduction, not around the appropriations process.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-blue">Keep</div></div>
+      <div class="cut-text">
+        <h5>Audit overseas programs first. Then cut the ones that don't work.</h5>
+        <p>DOGE was right that some overseas programs hadn't been evaluated in years. The problem was the method: eliminate everything rather than audit first. Condition: do the audit DOGE skipped. Restore programs with clear outcomes and American interest. Permanently cut the ones that can't show either. Publish the results publicly.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh-label">The bottom line: what reversal costs vs. what it pays back</div>
+  <div class="chart-card">
+    <div class="ct">DOGE reversal: annual cost vs. estimated annual return</div>
+    <div class="ct-sub">What it costs to restore each cut program vs. what that investment returns to the federal treasury and to working families each year.</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Annual restoration cost</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Estimated annual return</div>
+    </div>
+    <div class="chart-wrap" style="height:320px;"><canvas id="dogeReturnChart"></canvas></div>
+    <div class="src-note">Return estimates: CBO enforcement ROI ($5–9:1 on IRS), CFPB lifetime return ($21B over 10yr), SSA processing liability reduction. IRS figure is CBO-sourced. All others are floor estimates.</div>
+  </div>
+
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>"DOGE saved money. You want to spend it all back." Restoring the IRS, SSA, and CFPB is not spending. It is investing in functions with documented positive returns. The IRS returns $5–$9 for every $1 invested. The CFPB returned $21 billion to consumers over its lifetime. Leaving these agencies gutted is a choice. Working families are the ones paying for it.</p>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>"Some agencies really are too big." Agreed. IT consolidation and empty office sales belong in the Keep column. The Purse plan is not against efficiency. It is against cutting the services working people depend on while leaving corporate tax breaks untouched.</p>
+  </div>
+</div>
+
+<!-- ══ OPPORTUNITIES ══ -->
+<div id="pa-opps" class="pa-section">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Opportunities: the Purse plan in action</div>
+    <div class="sec-hd-sub">Every item below is a real, documented federal opportunity tied to Mike's platform commitments. All of them are scoped to FL-CD4: Duval, Nassau, and St. Johns counties.</div>
+  </div>
+  <div class="legend-bar">
+    <span class="opp-tag tag-invest">Invest: put federal dollars to work here</span>
+    <span class="opp-tag tag-reclaim">Reclaim: reverse a cut or restore a program</span>
+    <span class="opp-tag tag-defund">Defund / Redirect: stop wasteful spending</span>
+    <span class="opp-tag tag-reform">Tax Reform: close the loophole</span>
+  </div>
+
+  <div class="sh-label">Healthcare</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Healthcare: Invest</span>
+      <h4>Restore ACA health insurance subsidies</h4>
+      <div class="opp-dollar">1.4M Floridians at risk of losing coverage</div>
+      <p>Florida has the highest ACA enrollment in the country: 4.7 million people, 97% of whom receive subsidies. Restoring enhanced premium tax credits keeps working families covered. Without action, Florida's uninsured rate climbs from 10.7% to 16.7%.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Healthcare: Invest</span>
+      <h4>Let Medicare negotiate drug prices</h4>
+      <div class="opp-dollar">U.S. drug prices run 2–5x what other countries pay</div>
+      <p>American drug prices are among the highest in the world. Not because the drugs are different, but because of how pharmaceutical companies use patents and lobbying power. Giving Medicare full negotiation authority brings prices down for the 4.7 million Floridians enrolled.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reclaim">Healthcare: Reclaim</span>
+      <h4>Stop making eligible families re-prove their coverage every 6 months</h4>
+      <div class="opp-dollar">Coverage lost to paperwork, not ineligibility</div>
+      <p>The bill added more frequent eligibility checks for Medicaid. Most people who lose coverage during these checks are still eligible. They just missed a form. Annual renewals with automatic income verification through the IRS would keep eligible families covered. The federal money already exists. Only the bureaucracy needs to change.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Healthcare: Invest</span>
+      <h4>Fund mental health and addiction recovery in FL-CD4</h4>
+      <div class="opp-dollar">~$50M Florida share, not all of it claimed</div>
+      <p>SAMHSA distributes $794 million a year in mental health and substance abuse block grants nationally. Florida's share, based on population, is roughly $50 million annually across the Community Mental Health Services Block Grant (MHBG) and the Substance Use Prevention, Treatment, and Recovery Services Block Grant (SUBG). Florida has historically underspent these allocations. Crime, homelessness, and overdose deaths in FL-CD4 are downstream of untreated mental health. The money is appropriated. The applications need to be written. Source: SAMHSA Feb 2026.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Healthcare: Invest</span>
+      <h4>Bring VA healthcare to local providers in FL-CD4</h4>
+      <div class="opp-dollar">25,000 active duty and civilian personnel at NAS Jax and Mayport</div>
+      <p>FL-CD4 has one of Florida's largest active-duty and veteran populations. VA MISSION Act community care contracts let VA-covered services be delivered through local providers. Shorter wait times, closer to home.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reform">Healthcare: Tax Reform</span>
+      <h4>Cap the employer health insurance tax break to fund the public option</h4>
+      <div class="opp-dollar">$300B per year tax break, the largest single federal tax expenditure</div>
+      <p>The biggest tax break in the federal code subsidizes employer-sponsored insurance by making it tax-free. It locks in a system that leaves out the self-employed, gig workers, and small business owners. Capping it for high earners is what pays for a public option.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Healthcare: Invest</span>
+      <h4>National paid family leave</h4>
+      <div class="opp-dollar">$500B per year economic cost of doing nothing</div>
+      <p>The U.S. is the only wealthy country without guaranteed paid leave for new parents and caregivers. The cost of not having it, in workforce dropout, emergency room overuse, and lost tax revenue, exceeds what the program would cost.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Critics say capping the employer health exclusion could raise taxes on union health plans. The response: a cap applies above a threshold that protects average worker plans. A public option has majority public support. Failure to pass has been a political problem, not a policy one.</p>
+  </div>
+
+  <div class="sh-label">Food Security</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-reclaim">Food Security: Reclaim</span>
+      <h4>Restore the federal grocery benefit match</h4>
+      <div class="opp-dollar">$1.4B annual new cost to Florida, reversed</div>
+      <p>For the first time in SNAP's history, states now owe a share of the grocery benefit costs. Florida faces roughly $1.2 billion in new benefit costs plus $205 million in additional admin costs. That is about $1.4 billion a year by 2028. Restoring the federal match protects 2.9 million Floridians. Source: CBO / FPI.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-defund">Food Security: Defund / Redirect</span>
+      <h4>Roll back the work requirement age expansion for food benefits</h4>
+      <div class="opp-dollar">800,000 older adults cut from SNAP nationally</div>
+      <p>The bill raised the work requirement age for SNAP from 54 to 64. Adults aged 55–64 face real structural barriers to employment. Cutting their food benefits doesn't create jobs. Rolling this back redirects those benefit dollars to the people who need them.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Conservative critics say SNAP work requirements reduce dependency. The response: the expansion targets adults 55–64 who face structural barriers to employment. This is cutting benefits from people who can't meet requirements. Not creating incentives for people who can.</p>
+  </div>
+
+  <div class="sh-label">Infrastructure</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Infrastructure: Invest</span>
+      <h4>Apply for the federal infrastructure money FL-CD4 keeps missing</h4>
+      <div class="opp-dollar">$800M already authorized but not applied for in Duval alone</div>
+      <p>RAISE grants, infrastructure law carryover funds, and EPA septic-to-sewer programs exist across the district. Duval's $1 billion septic problem qualifies for EPA Clean Water financing. The money is appropriated. The applications need to be written. That's a first-term job for a member of Congress.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Infrastructure: Invest</span>
+      <h4>Close the broadband gap in rural Nassau and St. Johns</h4>
+      <div class="opp-dollar">$667M in federal broadband funding allocated to Florida</div>
+      <p>Rural pockets of Nassau and St. Johns still don't have reliable internet. No internet means no remote job applications, no telehealth visits, no school from home. The Broadband Equity, Access, and Deployment (BEAD) program makes unserved communities the top priority.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-defund">Infrastructure: Defund / Redirect</span>
+      <h4>Redirect overseas conflict spending to domestic infrastructure</h4>
+      <div class="opp-dollar">$872B annual defense discretionary budget</div>
+      <p>Every 1% reallocation from overseas conflict spending equals $8.7 billion available for infrastructure at home. This is about overseas conflict spending. Not base operations, not military pay. NAS Jacksonville and Mayport jobs are not at risk.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Opponents say federal infrastructure grants require local matching funds and grant-writing capacity Duval currently lacks. The response: building that grant-writing capacity is a straightforward first-term investment. The platform targets overseas conflict spending. Not base jobs.</p>
+  </div>
+
+  <div class="sh-label">Housing</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Housing: Invest</span>
+      <h4>Claim the Department of Housing and Urban Development (HUD) money Duval already qualifies for</h4>
+      <div class="opp-dollar">$14.5M per year in Duval: the floor, not the ceiling</div>
+      <p>Jacksonville receives $7.1M in Community Development Block Grant (CDBG) funds, $3.6M in HOME affordable housing funds, and $3.3M in Housing Opportunities for Persons with AIDS (HOPWA) assistance annually. Choice Neighborhoods grants, Section 202 senior housing, and competitive affordable development grants are largely unclaimed across the district.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reform">Housing: Tax Reform</span>
+      <h4>End the tax break that's helping corporations buy up Duval's housing</h4>
+      <div class="opp-dollar">$85B per year tax expenditure</div>
+      <p>A federal tax provision lets institutional investors write off rental properties far faster than they actually lose value. This is the financial mechanism behind build-to-rent growing 600% in Duval since 2019. Ending it for large investors slows the conversion of homes into permanent rentals.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reform">Housing: Tax Reform</span>
+      <h4>Limit the tax break that keeps homes out of reach for first-time buyers</h4>
+      <div class="opp-dollar">$65B per year tax expenditure</div>
+      <p>A 1031 exchange lets investors sell a rental property and roll the profits into a new one indefinitely, deferring taxes forever. This cycles homes through institutional hands rather than selling them to owner-occupants. Limiting 1031 to smaller portfolios redirects the benefit toward the buyers who need it most.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Critics say closing real estate tax breaks hurts small landlords who use the same provisions. The response: reforms would apply only to portfolios above a threshold, protecting small landlords while targeting the institutional players driving market distortion.</p>
+  </div>
+
+  <div class="sh-label">Education and Workforce</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Education: Invest</span>
+      <h4>Protect and grow Title I and workforce training funding</h4>
+      <div class="opp-dollar">$7.4M Duval CTE grant, plus Nassau and St. Johns</div>
+      <p>Duval County has one of Florida's largest low-income student populations. Title I funds flow to the schools that serve them. Career and Technical Education (CTE) workforce grants connect students to real jobs. Flat federal appropriations are real-dollar cuts when costs rise.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Education: Invest</span>
+      <h4>Fund public broadcasting, including WJCT in Jacksonville</h4>
+      <div class="opp-dollar">Corporation for Public Broadcasting (CPB) federal appropriation at risk</div>
+      <p>The Corporation for Public Broadcasting (CPB) funds NPR, PBS, and local stations including WJCT in Jacksonville. Cutting CPB hits smaller media markets first, where local stations have fewer private revenue alternatives. Civic information is infrastructure.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reclaim">Education: Reclaim</span>
+      <h4>Pilot guaranteed income programs in underserved FL-CD4 communities</h4>
+      <div class="opp-dollar">Dept. of Health and Human Services (HHS) and Dept. of Labor (DOL) demonstration grants available</div>
+      <p>Federal demonstration grants through the Department of Health and Human Services (HHS) and the Department of Labor exist to fund community economic pilots. Targeting underserved communities in FL-CD4 positions the district for funding that tests real solutions to economic instability.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Opponents argue education funding is a state prerogative and that CPB defunding is a legitimate debate. The response: Title I is a statutory entitlement that flows to where poverty exists, regardless of state preference. CPB's per-citizen cost is less than one hour of F-35 maintenance.</p>
+  </div>
+
+  <div class="sh-label">Economic Security and Wages</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Economic Security: Invest</span>
+      <h4>Use federal contracts to raise wages for FL-CD4 workers</h4>
+      <div class="opp-dollar">$5.5B annual federal contracting base in FL-CD4</div>
+      <p>Naval Air Station (NAS) Jacksonville, Naval Station Mayport, and their contractors make FL-CD4 one of Florida's most federally contracted districts. Federal contractor wage floor requirements raise pay for thousands of workers without new appropriations. The lever is the contract language.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Economic Security: Invest</span>
+      <h4>Keep more federal contract dollars in the district</h4>
+      <div class="opp-dollar">FL-CD4 small businesses capture 18% of contracts vs. a 23% federal goal</div>
+      <p>FL-CD4 small businesses are below the federal small business contracting target by 5 percentage points. Small Business Administration (SBA) set-aside programs exist to close that. A House member writes those requirements into authorization language. That is exactly what a Purse-focused representative does.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reform">Economic Security: Tax Reform</span>
+      <h4>Tax stock buybacks and invest the savings in worker wages</h4>
+      <div class="opp-dollar">$30B per year preference eliminated</div>
+      <p>A buyback tax paired with a wage investment credit for companies that raise worker pay redirects capital from shareholder returns to the people who earned it.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reform">Economic Security: Tax Reform</span>
+      <h4>Tax hedge fund profits like wages, not at the lower capital gains rate</h4>
+      <div class="opp-dollar">$18B over 10 years (CBO score)</div>
+      <p>Hedge fund and private equity managers currently pay lower tax rates on their fees than a teacher pays on their salary. This "carried interest" loophole affects fewer than 10,000 taxpayers and costs $18 billion over a decade.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Critics argue federal contractor wage floors raise contract costs paid by taxpayers. The response: Department of Defense (DoD) wage requirements have been in place multiple times without measurable cost inflation. Carried interest and data center credit closure are named platform provisions. Not abstractions.</p>
+  </div>
+
+  <div class="sh-label">Gun Safety and Public Safety</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-invest">Gun Safety: Invest</span>
+      <h4>Modernize the background check system</h4>
+      <div class="opp-dollar">28M checks per year on outdated infrastructure</div>
+      <p>The National Instant Criminal Background Check System (NICS) processes over 28 million background checks a year on infrastructure that hasn't kept pace. Modernizing NICS and closing private sale loopholes is the practical mechanism behind universal background checks.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reclaim">Gun Safety: Reclaim</span>
+      <h4>Fund CDC gun violence research. Treat it like the public health crisis it is.</h4>
+      <div class="opp-dollar">$15M per year</div>
+      <p>An amendment effectively banned CDC gun violence research for 20 years. That ban was partially lifted. Fully funding CDC and NIH research on gun violence builds the evidence base that every downstream policy intervention depends on.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Second Amendment advocates say NICS funding is a backdoor to a gun registry, and that CDC research is biased. The response: NICS is a point-of-sale check with no registry function written into law. CDC applies the same research standards to gun violence it applies to car crashes and opioids.</p>
+  </div>
+
+  <div class="sh-label">Cannabis and Justice</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-reform">Cannabis: Tax Reform / Redirect</span>
+      <h4>Federal legalization creates tax revenue and banking access</h4>
+      <div class="opp-dollar">$8–10B in new annual federal tax revenue (RAND estimate)</div>
+      <p>Federal prohibition forces legal, state-licensed cannabis businesses to operate in cash with no banking. They pay effective tax rates above 70% under Section 280E. Federal legalization unlocks banking, creates a taxable revenue stream, and redirects that revenue away from unregulated markets.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reclaim">Veterans: Reclaim</span>
+      <h4>Veterans shouldn't lose VA benefits for using state-legal medical cannabis</h4>
+      <div class="opp-dollar">40,000+ Florida veterans hold state medical cannabis cards</div>
+      <p>Veterans who use state-legal medical cannabis risk losing VA benefits under federal prohibition. Florida has over 40,000 registered medical marijuana patients who are also veterans. Federal rescheduling resolves the conflict.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Opponents argue legalization increases youth access and public health costs. The response: youth cannabis use has not increased in states that legalized. Revenue projections are from RAND, not advocacy groups. Alcohol and tobacco are federally legal, taxed, and regulated.</p>
+  </div>
+
+  <div class="sh-label">Technology and Digital Rights</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-defund">Technology: Defund / Redirect</span>
+      <h4>Stop subsidizing data centers that create very few local jobs</h4>
+      <div class="opp-dollar">$40B per year in federal and state tax breaks</div>
+      <p>Data centers receive major federal and state tax incentives. They consume enormous amounts of land, water, and power. And they create very few local jobs for their size. Eliminating these subsidies redirects public dollars toward investments that actually employ people.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-defund">Technology: Defund / Redirect</span>
+      <h4>Make Big Tech pay the cost of the harm it creates</h4>
+      <div class="opp-dollar">FTC enforcement investment</div>
+      <p>Unregulated data collection, algorithmic pricing, and predatory platforms impose real costs on consumers and communities. Federal investment in Federal Trade Commission (FTC) enforcement shifts those costs back to the companies profiting from them.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>Industry argues data center tax credits support AI infrastructure and competition with China. The response: unlimited public subsidy for private infrastructure is not a competitiveness strategy. Eliminating data center credits still leaves all private investment incentives intact.</p>
+  </div>
+
+  <div class="sh-label">Your vote, their money: fix the system</div>
+  <div class="opp-grid">
+    <div class="opp-card">
+      <span class="opp-tag tag-defund">Accountability: Defund / Redirect</span>
+      <h4>Get dark money out of politics</h4>
+      <div class="opp-dollar">$15–20B in untracked campaign money since Citizens United</div>
+      <p>The people writing the federal budget are chosen by the same donors who benefit from the tax code they write. Getting money out of politics is the prerequisite for every other Purse reform on this list.</p>
+    </div>
+    <div class="opp-card">
+      <span class="opp-tag tag-reclaim">Accountability: Reclaim</span>
+      <h4>Independent redistricting: competitive districts fight harder for their share</h4>
+      <div class="opp-dollar">Federal earmarks and grant competition</div>
+      <p>Safe, gerrymandered districts concentrate federal appropriations in politically protected hands. Competitive districts produce members who fight harder for their constituents' share of federal dollars. Fair maps are a Purse issue.</p>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>First Amendment advocates say campaign finance limits restrict political speech. The response: disclosure requirements and small-dollar matching don't limit speech. They amplify voices that can't write seven-figure checks.</p>
+  </div>
+</div>
+
+<!-- ══ TAX EXPENDITURES ══ -->
+<div id="pa-taxexp" class="pa-section">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Tax expenditures: the $1.9 trillion budget nobody votes on</div>
+    <div class="sec-hd-sub">More than the entire discretionary budget. Most of it flows to the top 20%. Reforming it is not new spending. It is redirecting public dollars that are already being spent.</div>
+  </div>
+
+  <div class="callout-purple">
+    <p><strong>The hidden budget:</strong> This money doesn't show up in the budget. It disappears through the tax code. The federal government spends roughly <strong>$1.8–2.0 trillion every year through deductions, credits, and special tax rates</strong> that never go through the normal budget process. This "invisible spending" is larger than all discretionary spending combined. Unlike regular appropriations, most of these tax breaks are permanent, uncapped, and flow mostly to corporations and high-income households. Reforming them is not new spending. It is redirecting existing public dollars toward people who actually need them. Source: JCT / OMB Analytical Perspectives.</p>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric danger"><div class="lbl">Total annual tax expenditures</div><div class="val">$1.9T</div><div class="sub">JCT estimate, FY2025</div></div>
+    <div class="metric danger"><div class="lbl">All discretionary spending (for comparison)</div><div class="val">$1.7T</div><div class="sub">Tax expenditures are larger</div></div>
+    <div class="metric warn"><div class="lbl">Corporate and wealth-concentrated share: reform target</div><div class="val">$620B</div><div class="sub">Platform-aligned reform targets</div></div>
+    <div class="metric success"><div class="lbl">Available to redirect to people and deficit</div><div class="val">$585B</div><div class="sub">$620B reform target minus a $35B responsible phase-in buffer. $80B to deficit reduction, $505B to programs.</div></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">The biggest federal tax breaks: FY2025</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Reform target (platform-aligned)</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#9ca3af;"></div>Broad-based benefits (preserved)</div>
+    </div>
+    <div class="chart-wrap" style="height:380px;"><canvas id="taxexpChart"></canvas></div>
+    <div class="src-note">Source: JCT-1-25; OMB FY2026 Analytical Perspectives Table 17-1. Red bars = reform targets. Gray bars = broad-based benefits like child tax credits and retirement accounts, preserved under the Purse plan. The $620B reform target reflects partial reform, not full elimination: the employer health exclusion would be capped, not ended; capital gains reform applies only to earners above $1M; real estate depreciation reform applies only above a portfolio threshold.</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">Who benefits from tax expenditures: today vs. under the Purse plan</div>
+    <div class="ct-sub">Right now, more than 60% of federal tax break benefits flow to the top 20% of earners. The Purse plan reforms corporate and wealth loopholes and redirects that revenue toward working families.</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Top 20% (wealth / corporate)</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#d97706;"></div>Upper-middle (40th–80th percentile)</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Bottom 60% (working families)</div>
+    </div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="benefitCompareChart"></canvas></div>
+    <div class="src-note">Current distribution: Brookings / JCT. Purse plan projection: estimated based on closing corporate and wealth loopholes while preserving the EITC, Child Tax Credit, and retirement exclusions. Not a CBO score.</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">FL-CD4 residents affected: today vs. OBBBA cuts vs. the Purse Plan</div>
+    <div class="ct-sub">Three bars per program. Left = today. Middle = under current OBBBA cuts. Right = under the Purse Plan.</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#888780;"></div>Today: adequately served</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#d97706;"></div>Today: underserved</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#A32D2D;"></div>OBBBA cuts: still covered</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Purse Plan: protected and newly reached</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:rgba(93,202,165,0.45);"></div>Purse Plan: gap that remains (honest)</div>
+    </div>
+    <div class="chart-wrap" style="height:500px;"><canvas id="districtImpactChart"></canvas></div>
+    <div class="src-note">Today: current enrollment scaled to FL-CD4's 6.3% share of Florida's population. OBBBA column reflects enacted cuts and subsidy expirations. Purse Plan: ACA restoration + public option = 253K; SNAP fully protected = 130K; housing investment = 60K; VA MISSION Act = 32K; Title I expansion = 85K. Teal stack = gap that remains even under the plan. All estimates carry wide confidence intervals. Not a CBO score. Sources: KFF, CBO, FPI, HUD, VA OIG, RAND.</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">Before and after: where $620B in reformed tax breaks goes</div>
+    <div class="ct-sub">Right now, $620 billion a year in federal tax breaks goes mostly to corporations and high-income households. This chart shows where it goes today, and where it would go under the Purse plan. About $505B goes to platform priorities, $80B to deficit reduction, and $35B is held as a responsible economic buffer.</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Current: where the subsidy goes now</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Purse plan: proposed reallocation</div>
+    </div>
+    <div class="chart-wrap" style="height:340px;"><canvas id="reallocChart"></canvas></div>
+    <div class="src-note">Reallocation estimates drawn from CBO program cost scores, JCT revenue estimates, and platform commitments. Figures assume a responsible 4-year phase-in. Not a CBO score.</div>
+  </div>
+
+  <div class="sh-label">What these mean for FL-CD4</div>
+  <div class="cut-list">
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">$300B/yr</div></div>
+      <div class="cut-text">
+        <h5>The employer health insurance tax break locks in a system that leaves millions out</h5>
+        <p>The single biggest federal tax break excludes employer-sponsored health insurance from taxable income. This keeps the employer-based model in place and leaves out the self-employed, gig workers, and those between jobs. It costs more per year than the entire Medicaid program. Capping it for high earners is the financing mechanism for a public option that covers everyone.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">$180B/yr</div></div>
+      <div class="cut-text">
+        <h5>Capital gains and carried interest: wealth taxed at half the rate of wages</h5>
+        <p>Long-term investment profits are taxed at roughly half the rate of wages. Hedge fund and private equity fees are compensation for a service. They are taxed as investment gains rather than income. Closing carried interest alone raises $18 billion over 10 years. This is the "make corporations and the wealthy pay their fair share" part of the platform.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">$85B/yr</div></div>
+      <div class="cut-text">
+        <h5>Accelerated depreciation for real estate: the federal code is writing the build-to-rent check</h5>
+        <p>This tax provision lets real estate investors write off properties far faster than they actually lose value. It generates paper losses that offset real income. This is the core financial engine behind institutional landlords scaling rapidly in markets like Duval. Build-to-rent grew 600% in FL-CD4 since 2019. The federal tax code is funding that.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">$65B/yr</div></div>
+      <div class="cut-text">
+        <h5>Like-kind exchange (1031): the flipper's best friend, the first-time buyer's worst enemy</h5>
+        <p>This provision lets real estate investors defer capital gains indefinitely by rolling sale profits into a new property. Properties cycle through institutional hands indefinitely instead of being sold to owner-occupants. Limiting 1031 exchanges to portfolios below a dollar threshold redirects the tax benefit toward smaller investors and first-time buyers.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">$40B/yr</div></div>
+      <div class="cut-text">
+        <h5>Data center tax credits: subsidizing the fewest jobs per dollar spent</h5>
+        <p>Section 48 investment tax credits and bonus depreciation let data centers write off 100% of construction costs immediately. Data centers consume large amounts of land, water, and power. They create very few local jobs relative to that footprint. The platform: stop data center tax breaks.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">$30B/yr</div></div>
+      <div class="cut-text">
+        <h5>Stock buybacks: shareholders first, workers later</h5>
+        <p>Before a 1% excise tax was enacted in 2022, stock buybacks were entirely tax-free. The preference still heavily favors returning capital to shareholders over raising worker pay. The platform: fight for higher wages; make corporations pay their fair share.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">$25B/yr</div></div>
+      <div class="cut-text">
+        <h5>Pharmaceutical tax deductions: why your prescriptions cost more in the U.S. than anywhere else</h5>
+        <p>Tax provisions and offshore accounting let drug companies deduct research costs twice and shift profits to low-tax countries. This is the mechanism behind U.S. drug prices running 2–5 times higher than peer nations. The platform: Medicare drug price negotiation.</p>
+      </div>
+    </div>
+  </div>
+  <div class="counter">
+    <span class="counter-lbl">Pushback</span>
+    <p>The serious critique: tax reform only reduces the deficit if Congress doesn't immediately spend the savings. Supply-side economists argue accelerated depreciation and R&amp;D credits drive real investment. The response: the JCT scores reform revenue as real. The investment argument applies to productive capital. Not financial engineering like carried interest, 1031 rollovers, and buybacks. Those are the specific targets.</p>
+  </div>
+</div>
+
+<!-- ══ FEDERAL BUDGET ══ -->
+<div id="pa-federal" class="pa-section">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Federal budget: FY2025</div>
+    <div class="sec-hd-sub">The full $7.0 trillion picture: mandatory spending, discretionary categories, and interest on the national debt.</div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric"><div class="lbl">Total FY2025 spending</div><div class="val">$7.0T</div><div class="sub">About 25% of U.S. GDP</div></div>
+    <div class="metric"><div class="lbl">Mandatory outlays</div><div class="val">$4.2T</div><div class="sub">60% of the total budget</div></div>
+    <div class="metric"><div class="lbl">Discretionary spending</div><div class="val">$1.7T</div><div class="sub">~24%, subject to annual budget caps</div></div>
+    <div class="metric warn"><div class="lbl">Interest on the national debt</div><div class="val">$892B</div><div class="sub">13% of the budget and rising</div></div>
+  </div>
+  <div class="chart-card">
+    <div class="ct">Mandatory spending: FY2025</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>Social Security $1.6T</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Medicare $987B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#7C3AED;"></div>Medicaid + CHIP $626B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#d97706;"></div>Other mandatory $987B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Net interest $892B</div>
+    </div>
+    <div class="chart-wrap" style="height:260px;"><canvas id="mandatoryChart"></canvas></div>
+    <div class="src-note">Source: CBO pub. 61951, Mandatory Spending in Fiscal Year 2025</div>
+  </div>
+  <div class="chart-card">
+    <div class="ct">Discretionary spending: key categories (FY2025)</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Defense $872B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#7C3AED;"></div>Veterans $135B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#d97706;"></div>Transportation $106B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Health / HHS $100B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>Education $79B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#59D7EE;"></div>Housing / HUD $77B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#9ca3af;"></div>Other $331B</div>
+    </div>
+    <div class="chart-wrap" style="height:300px;"><canvas id="discretChart"></canvas></div>
+    <div class="src-note">Source: CRS IN12535 / OMB FY2025 enacted appropriations</div>
+  </div>
+</div>
+
+<!-- ══ FLORIDA ══ -->
+<div id="pa-florida" class="pa-section">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Florida: where federal dollars land</div>
+    <div class="sec-hd-sub">$37.9 billion of Florida's state budget comes from Washington. Medicaid is the dominant program. Housing and education are where the district is most exposed.</div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric"><div class="lbl">FL total state budget</div><div class="val">$117B</div><div class="sub">FY 2025-26 signed</div></div>
+    <div class="metric success"><div class="lbl">Federal share of FL state budget</div><div class="val">$37.9B</div><div class="sub">33 cents of every dollar Florida spends</div></div>
+    <div class="metric"><div class="lbl">FL Medicaid + CHIP</div><div class="val">$33.4B</div><div class="sub">72% of the entire state HHS budget</div></div>
+    <div class="metric"><div class="lbl">FL ACA enrollees 2025</div><div class="val">4.7M</div><div class="sub">Highest in the nation. 97% receive subsidies.</div></div>
+  </div>
+  <div class="chart-card">
+    <div class="ct">Federal dollars in Florida's budget by category</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Medicaid / Health $33.4B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#9ca3af;"></div>Other $6.3B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#d97706;"></div>Infrastructure $2.1B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#7C3AED;"></div>Education $3.9B</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>Housing $1.2B</div>
+    </div>
+    <div class="chart-wrap" style="height:270px;"><canvas id="floridaChart"></canvas></div>
+    <div class="src-note">Source: FL Governor's Office FY2025-26 signed budget; Florida Policy Institute budget summaries</div>
+  </div>
+  <div class="chart-card">
+    <div class="ct">Federal investment per person enrolled, by program (estimated)</div>
+    <div class="chart-wrap" style="height:280px;"><canvas id="perCapitaChart"></canvas></div>
+    <div class="src-note">These are per-enrolled-beneficiary figures, not cash payments to individuals. Federal dollars flow to providers and institutions. Medicare (~4.7M enrollees), Medicaid (~5.2M), SNAP (~3.5M), Education (school-age population), HUD (assisted households). Source estimates based on program-specific enrollment counts.</div>
+  </div>
+</div>
+
+<!-- ══ FL-CD4 ══ -->
+<div id="pa-jacksonville" class="pa-section">
+  <div class="sec-hd">
+    <div class="sec-hd-title">FL-CD4: Duval, Nassau, and St. Johns</div>
+    <div class="sec-hd-sub">~$5.5 billion in annual federal contracts. $14.5 million in housing grants. $800 million in infrastructure money already authorized and not yet applied for.</div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric"><div class="lbl">Jacksonville city budget</div><div class="val">$1.9B</div><div class="sub">FY 2024-25 approved</div></div>
+    <div class="metric"><div class="lbl">HUD housing grant (Duval)</div><div class="val">$7.1M</div><div class="sub">Annual community development entitlement</div></div>
+    <div class="metric"><div class="lbl">HOME affordable housing (Duval)</div><div class="val">$3.6M</div><div class="sub">Annual (verified)</div></div>
+    <div class="metric warn"><div class="lbl">Affordable housing in a $2B city budget</div><div class="val">$12M</div><div class="sub">Less than 1% of the city's budget</div></div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric"><div class="lbl">Annual federal contracts in FL-CD4</div><div class="val">$5.5B</div><div class="sub">DoD + civilian combined</div></div>
+    <div class="metric warn"><div class="lbl">Share going to local small businesses</div><div class="val">18%</div><div class="sub">vs. 23% federal SBA goal</div></div>
+    <div class="metric"><div class="lbl">NAS Jax + Mayport personnel</div><div class="val">25K</div><div class="sub">Active duty + civilian</div></div>
+    <div class="metric success"><div class="lbl">SBA 8(a) / HUBZone eligible</div><div class="val">Yes</div><div class="sub">Multiple Duval ZIP codes qualify</div></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>A note on the numbers below:</strong> Medicare and Medicaid dollars flow to hospitals and providers. They do not flow through Jacksonville's city budget. The pass-through estimates below are based on FL-CD4's 6.3% share of Florida's population (Duval ~1M, Nassau ~100K, St. Johns ~330K). They are estimates with wide error margins, not verified direct grants.</p>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">Federal funding reaching FL-CD4: verified grants vs. estimated pass-throughs</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Medicare est. pass-through</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#7C3AED;"></div>Medicaid / CHIP est. pass-through</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Military / Defense (cumulative)</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>SNAP food benefits (est.)</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#d97706;"></div>Transportation 5-yr plan</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#59D7EE;"></div>Education Title I (est.)</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>HUD grants (verified)</div>
+    </div>
+    <div class="chart-wrap" style="height:360px;"><canvas id="jaxChart"></canvas></div>
+    <div class="src-note">HUD grants: City of Jacksonville 2025 Annual Action Plan (verified). Military: GovernmentContractsWon.com cumulative. Transportation: North Florida TPO TIP 2024-29. Medicare/Medicaid: CMS state totals x 6.3% FL-CD4 population share, flow to providers not residents directly. SNAP: FL statewide x 6.3% district share. All pass-throughs are estimates.</div>
+  </div>
+
+  <div class="chart-card">
+    <div class="ct">Who captures federal contracting dollars in FL-CD4</div>
+    <div class="ch-leg">
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Large prime contractors (headquarters out of district) ~64%</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>Mid-size / national (some local jobs) ~18%</div>
+      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Local small business (SBA set-asides) ~18%</div>
+    </div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="contractChart"></canvas></div>
+    <div class="src-note">Estimates based on DoD SBIR/STTR data and SBA federal procurement reports. FL-CD4's small business share lags the 23% federal SBA goal. SBA 8(a), HUBZone, and SDVOSB set-asides are the lever. Getting there requires a congressional member actively writing those requirements into authorization language.</div>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="sec-hd-title" style="margin-bottom:10px;">The money flow: from Washington to FL-CD4</div>
+    <div class="flow-row">
+      <div class="flow-box"><div class="fb-lbl">Federal budget</div><div class="fb-val">$7.0T</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="fb-lbl">Florida's share</div><div class="fb-val">$37.9B</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="fb-lbl">FL-CD4 ~6.3% of FL</div><div class="fb-val">~$2.4B est.</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="fb-lbl">Verified city grants</div><div class="fb-val">~$25M</div></div>
+    </div>
+    <div class="flow-note">FL-CD4's share is estimated from the combined population of Duval, Nassau, and St. Johns. That is about 1.43 million out of Florida's 22.6 million residents. The vast majority of federal dollars flow to healthcare providers, not to residents or community programs directly.</div>
+  </div>
+
+  <div class="sh-label">Critical local gaps</div>
+  <div class="cut-list">
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Infrastructure</div></div>
+      <div class="cut-text">
+        <h5>$2.5 billion project backlog in Duval. The city clears $250M a year.</h5>
+        <p>At the current pace, the backlog never gets fixed. $800 million is already authorized but not applied for. Nassau and St. Johns have their own road, water, and stormwater backlogs. Federal RAISE grants, infrastructure law carryover, and EPA septic-to-sewer funds are available. The gap is in applying for them.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-red">Housing</div></div>
+      <div class="cut-text">
+        <h5>$12M for affordable housing in a $2B budget. One in 10 new homes is built for corporate rental.</h5>
+        <p>Build-to-rent grew 600% in Duval since 2019. The trend is spreading into Nassau and St. Johns. HUD's HOME and CDBG programs are the only federal counter-pressure. The district consistently under-applies for both.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Public Safety</div></div>
+      <div class="cut-text">
+        <h5>Violent crime rate: 12.43 per 1,000 in Duval, about 1 in 80 residents</h5>
+        <p>JSO and JFR budgets together exceed $1 billion. Federal community violence intervention grants and mental health diversion grants are available but underutilized across the district's federal grant portfolio.</p>
+      </div>
+    </div>
+    <div class="cut-row">
+      <div class="cut-badge-col"><div class="cut-badge badge-amber">Education</div></div>
+      <div class="cut-text">
+        <h5>COVID school relief is gone. Nothing is replacing it.</h5>
+        <p>Florida used 90% of its $14.6 billion in pandemic education emergency funds. That cushion no longer exists. Title I and CTE workforce funding across Duval, Nassau, and St. Johns now face flat or declining appropriations with no state backstop in place.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout-purple">
+    <p><strong>These are first-term jobs.</strong> Write the grant applications. Change the authorization language. Require the small business set-asides. The $800 million sitting unspent in Duval's infrastructure pipeline doesn't need a new law. It needs someone in Washington who shows up and asks for it. That is what a Purse-focused representative does on day one.</p>
+  </div>
+</div>
+
+<!-- ══ SOURCES ══ -->
+<div id="pa-sources" class="pa-section">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Sources and methodology</div>
+    <div class="sec-hd-sub">Primary sources: CBO, CRS, KFF, RAND, JCT, OMB, USASpending. Secondary sources: FPI, Brookings, journalism, all attributed and tiered below.</div>
+  </div>
+  <div class="source-block">
+    <h3>Primary: nonpartisan and government sources</h3>
+    <ul>
+      <li><a href="https://www.cbo.gov/publication/61951" target="_blank">CBO: Mandatory Spending in Fiscal Year 2025</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.congress.gov/crs-product/IN12535" target="_blank">CRS IN12535: Overview of Recent Fiscal Spending Projections</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.cbo.gov/system/files/2025-08/61367-SNAP.pdf" target="_blank">CBO: SNAP Score, OBBBA (pub. 61367)</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.rand.org/pubs/research_reports/RRA4098-1.html" target="_blank">RAND RRA4098-1: State-Level Impacts of Key Medicaid Provisions in the OBBBA</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.kff.org/affordable-care-act/aca-marketplace-premium-payments-would-more-than-double-on-average-next-year-if-enhanced-premium-tax-credits-expire/" target="_blank">KFF: ACA Marketplace Premiums Would More Than Double If Enhanced Tax Credits Expire</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.usaspending.gov/state/florida/latest" target="_blank">USAspending.gov: Florida State Profile</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://bipartisanpolicy.org/explainer/appropriations-update-final-fy2026-thud-funding-summary/" target="_blank">Bipartisan Policy Center: FY2026 THUD Final Funding Summary</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://northfloridatpo.com/uploads/TIP-24-29-Final.pdf" target="_blank">North Florida TPO: Transportation Improvement Program FY 2024-29</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.jacksonville.gov/departments/neighborhoods/housing-and-community-development" target="_blank">City of Jacksonville: 2025 Annual Action Plan, CDBG / HOME / ESG / HOPWA</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://northfloridatpo.com/uploads/TIP-24-29-Final.pdf" target="_blank">North Florida TPO: Transportation Improvement Program FY 2024-29, FL-CD4 infrastructure pipeline</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.samhsa.gov/newsroom/press-announcements/20260204/samhsa-distributes-nearly-800-million-block-grants-nationwide-community-based-mental-health-substance-abuse-programs" target="_blank">SAMHSA: $794M Block Grant Distribution (Feb 2026), Florida share estimated at ~$50M</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://www.jct.gov/publications/2025/jct-1-25/" target="_blank">Joint Committee on Taxation: Tax Expenditure Estimates FY2025–2029 (JCT-1-25)</a><span class="src-tier tier-p">Primary</span></li>
+      <li><a href="https://whitehouse.gov/omb/analytical-perspectives/" target="_blank">OMB FY2026 Analytical Perspectives, Table 17-1 Tax Expenditures</a><span class="src-tier tier-p">Primary</span></li>
+    </ul>
+  </div>
+  <div class="source-block">
+    <h3>Secondary: advocacy and media (attributed)</h3>
+    <ul>
+      <li><a href="https://www.floridapolicy.org/posts/raising-the-alarm-on-the-oncoming-tidal-wave-of-health-care-coverage-loss-for-florida" target="_blank">Florida Policy Institute: Healthcare Coverage Loss Alarm (Aug 2025)</a><span class="src-tier tier-s">FPI (progressive)</span></li>
+      <li><a href="https://www.floridapolicy.org/posts/more-than-1-6-billion-in-snap-cuts-to-florida-would-put-residents-and-state-budget-at-risk-in-2028" target="_blank">Florida Policy Institute: $1.6B SNAP cuts to Florida</a><span class="src-tier tier-s">FPI (progressive)</span></li>
+      <li><a href="https://www.wusf.org/economy-business/2026-01-27/florida-lawmakers-consider-how-to-pay-for-snap-after-federal-cost-shift" target="_blank">WUSF: Florida lawmakers consider SNAP cost shift (Jan 2026)</a><span class="src-tier tier-s">Journalism</span></li>
+      <li><a href="https://www.politifact.com/factchecks/2025/oct/20/darren-soto/florida-aca-cost-increase-uninsured-highest/" target="_blank">PolitiFact: Florida ACA uninsured rate projections</a><span class="src-tier tier-s">Fact-check</span></li>
+      <li><a href="https://jaxtoday.org/2026/02/20/build-to-rent-homes/" target="_blank">Jacksonville Today: Build-to-rent growth in Duval (Feb 2026)</a><span class="src-tier tier-s">Local journalism</span></li>
+      <li><a href="https://www.rand.org/pubs/research_reports/RRA1955-1.html" target="_blank">RAND: Projected Revenue from Legal Cannabis Markets</a><span class="src-tier tier-s">Research (RAND)</span></li>
+      <li><a href="https://www.brookings.edu/articles/who-benefits-from-tax-expenditures/" target="_blank">Brookings: Distribution of Tax Expenditures by Income</a><span class="src-tier tier-s">Research (Brookings)</span></li>
+      <li><a href="https://paragoninstitute.org/medicaid/correcting-the-record-how-the-obbb-will-affect-coverage/" target="_blank">Paragon Institute: Correcting the Record on OBBBA Coverage</a><span class="src-tier tier-s">Conservative</span></li>
+      <li><a href="https://www.aei.org/articles/perspective-on-the-obbbas-snap-cuts/" target="_blank">AEI: Perspective on OBBBA's SNAP Cuts</a><span class="src-tier tier-s">Conservative</span></li>
+      <li><a href="https://mikesell.org" target="_blank">mikesell.org</a><span class="src-tier tier-s">Campaign</span></li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  <p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>
+  119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br>
+  <a href="https://mikesell.org">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p>
+</div>
+
+<script>
+function switchTab(tab, btn) {
+  var tabs = document.querySelectorAll('.pa-tab');
+  for (var i = 0; i < tabs.length; i++) { tabs[i].classList.remove('active'); }
+  var sections = document.querySelectorAll('.pa-section');
+  for (var i = 0; i < sections.length; i++) { sections[i].classList.remove('active'); }
+  if (btn) btn.classList.add('active');
+  var target = document.getElementById('pa-' + tab);
+  if (target) target.classList.add('active');
+}
+
+var gc = 'rgba(0,0,0,0.05)';
+var tc = 'rgba(26,26,24,0.5)';
+var borderC = '#f5f7fa';
+
+new Chart(document.getElementById('obbbaChart'), {
+  type:'bar',
+  data:{
+    labels:['ACA Marketplace','SNAP cost shift','Education','Medicaid'],
+    datasets:[{data:[95,85,45,10],backgroundColor:['#dc2626','#dc2626','#d97706','#059669'],borderWidth:0,borderRadius:4}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){var tips=['1.4M Floridians losing coverage','~$1.4B annual cost shift by 2028','Flat appropriations; no backstop','<0.5% Medicaid budget change (RAND)'];return ' '+tips[c.dataIndex];}}}},scales:{x:{display:true,max:100,grid:{color:gc},ticks:{color:tc,callback:function(v){return v+' pts';}},title:{display:true,text:'Relative impact score (0-100)',color:tc,font:{size:10}}},y:{grid:{display:false},ticks:{color:tc}}}}
+});
+
+new Chart(document.getElementById('dogeReturnChart'), {
+  type:'bar',
+  data:{
+    labels:['SSA Staffing (~$800M/yr)','IRS Enforcement (~$2B/yr)','CFPB (~$700M/yr)','USAID (~$7B/yr)','Dept. of Education (~$900M/yr)','VA Admin (~$500M/yr)'],
+    datasets:[
+      {label:'Annual restoration cost ($B)',data:[0.8,2.0,0.7,7.0,0.9,0.5],backgroundColor:'rgba(220,38,38,0.75)',borderColor:'#dc2626',borderWidth:1.5,borderRadius:4},
+      {label:'Estimated annual fiscal return ($B)',data:[1.4,14.0,3.0,9.5,2.8,1.8],backgroundColor:'rgba(5,150,105,0.75)',borderColor:'#059669',borderWidth:1.5,borderRadius:4}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tc,font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': $'+c.parsed.y+'B';}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10},maxRotation:30}},y:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'B';}},title:{display:true,text:'Annual $ (billions)',color:tc,font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('taxexpChart'), {
+  type:'bar',
+  data:{
+    labels:['Employer health insurance excl.','Retirement account excl. (401k/IRA)','Capital gains preferential rates','Child Tax Credit','Mortgage interest deduction','Accelerated depreciation (real estate)','Earned Income Tax Credit','Like-kind exchange (1031)','Data center / energy tax credits','Carried interest + stock buyback pref.'],
+    datasets:[{data:[300,250,180,120,95,85,75,65,40,48],backgroundColor:['#dc2626','#9ca3af','#dc2626','#9ca3af','#9ca3af','#dc2626','#9ca3af','#dc2626','#dc2626','#dc2626'],borderWidth:0,borderRadius:3}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' ~$'+c.parsed.x+'B per year';}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'B';}}},y:{grid:{display:false},ticks:{color:tc,font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('benefitCompareChart'), {
+  type:'bar',
+  data:{
+    labels:['Current tax expenditure distribution','Purse plan: after reform'],
+    datasets:[
+      {label:'Top 20% (wealth / corporate)',data:[62,22],backgroundColor:'#dc2626',borderWidth:0},
+      {label:'Upper-middle (40-80th pctile)',data:[22,28],backgroundColor:'#d97706',borderWidth:0},
+      {label:'Bottom 60% (working families)',data:[16,50],backgroundColor:'#059669',borderWidth:0}
+    ]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:tc,font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': '+c.parsed.x+'%';}}}},scales:{x:{stacked:true,max:100,grid:{color:gc},ticks:{color:tc,callback:function(v){return v+'%';}}},y:{stacked:true,grid:{display:false},ticks:{color:tc}}}}
+});
+
+new Chart(document.getElementById('reallocChart'), {
+  type:'bar',
+  data:{
+    labels:['Healthcare / public option','Wages + EITC expansion','Deficit reduction','Affordable housing','Education + broadband','Paid leave program','Small biz / essential workers','Institutional landlords (current)','Hedge funds / PE (current)','Data centers / pharma (current)'],
+    datasets:[
+      {label:'Current: subsidy goes to',data:[0,0,0,0,0,0,0,150,200,65],backgroundColor:'rgba(220,38,38,0.7)',borderWidth:0,borderRadius:3},
+      {label:'Purse plan: reallocation',data:[150,110,80,85,60,55,45,0,0,0],backgroundColor:'rgba(5,150,105,0.7)',borderWidth:0,borderRadius:3}
+    ]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:tc,font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': ~$'+c.parsed.x+'B/yr';}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'B';}}},y:{grid:{display:false},ticks:{color:tc,font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('districtImpactChart'), {
+  type:'bar',
+  data:{
+    labels:['ACA coverage: Today','ACA coverage: Current Plan','ACA coverage: Purse Plan','SNAP food aid: Today','SNAP food aid: Current Plan','SNAP food aid: Purse Plan','Housing (renters): Today','Housing (renters): Current Plan','Housing (renters): Purse Plan','Veterans access: Today','Veterans access: Current Plan','Veterans access: Purse Plan','Education (Title I): Today','Education (Title I): Current Plan','Education (Title I): Purse Plan','Uninsured / paid leave: Today','Uninsured / paid leave: Current Plan','Uninsured / paid leave: Purse Plan'],
+    datasets:[
+      {label:'Served / surviving / protected',data:[208,120,253,80,50,130,35,20,60,22,18,32,75,60,85,0,0,85],backgroundColor:['#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669'],borderWidth:0},
+      {label:'Underserved / residual gap',data:[88,0,43,50,0,0,40,0,15,10,0,0,20,0,10,153,0,68],backgroundColor:['#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)'],borderWidth:0}
+    ]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.parsed.x===0)return null;return ' ~'+c.parsed.x+'K people';}}}},scales:{x:{stacked:true,grid:{color:gc},ticks:{color:tc,callback:function(v){return v+'K';}},title:{display:true,text:'People (thousands)',color:tc,font:{size:10}}},y:{stacked:true,grid:{display:false},ticks:{color:tc,font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('mandatoryChart'), {
+  type:'doughnut',
+  data:{
+    labels:['Social Security $1.6T','Medicare $987B','Medicaid + CHIP $626B','Other mandatory $987B','Net interest $892B'],
+    datasets:[{data:[1600,987,626,987,892],backgroundColor:['#2563EB','#059669','#7C3AED','#d97706','#dc2626'],borderWidth:2,borderColor:borderC}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:tc,font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:function(c){return ' '+c.label;}}}}}
+});
+
+new Chart(document.getElementById('discretChart'), {
+  type:'bar',
+  data:{
+    labels:['Defense','Veterans','Other discr.','Transportation','Health / HHS','Education','Housing / HUD'],
+    datasets:[{data:[872,135,331,106,100,79,77],backgroundColor:['#dc2626','#7C3AED','#9ca3af','#d97706','#059669','#2563EB','#59D7EE'],borderWidth:0,borderRadius:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' $'+c.parsed.y+'B';}}}},scales:{x:{grid:{display:false},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'B';}}}}}
+});
+
+new Chart(document.getElementById('floridaChart'), {
+  type:'doughnut',
+  data:{
+    labels:['Medicaid / Health $33.4B','Other $6.3B','Infrastructure $2.1B','Education $3.9B','Housing $1.2B'],
+    datasets:[{data:[33.4,6.3,2.1,3.9,1.2],backgroundColor:['#059669','#9ca3af','#d97706','#7C3AED','#2563EB'],borderWidth:2,borderColor:borderC}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:tc,font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:function(c){return ' '+c.label;}}}}}
+});
+
+new Chart(document.getElementById('perCapitaChart'), {
+  type:'bar',
+  data:{
+    labels:['Medicare (est.)','Medicaid (est.)','SNAP (est.)','Education (fed)','HUD housing'],
+    datasets:[{data:[2750,1530,680,180,56],backgroundColor:['#059669','#7C3AED','#d97706','#2563EB','#59D7EE'],borderWidth:0,borderRadius:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' ~$'+c.parsed.y+' per beneficiary (est.)';}}}},scales:{x:{grid:{display:false},ticks:{color:tc}},y:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'/yr';}},title:{display:true,text:'Annual federal $ per enrolled beneficiary',color:tc,font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('jaxChart'), {
+  type:'bar',
+  data:{
+    labels:['Medicare (est.)','Medicaid/CHIP (est.)','Military contracts','SNAP (est.)','Transportation TIP','Education Title I','HUD grants (verified)'],
+    datasets:[{data:[2394,2104,850,284,178,50,14.5],backgroundColor:['#059669','#7C3AED','#dc2626','#2563EB','#d97706','#59D7EE','#059669'],borderWidth:0,borderRadius:4}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' ~$'+c.parsed.x+'M est. annual';}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'M';}}},y:{grid:{display:false},ticks:{color:tc,font:{size:10}}}}}
+});
+
+new Chart(document.getElementById('contractChart'), {
+  type:'doughnut',
+  data:{
+    labels:['Large prime contractors (out-of-district HQ) ~64%','Mid-size / national (some local jobs) ~18%','Local small business (SBA set-asides) ~18%'],
+    datasets:[{data:[64,18,18],backgroundColor:['#dc2626','#2563EB','#059669'],borderWidth:2,borderColor:borderC}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{color:tc,font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:function(c){return ' '+c.label;}}}}}
+});
+
+function resizeWix() {
+  var h = document.body.scrollHeight;
+  window.parent.postMessage({ type: 'iwResizeHeight', data: { height: h } }, '*');
+}
+window.addEventListener('load', resizeWix);
+new MutationObserver(resizeWix).observe(document.body, { childList: true, subtree: true });
+</script>
+</body>
+</html>

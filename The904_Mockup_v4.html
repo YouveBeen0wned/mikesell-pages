@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 904 | Game Mockup v4 | Mike Sell for Congress</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;font-size:14px;line-height:1.55;}
+.hero{background:linear-gradient(135deg,#002d5b 0%,#064e3b 100%);padding:34px 24px 30px;}
+.hero-eye{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;}
+.hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;margin-bottom:8px;}
+.hero p{font-size:13px;color:rgba(255,255,255,0.68);max-width:660px;}
+.pa-tabs{background:#fff;border-bottom:1.5px solid #e5e7eb;padding:0 12px;display:flex;gap:4px;overflow-x:auto;position:sticky;top:0;z-index:50;}
+.pa-tab{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;padding:12px 14px;border:none;background:none;border-bottom:2px solid transparent;color:#9ca3af;cursor:pointer;white-space:nowrap;}
+.pa-tab.active{color:#059669;border-bottom-color:#059669;}
+.pa-section{display:none;}
+.pa-section.active{display:block;}
+main{padding:24px 20px 56px;max-width:900px;margin:0 auto;}
+.sec-hd{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #059669;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:22px;}
+.sec-hd-title{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#002d5b;}
+.sec-hd-sub{font-size:11px;color:#6b7280;margin-top:2px;}
+
+.phone{width:390px;max-width:100%;margin:0 auto;background:#0b1220;border-radius:34px;padding:10px;box-shadow:0 18px 44px rgba(0,45,91,0.3);}
+.app{background:linear-gradient(180deg,#fdf8ee 0%,#f3ead8 100%);border-radius:26px;overflow:hidden;min-height:680px;display:flex;flex-direction:column;position:relative;}
+
+@keyframes wiggle{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(8deg);}}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+@keyframes shine{0%,100%{filter:brightness(1);}50%{filter:brightness(1.35) drop-shadow(0 0 8px rgba(252,211,77,0.8));}}
+@keyframes confetti{0%{transform:translateY(-8px) rotate(0);}100%{transform:translateY(700px) rotate(540deg);}}
+@keyframes popglow{0%,100%{box-shadow:0 0 0 rgba(5,150,105,0);}50%{box-shadow:0 0 26px rgba(5,150,105,0.55);}}
+@keyframes reelspin{0%{transform:translateY(0);}25%{transform:translateY(-6px);}75%{transform:translateY(6px);}100%{transform:translateY(0);}}
+@keyframes tada{0%,100%{transform:scale(1) rotate(0);}30%{transform:scale(1.25) rotate(-8deg);}60%{transform:scale(1.15) rotate(6deg);}}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 6px;}
+.pill{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fff;border:2px solid #e7dcc3;border-radius:16px;padding:5px 12px;color:#002d5b;box-shadow:0 2px 0 #e7dcc3;}
+.gametitle{font-family:'clarendon-w01-medium',serif;font-size:20px;color:#002d5b;}
+.gametitle span{color:#059669;}
+
+.bottomnav{display:flex;justify-content:space-around;background:#fff;border-top:2px solid #e7dcc3;padding:10px 6px 12px;margin-top:auto;}
+.bn{font-size:24px;opacity:0.4;text-align:center;cursor:pointer;}
+.bn.on{opacity:1;transform:scale(1.18);}
+.bn small{display:block;font-size:8px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;}
+
+.bigbtn{display:block;margin:12px auto 0;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:#fff;background:linear-gradient(135deg,#059669,#047857);border:none;border-radius:18px;padding:15px 30px;cursor:pointer;box-shadow:0 5px 0 #035c46;animation:popglow 2.6s infinite;}
+.bigbtn.gold{background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 5px 0 #a05a04;color:#fff;}
+
+.sticker{width:86px;height:104px;border-radius:12px;background:#fff;border:2.5px solid #e7dcc3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;}
+.sticker .art{font-size:34px;}
+.sticker .nm{font-family:'avenir-heavy',Arial,sans-serif;font-size:8px;color:#002d5b;text-align:center;padding:0 4px;}
+.sticker.got{border-color:#059669;background:linear-gradient(180deg,#fff,#ecfdf5);}
+.sticker.rare{border-color:#f59e0b;animation:shine 3s infinite;}
+.sticker.miss{opacity:0.55;}
+.sticker.miss .art{filter:grayscale(1);opacity:0.35;}
+.dupe{position:absolute;top:-7px;right:-7px;background:#059669;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;border-radius:10px;padding:2px 6px;box-shadow:0 2px 4px rgba(0,0,0,0.25);}
+.setbar{height:10px;background:#e7dcc3;border-radius:6px;overflow:hidden;flex:1;}
+.setbar>div{height:100%;background:linear-gradient(90deg,#059669,#34D399);}
+
+.jack{background:radial-gradient(120% 100% at 50% 20%, #123a6b 0%, #002d5b 55%, #001a35 100%);border-radius:26px;min-height:680px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.conf{position:absolute;top:0;font-size:15px;animation:confetti 3.4s linear infinite;}
+.jbig{font-family:'clarendon-w01-medium',serif;font-size:30px;color:#fcd34d;text-shadow:0 0 22px rgba(252,211,77,0.6);animation:tada 1.6s infinite;}
+.jrow{display:flex;gap:14px;margin-top:18px;}
+.jchip{background:rgba(255,255,255,0.1);border:1.5px solid rgba(252,211,77,0.5);border-radius:14px;padding:10px 14px;font-size:20px;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;animation:bob 2s infinite;}
+
+.reel{width:84px;height:84px;background:#fff;border:3px solid #e7dcc3;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:inset 0 -8px 0 #f3ead8;animation:reelspin 0.6s ease-in-out;}
+.msgbub{background:#e9f9f1;border:2px solid #a7f3d0;border-radius:18px 18px 18px 4px;padding:12px 14px;font-size:13px;color:#065f46;margin:12px 14px 0;}
+
+.varcard{background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center;margin-bottom:12px;}
+.varart{width:74px;height:74px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;}
+.varname{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#002d5b;}
+.varsub{font-size:11px;color:#6b7280;margin-top:2px;}
+
+.note-strip{background:#ecfdf5;border:1.5px solid #a7f3d0;border-radius:10px;padding:10px 14px;font-size:11px;color:#065f46;margin:0 auto 18px;max-width:390px;}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;margin-top:40px;}
+.footer p{font-size:11px;color:rgba(255,255,255,0.5);}
+.footer a{color:#34D399;text-decoration:none;}
+.tinytxt{font-size:9px;color:#94a3b8;text-align:center;margin-top:10px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress | FL-CD4 | Game Mockup v4</div>
+  <h1>The 904</h1>
+  <p>A board, dice, and a sticker album made of Northeast Florida. Words are nearly gone: the game teaches by tapping. Texting a friend is the move that earns rolls, and a friend tapping back is the jackpot.</p>
+</div>
+
+<div class="pa-tabs">
+  <button class="pa-tab active" onclick="switchTab('board',this)">The Board</button>
+  <button class="pa-tab" onclick="switchTab('album',this)">The Album</button>
+  <button class="pa-tab" onclick="switchTab('move',this)">Your Move</button>
+  <button class="pa-tab" onclick="switchTab('jackpot',this)">The Jackpot</button>
+  <button class="pa-tab" onclick="switchTab('friend',this)">Friend View</button>
+  <button class="pa-tab" onclick="switchTab('vars',this)">4 Variations</button>
+</div>
+
+<main>
+
+<!-- BOARD -->
+<section id="board" class="pa-section active">
+  <div class="sec-hd"><div class="sec-hd-title">The Board: 24 tiles of home, one thumb, almost no words</div><div class="sec-hd-sub">County colors ring the board: emerald Duval, amber Clay, coral Nassau, blue St. Johns. Corners: Mike's Porch, the Spin, the Gift, and GO. Center fills with light as the district plays. Final art comes from Mike's own archive.</div></div>
+  <div class="phone"><div class="app">
+    <div class="topbar"><div class="gametitle">THE <span>904</span></div><div class="pill">🎲 5 &nbsp; 🪙 340</div></div>
+    <div style="padding:8px 12px;">
+      <svg viewBox="0 0 360 360" style="width:100%;display:block;">
+        <rect x="6" y="6" width="348" height="348" rx="26" fill="#fffdf7" stroke="#e7dcc3" stroke-width="3"/>
+        <g font-size="20">
+          <rect x="14" y="14" width="52" height="52" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/><text x="40" y="47" text-anchor="middle" font-size="24">🏠</text>
+          <rect x="72" y="14" width="44" height="44" rx="10" fill="#fff" stroke="#059669" stroke-width="2"/><text x="94" y="42" text-anchor="middle">🌉</text>
+          <rect x="120" y="14" width="44" height="44" rx="10" fill="#fff" stroke="#059669" stroke-width="2"/><text x="142" y="42" text-anchor="middle">🏈</text>
+          <rect x="168" y="14" width="44" height="44" rx="10" fill="#fff" stroke="#059669" stroke-width="2"/><text x="190" y="42" text-anchor="middle">🪙</text>
+          <rect x="216" y="14" width="44" height="44" rx="10" fill="#fff" stroke="#059669" stroke-width="2"/><text x="238" y="42" text-anchor="middle">🍤</text>
+          <rect x="264" y="14" width="44" height="44" rx="10" fill="#fff" stroke="#f59e0b" stroke-width="2"/><text x="286" y="42" text-anchor="middle">🎟️</text>
+          <rect x="294" y="14" width="52" height="52" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2.5"/>
+          <text x="320" y="47" text-anchor="middle" font-size="24">🎰</text>
+          <rect x="302" y="72" width="44" height="44" rx="10" fill="#fff" stroke="#f43f5e" stroke-width="2"/><text x="324" y="100" text-anchor="middle">🏖️</text>
+          <rect x="302" y="120" width="44" height="44" rx="10" fill="#fff" stroke="#f43f5e" stroke-width="2"/><text x="324" y="148" text-anchor="middle">🗼</text>
+          <rect x="302" y="168" width="44" height="44" rx="10" fill="#fff" stroke="#f43f5e" stroke-width="2"/><text x="324" y="196" text-anchor="middle">⛵</text>
+          <rect x="302" y="216" width="44" height="44" rx="10" fill="#fff" stroke="#f43f5e" stroke-width="2"/><text x="324" y="244" text-anchor="middle">🦩</text>
+          <rect x="302" y="264" width="44" height="44" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="324" y="292" text-anchor="middle">🪙</text>
+          <rect x="294" y="294" width="52" height="52" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/><text x="320" y="327" text-anchor="middle" font-size="24">🎁</text>
+          <rect x="240" y="302" width="44" height="44" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="262" y="330" text-anchor="middle">🏰</text>
+          <rect x="192" y="302" width="44" height="44" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="214" y="330" text-anchor="middle">🌊</text>
+          <rect x="144" y="302" width="44" height="44" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="166" y="330" text-anchor="middle">🎟️</text>
+          <rect x="96" y="302" width="44" height="44" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/><text x="118" y="330" text-anchor="middle">🐬</text>
+          <rect x="14" y="294" width="52" height="52" rx="12" fill="#eef4fb" stroke="#002d5b" stroke-width="2.5"/><text x="40" y="327" text-anchor="middle" font-size="22">🎲</text>
+          <rect x="14" y="246" width="44" height="44" rx="10" fill="#fff" stroke="#d97706" stroke-width="2"/><text x="36" y="274" text-anchor="middle">🐊</text>
+          <rect x="14" y="198" width="44" height="44" rx="10" fill="#fff" stroke="#d97706" stroke-width="2"/><text x="36" y="226" text-anchor="middle">🎣</text>
+          <rect x="14" y="150" width="44" height="44" rx="10" fill="#fff" stroke="#d97706" stroke-width="2"/><text x="36" y="178" text-anchor="middle">🪙</text>
+          <rect x="14" y="102" width="44" height="44" rx="10" fill="#fff" stroke="#d97706" stroke-width="2"/><text x="36" y="130" text-anchor="middle">🌴</text>
+          <rect x="14" y="54" width="44" height="44" rx="10" fill="#fff" stroke="#d97706" stroke-width="2" transform="translate(0,6)"/><text x="36" y="88" text-anchor="middle">🎸</text>
+        </g>
+        <circle cx="180" cy="180" r="86" fill="#eef4fb" stroke="#e7dcc3" stroke-width="2"/>
+        <path d="M150 130 L215 135 L235 175 L205 225 L145 218 L132 168 Z" fill="#059669" fill-opacity="0.16" stroke="#059669" stroke-width="1.5"/>
+        <circle cx="172" cy="168" r="3" fill="#fcd34d" style="animation:shine 2.5s infinite;"/>
+        <circle cx="195" cy="185" r="3" fill="#fcd34d" style="animation:shine 3s infinite;"/>
+        <circle cx="160" cy="196" r="3" fill="#fcd34d" style="animation:shine 3.4s infinite;"/>
+        <circle cx="210" cy="160" r="3" fill="#e7dcc3"/>
+        <text x="180" y="242" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Arial">3 of 24 lit</text>
+        <text x="94" y="52" font-size="26" style="animation:bob 1.6s infinite;">🦐</text>
+      </svg>
+      <button class="bigbtn" style="animation:popglow 2.2s infinite;">🎲 🎲</button>
+    </div>
+    <div class="bottomnav">
+      <div class="bn on">🎲<small>PLAY</small></div>
+      <div class="bn">📔<small>ALBUM</small></div>
+      <div class="bn">💬<small>MOVE</small></div>
+      <div class="bn">👥<small>CREW</small></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ALBUM -->
+<section id="album" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">The 904 Album: the retention engine</div><div class="sec-hd-sub">Six sets of nine. Bridges of Jax sits at 8 of 9, which is the strongest comeback hook in casual gaming. Duplicates carry a badge and one tap gifts them to a teammate. Gold stickers only move on Sunday Trade Nights.</div></div>
+  <div class="phone"><div class="app">
+    <div class="topbar"><div class="gametitle">📔 <span>Album</span></div><div class="pill">⭐ 31/54</div></div>
+    <div style="padding:6px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;margin:8px 2px 10px;">
+        <span style="font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#002d5b;white-space:nowrap;">🌉 Bridges of Jax</span>
+        <div class="setbar"><div style="width:89%"></div></div>
+        <span style="font-family:'clarendon-w01-medium',serif;font-size:13px;color:#059669;">8/9</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;justify-items:center;">
+        <div class="sticker got"><div class="art">🌉</div><div class="nm">Main Street</div></div>
+        <div class="sticker got"><div class="art">🌁</div><div class="nm">Dames Point</div></div>
+        <div class="sticker got rare"><div class="art">✨🌉</div><div class="nm">Acosta at Dusk</div></div>
+        <div class="sticker got"><div class="art">🛤️</div><div class="nm">FEC Strauss</div></div>
+        <div class="sticker got"><div class="art">🌇</div><div class="nm">Fuller Warren</div></div>
+        <div class="sticker got"><div class="art">⚓</div><div class="nm">Mathews</div><div class="dupe">x2</div></div>
+        <div class="sticker got"><div class="art">🌊</div><div class="nm">Hart</div></div>
+        <div class="sticker got"><div class="art">🚢</div><div class="nm">Buckman</div><div class="dupe">x3</div></div>
+        <div class="sticker miss"><div class="art">🌟</div><div class="nm">? ? ?</div></div>
+      </div>
+      <button class="bigbtn gold" style="padding:11px 22px;font-size:13px;">🎁 Gift a double</button>
+      <div style="display:flex;align-items:center;gap:10px;margin:16px 2px 6px;">
+        <span style="font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#002d5b;white-space:nowrap;">🏖️ The Beaches</span>
+        <div class="setbar"><div style="width:44%"></div></div>
+        <span style="font-family:'clarendon-w01-medium',serif;font-size:13px;color:#d97706;">4/9</span>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <div class="sticker got" style="width:70px;height:86px;"><div class="art" style="font-size:26px;">🏖️</div><div class="nm">Jax Beach</div></div>
+        <div class="sticker got" style="width:70px;height:86px;"><div class="art" style="font-size:26px;">🛟</div><div class="nm">Life Guard Stn</div></div>
+        <div class="sticker miss" style="width:70px;height:86px;"><div class="art" style="font-size:26px;">🌅</div><div class="nm">? ? ?</div></div>
+        <div class="sticker miss" style="width:70px;height:86px;"><div class="art" style="font-size:26px;">🐚</div><div class="nm">? ? ?</div></div>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <div class="bn">🎲<small>PLAY</small></div>
+      <div class="bn on">📔<small>ALBUM</small></div>
+      <div class="bn">💬<small>MOVE</small></div>
+      <div class="bn">👥<small>CREW</small></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- YOUR MOVE -->
+<section id="move" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Your Move: land on the Spin, it deals a friend</div><div class="sec-hd-sub">The reels deal one of YOUR names (nothing about them is shown or checked on screen), a short casual message ready to make yours, and one tap opens your own texting app. Sending pays 2 rolls. Their tap pays the jackpot.</div></div>
+  <div class="phone"><div class="app">
+    <div class="topbar"><div class="gametitle">🎰 <span>Next up</span></div><div class="pill">+🎲🎲</div></div>
+    <div style="padding:10px 14px;text-align:center;">
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:8px;">
+        <div class="reel">👤</div>
+        <div class="reel" style="animation-delay:0.15s;font-size:16px;font-family:'avenir-heavy',Arial,sans-serif;color:#002d5b;">SARAH</div>
+        <div class="reel" style="animation-delay:0.3s;">🎲🎲</div>
+      </div>
+      <div class="msgbub" style="text-align:left;">Sarah!! I'm playing a game where texting you is literally my move 🎲 It's for Mike Sell, he's running for Congress here and he's the real deal. Tap this and I score big: mikesell.org/f/8f3k</div>
+      <div style="font-size:10px;color:#6b7280;margin-top:6px;">✏️ make it yours = 2x</div>
+      <button class="bigbtn">📤</button>
+      <div class="tinytxt">your phone sends it · the game never does</div>
+      <div style="margin-top:18px;display:flex;justify-content:center;gap:16px;font-size:22px;opacity:0.5;">
+        <span>🔁</span><span>⏭️</span>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <div class="bn">🎲<small>PLAY</small></div>
+      <div class="bn">📔<small>ALBUM</small></div>
+      <div class="bn on">💬<small>MOVE</small></div>
+      <div class="bn">👥<small>CREW</small></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- JACKPOT -->
+<section id="jackpot" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">The Jackpot: a friend tapped your link</div><div class="sec-hd-sub">The pinball celebration from Tip the Table lives here, saved for the action that matters most. Five rolls, a guaranteed pack, a shot at a rare. Four seconds of pure noise and light.</div></div>
+  <div class="phone"><div class="jack">
+    <span class="conf" style="left:8%;animation-delay:0s;">🎊</span>
+    <span class="conf" style="left:22%;animation-delay:0.7s;">✨</span>
+    <span class="conf" style="left:38%;animation-delay:1.3s;">🎉</span>
+    <span class="conf" style="left:55%;animation-delay:0.3s;">🪙</span>
+    <span class="conf" style="left:70%;animation-delay:1.7s;">⭐</span>
+    <span class="conf" style="left:85%;animation-delay:0.9s;">🎊</span>
+    <div style="font-size:64px;animation:tada 1.6s infinite;">🎯</div>
+    <div class="jbig">SARAH TAPPED!</div>
+    <div class="jrow">
+      <div class="jchip">🎲 +5</div>
+      <div class="jchip" style="animation-delay:0.3s;">🎟️ +1</div>
+      <div class="jchip" style="animation-delay:0.6s;">✨ ?</div>
+    </div>
+    <button class="bigbtn gold" style="margin-top:26px;">OPEN PACK 🎟️</button>
+  </div></div>
+</section>
+
+<!-- FRIEND VIEW -->
+<section id="friend" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Friend View: one giant tap, zero questions</div><div class="sec-hd-sub">No voter anything, no survey, no form. One record: tapped. The confetti fires under their thumb, and the join button is right there while they are smiling.</div></div>
+  <div class="note-strip">The only record this page creates: "link 8f3k, tapped."</div>
+  <div class="phone"><div class="jack">
+    <span class="conf" style="left:15%;animation-delay:0.2s;">🎊</span>
+    <span class="conf" style="left:48%;animation-delay:1.1s;">✨</span>
+    <span class="conf" style="left:78%;animation-delay:0.6s;">🎉</span>
+    <div style="font-family:'clarendon-w01-medium',serif;font-size:22px;color:#fff;text-align:center;line-height:1.3;">Alex played <span style="color:#fcd34d;">you</span><br>in The 904</div>
+    <div style="font-size:13px;color:#94a3b8;margin-top:8px;">your tap is their jackpot</div>
+    <div style="font-size:78px;margin:22px 0 6px;animation:bob 1.8s infinite;cursor:pointer;filter:drop-shadow(0 0 24px rgba(252,211,77,0.7));">🎲</div>
+    <div style="font-size:11px;color:#64748b;">tap it</div>
+    <button class="bigbtn mint" style="background:linear-gradient(135deg,#34D399,#059669);margin-top:26px;">🎮 Deal me in</button>
+    <div style="margin-top:14px;"><a href="https://mikesell.org" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#34D399;text-decoration:none;">Meet Mike → mikesell.org</a></div>
+    <div class="tinytxt">Paid for by Mike Sell for Congress<br>119 Center St S #143, Jacksonville, FL 32234</div>
+  </div></div>
+</section>
+
+<!-- VARIATIONS -->
+<section id="vars" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">The other four variations, at a glance</div><div class="sec-hd-sub">Full write-ups in the Game Lab document. The 904 is the recommended chassis; each of these donates its best organ to it.</div></div>
+  <div style="max-width:480px;margin:0 auto;">
+    <div class="varcard">
+      <div class="varart" style="background:linear-gradient(135deg,#fef3c7,#fde68a);">🎰🏗️</div>
+      <div><div class="varname">Spin City</div><div class="varsub">Your slot machine as the whole game: spins on a timer, coins build your block, porch-drop gifting. Its spin became The 904's friend-dealer tile.</div></div>
+    </div>
+    <div class="varcard">
+      <div class="varart" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);">🌱🌸</div>
+      <div><div class="varname">The Garden</div><div class="varsub">Your metaphor, playable: friends as seeds, taps as blooms, one shared district garden by November. Returns as an album chapter and a September season event.</div></div>
+    </div>
+    <div class="varcard">
+      <div class="varart" style="background:linear-gradient(135deg,#e0f2fe,#bae6fd);">🎱⚡</div>
+      <div><div class="varname">Tip the Table</div><div class="varsub">"In the game of life, the table is tipped." A pinball toy where every friend tap fires the ball. Became the jackpot celebration.</div></div>
+    </div>
+    <div class="varcard">
+      <div class="varart" style="background:linear-gradient(135deg,#002d5b,#064e3b);">🏮🌫️</div>
+      <div><div class="varname">Night Shift</div><div class="varsub">Lamplighters, gone casual. Its finale survives: on election night the board's center district lights fully up.</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="footer">
+  <p>The 904 · Game mockup v4 · August 9, 2026 · Built for review, no live data. Emoji stand in for final art from Mike's archive.<br>
+  Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234 · <a href="https://mikesell.org">mikesell.org</a></p>
+</div>
+
+<script>
+function switchTab(id, btn){
+  document.querySelectorAll('.pa-section').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.pa-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>

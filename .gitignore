@@ -1,0 +1,7 @@
+﻿# Block everything by default
+*
+
+# Allow only what belongs on GitHub
+!*.html
+!push-to-github.ps1
+!.gitignore

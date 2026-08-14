@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Ps Hub — Mike Sell for Congress FL-CD4 2026</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'clarendon-bold';font-style:normal;font-weight:700;src:url('https://db.onlinewebfonts.com/t/47c119b46a64815c975257f0c8a17fbb.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#087DD6 0%,#8B0000 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;}
+.hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;position:relative;}
+.hero h1{font-family:'clarendon-bold','clarendon-w01-medium',serif;font-size:32px;color:#fff;line-height:1.2;margin-bottom:8px;position:relative;font-weight:700;}
+.hero h1 span{color:#fff;}
+.hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;max-width:600px;position:relative;}
+
+/* Pillars */
+.pillars-wrap{background:#fff;padding:20px 24px 24px;border-bottom:1.5px solid #e5e7eb;max-width:860px;}
+.pillars-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.card{padding:20px 18px;border-right:1.5px solid #e2e8f0;display:flex;flex-direction:column;min-width:0;}
+.card:last-child{border-right:none;}
+.card-accent{height:3px;width:28px;border-radius:2px;margin-bottom:12px;}
+.card-icon{font-size:20px;margin-bottom:8px;}
+.card-name{font-family:'clarendon-w01-medium',serif;font-size:14px;color:#002d5b;margin-bottom:6px;}
+.card-desc{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;flex:1;margin-bottom:12px;}
+.card-cta{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#fff;border-radius:50px;padding:6px 8px;display:block;text-align:center;letter-spacing:0.04em;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Pillar colors */
+.p-people .card-accent{background:#087DD6;}
+.p-people .card-cta{background:#087DD6;}
+.p-process .card-accent{background:#6b21a8;}
+.p-process .card-cta{background:#6b21a8;}
+.p-policy .card-accent{background:#8B0000;}
+.p-policy .card-cta{background:#8B0000;}
+.p-purse .card-accent{background:#059669;}
+.p-purse .card-cta{background:#059669;}
+
+/* Issue grid */
+.issue-wrap{background:#f5f7fa;padding:18px 20px;}
+.issue-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#9ca3af;margin-bottom:5px;}
+.issue-title{font-family:'clarendon-w01-medium',serif;font-size:17px;color:#002d5b;margin-bottom:4px;}
+.issue-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#9ca3af;line-height:1.6;margin-bottom:14px;}
+.issues{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:7px;}
+.iss{background:#fff;border:1.5px solid #e2e8f0;border-radius:9px;padding:11px 4px 9px;text-align:center;}
+.iss-icon{font-size:16px;margin-bottom:4px;}
+.iss-name{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#374151;line-height:1.3;}
+
+/* Footer */
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
+.footer a{color:#59D7EE;text-decoration:none;}
+
+@media(max-width:600px){
+  .issues{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+  <h1>Change That Works <span>For Us.</span></h1>
+  <p>My vision, our agenda. Built from living here and listening to you, taking it to Washington to make it law.</p>
+</div>
+
+<div class="pillars-wrap">
+  <div class="pillars-eye">The 4Ps Platform</div>
+  <div class="pillars">
+    <div class="card p-people">
+      <div class="card-accent"></div>
+      <div class="card-icon">🤝</div>
+      <div class="card-name">People</div>
+      <div class="card-desc">The orgs doing work in our neighborhoods.</div>
+      <div class="card-cta">Meet the Activists</div>
+    </div>
+    <div class="card p-process">
+      <div class="card-accent"></div>
+      <div class="card-icon">⚙️</div>
+      <div class="card-name">Process</div>
+      <div class="card-desc">We can't fix what we won't name.</div>
+      <div class="card-cta">Browse Processes</div>
+    </div>
+    <div class="card p-policy">
+      <div class="card-accent"></div>
+      <div class="card-icon">📋</div>
+      <div class="card-name">Policy</div>
+      <div class="card-desc">Every bill with a direct impact on us.</div>
+      <div class="card-cta">Track the Bills</div>
+    </div>
+    <div class="card p-purse">
+      <div class="card-accent"></div>
+      <div class="card-icon">💰</div>
+      <div class="card-name">Purse</div>
+      <div class="card-desc">We're following the money from Washington to Tallahassee to Northeast Florida.</div>
+      <div class="card-cta">Follow the Money</div>
+    </div>
+  </div>
+</div>
+
+<div class="issue-wrap">
+  <div class="issue-eye">We will</div>
+  <div class="issue-title">Protect our future. Make life affordable. Fix the system.</div>
+  <div class="issue-sub">Pick an issue. See who is fighting, what is broken, what laws would fix it, and where the money is.</div>
+  <div class="issues">
+    <div class="iss"><div class="iss-icon">💊</div><div class="iss-name">Healthcare &amp; Drugs</div></div>
+    <div class="iss"><div class="iss-icon">🏘️</div><div class="iss-name">Housing &amp; Affordability</div></div>
+    <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Workers, Wages &amp; UBI</div></div>
+    <div class="iss"><div class="iss-icon">🛡️</div><div class="iss-name">Gun Safety</div></div>
+    <div class="iss"><div class="iss-icon">🌿</div><div class="iss-name">Climate &amp; Infrastructure</div></div>
+    <div class="iss"><div class="iss-icon">🎓</div><div class="iss-name">Education &amp; Workforce</div></div>
+    <div class="iss"><div class="iss-icon">💰</div><div class="iss-name">Tax the Wealthy</div></div>
+  </div>
+  <div class="issues">
+    <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Criminal Justice &amp; Cannabis</div></div>
+    <div class="iss"><div class="iss-icon">🌎</div><div class="iss-name">Immigration</div></div>
+    <div class="iss"><div class="iss-icon">💻</div><div class="iss-name">Technology &amp; AI</div></div>
+    <div class="iss"><div class="iss-icon">🤱</div><div class="iss-name">Body Autonomy</div></div>
+    <div class="iss"><div class="iss-icon">🧠</div><div class="iss-name">Mental Health</div></div>
+    <div class="iss"><div class="iss-icon">✌️</div><div class="iss-name">End Foreign Wars</div></div>
+    <div class="iss"><div class="iss-icon">🗳️</div><div class="iss-name">Fix the System</div></div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>
+  119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br>
+  <a href="https://mikesell.org">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+  .card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .color-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .chip { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-secondary); }
+  .swatch { width: 20px; height: 20px; border-radius: 4px; border: 0.5px solid var(--color-border-tertiary); flex-shrink: 0; }
+  .code-block { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 6px; padding: 10px 12px; font-family: var(--font-mono); font-size: 11.5px; color: var(--color-text-primary); line-height: 1.7; white-space: pre-wrap; margin-top: 8px; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; background: var(--color-background-info); color: var(--color-text-info); margin-right: 4px; }
+  .badge.warn { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .badge.success { background: var(--color-background-success); color: var(--color-text-success); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tab-row { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tab { padding: 5px 12px; font-size: 12px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); border-radius: 6px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-secondary); transition: all 0.15s; }
+  .tab.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: transparent; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .rule-row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .rule-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.5; }
+  .rule-text span { color: var(--color-text-secondary); font-size: 12px; }
+</style>
+
+<div style="padding: 1rem 0;">
+  <p style="font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px;">mikesell.org — Embed Design Reference</p>
+  <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 20px;">Platform: Wix &nbsp;|&nbsp; CDN: static.wixstatic.com &nbsp;|&nbsp; Format: Single-page scroll</p>
+
+  <div class="tab-row">
+    <div class="tab active" onclick="switchTab('colors')">Colors</div>
+    <div class="tab" onclick="switchTab('type')">Typography</div>
+    <div class="tab" onclick="switchTab('layout')">Layout</div>
+    <div class="tab" onclick="switchTab('images')">Images & CDN</div>
+    <div class="tab" onclick="switchTab('embed')">Embed Rules</div>
+    <div class="tab" onclick="switchTab('nav')">Nav & Footer</div>
+  </div>
+
+  <!-- COLORS -->
+  <div class="panel active" id="panel-colors">
+    <div class="card">
+      <div class="card-title">Inferred Brand Palette</div>
+      <div class="card-body">Wix sites use inline CSS variables. These are the most likely palette tokens based on the imagery and political campaign context. Verify in browser DevTools on the live site.</div>
+      <div class="color-row" style="margin-top: 12px;">
+        <div class="chip"><div class="swatch" style="background:#1a2a4a;"></div> Primary navy <br><small>#1a2a4a</small></div>
+        <div class="chip"><div class="swatch" style="background:#ffffff; border: 1px solid #ddd;"></div> White <br><small>#ffffff</small></div>
+        <div class="chip"><div class="swatch" style="background:#c8102e;"></div> Accent red <br><small>#c8102e (est.)</small></div>
+        <div class="chip"><div class="swatch" style="background:#f5f5f5;"></div> Light bg <br><small>#f5f5f5</small></div>
+        <div class="chip"><div class="swatch" style="background:#333333;"></div> Body text <br><small>#333333</small></div>
+      </div>
+      <div class="card-body" style="margin-top: 10px;"><span class="badge warn">ACTION</span> Open Chrome DevTools → Elements → body or nav element → Computed → search "color" to get exact hex values from Wix's injected style sheet.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">CSS to copy into any embed</div>
+      <div class="code-block">:root {
+  --ms-navy: #1a2a4a;
+  --ms-white: #ffffff;
+  --ms-red: #c8102e;      /* verify */
+  --ms-light-bg: #f5f5f5;
+  --ms-text: #333333;
+  --ms-link: #1a2a4a;
+}</div>
+    </div>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="panel" id="panel-type">
+    <div class="card">
+      <div class="card-title">Heading Hierarchy (from live HTML)</div>
+      <div class="rule-row"><div class="rule-icon">H1</div><div class="rule-text">"Not me. Us." — Hero headline. Large, bold, center-aligned. Likely 48–64px on desktop. <span>Wix default: Playfair Display or similar serif for hero text.</span></div></div>
+      <div class="rule-row"><div class="rule-icon">H2</div><div class="rule-text">"About Mike", "This is our movement." — Section headers. ~32–40px. <span>Usually same family as H1 or bold sans.</span></div></div>
+      <div class="rule-row"><div class="rule-icon">H4</div><div class="rule-text">"Early Life", "Today", "The Future" — Subsection labels. ~20px. <span>Often a different weight or color from body.</span></div></div>
+      <div class="rule-row"><div class="rule-icon">H5</div><div class="rule-text">Subheadlines and CTA support text. ~16–18px. <span>Used for supporting context under CTAs.</span></div></div>
+      <div class="rule-row"><div class="rule-icon">p</div><div class="rule-text">Body copy. ~16px, line-height ~1.7. <span>Paragraph text in bio and movement sections.</span></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Font Stack to embed</div>
+      <div class="code-block">/* Match Wix font if site uses Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap');
+
+body, p, li { font-family: 'Open Sans', sans-serif; }
+h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+/* Fallback stack if Google Fonts blocked */
+h1, h2 { font-family: Georgia, 'Times New Roman', serif; }
+body   { font-family: Arial, Helvetica, sans-serif; }</div>
+      <div class="card-body" style="margin-top: 8px;"><span class="badge warn">ACTION</span> In DevTools → Network tab → filter "fonts" to see the exact Google Font names the Wix site loads.</div>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="panel" id="panel-layout">
+    <div class="card">
+      <div class="card-title">Page Section Order</div>
+      <div class="rule-row"><div class="rule-icon">1</div><div class="rule-text">Sticky nav — Logo left, 3 links center, Volunteer CTA button right</div></div>
+      <div class="rule-row"><div class="rule-icon">2</div><div class="rule-text">Hero section — "Not me. Us." headline + sub + signup form + image</div></div>
+      <div class="rule-row"><div class="rule-icon">3</div><div class="rule-text">"We Will" — 3-column bullet grid (Protect / Affordable / Fix)</div></div>
+      <div class="rule-row"><div class="rule-icon">4</div><div class="rule-text">Volunteer CTA repeat + Jacksonville bridge image full-bleed</div></div>
+      <div class="rule-row"><div class="rule-icon">5</div><div class="rule-text">About Mike — alternating image/text blocks (Early Life, Today, Future)</div></div>
+      <div class="rule-row"><div class="rule-icon">6</div><div class="rule-text">"This is our movement" — second signup form</div></div>
+      <div class="rule-row"><div class="rule-icon">7</div><div class="rule-text">Footer — logo, copyright, social share links</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Max Width & Padding</div>
+      <div class="code-block">/* Wix default container width */
+.ms-container {
+  max-width: 980px;       /* Wix default */
+  margin: 0 auto;
+  padding: 0 24px;        /* mobile side padding */
+}
+
+/* Section vertical rhythm */
+.ms-section {
+  padding: 60px 0;        /* desktop */
+}
+@media (max-width: 768px) {
+  .ms-section { padding: 36px 0; }
+  .ms-container { padding: 0 16px; }
+}</div>
+    </div>
+  </div>
+
+  <!-- IMAGES -->
+  <div class="panel" id="panel-images">
+    <div class="card">
+      <div class="card-title">Wix CDN URL Pattern</div>
+      <div class="card-body">All images are served from <strong>static.wixstatic.com</strong> with Wix's transform API baked into the URL. You do not need to download or re-host them — reference the URLs directly.</div>
+      <div class="code-block">/* Logo PNG (transparent bg) */
+https://static.wixstatic.com/media/8f30d6_4602a9...
+  /fill/w_182,h_81,al_c,q_85,enc_avif,quality_auto/...
+
+/* Hero image */
+https://static.wixstatic.com/media/8f30d6_ef169b...
+  /fill/w_621,h_502,al_c,q_80,enc_avif,quality_auto/...
+
+/* Jacksonville bridge */
+https://static.wixstatic.com/media/8f30d6_86dfb5...
+  /fill/w_980,h_626,al_c,q_85,enc_avif,quality_auto/...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Image Parameters You Can Control in the URL</div>
+      <div class="rule-row"><div class="rule-icon" style="font-size:12px;">w_</div><div class="rule-text">Width in px. Change this to resize the image.</div></div>
+      <div class="rule-row"><div class="rule-icon" style="font-size:12px;">h_</div><div class="rule-text">Height in px. Leave out for auto-height.</div></div>
+      <div class="rule-row"><div class="rule-icon" style="font-size:12px;">q_</div><div class="rule-text">Quality (1–100). 80–85 is good for web.</div></div>
+      <div class="rule-row"><div class="rule-icon" style="font-size:12px;">al_c</div><div class="rule-text">Alignment: center. Options: tl, tr, bl, br, c</div></div>
+      <div class="rule-row"><div class="rule-icon" style="font-size:12px;">enc_avif</div><div class="rule-text">Format: AVIF. Change to enc_webp or enc_jpg if needed for older browser support.</div></div>
+      <div class="card-body" style="margin-top:8px;"><span class="badge warn">NOTE</span> Add <code>loading="lazy"</code> to all img tags below the fold. Add <code>alt</code> text for accessibility and SEO.</div>
+    </div>
+  </div>
+
+  <!-- EMBED RULES -->
+  <div class="panel" id="panel-embed">
+    <div class="card">
+      <div class="card-title">Wix HTML Embed Constraints</div>
+      <div class="rule-row"><div class="rule-text"><span class="badge">1</span> Wix embeds HTML via an iFrame. Your code runs in a sandboxed iframe — no access to parent window or Wix's CSS variables.</div></div>
+      <div class="rule-row"><div class="rule-text"><span class="badge">2</span> You must include all your own styles. Do not rely on Wix's stylesheet inside an embed block.</div></div>
+      <div class="rule-row"><div class="rule-text"><span class="badge">3</span> Height must be set manually on the Wix embed element, or use <code>postMessage</code> to resize. Default iframe does not auto-expand.</div></div>
+      <div class="rule-row"><div class="rule-text"><span class="badge">4</span> External fonts must be imported inside the embed's own style block.</div></div>
+      <div class="rule-row"><div class="rule-text"><span class="badge warn">LIMIT</span> No form POST submissions to external servers without CORS headers configured on your server.</div></div>
+      <div class="rule-row"><div class="rule-text"><span class="badge success">OK</span> JavaScript, fetch(), localStorage, and CSS animations all work inside Wix embeds.</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Minimal Embed Boilerplate</div>
+      <div class="code-block">&lt;!-- Paste into Wix: Add Element → Embed Code → HTML iFrame --&gt;
+&lt;style&gt;
+  @import url('https://fonts.googleapis.com/css2?
+    family=Open+Sans:wght@400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333333;
+    background: transparent;  /* match section bg */
+  }
+
+  h1, h2, h3 {
+    font-family: Georgia, serif;  /* match Wix serif */
+    color: #1a2a4a;
+    margin-bottom: 12px;
+  }
+
+  a { color: #1a2a4a; }
+  a:hover { text-decoration: underline; }
+
+  .ms-btn {
+    display: inline-block;
+    background: #c8102e;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+&lt;/style&gt;
+
+&lt;!-- Your content here --&gt;</div>
+    </div>
+  </div>
+
+  <!-- NAV & FOOTER -->
+  <div class="panel" id="panel-nav">
+    <div class="card">
+      <div class="card-title">Navigation Structure</div>
+      <div class="rule-row"><div class="rule-text">Logo: <code>w_182,h_81</code> PNG — white version on dark nav or color on white.</div></div>
+      <div class="rule-row"><div class="rule-text">Links: Our Agenda · Meet Mike · Vote by Mail (duvalelections.gov external)</div></div>
+      <div class="rule-row"><div class="rule-text">CTA: "Volunteer" → <code>https://forms.gle/q76rRz2Y3haKbikG7</code></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Footer Structure</div>
+      <div class="rule-row"><div class="rule-text">Copyright: © 2025 Friends of Mike</div></div>
+      <div class="rule-row"><div class="rule-text">Logo: wider version <code>w_290,h_89</code></div></div>
+      <div class="rule-row"><div class="rule-text">Social share: Facebook · X/Twitter · WhatsApp · LinkedIn · Copy link</div></div>
+      <div class="card-body" style="margin-top: 8px;"><span class="badge warn">NOTE</span> Share URLs use UTM-less base URL: <code>https://www.mikesell.org</code>. Add <code>?utm_source=...</code> to track traffic sources.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Signup Form Fields (both instances)</div>
+      <div class="code-block">Fields: Email · Zip code · Phone number (with SMS consent)
+Action: Wix native form (no external endpoint visible)
+Consent copy: "...periodic text message alerts from Mike
+and his affiliated campaigns, including Friends of Mike."</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

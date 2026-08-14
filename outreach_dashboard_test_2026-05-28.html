@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mike Sell — Voter Outreach Dashboard</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#f5f7fa;font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#002d5b 0%,#064e3b 100%);padding:24px 24px 20px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23fff'/%3E%3C/svg%3E") repeat;opacity:0.06;}
+.hero-eye{font-family:'avenir-light';font-size:10px;letter-spacing:0.18em;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:6px;}
+.hero h1{font-family:'clarendon-w01-medium';font-size:22px;color:#fff;margin-bottom:4px;}
+.hero p{font-family:'avenir-light';font-size:12px;color:rgba(255,255,255,0.68);margin-bottom:16px;}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap;}
+.hero-stat-val{font-family:'clarendon-w01-medium';font-size:20px;color:#34D399;}
+.hero-stat-lbl{font-family:'avenir-light';font-size:10px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px;}
+
+/* Progress bar */
+.progress-wrap{background:#002d5b;padding:0 24px 16px;position:relative;}
+.progress-bar-bg{background:rgba(255,255,255,0.15);border-radius:4px;height:6px;overflow:hidden;}
+.progress-bar-fill{background:#34D399;height:100%;border-radius:4px;transition:width 0.4s ease;}
+.progress-label{font-family:'avenir-light';font-size:10px;color:rgba(255,255,255,0.5);margin-top:6px;}
+
+/* Tabs */
+.pa-tabs{background:#fff;border-bottom:1.5px solid #e5e7eb;padding:0 12px;display:flex;gap:4px;overflow-x:auto;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.pa-tab{font-family:'avenir-heavy';font-size:11px;padding:10px 14px;border:none;border-bottom:2.5px solid transparent;color:#9ca3af;background:none;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.pa-tab.active{color:#059669;border-bottom-color:#059669;}
+.tab-count{background:#f3f4f6;color:#6b7280;font-family:'avenir-heavy';font-size:9px;padding:1px 6px;border-radius:8px;}
+.pa-tab.active .tab-count{background:#ecfdf5;color:#059669;}
+
+/* Sections */
+.pa-section{display:none;padding:20px 20px 56px;}
+.pa-section.active{display:block;}
+
+/* Section header */
+.sec-hd{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #059669;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:20px;}
+.sec-hd-title{font-family:'avenir-heavy';font-size:13px;color:#002d5b;}
+.sec-hd-sub{font-family:'avenir-light';font-size:11px;color:#6b7280;margin-top:3px;}
+
+/* Card grid */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:14px;}
+
+/* Contact card */
+.contact-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;padding:16px;transition:border-color 0.2s;position:relative;}
+.contact-card.sent{border-color:#059669;background:#f0fdf4;}
+.contact-card.skipped{border-color:#e2e8f0;background:#f9fafb;opacity:0.6;}
+
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.card-name{font-family:'avenir-heavy';font-size:13px;color:#002d5b;}
+.card-meta{font-family:'avenir-light';font-size:10px;color:#6b7280;margin-top:2px;}
+
+.card-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.badge{font-family:'avenir-heavy';font-size:9px;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.05em;}
+.badge-tier{background:#002d5b;color:#fff;}
+.badge-party-d{background:#dbeafe;color:#1d4ed8;}
+.badge-party-r{background:#fee2e2;color:#b91c1c;}
+.badge-party-npa{background:#f3f4f6;color:#374151;}
+.badge-party-fwd{background:#ecfdf5;color:#059669;}
+.badge-mil{background:#fef3c7;color:#92400e;}
+.badge-genz{background:#f5f3ff;color:#6d28d9;}
+.badge-boomer{background:#fff7ed;color:#c2410c;}
+
+.card-message{font-family:'avenir-light';font-size:11px;color:#374151;line-height:1.55;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:10px 12px;margin-bottom:12px;}
+.card-chars{font-family:'avenir-light';font-size:9px;color:#9ca3af;margin-bottom:10px;}
+
+.card-actions{display:flex;gap:8px;align-items:center;}
+.btn-send{font-family:'avenir-heavy';font-size:11px;background:#059669;color:#fff;border:none;border-radius:7px;padding:8px 18px;cursor:pointer;flex:1;transition:background 0.2s;}
+.btn-send:hover{background:#047857;}
+.btn-send:disabled{background:#9ca3af;cursor:not-allowed;}
+.btn-skip{font-family:'avenir-heavy';font-size:10px;background:none;color:#9ca3af;border:1px solid #e2e8f0;border-radius:7px;padding:8px 12px;cursor:pointer;}
+.btn-skip:hover{color:#6b7280;border-color:#9ca3af;}
+.btn-undo{font-family:'avenir-heavy';font-size:10px;background:none;color:#059669;border:1px solid #059669;border-radius:7px;padding:8px 12px;cursor:pointer;display:none;}
+
+.card-status{position:absolute;top:12px;right:12px;font-family:'avenir-heavy';font-size:9px;padding:2px 8px;border-radius:8px;text-transform:uppercase;}
+.status-sent{background:#ecfdf5;color:#059669;}
+.status-skipped{background:#f3f4f6;color:#6b7280;}
+
+/* Phone display */
+.card-phone{font-family:'avenir-heavy';font-size:10px;color:#6b7280;margin-bottom:8px;}
+
+/* Footer */
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-family:'avenir-light';font-size:11px;color:rgba(255,255,255,0.5);}
+.footer a{color:#34D399;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress &bull; FL-CD4 &bull; 2026</div>
+  <h1>Voter Outreach Dashboard</h1>
+  <p>Generated 2026-05-28 &bull; Intro messages &bull; Click Send to open Google Messages</p>
+  <div class="hero-stats">
+    <div><div class="hero-stat-val" id="stat-total">7</div><div class="hero-stat-lbl">Total Contacts</div></div>
+    <div><div class="hero-stat-val" id="stat-ready">7</div><div class="hero-stat-lbl">Ready to Send</div></div>
+    <div><div class="hero-stat-val" id="stat-sent">0</div><div class="hero-stat-lbl">Sent This Session</div></div>
+    <div><div class="hero-stat-val" id="stat-remaining">7</div><div class="hero-stat-lbl">Remaining</div></div>
+  </div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="progress-label" id="progress-label">0 of 7 sent</div>
+</div>
+
+<div class="pa-tabs" id="pa-tabs">
+  <button class="pa-tab" id="tab-t2" onclick="switchTab('t2',this)">Soft Republican <span class="tab-count">3</span></button>
+<button class="pa-tab" id="tab-t3" onclick="switchTab('t3',this)">Soft Democrat <span class="tab-count">3</span></button>
+<button class="pa-tab" id="tab-t5" onclick="switchTab('t5',this)">Low Frequency <span class="tab-count">1</span></button>
+
+</div>
+
+
+<div class="pa-section" id="t2">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Soft Republican</div>
+    <div class="sec-hd-sub">3 contacts &mdash; click Send on each card to open Google Messages</div>
+  </div>
+  <div class="card-grid" id="grid-t2">
+    
+<div class="contact-card" id="card-9048641774" data-ready="true">
+  <div class="card-header">
+    <div>
+      <div class="card-name">Jonathan Votes</div>
+      <div class="card-meta">Age 36 &bull; ZIP 32256 &bull; LTV 25%</div>
+    </div>
+  </div>
+  <div class="card-badges">
+    <span class="badge badge-tier" style="background:#dc2626">Soft Republican</span>
+    <span class="badge badge-party-r">Rep</span>
+  </div>
+  <div class="card-phone">📱 9048641774</div>
+  <div class="card-message">Hi Jonathan, this is Mike Sell. I am not here to tell you your party is wrong. I am here because this district keeps sending someone to Washington who says one thing and votes another. I am on the ballot in FL-CD4 this November. If accountability matters to you, this race is worth a look. mikesell.org. -Mike</div>
+  <div class="card-chars">309 chars &bull; 2 SMS segment(s)</div>
+  
+  <div class="card-actions">
+    <button class="btn-send" 
+      onclick="sendContact('card-9048641774','9048641774','Hi Jonathan, this is Mike Sell. I am not here to tell you your party is wrong. I am here because this district keeps sending someone to Washington who says one thing and votes another. I am on the ballot in FL-CD4 this November. If accountability matters to you, this race is worth a look. mikesell.org. -Mike')">
+      Send
+    </button>
+    <button class="btn-skip" onclick="skipContact('card-9048641774')">Skip</button>
+    <button class="btn-undo" onclick="undoContact('card-9048641774')">Undo</button>
+  </div>
+</div>
+<div class="contact-card" id="card-9045832747" data-ready="true">
+  <div class="card-header">
+    <div>
+      <div class="card-name">Steve Vet</div>
+      <div class="card-meta">Age 71 &bull; ZIP 32256 &bull; LTV 83%</div>
+    </div>
+  </div>
+  <div class="card-badges">
+    <span class="badge badge-tier" style="background:#dc2626">Soft Republican</span>
+    <span class="badge badge-party-r">Rep</span><span class="badge badge-boomer">Boomer</span>
+  </div>
+  <div class="card-phone">📱 9045832747</div>
+  <div class="card-message">Hi Steve, this is Mike Sell. I believe in personal responsibility, strong families, and leaving this community in better shape than we found it. Those values drive my Real Change agenda. I am on the ballot in FL-CD4 this November and I would love the chance to earn your trust. mikesell.org. -Mike</div>
+  <div class="card-chars">297 chars &bull; 2 SMS segment(s)</div>
+  
+  <div class="card-actions">
+    <button class="btn-send" 
+      onclick="sendContact('card-9045832747','9045832747','Hi Steve, this is Mike Sell. I believe in personal responsibility, strong families, and leaving this community in better shape than we found it. Those values drive my Real Change agenda. I am on the ballot in FL-CD4 this November and I would love the chance to earn your trust. mikesell.org. -Mike')">
+      Send
+    </button>
+    <button class="btn-skip" onclick="skipContact('card-9045832747')">Skip</button>
+    <button class="btn-undo" onclick="undoContact('card-9045832747')">Undo</button>
+  </div>
+</div>
+<div class="contact-card" id="card-9046139716" data-ready="true">
+  <div class="card-header">
+    <div>
+      <div class="card-name">Sheryl Workshard</div>
+      <div class="card-meta">Age 58 &bull; ZIP 32212 &bull; LTV 83%</div>
+    </div>
+  </div>
+  <div class="card-badges">
+    <span class="badge badge-tier" style="background:#dc2626">Soft Republican</span>
+    <span class="badge badge-party-r">Rep</span><span class="badge badge-mil">Mil ZIP</span>
+  </div>
+  <div class="card-phone">📱 9046139716</div>
+  <div class="card-message">Hi Sheryl, this is Mike Sell. I grew up in a Navy family so I take this personally. Aaron Bean co-chairs the caucus that cut VA hiring and still says he supports veterans. I am not asking you to switch sides. I am asking whether that adds up to you. I am on the ballot in FL-CD4 this November. Check out my proposal for Real Change (mikesell.org). -Mike</div>
+  <div class="card-chars">353 chars &bull; 3 SMS segment(s)</div>
+  
+  <div class="card-actions">
+    <button class="btn-send" 
+      onclick="sendContact('card-9046139716','9046139716','Hi Sheryl, this is Mike Sell. I grew up in a Navy family so I take this personally. Aaron Bean co-chairs the caucus that cut VA hiring and still says he supports veterans. I am not asking you to switch sides. I am asking whether that adds up to you. I am on the ballot in FL-CD4 this November. Check out my proposal for Real Change (mikesell.org). -Mike')">
+      Send
+    </button>
+    <button class="btn-skip" onclick="skipContact('card-9046139716')">Skip</button>
+    <button class="btn-undo" onclick="undoContact('card-9046139716')">Undo</button>
+  </div>
+</div>
+  </div>
+</div>
+<div class="pa-section" id="t3">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Soft Democrat</div>
+    <div class="sec-hd-sub">3 contacts &mdash; click Send on each card to open Google Messages</div>
+  </div>
+  <div class="card-grid" id="grid-t3">
+    
+<div class="contact-card" id="card-9043184869" data-ready="true">
+  <div class="card-header">
+    <div>
+      <div class="card-name">Becky Westside</div>
+      <div class="card-meta">Age 45 &bull; ZIP 32234 &bull; LTV 75%</div>
+    </div>
+  </div>
+  <div class="card-badges">
+    <span class="badge badge-tier" style="background:#2563eb">Soft Democrat</span>
+    <span class="badge badge-party-d">Dem</span>
+  </div>
+  <div class="card-phone">📱 9043184869</div>
+  <div class="card-message">Hi Becky, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party. Affordable healthcare, housing families can actually afford, and an economy that works for working people. That is what my Real Change agenda is built around. It would be an honor to earn your vote. mikesell.org. -Mike</div>
+  <div class="card-chars">314 chars &bull; 2 SMS segment(s)</div>
+  
+  <div class="card-actions">
+    <button class="btn-send" 
+      onclick="sendContact('card-9043184869','9043184869','Hi Becky, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party. Affordable healthcare, housing families can actually afford, and an economy that works for working people. That is what my Real Change agenda is built around. It would be an honor to earn your vote. mikesell.org. -Mike')">
+      Send
+    </button>
+    <button class="btn-skip" onclick="skipContact('card-9043184869')">Skip</button>
+    <button class="btn-undo" onclick="undoContact('card-9043184869')">Undo</button>
+  </div>
+</div>
+<div class="contact-card" id="card-9045545057" data-ready="true">
+  <div class="card-header">
+    <div>
+      <div class="card-name">Aiden Tech</div>
+      <div class="card-meta">Age 21 &bull; ZIP 32234 &bull; LTV 50%</div>
+    </div>
+  </div>
+  <div class="card-badges">
+    <span class="badge badge-tier" style="background:#2563eb">Soft Democrat</span>
+    <span class="badge badge-party-d">Dem</span><span class="badge badge-genz">Gen Z</span>
+  </div>
+  <div class="card-phone">📱 9045545057</div>
+  <div class="card-message">Hi Aiden, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party and I want to be honest with you. This campaign is different. We have a real agenda, a personalized AI, and a genuine shot at changing what this district looks like. Now is the time. mikesell.org. -Mike</div>
+  <div class="card-chars">297 chars &bull; 2 SMS segment(s)</div>
+  
+  <div class="card-actions">
+    <button class="btn-send" 
+      onclick="sendContact('card-9045545057','9045545057','Hi Aiden, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party and I want to be honest with you. This campaign is different. We have a real agenda, a personalized AI, and a genuine shot at changing what this district looks like. Now is the time. mikesell.org. -Mike')">
+      Send
+    </button>
+    <button class="btn-skip" onclick="skipContact('card-9045545057')">Skip</button>
+    <button class="btn-undo" onclick="undoContact('card-9045545057')">Undo</button>
+  </div>
+</div>
+<div class="contact-card" id="card-9044700875" data-ready="true">
+  <div class="card-header">
+    <div>
+      <div class="card-name">Madison Art</div>
+      <div class="card-meta">Age 19 &bull; ZIP 32204 &bull; LTV 25%</div>
+    </div>
+  </div>
+  <div class="card-badges">
+    <span class="badge badge-tier" style="background:#2563eb">Soft Democrat</span>
+    <span class="badge badge-party-d">Dem</span><span class="badge badge-genz">Gen Z</span>
+  </div>
+  <div class="card-phone">📱 9044700875</div>
+  <div class="card-message">Hi Madison, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party and I want to be honest with you. This campaign is different. We have a real agenda, a personalized AI, and a genuine shot at changing what this district looks like. Now is the time. mikesell.org. -Mike</div>
+  <div class="card-chars">299 chars &bull; 2 SMS segment(s)</div>
+  
+  <div class="card-actions">
+    <button class="btn-send" 
+      onclick="sendContact('card-9044700875','9044700875','Hi Madison, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party and I want to be honest with you. This campaign is different. We have a real agenda, a personalized AI, and a genuine shot at changing what this district looks like. Now is the time. mikesell.org. -Mike')">
+      Send
+    </button>
+    <button class="btn-skip" onclick="skipContact('card-9044700875')">Skip</button>
+    <button class="btn-undo" onclick="undoContact('card-9044700875')">Undo</button>
+  </div>
+</div>
+  </div>
+</div>
+<div class="pa-section" id="t5">
+  <div class="sec-hd">
+    <div class="sec-hd-title">Low Frequency</div>
+    <div class="sec-hd-sub">1 contacts &mdash; click Send on each card to open Google Messages</div>
+  </div>
+  <div class="card-grid" id="grid-t5">
+    
+<div class="contact-card" id="card-9048055580" data-ready="true">
+  <div class="card-header">
+    <div>
+      <div class="card-name">Abigail Nurse</div>
+      <div class="card-meta">Age 23 &bull; ZIP 32218 &bull; LTV 25%</div>
+    </div>
+  </div>
+  <div class="card-badges">
+    <span class="badge badge-tier" style="background:#6b7280">Low Frequency</span>
+    <span class="badge badge-party-npa">NPA</span><span class="badge badge-genz">Gen Z</span>
+  </div>
+  <div class="card-phone">📱 9048055580</div>
+  <div class="card-message">Hi Abigail, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party and I genuinely believe this is the moment things start changing in this district. I would love for you to be part of it. Check out the Real Change agenda and ask my personalized AI anything at mikesell.org. -Mike</div>
+  <div class="card-chars">310 chars &bull; 2 SMS segment(s)</div>
+  
+  <div class="card-actions">
+    <button class="btn-send" 
+      onclick="sendContact('card-9048055580','9048055580','Hi Abigail, this is Mike Sell. I am on the ballot this November in FL-CD4 with the Forward Party and I genuinely believe this is the moment things start changing in this district. I would love for you to be part of it. Check out the Real Change agenda and ask my personalized AI anything at mikesell.org. -Mike')">
+      Send
+    </button>
+    <button class="btn-skip" onclick="skipContact('card-9048055580')">Skip</button>
+    <button class="btn-undo" onclick="undoContact('card-9048055580')">Undo</button>
+  </div>
+</div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Mike Sell for Congress &bull; <a href="https://mikesell.org">mikesell.org</a> &bull; Paid for by Mike Sell for Congress</p>
+</div>
+
+<script>
+// ── State management (localStorage) ──────────────────────────────────────────
+const STORAGE_KEY = 'outreach_status_2026-05-28';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
+}
+
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.pa-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.pa-tab').forEach(b => b.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── Progress tracking ─────────────────────────────────────────────────────────
+function updateProgress() {
+  const state = loadState();
+  const total = document.querySelectorAll('.contact-card[data-ready="true"]').length;
+  const sent  = Object.values(state).filter(v => v === 'sent').length;
+  const remaining = Math.max(0, total - sent);
+
+  document.getElementById('stat-sent').textContent      = sent;
+  document.getElementById('stat-remaining').textContent = remaining;
+  document.getElementById('progress-label').textContent = sent + ' of ' + total + ' sent';
+
+  const pct = total > 0 ? Math.round((sent / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width  = pct + '%';
+}
+
+// ── Send action ───────────────────────────────────────────────────────────────
+function sendContact(cardId, phone, message) {
+  // 1. Copy message to clipboard
+  navigator.clipboard.writeText(message).catch(() => {
+    // Fallback: select temp textarea
+    const ta = document.createElement('textarea');
+    ta.value = message;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+
+  // 2. Open Google Messages new conversation with phone pre-filled
+  const digits = phone.replace(/\D/g, '');
+  const url = 'https://messages.google.com/web/u/2/conversations/new#' + digits;
+  window.open(url, '_blank');
+
+  // 3. Mark card as sent
+  markCard(cardId, 'sent');
+}
+
+function skipContact(cardId) {
+  markCard(cardId, 'skipped');
+}
+
+function undoContact(cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.remove('sent', 'skipped');
+
+  const statusEl = card.querySelector('.card-status');
+  if (statusEl) statusEl.remove();
+
+  card.querySelector('.btn-send').disabled = false;
+  card.querySelector('.btn-send').style.display = '';
+  card.querySelector('.btn-skip').style.display = '';
+  card.querySelector('.btn-undo').style.display = 'none';
+
+  const state = loadState();
+  delete state[cardId];
+  saveState(state);
+  updateProgress();
+}
+
+function markCard(cardId, status) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+
+  card.classList.remove('sent', 'skipped');
+  card.classList.add(status);
+
+  // Update or create status badge
+  let statusEl = card.querySelector('.card-status');
+  if (!statusEl) {
+    statusEl = document.createElement('div');
+    statusEl.className = 'card-status';
+    card.appendChild(statusEl);
+  }
+  statusEl.className = 'card-status ' + (status === 'sent' ? 'status-sent' : 'status-skipped');
+  statusEl.textContent = status === 'sent' ? '✓ Sent' : 'Skipped';
+
+  // Swap buttons
+  card.querySelector('.btn-send').disabled = true;
+  card.querySelector('.btn-send').style.display = 'none';
+  card.querySelector('.btn-skip').style.display = 'none';
+  card.querySelector('.btn-undo').style.display = '';
+
+  const state = loadState();
+  state[cardId] = status;
+  saveState(state);
+  updateProgress();
+}
+
+// ── Restore state on load ─────────────────────────────────────────────────────
+function restoreState() {
+  const state = loadState();
+  Object.entries(state).forEach(([cardId, status]) => {
+    const card = document.getElementById(cardId);
+    if (card && status) markCard(cardId, status);
+  });
+  updateProgress();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Activate first tab
+  const firstTab = document.querySelector('.pa-tab');
+  const firstSection = document.querySelector('.pa-section');
+  if (firstTab)    firstTab.classList.add('active');
+  if (firstSection) firstSection.classList.add('active');
+
+  restoreState();
+});
+</script>
+</body>
+</html>

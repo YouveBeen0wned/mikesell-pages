@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2 + P3 · Coalition Builder — Mike Sell for Congress FL-CD4 2026</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --pur:#470D67;--navy:#182742;--cyan:#59D7EE;
+  --p2:#0891B2;--p3:#7C3AED;
+  --bg:#F7F6F2;--bg2:#EEECEA;--bg3:#fff;
+  --text:#1a1a18;--text2:#5f5e5a;--text3:#888780;
+  --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);
+  --r:10px;--r2:14px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0F1117;--bg2:#1A1D28;--bg3:#252936;
+    --text:#F0EDE8;--text2:#A8A49E;--text3:#666360;
+    --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.20);
+  }
+}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;max-width:100%;}
+
+/* TOPBAR */
+.topbar{background:var(--navy);height:52px;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100;}
+.back-link{font-size:12px;font-weight:600;color:var(--cyan);text-decoration:none;}
+.back-link:hover{opacity:0.8;}
+.tb-title{font-size:13px;font-weight:700;color:#fff;letter-spacing:0.06em;flex:1;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+.tb-title span{color:var(--cyan);}
+.tb-tag{font-size:10px;font-weight:600;padding:2px 9px;border-radius:4px;background:rgba(124,58,237,0.3);color:#c084fc;white-space:nowrap;}
+@media(max-width:480px){.tb-tag{display:none;}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--pur) 100%);padding:24px 20px 20px;overflow:hidden;}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;}
+.hero-title{font-size:clamp(1.2rem,4vw,2.2rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-0.03em;margin-bottom:10px;word-break:break-word;}
+.hero-title span{color:var(--cyan);}
+.hero-sub{font-size:0.88rem;color:rgba(255,255,255,0.65);max-width:620px;line-height:1.65;}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap;margin-top:20px;}
+.hero-stat-val{font-size:1.6rem;font-weight:800;color:var(--cyan);line-height:1;}
+.hero-stat-lbl{font-size:10px;color:rgba(255,255,255,0.5);margin-top:3px;letter-spacing:0.04em;}
+
+/* TABS */
+.tabs{background:var(--bg3);border-bottom:2px solid var(--border);display:flex;padding:0 24px;gap:0;position:sticky;top:52px;z-index:90;}
+.tab-btn{padding:14px 20px;font-size:13px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--text3);font-family:inherit;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.15s;letter-spacing:0.04em;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-orgs{color:var(--p3);border-bottom-color:var(--p3);}
+.tab-btn.active-bills{color:var(--p2);border-bottom-color:var(--p2);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* MAIN */
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 80px;}
+
+/* SEARCH */
+.search-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.srch{flex:1;min-width:180px;padding:9px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:13px;font-family:inherit;}
+.srch::placeholder{color:var(--text3);}
+.srch:focus{outline:none;border-color:var(--pur);}
+.dd-filter{padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;}
+.dd-filter:focus{outline:none;border-color:var(--pur);}
+.res-count{font-size:11px;color:var(--text3);margin-bottom:14px;}
+
+/* ORG CARDS */
+.org-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:12px;}
+.dd-org{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:6px;}
+.dd-org-hd{display:flex;align-items:center;gap:10px;}
+.dd-org-logo{width:38px;height:38px;border-radius:7px;background:linear-gradient(135deg,var(--pur),var(--navy));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;text-transform:uppercase;overflow:hidden;position:relative;}
+.dd-org-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;border-radius:7px;}
+.dd-org-name{font-size:0.85rem;font-weight:700;color:var(--text);line-height:1.3;}
+.dd-org-scope{font-size:9px;font-weight:600;padding:1px 6px;border-radius:3px;display:inline-block;}
+.sc-Local{background:#E8F0FE;color:#1A56DB;}
+.sc-State{background:#FFF0E0;color:#B45309;}
+.sc-National{background:#EDE9FE;color:#5B21B6;}
+.sc-Research{background:#F0FDF4;color:#166534;}
+.dd-org-desc{font-size:0.76rem;color:var(--text2);line-height:1.55;flex:1;}
+.dd-org-issues{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
+.dd-org-issue{font-size:9px;font-weight:600;padding:1px 7px;border-radius:10px;background:rgba(24,39,66,0.08);color:var(--navy);border:1px solid rgba(24,39,66,0.15);}
+@media(prefers-color-scheme:dark){.dd-org-issue{background:rgba(89,215,238,0.10);color:var(--cyan);border-color:rgba(89,215,238,0.25);}}
+
+/* BILL CARDS — grid matching org card style */
+.bill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:12px;}
+.dd-bill{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:6px;}
+.dd-bill-hd{display:flex;align-items:center;gap:10px;}
+.dd-bill-icon{width:38px;height:38px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;text-transform:uppercase;}
+.icon-Federal{background:linear-gradient(135deg,#1A56DB,#182742);}
+.icon-Florida{background:linear-gradient(135deg,#B45309,#78350f);}
+.icon-Jacksonville{background:linear-gradient(135deg,#5B21B6,#470D67);}
+.dd-bill-hd-meta{flex:1;}
+.dd-bill-name{font-size:0.85rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px;}
+.dd-bill-lvl{font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;display:inline-block;letter-spacing:0.05em;text-transform:uppercase;}
+.lv-Federal{background:#E8F0FE;color:#1A56DB;}
+.lv-Florida{background:#FFF0E0;color:#B45309;}
+.lv-Jacksonville{background:#EDE9FE;color:#5B21B6;}
+.dd-bill-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;}
+.alg-PRO{background:#D4EDDA;color:#1C4A28;font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;}
+.alg-ANTI{background:#FFDEDE;color:#9B2226;font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;}
+.alg-MIXED{background:#FFF8DC;color:#7B6914;font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;}
+.dd-bill-cause{font-size:9px;font-weight:600;padding:1px 7px;border-radius:10px;background:rgba(24,39,66,0.08);color:var(--navy);border:1px solid rgba(24,39,66,0.12);}
+@media(prefers-color-scheme:dark){.dd-bill-cause{background:rgba(89,215,238,0.10);color:var(--cyan);border-color:rgba(89,215,238,0.25);}}
+.dd-bill-num{font-size:10px;color:var(--text3);margin-bottom:2px;}
+.dd-bill-status{font-size:10px;font-weight:600;color:var(--text2);}
+.dd-bill-plain{font-size:0.76rem;color:var(--text2);line-height:1.55;flex:1;}
+
+/* SHARE */
+.sh-btn{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 9px;border-radius:5px;border:none;cursor:pointer;font-family:inherit;letter-spacing:0.04em;transition:all 0.14s;text-decoration:none;white-space:nowrap;}
+.sh-btn:hover{opacity:0.82;transform:translateY(-1px);}
+.sh-x{background:#000;color:#fff;}
+.sh-fb{background:#1877F2;color:#fff;}
+.sh-bsky{background:#0085FF;color:#fff;}
+.sh-connect{background:var(--bg2);color:var(--text2);border:1px solid var(--border2);}
+.sh-copy{background:var(--bg2);color:var(--text2);border:1px solid var(--border2);}
+.sh-copy.copied{background:#D4EDDA;color:#1C4A28;border-color:#A3CEB4;}
+.sh-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+
+/* FOOTER */
+.footer{background:var(--navy);padding:24px;text-align:center;border-top:1px solid rgba(255,255,255,0.08);}
+.footer p{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.8;}
+.footer a{color:var(--cyan);text-decoration:none;}
+</style>
+</head>
+<body>
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Mike Sell for Congress · Change That Works For Us</div>
+  <h1 class="hero-title">The people <span>and the policy.</span></h1>
+  <p class="hero-sub">Mike names the organizations already doing the work who could use our support. And he tracks the bills that would make these changes permanent. Neither works without the other.</p>
+
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active-orgs" id="tab-orgs" onclick="switchTab('orgs')">🤝 People</button>
+  <button class="tab-btn" id="tab-bills" onclick="switchTab('bills')">📋 Policies</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ORGS TAB -->
+  <div class="tab-pane active" id="pane-orgs">
+    <div class="search-bar">
+      <input class="srch" id="org-search" placeholder="Search organizations…" oninput="renderOrgs()">
+      <select class="dd-filter" id="org-scope" onchange="renderOrgs()">
+        <option value="all">All scopes</option>
+        <option value="Local">Local</option>
+        <option value="State">State</option>
+        <option value="National">National</option>
+      </select>
+      <select class="dd-filter" id="org-issue" onchange="renderOrgs()">
+        <option value="all">All issue areas</option>
+        <option value="Gun Safety">Gun Safety</option>
+        <option value="Healthcare & Drugs">Healthcare</option>
+        <option value="Democracy & Voting">Democracy & Voting</option>
+        <option value="Housing & Insurance">Housing</option>
+        <option value="Criminal Justice">Criminal Justice</option>
+        <option value="Education & Workforce">Education</option>
+        <option value="Economic Justice & UBI">Economic Justice</option>
+        <option value="Climate & Infrastructure">Climate</option>
+        <option value="Body Autonomy">Body Autonomy</option>
+        <option value="Immigration">Immigration</option>
+        <option value="LGBTQ+ Rights">LGBTQ+ Rights</option>
+        <option value="Mental Health & Addiction">Mental Health</option>
+        <option value="Technology & AI">Technology</option>
+        <option value="Campaign Finance">Campaign Finance</option>
+      </select>
+    </div>
+    <div class="res-count" id="org-count"></div>
+    <div class="org-grid" id="org-grid"></div>
+  </div>
+
+  <!-- BILLS TAB -->
+  <div class="tab-pane" id="pane-bills">
+    <div class="search-bar">
+      <input class="srch" id="bill-search" placeholder="Search bills…" oninput="renderBills()">
+      <select class="dd-filter" id="bill-level" onchange="renderBills()">
+        <option value="all">All levels</option>
+        <option value="Federal">Federal</option>
+        <option value="Florida">Florida</option>
+        <option value="Jacksonville">Jacksonville</option>
+      </select>
+      <select class="dd-filter" id="bill-alg" onchange="renderBills()">
+        <option value="all">All alignments</option>
+        <option value="PRO">PRO — Mike supports</option>
+        <option value="ANTI">ANTI — Mike opposes</option>
+        <option value="MIXED">MIXED</option>
+      </select>
+      <select class="dd-filter" id="bill-cause" onchange="renderBills()">
+        <option value="all">All issues</option>
+        <option value="Healthcare & Drugs">Healthcare</option>
+        <option value="Gun Safety">Gun Safety</option>
+        <option value="Democracy & Voting">Democracy & Voting</option>
+        <option value="Housing & Insurance">Housing</option>
+        <option value="Criminal Justice">Criminal Justice</option>
+        <option value="Economic Justice & UBI">Economic Justice</option>
+        <option value="Body Autonomy">Body Autonomy</option>
+        <option value="Climate & Infrastructure">Climate</option>
+        <option value="Immigration">Immigration</option>
+        <option value="Technology & AI">Technology</option>
+        <option value="Education & Workforce">Education</option>
+        <option value="LGBTQ+ Rights">LGBTQ+ Rights</option>
+        <option value="Disability Rights">Disability Rights</option>
+        <option value="Small Business">Small Business</option>
+      </select>
+    </div>
+    <div class="res-count" id="bill-count"></div>
+    <div class="bill-grid" id="bill-list"></div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>
+    <strong style="color:#fff">Mike Sell for Congress</strong> · FL-CD4 · 2026 · Forward Party<br>
+    119 Center St S #143, Jacksonville FL 32234 · (904) 738-3264<br>
+    <a href="https://mikesell.org">mikesell.org</a> · Paid for by Friends of Mike
+  </p>
+</div>
+
+<script>
+// ── TAB SWITCH ───────────────────────────────────
+function switchTab(tab){
+  document.getElementById('pane-orgs').classList.toggle('active', tab==='orgs');
+  document.getElementById('pane-bills').classList.toggle('active', tab==='bills');
+  document.getElementById('tab-orgs').className='tab-btn'+(tab==='orgs'?' active-orgs':'');
+  document.getElementById('tab-bills').className='tab-btn'+(tab==='bills'?' active-bills':'');
+}
+
+// ── SHARE ────────────────────────────────────────
+function shareX(text){window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text.slice(0,280)),'_blank','noopener,noreferrer');}
+function shareFB(){window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://mikesell.org'),'_blank','noopener,noreferrer');}
+function shareBsky(text){window.open('https://bsky.app/intent/compose?text='+encodeURIComponent(text.slice(0,300)),'_blank','noopener,noreferrer');}
+function copyText(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    const o=btn.textContent;btn.textContent='✓ Copied';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove('copied');},2000);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    const o=btn.textContent;btn.textContent='✓ Copied';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=o;btn.classList.remove('copied');},2000);
+  });
+}
+
+// ── ORG HELPERS ──────────────────────────────────
+function getInitials(name){
+  const p=(name||'').replace(/[^a-zA-Z\s]/g,' ').split(/\s+/).filter(Boolean);
+  if(!p.length)return'?'; if(p.length===1)return p[0].slice(0,2).toUpperCase();
+  return(p[0][0]+(p[1][0]||'')).toUpperCase();
+}
+function logoH(org){
+  const initials=getInitials(org.name);
+  const bg=org.url?'background:linear-gradient(135deg,#470D67,#182742)':'background:#182742';
+  const imgTag=org.url?`<img src="https://www.google.com/s2/favicons?domain=${new URL(org.url).hostname}&sz=64" onerror="this.style.display='none'" alt="">`:'';
+  return `<div class="dd-org-logo" style="${bg}">${initials}${imgTag}</div>`;
+}
+
+// ── ORG DATA ─────────────────────────────────────
+const ORGS_RAW = [{"id":"fscj_florida_state_college_at_jacksonville","name":"FSCJ – Florida State College at Jacksonville","url":"https://www.fscj.edu","scope":"Local","issue_areas":["Education & Workforce","Democracy & Voting"],"description":"37,556-student community college; highest-leverage youth voter registration partner in FL-04."},{"id":"jacksonville_public_education_fund_jpef","name":"Jacksonville Public Education Fund (JPEF)","url":"https://www.jaxpef.org","scope":"Local","issue_areas":["Education & Workforce"],"description":"Read Jax Coalition convener. Goal: all Duval students reading on grade level by 3rd grade."},{"id":"naacp_jacksonville_branch","name":"NAACP Jacksonville Branch","url":"https://www.naacpjax.org","scope":"Local","issue_areas":["Gun Safety","Criminal Justice","Democracy & Voting"],"description":"Largest civil rights chapter in Jacksonville. Civil rights, voter mobilization, JSO accountability."},{"id":"florida_rights_restoration_coalition_frrc","name":"Florida Rights Restoration Coalition (FRRC)","url":"https://floridarrc.com","scope":"State","issue_areas":["Democracy & Voting","Criminal Justice","Gun Safety"],"description":"Led Amendment 4 — largest single voter expansion in FL history. Desmond Meade, Executive Director."},{"id":"st_johns_riverkeeper","name":"St. Johns Riverkeeper","url":"https://www.stjohnsriverkeeper.org","scope":"Local","issue_areas":["Climate & Infrastructure"],"description":"Environmental enforcement and advocacy for the St. Johns River watershed. 20+ years holding polluters accountable."},{"id":"groundwork_jacksonville","name":"Groundwork Jacksonville","url":"https://groundworkjacksonville.org","scope":"Local","issue_areas":["Climate & Infrastructure"],"description":"Emerald Trail, creek restoration, and youth environmental leadership programs in FL-04."},{"id":"wjct_public_media","name":"WJCT Public Media","url":"https://www.wjct.org","scope":"Local","issue_areas":["Technology & AI","Campaign Finance","Democracy & Voting"],"description":"NPR/PBS Jacksonville. Accountability journalism and trusted election coverage."},{"id":"common_cause_florida","name":"Common Cause Florida","url":"https://www.commoncause.org/florida/","scope":"State","issue_areas":["Technology & AI","Body Autonomy","Campaign Finance","Democracy & Voting"],"description":"Civic rights, campaign finance reform, bodily rights advocacy. Active in FL-04."},{"id":"united_way_of_northeast_florida","name":"United Way of Northeast Florida","url":"https://www.unitedwaynefl.org","scope":"Local","issue_areas":["Mental Health & Addiction","Housing & Insurance","Healthcare & Drugs"],"description":"211 Helpline; 60+ nonprofit partners. Community bridge across healthcare access, housing, and social services."},{"id":"shiloh_metropolitan_baptist_church","name":"Shiloh Metropolitan Baptist Church","url":"https://www.shilohmetro.org","scope":"Local","issue_areas":["Mental Health & Addiction","Criminal Justice","Democracy & Voting"],"description":"5,000-seat sanctuary; trusted mental health outreach access point and community anchor."},{"id":"health_start_coalition","name":"Health Start Coalition","url":"https://www.healthstart.org","scope":"Local","issue_areas":["Mental Health & Addiction","Body Autonomy","Healthcare & Drugs"],"description":"Maternal and infant mental health. Only zip-code-level maternal mortality baseline for Duval, Clay, Nassau, St. Johns."},{"id":"realtalk_real_change","name":"RealTalk Real Change","url":"https://www.realtalkrealchange.org","scope":"Local","issue_areas":["Mental Health & Addiction","Criminal Justice"],"description":"Civic action and honest community conversation; grassroots mental health awareness in Jacksonville."},{"id":"disability_rights_florida","name":"Disability Rights Florida","url":"https://disabilityrightsflorida.org","scope":"State","issue_areas":["Disability Rights","Healthcare & Drugs","Criminal Justice"],"description":"State protection and advocacy; active litigation on FL HCBS waitlist and $431.5M reversion case."},{"id":"equality_florida","name":"Equality Florida","url":"https://equalityflorida.org","scope":"State","issue_areas":["LGBTQ+ Rights","Democracy & Voting","Criminal Justice"],"description":"Statewide LGBTQ+ civil rights organization. 2025-2026 legislative scorecards."},{"id":"jacksonville_urban_league","name":"Jacksonville Urban League","url":"https://www.jacksonvilleurbanleague.org","scope":"Local","issue_areas":["Housing & Insurance","Economic Justice & UBI","Criminal Justice"],"description":"FL-04 civic anchor for Black Jacksonville since 1947."},{"id":"community_foundation_for_ne_florida","name":"Community Foundation for NE Florida","url":"https://cfnef.org","scope":"Local","issue_areas":["Housing & Insurance","Economic Justice & UBI","Education & Workforce"],"description":"Oldest/largest FL community foundation. A.L. Lewis Black Opportunity & Impact Fund."},{"id":"league_of_women_voters_jax_first_coast","name":"League of Women Voters JAX First Coast","url":"https://my.lwv.org/florida/jacksonville-first-coast","scope":"Local","issue_areas":["Democracy & Voting","Body Autonomy","Campaign Finance"],"description":"Certified voter registrars covering all 4 FL-04 counties."},{"id":"state_voices_florida","name":"State Voices Florida","url":"https://statevoices.org/state/florida/","scope":"State","issue_areas":["Democracy & Voting","Body Autonomy"],"description":"BIPOC women voter mobilization; 35+ FL partner orgs."},{"id":"equal_ground_education_fund","name":"Equal Ground Education Fund","url":"https://equalgroundfl.org","scope":"State","issue_areas":["Democracy & Voting","Campaign Finance","Criminal Justice"],"description":"Filed legal challenge to FL's mid-decade redistricting."},{"id":"move_to_amend_coalition","name":"Move to Amend Coalition","url":"https://movetoamend.org","scope":"Local","issue_areas":["Campaign Finance","Democracy & Voting"],"description":"Human rights and money-in-politics. Active in FL-04 right now."},{"id":"representus","name":"RepresentUs","url":"https://represent.us","scope":"National","issue_areas":["Campaign Finance","Democracy & Voting"],"description":"Anti-corruption, pro-democracy reform. Model legislation for campaign finance reform."},{"id":"equal_justice_initiative","name":"Equal Justice Initiative","url":"https://eji.org","scope":"National","issue_areas":["Criminal Justice"],"description":"Founded by Bryan Stevenson. Exonerated 140+ death row prisoners."},{"id":"florida_immigrant_coalition_flic","name":"Florida Immigrant Coalition (FLIC)","url":"https://floridaimmigrant.org","scope":"State","issue_areas":["Immigration","Criminal Justice","Democracy & Voting"],"description":"Statewide immigrant rights organization. Documented Ordinance 2025-0147 detention and Operation Tidal Wave worksite raids."},{"id":"moms_demand_action","name":"Moms Demand Action","url":"https://momsdemandaction.org","scope":"State","issue_areas":["Gun Safety"],"description":"Largest gun safety organization in the US. Founded by Shannon Watts after Sandy Hook."},{"id":"cure_violence_global","name":"Cure Violence Global","url":"https://cvg.org","scope":"Local","issue_areas":["Gun Safety","Criminal Justice","Mental Health & Addiction"],"description":"Evidence-based community violence interruption in 30+ cities including Jacksonville. Currently unfunded in JAX after 2025 federal cut."},{"id":"indivisible_jax_riverside_ijr","name":"Indivisible Jax Riverside (IJR)","url":"https://indivisiblejax.org","scope":"Local","issue_areas":["Democracy & Voting","Education & Workforce","Gun Safety"],"description":"Cross-publication comms partner. Mike is co-lead of Find & Elect Good Candidates Action Group."},{"id":"icare_jacksonville","name":"ICARE – Jacksonville","url":"","scope":"Local","issue_areas":["Criminal Justice","Housing & Insurance","Democracy & Voting"],"description":"Interfaith Coalition for Action, Reconciliation, and Empowerment. 38-congregation interfaith coalition for justice reform."},{"id":"florida_rising","name":"Florida Rising","url":"https://floridarising.org","scope":"State","issue_areas":["Democracy & Voting","Criminal Justice","Economic Justice & UBI"],"description":"Civic engagement, voting rights, and justice."},{"id":"jax_tenants_union","name":"Jax Tenants Union","url":"","scope":"Local","issue_areas":["Housing & Insurance"],"description":"Tenant rights and housing justice advocacy in Jacksonville."},{"id":"904ward","name":"904Ward","url":"","scope":"Local","issue_areas":["Criminal Justice","Democracy & Voting","Economic Justice & UBI"],"description":"Leading racial-equity organization in Jacksonville."},{"id":"aclu_of_florida","name":"ACLU of Florida","url":"https://www.aclufl.org","scope":"State","issue_areas":["Criminal Justice","Immigration","LGBTQ+ Rights","Body Autonomy","Democracy & Voting"],"description":"Civil liberties and legal aid statewide. Tiffani Lennon, Executive Director."},{"id":"dream_defenders","name":"Dream Defenders","url":"https://dreamdefenders.org","scope":"State","issue_areas":["Criminal Justice","Democracy & Voting","Immigration"],"description":"Police reform and racial justice. FL-based statewide organization."},{"id":"florida_housing_coalition","name":"Florida Housing Coalition","url":"https://www.flhousing.org","scope":"State","issue_areas":["Housing & Insurance"],"description":"Statewide affordable housing policy advocacy."},{"id":"sunrise_movement_florida","name":"Sunrise Movement Florida","url":"https://www.sunrisemovement.org","scope":"State","issue_areas":["Climate & Infrastructure","Economic Justice & UBI","Democracy & Voting"],"description":"Youth-led climate action. FL hubs active."},{"id":"florida_conservation_voters","name":"Florida Conservation Voters","url":"https://www.flcv.com","scope":"State","issue_areas":["Climate & Infrastructure"],"description":"Electing environmental champions in Florida."},{"id":"physicians_for_a_national_health_program_pnhp","name":"Physicians for a National Health Program (PNHP)","url":"https://pnhp.org","scope":"National","issue_areas":["Healthcare & Drugs"],"description":"Medicare for All advocacy. National physician network."},{"id":"dcps_duval_county_public_schools","name":"DCPS – Duval County Public Schools","url":"https://dcps.duvalschools.org","scope":"Local","issue_areas":["Education & Workforce"],"description":"8 elementary schools closed 2024-25; 3 of 5 closures served 80%+ Black students. $32M in academic acceleration funds lost."},{"id":"the_kennedy_forum","name":"The Kennedy Forum","url":"https://www.thekennedyforum.org","scope":"National","issue_areas":["Mental Health & Addiction"],"description":"Mental health parity enforcement and advocacy. Founded by Patrick Kennedy."},{"id":"center_for_humane_technology","name":"Center for Humane Technology","url":"https://www.humanetech.com","scope":"National","issue_areas":["Technology & AI"],"description":"Platform design reform advocacy. Founded by Tristan Harris."},{"id":"institute_for_political_innovation","name":"Institute for Political Innovation","url":"https://www.politicalinnovation.org","scope":"National","issue_areas":["Democracy & Voting","Campaign Finance"],"description":"Final-five voting advocacy. Founded by Katherine Gehl."},{"id":"brookings_institution","name":"Brookings Institution","url":"https://www.brookings.edu","scope":"National","issue_areas":["Housing & Insurance","Economic Justice & UBI"],"description":"Policy research. Jenny Schuetz designed zoning reform frameworks adopted in multiple states."},{"id":"center_on_budget_and_policy_priorities","name":"Center on Budget and Policy Priorities","url":"https://www.cbpp.org","scope":"National","issue_areas":["Small Business","Economic Justice & UBI","Healthcare & Drugs"],"description":"Tax and budget enforcement analysis."},{"id":"project_on_predatory_student_lending","name":"Project on Predatory Student Lending","url":"https://www.ppsl.org","scope":"National","issue_areas":["Education & Workforce"],"description":"Advocates for borrowers defrauded by for-profit colleges."},{"id":"learning_policy_institute","name":"Learning Policy Institute","url":"https://learningpolicyinstitute.org","scope":"National","issue_areas":["Education & Workforce"],"description":"Policy research on teacher pipelines. Programs that reduced teacher attrition 30%, piloted in CA and NM."},{"id":"uc_davis_violence_prevention_research_program","name":"UC Davis Violence Prevention Research Program","url":"https://health.ucdavis.edu/vprp/","scope":"National","issue_areas":["Gun Safety"],"description":"Only federally-funded gun violence research program that survived the Dickey Amendment era."},{"id":"famm_families_against_mandatory_minimums","name":"FAMM – Families Against Mandatory Minimums","url":"https://famm.org","scope":"National","issue_areas":["Criminal Justice"],"description":"Criminal justice reform; mandatory minimum sentencing advocacy."},{"id":"campaign_zero","name":"Campaign Zero","url":"https://campaignzero.org","scope":"National","issue_areas":["Criminal Justice"],"description":"Data-driven police reform advocacy."},{"id":"voteriders","name":"VoteRiders","url":"https://www.voteriders.org","scope":"National","issue_areas":["Democracy & Voting"],"description":"Voter ID education and support. FL organizer present."},{"id":"sulzbacher_center","name":"Sulzbacher Center","url":"https://sulzbacher.org","scope":"Local","issue_areas":["Housing & Insurance","Healthcare & Drugs","Mental Health & Addiction"],"description":"Jacksonville's largest homeless services provider. Emergency shelter, healthcare clinic, and housing navigation."},{"id":"clara_white_mission","name":"Clara White Mission","url":"https://www.clarawhitemission.org","scope":"Local","issue_areas":["Housing & Insurance","Economic Justice & UBI","Education & Workforce"],"description":"Historic Jacksonville nonprofit founded 1904. Culinary job training, food programs, and workforce development."},{"id":"habitat_for_humanity_of_jacksonville","name":"Habitat for Humanity of Jacksonville","url":"https://www.habitatjax.org","scope":"Local","issue_areas":["Housing & Insurance"],"description":"Builds and repairs affordable homes across Duval County."},{"id":"jacksonville_area_legal_aid_jala","name":"Jacksonville Area Legal Aid (JALA)","url":"https://www.jaxlegalaid.org","scope":"Local","issue_areas":["Criminal Justice","Housing & Insurance","Immigration"],"description":"Free civil legal services to low-income Duval County residents."},{"id":"first_coast_ymca","name":"First Coast YMCA","url":"https://www.firstcoastymca.org","scope":"Local","issue_areas":["Education & Workforce","Mental Health & Addiction","Healthcare & Drugs"],"description":"12 branches across Northeast Florida. Youth development, after-school programs, healthy living."},{"id":"baptist_health_baptist_medical_center","name":"Baptist Health / Baptist Medical Center","url":"https://www.baptistjax.com","scope":"Local","issue_areas":["Healthcare & Drugs","Mental Health & Addiction"],"description":"Largest healthcare system in Northeast Florida. Community health programs and behavioral health services."},{"id":"uf_health_jacksonville","name":"UF Health Jacksonville","url":"https://ufhealthjax.org","scope":"Local","issue_areas":["Healthcare & Drugs","Education & Workforce"],"description":"Academic medical center and Level I trauma center. Safety-net hospital serving uninsured patients across Duval."},{"id":"university_of_north_florida_unf","name":"University of North Florida (UNF)","url":"https://www.unf.edu","scope":"Local","issue_areas":["Education & Workforce","Technology & AI","Democracy & Voting"],"description":"17,000-student public university. Civic research hub. Workforce pipeline for tech and business."},{"id":"aclu_of_florida_first_coast_office","name":"ACLU of Florida – First Coast Office","url":"https://www.aclufl.org","scope":"Local","issue_areas":["Criminal Justice","Body Autonomy","LGBTQ+ Rights","Democracy & Voting"],"description":"Regional ACLU office covering Northeast Florida. Civil liberties litigation and advocacy."},{"id":"jasmyn_jacksonville_s_lgbtq_youth","name":"JASMYN (Jacksonville's LGBTQ Youth)","url":"https://www.jasmyn.org","scope":"Local","issue_areas":["LGBTQ+ Rights","Mental Health & Addiction","Housing & Insurance"],"description":"Drop-in center, housing support, and mental health services for LGBTQ+ youth."},{"id":"veterans_coalition_of_northeast_florida","name":"Veterans Coalition of Northeast Florida","url":"","scope":"Local","issue_areas":["Veterans","Mental Health & Addiction","Housing & Insurance"],"description":"Coalition of veteran service organizations across Duval, Clay, Nassau, and St. Johns counties."},{"id":"seiu_florida","name":"SEIU Florida","url":"https://www.seiu.org","scope":"State","issue_areas":["Economic Justice & UBI","Healthcare & Drugs"],"description":"Service Employees International Union Florida. Workers rights, living wage, and healthcare access."},{"id":"florida_for_all","name":"Florida For All","url":"https://floridaforall.org","scope":"State","issue_areas":["Democracy & Voting","Body Autonomy","Economic Justice & UBI"],"description":"Ballot initiative and civic campaign organization. Ran Amendment 4 reproductive freedom campaign."},{"id":"florida_alliance_of_planned_parenthood_affiliate","name":"Florida Alliance of Planned Parenthood Affiliates","url":"https://www.plannedparenthood.org","scope":"State","issue_areas":["Body Autonomy","Healthcare & Drugs"],"description":"Statewide reproductive healthcare advocacy."},{"id":"hispanic_federation_florida","name":"Hispanic Federation Florida","url":"https://hispanicfederation.org","scope":"State","issue_areas":["Immigration","Economic Justice & UBI","Education & Workforce"],"description":"Advocacy and services for Latino communities across Florida."},{"id":"afl_cio_florida","name":"AFL-CIO Florida","url":"https://flaflcio.org","scope":"State","issue_areas":["Economic Justice & UBI","Democracy & Voting"],"description":"Florida state federation of the AFL-CIO, representing more than 1 million union workers."},{"id":"futures_without_violence","name":"Futures Without Violence","url":"https://www.futureswithoutviolence.org","scope":"National","issue_areas":["Body Autonomy","Gun Safety","Healthcare & Drugs"],"description":"National organization ending gender-based violence. Advocacy for domestic violence survivors."},{"id":"ultraviolet","name":"UltraViolet","url":"https://weareultraviolet.org","scope":"National","issue_areas":["Body Autonomy","LGBTQ+ Rights"],"description":"Online feminist advocacy. Reproductive rights, gender equity, and corporate accountability."},{"id":"national_low_income_housing_coalition","name":"National Low Income Housing Coalition","url":"https://nlihc.org","scope":"National","issue_areas":["Housing & Insurance","Economic Justice & UBI"],"description":"Policy advocacy for affordable housing nationwide."},{"id":"electronic_frontier_foundation_eff","name":"Electronic Frontier Foundation (EFF)","url":"https://www.eff.org","scope":"National","issue_areas":["Technology & AI","Democracy & Voting"],"description":"Digital rights advocacy. Privacy protections, net neutrality, and oversight of AI and surveillance."},{"id":"naral_pro_choice_america","name":"NARAL Pro-Choice America","url":"https://www.prochoiceamerica.org","scope":"National","issue_areas":["Body Autonomy"],"description":"National reproductive rights advocacy organization."},{"id":"feeding_northeast_florida","name":"Feeding Northeast Florida","url":"https://feedingneflorida.org","scope":"Local","issue_areas":["Economic Justice & UBI","Healthcare & Drugs"],"description":"Regional food bank serving Northeast Florida."},{"id":"ibew_local_177","name":"IBEW Local 177","url":"https://www.ibew177.com","scope":"Local","issue_areas":["Economic Justice & UBI","Small Business"],"description":"International Brotherhood of Electrical Workers Local 177 representing electricians across Northeast Florida."},{"id":"florida_state_conference_of_the_naacp","name":"Florida State Conference of the NAACP","url":"https://www.floridanaacp.org","scope":"State","issue_areas":["Criminal Justice","Democracy & Voting","Education & Workforce"],"description":"Statewide civil rights organization. Voting rights litigation, criminal justice reform, and education equity advocacy."},{"id":"florida_alliance_for_retired_americans_flara","name":"Florida Alliance for Retired Americans (FLARA)","url":"https://www.floridaara.org","scope":"State","issue_areas":["Healthcare & Drugs","Economic Justice & UBI","Housing & Insurance"],"description":"Statewide senior advocacy. Medicare, Social Security, prescription drug pricing, and housing affordability."},{"id":"organize_florida","name":"Organize Florida","url":"https://www.organizeflorida.org","scope":"State","issue_areas":["Economic Justice & UBI","Democracy & Voting","Immigration"],"description":"Statewide grassroots power-building. Workers rights, housing, immigration, and civic engagement."},{"id":"northside_coalition_of_jacksonville","name":"Northside Coalition of Jacksonville","url":"https://www.northsidecoalition.com","scope":"Local","issue_areas":["Democracy & Voting","Criminal Justice","Economic Justice & UBI"],"description":"Community advocacy organization in North Jacksonville neighborhoods."},{"id":"rethink_energy_florida","name":"Rethink Energy Florida","url":"https://rethinkenergyfl.org","scope":"Local","issue_areas":["Climate & Infrastructure"],"description":"Northeast Florida clean energy advocacy. Campaigns for solar access, utility accountability, and ratepayer protections."},{"id":"data_for_progress","name":"Data for Progress","url":"https://www.dataforprogress.org","scope":"National","issue_areas":["Democracy & Voting","Campaign Finance","Technology & AI"],"description":"Progressive think tank providing polling, data analysis, and policy research."}];
+
+function renderOrgs(){
+  const q=(document.getElementById('org-search')||{value:''}).value.toLowerCase();
+  const sc=(document.getElementById('org-scope')||{value:'all'}).value;
+  const iss=(document.getElementById('org-issue')||{value:'all'}).value;
+  const filtered=ORGS_RAW.filter(o=>{
+    if(sc!=='all'&&o.scope!==sc)return false;
+    if(iss!=='all'&&!(o.issue_areas||[]).includes(iss))return false;
+    if(q&&!(o.name.toLowerCase().includes(q)||(o.description||'').toLowerCase().includes(q)))return false;
+    return true;
+  });
+  document.getElementById('org-count').textContent=`Showing ${filtered.length} of ${ORGS_RAW.length} organizations`;
+  document.getElementById('org-grid').innerHTML=filtered.map(o=>{
+    const issues=(o.issue_areas||[]).map(i=>`<span class="dd-org-issue">${i}</span>`).join('');
+    const xText=`${o.name} is part of Mike Sell's coalition for FL-CD4. ${o.description||''} mikesell.org`.slice(0,280);
+    const copyVal=`Coalition Partner: ${o.name}\nScope: ${o.scope||'Local'}\nIssues: ${(o.issue_areas||[]).join(', ')}\n\n${o.description||''}\n\nMike Sell for Congress · FL-CD4 2026 · mikesell.org`;
+    return `<div class="dd-org">
+      <div class="dd-org-hd">
+        ${logoH(o)}
+        <div>
+          <div class="dd-org-name">${o.name}</div>
+          <span class="dd-org-scope sc-${o.scope||'Local'}">${o.scope||'Local'}</span>
+        </div>
+      </div>
+      <div class="dd-org-desc">${o.description||''}</div>
+      <div class="dd-org-issues">${issues}</div>
+      <div class="sh-row">
+        <button class="sh-btn sh-x" onclick="shareX(${JSON.stringify(xText)})">𝕏 Share</button>
+        <button class="sh-btn sh-fb" onclick="shareFB()">fb Share</button>
+        <button class="sh-btn sh-bsky" onclick="shareBsky(${JSON.stringify(xText)})">🦋 Bluesky</button>
+        ${o.url?`<a class="sh-btn sh-connect" href="${o.url}" target="_blank" rel="noopener">🔗 Connect</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── BILLS DATA ────────────────────────────────────
+const BILLS = [
+{"level":"Federal","cause":"Healthcare & Drugs","name":"FAMILY Act","num":"S.2823 / H.R.5390","sponsor":"Gillibrand(D-NY) / DeLauro(D-CT)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/2823","plain":"If you need time off to care for a new baby or sick family member, this bill makes sure you still get paid."},
+{"level":"Federal","cause":"Healthcare & Drugs","name":"Mental Health Access Improvement Act","num":"H.R.432","sponsor":"Bipartisan","status":"Passed House — Senate Pending","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/432","plain":"Lets Medicare cover more types of mental health counselors so seniors can actually get the help they need."},
+{"level":"Federal","cause":"Healthcare & Drugs","name":"Black Maternal Health Momnibus Act","num":"H.R.959","sponsor":"Underwood(D-IL) / Pressley(D-MA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/959","plain":"Black mothers die during childbirth at more than twice the rate of white mothers. This package addresses root causes including racism in healthcare."},
+{"level":"Federal","cause":"Healthcare & Drugs","name":"MOMMA's Act","num":"S.1658","sponsor":"Booker(D-NJ)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1658","plain":"Requires hospitals to track why mothers die in childbirth and train doctors to fix biased care that puts Black mothers at higher risk."},
+{"level":"Federal","cause":"Healthcare & Drugs","name":"MORE Act — Cannabis","num":"H.R.5601","sponsor":"Nadler(D-NY)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/5601","plain":"Removes marijuana from the federal list of illegal drugs so states can set their own rules without conflicting with federal law."},
+{"level":"Federal","cause":"Healthcare & Drugs","name":"Cannabis Administration & Opportunity Act","num":"S.1360","sponsor":"Schumer(D-NY)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1360","plain":"Makes cannabis federally legal with programs to support communities hit hardest by the old drug war."},
+{"level":"Federal","cause":"Healthcare & Drugs","name":"PFAS Action Act","num":"H.R.1512","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/1512","plain":"Forces the government to set strict legal limits on 'forever chemicals' (PFAS) that have contaminated drinking water in thousands of communities."},
+{"level":"Federal","cause":"Gun Safety","name":"Bipartisan Background Checks Act","num":"H.R.715","sponsor":"Thompson(D-CA) / King(R-ME)","status":"Passed House — Senate Pending","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/715","plain":"Closes the loophole that lets people buy guns at gun shows or online without a background check."},
+{"level":"Federal","cause":"Gun Safety","name":"Child Gunshot Victim Protection Act","num":"H.R.4855","sponsor":"Cicilline(D-RI)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/4855","plain":"Requires gun owners to lock up their weapons so kids can't access them."},
+{"level":"Federal","cause":"Gun Safety","name":"George Floyd Justice in Policing Act","num":"H.R.5361","sponsor":"Bass(D-CA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/5361","plain":"Sets national rules for when police can use force, bans chokeholds and no-knock warrants in most cases, and creates better accountability."},
+{"level":"Federal","cause":"Climate & Infrastructure","name":"Saving America's Pollinators Act","num":"H.R.1515","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/1515","plain":"Restricts pesticides that are killing off bee populations — which pollinate about a third of our food supply."},
+{"level":"Federal","cause":"Technology & AI","name":"Kids Online Safety Act","num":"S.1409","sponsor":"Blumenthal(D-CT) / Blackburn(R-TN)","status":"Passed Senate — House Pending","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1409","plain":"Social media platforms must take reasonable steps to protect kids from harmful content."},
+{"level":"Federal","cause":"Technology & AI","name":"COPPA 2.0","num":"S.1291","sponsor":"Markey(D-MA) / Cassidy(R-LA)","status":"Passed Senate — House Pending","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1291","plain":"Updates online privacy rules for children and bans platforms from targeting ads at kids and teens."},
+{"level":"Federal","cause":"Technology & AI","name":"Fourth Amendment Is Not For Sale Act","num":"H.R.946","sponsor":"Davidson(R-OH) — Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/946","plain":"Stops the government from buying your private data from data brokers to spy on you without a warrant."},
+{"level":"Federal","cause":"Economic Justice & UBI","name":"Raise the Wage Act","num":"S.1332 / H.R.2743","sponsor":"Murray(D-WA) / Scott(D-VA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1332","plain":"Raises the federal minimum wage — stuck at $7.25/hr since 2009 — to $17/hr over several years."},
+{"level":"Federal","cause":"Economic Justice & UBI","name":"Domestic Workers Bill of Rights Act","num":"H.R.3971 / S.3396","sponsor":"Jayapal(D-WA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/3971","plain":"Gives nannies, house cleaners, and home health aides the same basic labor protections most other workers already have."},
+{"level":"Federal","cause":"Economic Justice & UBI","name":"PRO Act","num":"H.R.20","sponsor":"Scott(D-VA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/20","plain":"The biggest update to labor law in 80 years. Makes it easier for workers to form unions and harder for employers to union-bust."},
+{"level":"Federal","cause":"Economic Justice & UBI","name":"Food Deserts Act","num":"H.R.484","sponsor":"Fudge(D-OH)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/484","plain":"Offers tax incentives to grocery stores that open locations in neighborhoods where residents have no easy access to fresh, healthy food."},
+{"level":"Federal","cause":"Housing & Insurance","name":"Housing Supply and Affordability Act","num":"S.1576","sponsor":"Klobuchar(D-MN)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1576","plain":"Gives cities grants to relax outdated zoning rules that block new apartments — one of the biggest drivers of the housing crisis."},
+{"level":"Federal","cause":"Housing & Insurance","name":"Landlord Accountability Act","num":"H.R.206","sponsor":"Waters(D-CA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/206","plain":"Protects renters from landlords who try to evict or harass tenants for complaining about bad conditions or trying to organize."},
+{"level":"Federal","cause":"Housing & Insurance","name":"Affordable Housing Credit Improvement Act","num":"S.1557","sponsor":"Cantwell(D-WA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1557","plain":"Expands the main federal program that funds affordable apartment construction."},
+{"level":"Federal","cause":"Housing & Insurance","name":"Child Care for Working Families Act","num":"S.1360","sponsor":"Murray(D-WA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/1360","plain":"Makes pre-K and child care free or affordable for working families so parents can actually afford to go to work."},
+{"level":"Federal","cause":"Democracy & Voting","name":"Automatic Voter Registration Act","num":"H.R.4128","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/4128","plain":"Automatically registers eligible citizens to vote when they interact with government agencies — unless they opt out."},
+{"level":"Federal","cause":"Democracy & Voting","name":"Election Day Holiday Act","num":"H.R.281 / S.198","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/281","plain":"Makes Election Day a federal holiday so working people don't have to choose between voting and keeping their jobs."},
+{"level":"Federal","cause":"Democracy & Voting","name":"Early Voting Act","num":"H.R.2980","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/2980","plain":"Requires at least two weeks of early voting before elections, giving people more flexibility to cast their ballots."},
+{"level":"Federal","cause":"Democracy & Voting","name":"DISCLOSE Act","num":"S. pending","sponsor":"Whitehouse(D-RI)","status":"Floor Pending","alignment":"PRO","url":"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22DISCLOSE+Act%22%7D","plain":"Forces super PACs and dark money groups to reveal who is funding their political ads."},
+{"level":"Federal","cause":"Criminal Justice","name":"End For-Profit Prisons Act","num":"H.R.3612","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/3612","plain":"Phases out private prison companies that profit from incarcerating people."},
+{"level":"Federal","cause":"Criminal Justice","name":"Pretrial Integrity and Safety Act","num":"H.R.6859","sponsor":"Harris(D-CA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/6859","plain":"Reduces the number of people held in jail before trial simply because they can't afford bail."},
+{"level":"Federal","cause":"Criminal Justice","name":"CROWN Act","num":"H.R.5151","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/5151","plain":"Makes it illegal to discriminate against people for wearing natural hairstyles like locs or braids."},
+{"level":"Federal","cause":"Criminal Justice","name":"MENTOR Act","num":"H.R.726","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/726","plain":"Funds community programs that work directly with people most at risk of gun violence."},
+{"level":"Federal","cause":"Body Autonomy","name":"Women's Health Protection Act","num":"H.R.12","sponsor":"Bipartisan(D)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/12","plain":"Would guarantee the right to abortion nationwide, effectively restoring protections that existed under Roe v. Wade."},
+{"level":"Federal","cause":"Body Autonomy","name":"Access to Contraception Act","num":"Pending 119th","sponsor":"Bipartisan(D)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22access+to+contraception%22%7D","plain":"Protects access to birth control nationwide."},
+{"level":"Federal","cause":"LGBTQ+ Rights","name":"Equality Act","num":"H.R.15","sponsor":"Bipartisan(D)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/15","plain":"Adds LGBTQ+ people to federal civil rights law so they can't be fired, denied housing, or turned away from a business."},
+{"level":"Federal","cause":"Immigration","name":"Immigration Detainee Civil Rights Act","num":"Pending 119th","sponsor":"Jayapal(D-WA)","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22Immigration+Detainee+Civil+Rights%22%7D","plain":"Sets minimum standards for humane treatment in immigration detention."},
+{"level":"Federal","cause":"Education & Workforce","name":"Civics Secures Democracy Act","num":"H.R.5784 / S.3069","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/5784","plain":"Puts $1 billion toward teaching kids civics and history."},
+{"level":"Federal","cause":"Education & Workforce","name":"National Apprenticeship Act","num":"H.R.447","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/house-bill/447","plain":"Expands apprenticeship programs that let people learn a trade on the job — earning while they learn."},
+{"level":"Federal","cause":"Disability Rights","name":"IDEA Reauthorization","num":"Pending 119th","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22IDEA+reauthorization%22%7D","plain":"Renews the law that guarantees children with disabilities the right to a free, appropriate public education."},
+{"level":"Federal","cause":"Small Business","name":"SAFER Banking Act","num":"S.2860","sponsor":"Bipartisan","status":"In Committee","alignment":"PRO","url":"https://www.congress.gov/bill/119th-congress/senate-bill/2860","plain":"Lets marijuana businesses — legal in many states — open bank accounts and take credit cards."},
+{"level":"Florida","cause":"Democracy & Voting","name":"FL SAVE Act — Federal Lawsuits Active","num":"HB 991","sponsor":"House Republican Majority","status":"Signed Apr 2026 — ACLU/NAACP Suing","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2026/991","plain":"Requires citizenship proof to register to vote. ACLU, NAACP, LWV, and FL Immigrant Coalition sued the same day it was signed."},
+{"level":"Florida","cause":"Democracy & Voting","name":"Voting Rights Restoration — Enforcement Failures","num":"Amendment 4 (2018) / SB 7066","sponsor":"FL Division of Elections","status":"Active Legal Dispute","alignment":"ANTI","url":"https://www.aclufl.org/en/cases/jones-v-desantis","plain":"Florida voters voted overwhelmingly to restore voting rights to returning citizens. Tallahassee added a fee/fine requirement that courts keep ruling unconstitutional."},
+{"level":"Florida","cause":"Gun Safety","name":"Open Carry — Cities Assessing Liability","num":"Post-1st DCA Ruling","sponsor":"FL Legislature","status":"In Effect Sep 2025","alignment":"ANTI","url":"https://efacts.flcourts.org","plain":"A court struck FL's ban on openly carrying guns. Now anyone legally allowed to own a gun can carry openly almost anywhere."},
+{"level":"Florida","cause":"Gun Safety","name":"Red Flag Law — Repeal Threat Returns 2027","num":"HB 31 precedent","sponsor":"Senate/House Republicans","status":"Active Threat — Expected 2027","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bills/2027","plain":"Florida's red flag law lets courts temporarily remove guns from people in crisis. Republican legislators keep trying to repeal it."},
+{"level":"Florida","cause":"Healthcare & Drugs","name":"Federal Medicaid Cuts — FL Impact","num":"HB 693 / Federal OBBA","sponsor":"FL Legislature / U.S. Congress","status":"Legislature Must Return 2027 — 800K+ Floridians at Risk","alignment":"ANTI","url":"https://floridahealthjustice.org","plain":"Federal Medicaid cuts of nearly a trillion dollars threaten 800,000+ FL residents."},
+{"level":"Florida","cause":"Healthcare & Drugs","name":"Medicaid Work Requirements — Returns 2027","num":"SB 1758","sponsor":"Senate Republican Majority","status":"Died 2026 — Expected Return 2027","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2026/1758","plain":"Would impose work requirements on 111,000+ FL Medicaid recipients."},
+{"level":"Florida","cause":"Healthcare & Drugs","name":"Cannabis Legalization — Ballot Path Blocked Until 2028","num":"SB 1398 / HB 1501","sponsor":"Senate/House Democrats","status":"Blocked 6+ Sessions — Next Ballot Opportunity 2028","alignment":"PRO","url":"https://www.flsenate.gov/Session/Bill/2026/1398","plain":"73% of Floridians support legalizing marijuana but Republican leaders keep blocking it without a vote."},
+{"level":"Florida","cause":"Body Autonomy","name":"6-Week Abortion Ban — Amendment 4 Strategy for 2028","num":"HB 7 (2023) / Amendment 4 (2024)","sponsor":"FL Legislature","status":"In Effect — Amendment 4 Got 57%, Needs 60% — Advocates Regrouping 2028","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2023/7","plain":"Florida bans abortion after ~6 weeks. In 2024, 57% of voters tried to restore rights but FL requires 60%."},
+{"level":"Florida","cause":"Body Autonomy","name":"Fetal Personhood — Returns 2027 with Momentum","num":"HB 289 / SB 164","sponsor":"Greco(R) / Grall(R)","status":"HB Passed House 2026 — SB Died — Returns 2027","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2026/289","plain":"A bill to let families sue over the death of a fetus at any pregnancy stage passed the FL House."},
+{"level":"Florida","cause":"Body Autonomy","name":"Abortion Pill / Telehealth Bounty — Returns 2027","num":"HB 663 / SB 1374","sponsor":"House Republicans","status":"Died 2026 — High Probability Return 2027","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2026/663","plain":"A $100K civil suit bill for abortion medication by mail or telehealth. Failed this year. Expect it back in 2027."},
+{"level":"Florida","cause":"Economic Justice & UBI","name":"Public Sector Union Restrictions — Legal Challenge","num":"SB 1296","sponsor":"Senate Republican Majority","status":"Signed May 2026 — Constitutional Challenge Expected","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2026/1296","plain":"Makes it much harder for public workers — teachers, social workers, city employees — to keep their unions."},
+{"level":"Florida","cause":"Climate & Infrastructure","name":"Net-Zero Preemption — Signed, Challenges Evaluated","num":"HB 1217","sponsor":"House Republican Majority","status":"Signed Apr 22 2026 — Preemption Challenges Active","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2026/1217","plain":"Bans FL cities and counties from adopting climate goals or net-zero targets. Signed in Jacksonville — the city most vulnerable to sea-level rise."},
+{"level":"Florida","cause":"Technology & AI","name":"AI Bill of Rights — DeSantis Priority for 2027","num":"CS/SB 482 / HB 1395","sponsor":"Leek(R) — Bipartisan","status":"Passed Senate 35-2 — Killed by House Speaker — Returns 2027","alignment":"PRO","url":"https://www.flsenate.gov/Session/Bill/2026/482","plain":"Passed FL Senate 35-2 protecting Floridians from AI deception. House Speaker killed it. It will be back in 2027."},
+{"level":"Florida","cause":"LGBTQ+ Rights","name":"Anti-DEI Law — Legal Challenges Being Evaluated","num":"SB 1134","sponsor":"Senate Republican Majority","status":"Signed Apr 22 2026 — Cities Assessing Compliance","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2026/1134","plain":"Bans local governments from funding DEI programs — meaning cities can't fund LGBTQ+ training or related initiatives."},
+{"level":"Florida","cause":"Immigration","name":"TRUMP Acts — Active Enforcement, Legal Challenges","num":"SB 2-C / SB 4-C","sponsor":"Senate Republican Majority","status":"In Effect Feb 2025 — Provisions Under Federal Court Scrutiny","alignment":"ANTI","url":"https://www.flsenate.gov/Session/Bill/2025C/2C","plain":"FL's toughest anti-immigration laws are in effect but several provisions are in federal court."},
+{"level":"Jacksonville","cause":"Housing & Insurance","name":"Eviction Diversion Program — FY2026-27 Funding Fight","num":"Admin / Budget 2026","sponsor":"Mayor Deegan","status":"Active — Funding at Risk","alignment":"PRO","url":"https://nlihc.org/resource/jacksonville-floridas-eviction-diversion-program-increased-housing-stability-0","plain":"City program that pays up to 3 months of back rent to prevent evictions. 84% success rate."},
+{"level":"Jacksonville","cause":"Housing & Insurance","name":"Affordable Housing Trust Fund — $10M Push","num":"Budget Initiative 2026","sponsor":"Mayor Deegan / ICARE","status":"Pre-Budget — Deegan Committed for July 2026","alignment":"PRO","url":"https://jaxtoday.org","plain":"ICARE is demanding a permanent $10M affordable housing fund. Mayor Deegan is pushing to include it in the July 2026 budget."},
+{"level":"Jacksonville","cause":"Housing & Insurance","name":"Zoning Deviation Deregulation — Remove Public Hearings","num":"Ordinance 2026-0364","sponsor":"CM Diamond","status":"Pending — In Committee","alignment":"ANTI","url":"https://www.jaxdailyrecord.com","plain":"Would let Jacksonville's Planning Department approve zoning exceptions without public hearings."},
+{"level":"Jacksonville","cause":"Climate & Infrastructure","name":"Resilient Jacksonville — 50-Year Plan Implementation","num":"Executive Strategy Oct 2023","sponsor":"Mayor Deegan","status":"Active — 38 of 45 Actions Underway","alignment":"PRO","url":"https://www.jacksonville.gov/climateactionplan","plain":"A 50-year plan to protect Jacksonville from flooding, hurricanes, and sea-level rise."},
+{"level":"Jacksonville","cause":"Climate & Infrastructure","name":"JEA Workforce Investigation — Active","num":"Resolution 2026","sponsor":"CP Carrico / CM Salem","status":"Active Investigation May 2026","alignment":"MIXED","url":"https://jaxtoday.org/2026/05/05/city-council-jea-investigation/","plain":"A City Council investigation into JEA's city-owned utility, looking into allegations of a toxic, racially biased workplace."},
+{"level":"Jacksonville","cause":"Criminal Justice","name":"Journey Forward — 2026 Funding Continuation","num":"Admin Program 2023+","sponsor":"Mayor Deegan","status":"Active — Annual Budget Review","alignment":"PRO","url":"https://www.jacksonville.gov/mayor/initiatives/journeyforward","plain":"Community violence interruption program. Jacksonville's murder rate hit a decade low in 2024 — a 47% drop from 2020."},
+{"level":"Jacksonville","cause":"Mental Health & Addiction","name":"Mental Health Matters Jax — FY2026-27 Expansion","num":"Executive Initiative 2024+","sponsor":"Mayor Deegan","status":"Active — Expansion Proposed in FY2026-27 Budget","alignment":"PRO","url":"https://jaxtoday.org/2024/05/06/jacksonville-aims-to-curb-its-mental-health-issues/","plain":"City initiative funding mental health services for children and the 988 crisis line."},
+{"level":"Jacksonville","cause":"Immigration","name":"Jacksonville Immigration Enforcement Act — Legal Challenge","num":"Ordinance 2025-0147-E","sponsor":"CM Carrico / Diamond / Freeman","status":"Passed 12-5 — Deegan Did Not Sign — Under Legal Challenge","alignment":"ANTI","url":"https://jaxcityc.legistar.com/LegislationDetail.aspx?ID=7144241","plain":"Criminalizes undocumented presence locally and requires ICE cooperation. Mayor Deegan refused to sign it."},
+{"level":"Jacksonville","cause":"Economic Justice & UBI","name":"Eastside CBA $40M Grants — First Cycle Open","num":"Ordinance 2026-0036","sponsor":"City Council / Eastside Grants Committee","status":"Active — Awards Pending","alignment":"PRO","url":"https://www.jaxdailyrecord.com","plain":"Distributes $40M from the Jaguars stadium deal to the Eastside neighborhood for affordable housing, jobs, and economic development."}
+];
+
+function renderBills(){
+  const q=(document.getElementById('bill-search')||{value:''}).value.toLowerCase();
+  const lv=(document.getElementById('bill-level')||{value:'all'}).value;
+  const alg=(document.getElementById('bill-alg')||{value:'all'}).value;
+  const cause=(document.getElementById('bill-cause')||{value:'all'}).value;
+  const filtered=BILLS.filter(b=>{
+    if(lv!=='all'&&b.level!==lv)return false;
+    if(alg!=='all'&&b.alignment!==alg)return false;
+    if(cause!=='all'&&b.cause!==cause)return false;
+    if(q&&!(b.name.toLowerCase().includes(q)||b.cause.toLowerCase().includes(q)||b.plain.toLowerCase().includes(q)))return false;
+    return true;
+  });
+  document.getElementById('bill-count').textContent=`Showing ${filtered.length} of ${BILLS.length} bills`;
+  const iconCls={'Federal':'icon-Federal','Florida':'icon-Florida','Jacksonville':'icon-Jacksonville'};
+  const iconLbl={'Federal':'FED','Florida':'FL','Jacksonville':'JAX'};
+  document.getElementById('bill-list').innerHTML=filtered.map(b=>{
+    const xText=`${b.name} (${b.num}): ${b.plain} — Mike Sell for Congress FL-CD4 mikesell.org`.slice(0,280);
+    const copyVal=`${b.name} · ${b.num}\nStatus: ${b.status}\n\n${b.plain}\n\nMike Sell for Congress · FL-CD4 2026 · mikesell.org`;
+    return `<div class="dd-bill">
+      <div class="dd-bill-hd">
+        <div class="dd-bill-icon ${iconCls[b.level]||'icon-Federal'}">${iconLbl[b.level]||'FED'}</div>
+        <div class="dd-bill-hd-meta">
+          <div class="dd-bill-name">${b.name}</div>
+          <span class="dd-bill-lvl lv-${b.level}">${b.level}</span>
+          <div class="dd-bill-badges">
+            <span class="alg-${b.alignment}">${b.alignment}</span>
+            <span class="dd-bill-cause">${b.cause}</span>
+          </div>
+        </div>
+      </div>
+      <div class="dd-bill-num">${b.num}${b.sponsor?' · '+b.sponsor:''}</div>
+      <div class="dd-bill-status">${b.status}</div>
+      <div class="dd-bill-plain">${b.plain}</div>
+      <div class="sh-row">
+        <button class="sh-btn sh-x" onclick="shareX(${JSON.stringify(xText)})">𝕏 Share</button>
+        <button class="sh-btn sh-fb" onclick="shareFB()">fb Share</button>
+        <button class="sh-btn sh-bsky" onclick="shareBsky(${JSON.stringify(xText)})">🦋 Bluesky</button>
+        ${b.url?`<a class="sh-btn sh-connect" href="${b.url}" target="_blank" rel="noopener">📄 View bill</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+renderOrgs();
+renderBills();
+</script>
+
+</body>
+</html>
+<script>
+// Auto-resize iframe height for Wix embed
+function sendHeight(){
+  var h = document.documentElement.scrollHeight || document.body.scrollHeight;
+  window.parent.postMessage({type:'iwResizeHeight',data:{height:h}},'*');
+}
+window.addEventListener('load',sendHeight);
+window.addEventListener('resize',sendHeight);
+new MutationObserver(sendHeight).observe(document.body,{childList:true,subtree:true,attributes:true});
+</script>
+</body>
+</html>

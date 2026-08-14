@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2 · Process Audit — Mike Sell for Congress FL-CD4 2026</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --pur:#470D67;--navy:#182742;--cyan:#59D7EE;
+  --p1:#2563EB;
+  --bg:#0f1117;--bg2:#1A1D28;--bg3:#252936;
+  --text:#F0EDE8;--text2:#A8A49E;--text3:#666360;
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.20);
+  --r:10px;--r2:14px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.topbar{background:var(--navy);height:52px;display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:100;}
+.back-link{font-size:12px;font-weight:600;color:var(--cyan);text-decoration:none;display:flex;align-items:center;gap:5px;}
+.back-link:hover{opacity:0.8;}
+.tb-title{font-size:13px;font-weight:700;color:#fff;letter-spacing:0.06em;flex:1;text-transform:uppercase;}
+.tb-title span{color:var(--cyan);}
+.tb-tag{font-size:10px;font-weight:600;padding:2px 9px;border-radius:4px;background:rgba(37,99,235,0.25);color:#60a5fa;white-space:nowrap;}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#0a0f1e 100%);padding:40px 24px 36px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;}
+.hero-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-0.03em;margin-bottom:10px;}
+.hero-title span{color:#60a5fa;}
+.hero-sub{font-size:0.88rem;color:rgba(255,255,255,0.65);max-width:620px;line-height:1.65;}
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 80px;}
+.search-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.srch{flex:1;min-width:200px;padding:9px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:13px;font-family:inherit;}
+.srch::placeholder{color:var(--text3);}
+.srch:focus{outline:none;border-color:#60a5fa;}
+.dd-filter{padding:8px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;}
+.dd-filter:focus{outline:none;border-color:#60a5fa;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--text3);}
+.leg-dot{width:10px;height:10px;border-radius:50%;}
+.leg-4{background:#a78bfa;}.leg-3{background:#e07a5f;}.leg-2{background:#4a90d9;}.leg-J{background:#c9b84a;}
+.res-count{font-size:11px;color:var(--text3);margin-bottom:14px;padding:4px 0;}
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;}
+.dd-pc{background:#1a1d28;border:1.5px solid #252936;border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color 0.18s;}
+.dd-pc:hover{border-color:#3a3f58;}
+.dd-pc.open{border-color:#3a3f58;}
+.dd-pc-hd{padding:14px 16px 12px;display:flex;align-items:flex-start;gap:10px;}
+.dd-pc-icon{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.lv-4 .dd-pc-icon{background:#1a172a;}.lv-3 .dd-pc-icon{background:#2a1a1c;}.lv-2 .dd-pc-icon{background:#172030;}.lv-J .dd-pc-icon{background:#252016;}
+.dd-pc-title{font-size:0.88rem;font-weight:700;color:#d8dce8;line-height:1.3;margin-bottom:3px;}
+.dd-pc-tag{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:1px 6px;border-radius:3px;}
+.lv-4 .dd-pc-tag{background:#1e1530;color:#a78bfa;}.lv-3 .dd-pc-tag{background:#321a1c;color:#e07a5f;}.lv-2 .dd-pc-tag{background:#152238;color:#4a90d9;}.lv-J .dd-pc-tag{background:#252016;color:#c9b84a;}
+.dd-pc-hook{padding:0 16px 12px;font-size:0.8rem;color:#8b91a8;line-height:1.5;}
+.dd-pc-expand{padding:7px 16px;border-top:1px solid #252936;font-size:0.72rem;color:#4a90d9;font-weight:600;display:flex;align-items:center;gap:5px;user-select:none;}
+.dd-pc.open .dd-pc-expand{color:#60a5fa;}
+.dd-pc-detail{display:none;padding:14px 16px;border-top:1px solid #252936;background:#111420;}
+.dd-pc.open .dd-pc-detail{display:block;}
+.dd-pc-fix{background:rgba(255,255,255,0.03);border-left:3px solid #2e3550;border-radius:0 5px 5px 0;padding:10px 12px;margin:0 16px 12px;font-size:0.8rem;color:#b0b6cc;line-height:1.6;}
+.dd-pc-fixlbl{font-size:0.66rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;}
+.lv-4 .dd-pc-fixlbl{color:#a78bfa;}.lv-3 .dd-pc-fixlbl{color:#e07a5f;}.lv-2 .dd-pc-fixlbl{color:#4a90d9;}.lv-J .dd-pc-fixlbl{color:#c9b84a;}
+.dd-pc-stat{background:#0f1117;border-radius:7px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.dd-pc-statnum{font-size:1.4rem;font-weight:800;line-height:1;}
+.lv-4 .dd-pc-statnum{color:#a78bfa;}.lv-3 .dd-pc-statnum{color:#e07a5f;}.lv-2 .dd-pc-statnum{color:#4a90d9;}.lv-J .dd-pc-statnum{color:#c9b84a;}
+.dd-pc-statlbl{font-size:0.75rem;color:#8b91a8;line-height:1.4;}
+.dd-pc-story{font-size:0.8rem;color:#b0b6cc;line-height:1.6;margin-bottom:10px;}
+.sh-btn{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 9px;border-radius:5px;border:none;cursor:pointer;font-family:inherit;letter-spacing:0.04em;transition:all 0.14s;text-decoration:none;white-space:nowrap;}
+.sh-btn:hover{opacity:0.82;transform:translateY(-1px);}
+.sh-x{background:#000;color:#fff;}.sh-fb{background:#1877F2;color:#fff;}.sh-copy{background:#252936;color:#8b91a8;border:1px solid #2e3550;}
+.sh-copy.copied{background:#1a3320;color:#4ade80;border-color:#166634;}
+.sh-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #252936;}
+.pa-tabs{background:#111420;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);padding:0 24px;display:flex;gap:4px;position:sticky;top:52px;z-index:90;}
+.pa-tab{font-size:12px;font-weight:600;padding:10px 18px;border:none;border-bottom:2px solid transparent;background:transparent;color:rgba(255,255,255,0.45);cursor:pointer;font-family:inherit;transition:all 0.15s;white-space:nowrap;}
+.pa-tab:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.05);}
+.pa-tab.active{color:#fff;background:rgba(255,255,255,0.09);border-bottom-color:var(--cyan);}
+.pa-section{display:none;}.pa-section.active{display:block;}
+.doge-section-head{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:10px;margin-bottom:14px;}
+.doge-section-head.reverse{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);}
+.doge-section-head.guardrail{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);}
+.doge-section-head.keep{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);}
+.dsh-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+.dsh-title{font-size:13px;font-weight:700;color:#d8dce8;margin-bottom:3px;}
+.dsh-sub{font-size:11px;color:#8b91a8;line-height:1.6;}
+.loading{text-align:center;padding:60px 24px;color:#8b91a8;font-size:14px;}
+.footer{background:var(--navy);padding:24px;text-align:center;border-top:1px solid rgba(255,255,255,0.08);}
+.footer p{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.8;}
+.footer a{color:var(--cyan);text-decoration:none;}
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a href="https://youvebeen0wned.github.io/mikesell-pages/4Ps_Vision_Hub.html" class="back-link">← Back to Platform Hub</a>
+  <div class="tb-title">⚙️ <span>P2 · Process Audit</span></div>
+  <span class="tb-tag">FL-CD4 · 2026</span>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Mike Sell for Congress · Change That Works For Us</div>
+  <h1 class="hero-title">The <span>broken processes</span><br>named precisely.</h1>
+  <p class="hero-sub">You can't fix what you won't name. Mike audits the exact rule, agency, or policy built to produce the wrong outcome. Every card below shows what is broken, why it matters, and what the fix looks like.</p>
+</div>
+<div class="pa-tabs" id="pa-tabs">
+  <button class="pa-tab active" onclick="switchTab('all',this)">All Processes</button>
+  <button class="pa-tab" onclick="switchTab('federal',this)">Federal</button>
+  <button class="pa-tab" onclick="switchTab('state',this)">State</button>
+  <button class="pa-tab" onclick="switchTab('local',this)">Local</button>
+  <button class="pa-tab" onclick="switchTab('jax',this)">JAX-Specific</button>
+  <button class="pa-tab" onclick="switchTab('doge',this)">DOGE Actions</button>
+</div>
+<div class="main">
+  <div id="pa-all" class="pa-section active">
+    <div class="search-bar">
+      <input class="srch" id="proc-search" placeholder="Search by title, issue, or keyword…" oninput="renderProcesses()">
+      <select class="dd-filter" id="proc-level" onchange="renderProcesses()">
+        <option value="all">All levels</option>
+        <option value="4">Federal</option>
+        <option value="3">State Government</option>
+        <option value="2">Local Government</option>
+        <option value="J">JAX-Specific</option>
+      </select>
+      <select class="dd-filter" id="proc-doge" onchange="renderProcesses()">
+        <option value="all">All types</option>
+        <option value="doge-reverse">↩️ DOGE: Cuts to reverse</option>
+        <option value="doge-guardrail">🔧 DOGE: Guardrails needed</option>
+        <option value="doge-keep">✂️ DOGE: Worth keeping</option>
+        <option value="standard">Standard process failures</option>
+      </select>
+    </div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot leg-4"></div>Federal</div>
+      <div class="leg-item"><div class="leg-dot leg-3"></div>State</div>
+      <div class="leg-item"><div class="leg-dot leg-2"></div>Local</div>
+      <div class="leg-item"><div class="leg-dot leg-J"></div>JAX-Specific</div>
+    </div>
+    <div class="res-count" id="proc-count"></div>
+    <div class="pc-grid" id="proc-grid"><div class="loading">Loading processes…</div></div>
+  </div>
+  <div id="pa-federal" class="pa-section">
+    <div class="res-count" id="proc-count-federal"></div>
+    <div class="pc-grid" id="proc-grid-federal"></div>
+  </div>
+  <div id="pa-state" class="pa-section">
+    <div class="res-count" id="proc-count-state"></div>
+    <div class="pc-grid" id="proc-grid-state"></div>
+  </div>
+  <div id="pa-local" class="pa-section">
+    <div class="res-count" id="proc-count-local"></div>
+    <div class="pc-grid" id="proc-grid-local"></div>
+  </div>
+  <div id="pa-jax" class="pa-section">
+    <div class="res-count" id="proc-count-jax"></div>
+    <div class="pc-grid" id="proc-grid-jax"></div>
+  </div>
+  <div id="pa-doge" class="pa-section">
+    <div style="background:linear-gradient(135deg,#1a0a2e,#0a1a2a);border-radius:10px;padding:18px 20px;margin-bottom:22px;border:1px solid rgba(167,139,250,0.2);">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#a78bfa;margin-bottom:6px;">Process Analysis · DOGE Actions</div>
+      <div style="font-size:15px;font-weight:800;color:#F0EDE8;margin-bottom:6px;line-height:1.3;">What DOGE did. What should be reversed. What should stay. What needs guardrails.</div>
+      <div style="font-size:12px;color:#8b91a8;line-height:1.65;">DOGE was not all wrong — and it was not all right. This analysis separates the three: cuts that dismantled functioning services and need immediate reversal; actions that surfaced real waste but used the wrong method; and cuts where the process outcome was correct even if the process itself was flawed.</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;">
+        <div style="text-align:center;"><div style="font-size:1.4rem;font-weight:800;color:#f87171;">6</div><div style="font-size:10px;color:#8b91a8;margin-top:2px;">REVERSE</div></div>
+        <div style="text-align:center;"><div style="font-size:1.4rem;font-weight:800;color:#fbbf24;">4</div><div style="font-size:10px;color:#8b91a8;margin-top:2px;">GUARDRAILS</div></div>
+        <div style="text-align:center;"><div style="font-size:1.4rem;font-weight:800;color:#34d399;">3</div><div style="font-size:10px;color:#8b91a8;margin-top:2px;">KEEP</div></div>
+      </div>
+    </div>
+    <div class="doge-section-head reverse">
+      <div class="dsh-icon">↩️</div>
+      <div>
+        <div class="dsh-title">Cuts that must be reversed</div>
+        <div class="dsh-sub">These weren't inefficiencies — they were services Americans paid into and are now denied. Every cut below hurt real people with legitimate claims.</div>
+      </div>
+    </div>
+    <div class="pc-grid" id="doge-reverse-grid"></div>
+    <div class="doge-section-head guardrail" style="margin-top:32px;">
+      <div class="dsh-icon">🔧</div>
+      <div>
+        <div class="dsh-title">Actions that require legal guardrails</div>
+        <div class="dsh-sub">These exposed real problems in how government operates. The issue isn't that they happened — it's that they happened without congressional oversight, legal authorization, or accountability structures.</div>
+      </div>
+    </div>
+    <div class="pc-grid" id="doge-guardrail-grid"></div>
+    <div class="doge-section-head keep" style="margin-top:32px;">
+      <div class="dsh-icon">✂️</div>
+      <div>
+        <div class="dsh-title">Cuts worth keeping (with conditions)</div>
+        <div class="dsh-sub">Where DOGE identified legitimate waste — duplicative systems, unused real estate, unaudited programs. These should be formalized through proper process, not reversed.</div>
+      </div>
+    </div>
+    <div class="pc-grid" id="doge-keep-grid"></div>
+  </div>
+</div>
+<div class="footer">
+  <p>
+    <strong style="color:#fff">Mike Sell for Congress</strong> · FL-CD4 · 2026 · Forward Party<br>
+    119 Center St S #143, Jacksonville FL 32234 · (904) 738-3264<br>
+    <a href="https://mikesell.org">mikesell.org</a> · Paid for by Friends of Mike
+  </p>
+</div>
+<script>
+/* ── DATA URL: replace with your hosted processes_data.json URL ── */
+const DATA_URL = 'processes_data.json';
+
+var processes = [];
+
+function shareX(text){
+  window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text.slice(0,280)),'_blank','noopener,noreferrer');
+}
+function shareFB(){
+  window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://mikesell.org'),'_blank','noopener,noreferrer');
+}
+function copyText(btn, text){
+  navigator.clipboard.writeText(text).then(function(){
+    var orig=btn.textContent; btn.textContent='✓ Copied'; btn.classList.add('copied');
+    setTimeout(function(){btn.textContent=orig;btn.classList.remove('copied');},2000);
+  }).catch(function(){
+    var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    var orig=btn.textContent; btn.textContent='✓ Copied'; btn.classList.add('copied');
+    setTimeout(function(){btn.textContent=orig;btn.classList.remove('copied');},2000);
+  });
+}
+
+function makeCard(p){
+  var lc={'4':'lv-4','3':'lv-3','2':'lv-2','J':'lv-J'};
+  var lClass=lc[String(p.level)]||'lv-4';
+  var xText=(p.title+': '+p.hook+' — Mike Sell for Congress FL-CD4 mikesell.org').slice(0,280);
+  var copyTextVal=p.title+'\n\n"'+p.hook+'"\n\nThe fix: '+p.fix+'\n\nMike Sell for Congress · FL-CD4 2026 · mikesell.org';
+  return '<div class="dd-pc '+lClass+'" onclick="this.classList.toggle(\'open\')">'
+    +'<div class="dd-pc-hd"><div class="dd-pc-icon">'+p.icon+'</div>'
+    +'<div><div class="dd-pc-title">'+p.title+'</div>'
+    +'<span class="dd-pc-tag">'+p.levelLabel+'</span></div></div>'
+    +'<div class="dd-pc-hook">'+p.hook+'</div>'
+    +'<div class="dd-pc-fix"><div class="dd-pc-fixlbl">The Fix (Process Reform)</div>'+p.fix+'</div>'
+    +'<div class="dd-pc-expand">▾ See the full story</div>'
+    +'<div class="dd-pc-detail">'
+    +'<div class="dd-pc-stat"><div class="dd-pc-statnum">'+p.stat+'</div><div class="dd-pc-statlbl">'+p.statLabel+'</div></div>'
+    +'<div class="dd-pc-story">'+p.story+'</div>'
+    +'<div class="sh-row" onclick="event.stopPropagation()">'
+    +'<button class="sh-btn sh-x" onclick="shareX('+JSON.stringify(xText)+')">𝕏 Share</button>'
+    +'<button class="sh-btn sh-fb" onclick="shareFB()">fb Share</button>'
+    +'<button class="sh-btn sh-copy" onclick="copyText(this,'+JSON.stringify(copyTextVal)+')">Copy</button>'
+    +'</div></div></div>';
+}
+
+function renderProcesses(){
+  var q=(document.getElementById('proc-search')||{value:''}).value.toLowerCase();
+  var lv=(document.getElementById('proc-level')||{value:'all'}).value;
+  var dt=(document.getElementById('proc-doge')||{value:'all'}).value;
+  var filtered=processes.filter(function(p){
+    if(lv!=='all' && String(p.level)!==lv) return false;
+    if(dt==='standard' && p.dogeType) return false;
+    if(dt!=='all' && dt!=='standard' && p.dogeType!==dt) return false;
+    if(q && !(p.title.toLowerCase().includes(q)||p.hook.toLowerCase().includes(q)||(p.story||'').toLowerCase().includes(q))) return false;
+    return true;
+  });
+  document.getElementById('proc-count').textContent='Showing '+filtered.length+' of '+processes.length+' processes';
+  document.getElementById('proc-grid').innerHTML=filtered.map(makeCard).join('');
+}
+
+var levelMap={federal:'4',state:'3',local:'2',jax:'J'};
+
+function switchTab(tab,btn){
+  document.querySelectorAll('.pa-tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.pa-section').forEach(function(s){s.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  var target=document.getElementById('pa-'+tab);
+  if(target) target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='doge'){renderDogeGrids();return;}
+  if(levelMap[tab]){
+    var lv=levelMap[tab];
+    var items=processes.filter(function(p){return String(p.level)===lv;});
+    var countEl=document.getElementById('proc-count-'+tab);
+    var gridEl=document.getElementById('proc-grid-'+tab);
+    if(countEl) countEl.textContent=items.length+' processes';
+    if(gridEl) gridEl.innerHTML=items.map(makeCard).join('');
+  }
+}
+
+function renderDogeGrids(){
+  document.getElementById('doge-reverse-grid').innerHTML=processes.filter(function(p){return p.dogeType==='doge-reverse';}).map(makeCard).join('');
+  document.getElementById('doge-guardrail-grid').innerHTML=processes.filter(function(p){return p.dogeType==='doge-guardrail';}).map(makeCard).join('');
+  document.getElementById('doge-keep-grid').innerHTML=processes.filter(function(p){return p.dogeType==='doge-keep';}).map(makeCard).join('');
+}
+
+/* Load data */
+fetch(DATA_URL)
+  .then(function(r){return r.json();})
+  .then(function(data){
+    processes=data;
+    renderProcesses();
+  })
+  .catch(function(err){
+    document.getElementById('proc-grid').innerHTML='<div class="loading" style="color:#e07a5f">Could not load process data. Make sure processes_data.json is hosted at the same URL as this file.</div>';
+    console.error('Failed to load processes_data.json:',err);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pass It Forward | Game Mockup | Mike Sell for Congress</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;
+  src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;font-size:14px;line-height:1.55;}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#002d5b 0%,#064e3b 100%);padding:34px 24px 30px;position:relative;overflow:hidden;}
+.hero-eye{font-family:'avenir-light';font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;}
+.hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;margin-bottom:8px;}
+.hero p{font-family:'avenir-light';font-size:13px;color:rgba(255,255,255,0.68);max-width:640px;}
+.hero-stats{display:flex;gap:28px;margin-top:18px;flex-wrap:wrap;}
+.hero-stat-val{font-family:'clarendon-w01-medium',serif;font-size:22px;color:#34D399;}
+.hero-stat-lbl{font-family:'avenir-light';font-size:10px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.08em;}
+
+/* Tabs */
+.pa-tabs{background:#fff;border-bottom:1.5px solid #e5e7eb;padding:0 12px;display:flex;gap:4px;overflow-x:auto;position:sticky;top:0;z-index:50;}
+.pa-tab{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;padding:12px 14px;border:none;background:none;border-bottom:2px solid transparent;color:#9ca3af;cursor:pointer;white-space:nowrap;}
+.pa-tab.active{color:#059669;border-bottom-color:#059669;}
+.pa-section{display:none;}
+.pa-section.active{display:block;}
+main{padding:24px 20px 56px;max-width:900px;margin:0 auto;}
+
+.sec-hd{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #059669;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:22px;}
+.sec-hd-title{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#002d5b;}
+.sec-hd-sub{font-family:'avenir-light';font-size:11px;color:#6b7280;margin-top:2px;}
+
+/* Phone frame */
+.phone{width:390px;max-width:100%;margin:0 auto;background:#0b1220;border-radius:34px;padding:10px;box-shadow:0 18px 44px rgba(0,45,91,0.25);}
+.screen{background:#f5f7fa;border-radius:26px;overflow:hidden;min-height:640px;display:flex;flex-direction:column;}
+.appbar{background:#002d5b;color:#fff;padding:16px 16px 12px;display:flex;justify-content:space-between;align-items:center;}
+.appbar .logo{font-family:'clarendon-w01-medium',serif;font-size:15px;}
+.appbar .logo span{color:#34D399;}
+.chip{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;background:rgba(255,255,255,0.12);border-radius:12px;padding:3px 10px;color:#fff;}
+.appbody{padding:14px;flex:1;}
+.card{background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:13px 15px;margin-bottom:12px;}
+.card .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+.big{font-family:'clarendon-w01-medium',serif;font-size:24px;color:#002d5b;}
+.big.green{color:#059669;}
+.bar{height:8px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-top:8px;}
+.bar>div{height:100%;background:linear-gradient(90deg,#059669,#34D399);border-radius:6px;}
+.sub{font-family:'avenir-light';font-size:11px;color:#6b7280;margin-top:5px;}
+.row{display:flex;gap:10px;}
+.row .card{flex:1;margin-bottom:0;}
+.mt{margin-top:12px;}
+.mission{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1.5px solid #f3f4f6;}
+.mission:last-child{border-bottom:none;}
+.mission .m-name{font-family:'avenir-light';font-size:12px;color:#1a1a18;}
+.mission .m-pts{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#059669;white-space:nowrap;margin-left:8px;}
+.feed-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1.5px solid #f3f4f6;font-size:12px;}
+.feed-item:last-child{border-bottom:none;}
+.hifive{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#059669;background:#ecfdf5;border:1.5px solid #a7f3d0;border-radius:12px;padding:3px 9px;cursor:pointer;white-space:nowrap;}
+.btn{display:block;width:100%;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#fff;background:#059669;border:none;border-radius:12px;padding:14px;cursor:pointer;margin-top:10px;}
+.btn.navy{background:#002d5b;}
+.btn.ghost{background:#fff;color:#059669;border:1.5px solid #059669;}
+.tag{display:inline-block;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:2px 8px;border-radius:10px;background:#ecfdf5;color:#059669;}
+.tag.navy{background:#eef4fb;color:#002d5b;}
+
+/* Badges */
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.badge{background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 6px;text-align:center;}
+.badge .b-ico{width:44px;height:44px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:linear-gradient(135deg,#059669,#34D399);box-shadow:0 3px 8px rgba(5,150,105,0.3);}
+.badge.locked .b-ico{background:#e5e7eb;box-shadow:none;filter:grayscale(1);opacity:0.7;}
+.badge.hidden-b .b-ico{background:#002d5b;color:#34D399;font-family:'clarendon-w01-medium',serif;}
+.badge .b-name{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#002d5b;}
+.badge.locked .b-name{color:#9ca3af;}
+.badge .b-req{font-family:'avenir-light';font-size:9px;color:#9ca3af;margin-top:2px;}
+.sh-label{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:16px 0 8px;padding-bottom:5px;border-bottom:1.5px solid #e2e8f0;display:block;}
+
+/* League */
+.lg-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1.5px solid #f3f4f6;font-size:12px;background:#fff;}
+.lg-row .rank{font-family:'clarendon-w01-medium',serif;width:22px;color:#6b7280;}
+.lg-row .nick{flex:1;font-family:'avenir-heavy',Arial,sans-serif;color:#1a1a18;}
+.lg-row .pts{font-family:'clarendon-w01-medium',serif;color:#002d5b;}
+.lg-row.me{background:#ecfdf5;border-left:3px solid #059669;}
+.lg-zone{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;text-transform:uppercase;letter-spacing:0.08em;padding:6px 12px;background:#f8fffc;}
+.lg-zone.down{color:#d97706;background:#fffdf5;}
+
+/* Friend view */
+.fv{background:linear-gradient(160deg,#002d5b 0%,#064e3b 100%);min-height:640px;border-radius:26px;padding:26px 20px;display:flex;flex-direction:column;justify-content:center;}
+.fv .ms-mark{width:54px;height:54px;border-radius:50%;background:#fff;color:#002d5b;font-family:'clarendon-w01-medium',serif;font-size:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.fv h2{font-family:'clarendon-w01-medium',serif;font-size:22px;color:#fff;text-align:center;}
+.fv .fv-sub{font-family:'avenir-light';font-size:13px;color:rgba(255,255,255,0.75);text-align:center;margin:8px 0 18px;}
+.fv-btn{display:flex;justify-content:space-between;align-items:center;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#002d5b;background:#fff;border:none;border-radius:14px;padding:14px 16px;cursor:pointer;margin-top:10px;text-align:left;}
+.fv-btn .pts{font-family:'clarendon-w01-medium',serif;color:#059669;font-size:13px;}
+.fv-plan{display:flex;gap:8px;margin-top:10px;}
+.fv-plan button{flex:1;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);border-radius:12px;padding:11px 4px;cursor:pointer;}
+.fv-note{font-family:'avenir-light';font-size:10px;color:rgba(255,255,255,0.55);text-align:center;margin-top:16px;}
+.fv-link{text-align:center;margin-top:14px;}
+.fv-link a{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#34D399;text-decoration:none;}
+
+/* Share card */
+.wrapped{background:linear-gradient(160deg,#002d5b 0%,#059669 130%);border-radius:26px;min-height:640px;padding:30px 24px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.wrapped .w-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#34D399;}
+.wrapped .w-big{font-family:'clarendon-w01-medium',serif;font-size:56px;color:#fff;line-height:1.05;}
+.wrapped .w-mid{font-family:'avenir-light';font-size:15px;color:rgba(255,255,255,0.85);margin-top:6px;}
+.wrapped .w-stats{display:flex;gap:22px;margin-top:20px;}
+.wrapped .w-sv{font-family:'clarendon-w01-medium',serif;font-size:24px;color:#34D399;}
+.wrapped .w-sl{font-family:'avenir-light';font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.08em;}
+.wrapped .w-foot{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#fff;}
+.wrapped .w-ring{position:absolute;border:1.5px solid rgba(255,255,255,0.14);border-radius:50%;}
+
+.note-strip{background:#ecfdf5;border:1.5px solid #a7f3d0;border-radius:10px;padding:10px 14px;font-size:11px;color:#065f46;margin:0 auto 18px;max-width:390px;font-family:'avenir-light';}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;margin-top:40px;}
+.footer p{font-family:'avenir-light';font-size:11px;color:rgba(255,255,255,0.5);}
+.footer a{color:#34D399;text-decoration:none;}
+@media(max-width:430px){.badge-grid{grid-template-columns:repeat(3,1fr);} .hero h1{font-size:24px;}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress | FL-CD4 | Mockup v1</div>
+  <h1>Pass It Forward</h1>
+  <p>The sphere of influence game. Real friends, real conversations, one district. Tap the tabs to walk through each screen the way a player would.</p>
+  <div class="hero-stats">
+    <div><div class="hero-stat-val">2,318</div><div class="hero-stat-lbl">Players</div></div>
+    <div><div class="hero-stat-val">8,412</div><div class="hero-stat-lbl">Conversations</div></div>
+    <div><div class="hero-stat-val">34%</div><div class="hero-stat-lbl">To 25K goal</div></div>
+    <div><div class="hero-stat-val">1</div><div class="hero-stat-lbl">Thing we store</div></div>
+  </div>
+</div>
+
+<div class="pa-tabs">
+  <button class="pa-tab active" onclick="switchTab('home',this)">Home</button>
+  <button class="pa-tab" onclick="switchTab('sphere',this)">My Sphere</button>
+  <button class="pa-tab" onclick="switchTab('district',this)">Our District</button>
+  <button class="pa-tab" onclick="switchTab('send',this)">Send</button>
+  <button class="pa-tab" onclick="switchTab('friend',this)">Friend View</button>
+  <button class="pa-tab" onclick="switchTab('badges',this)">Badges</button>
+  <button class="pa-tab" onclick="switchTab('league',this)">League</button>
+  <button class="pa-tab" onclick="switchTab('share',this)">Share Card</button>
+</div>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="pa-section active">
+  <div class="sec-hd"><div class="sec-hd-title">Home: the daily front door</div><div class="sec-hd-sub">Points, streak, missions, and the team feed in one glance. First send is always one tap away.</div></div>
+  <div class="phone"><div class="screen">
+    <div class="appbar"><div class="logo">Pass It <span>Forward</span></div><div class="chip">🔥 4 wk streak</div></div>
+    <div class="appbody">
+      <div class="card">
+        <div class="lbl">Evening, RiverRat904</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <div class="big">1,240 <span style="font-size:13px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;">pts</span></div>
+          <span class="tag navy">Connector · Lv 3</span>
+        </div>
+        <div class="bar"><div style="width:74%"></div></div>
+        <div class="sub">260 to Organizer. Keep moving.</div>
+      </div>
+      <div class="card">
+        <div class="lbl">This week's missions · reset Monday</div>
+        <div class="mission"><span class="m-name">Reach 3 friends in Clay County <b>2/3</b></span><span class="m-pts">+50</span></div>
+        <div class="mission"><span class="m-name">Send 5 messages in your own words <b>3/5</b></span><span class="m-pts">+50</span></div>
+        <div class="mission"><span class="m-name">Team Duval: 100 acknowledgements <b>61/100</b></span><span class="m-pts">🏆 River Cup</span></div>
+      </div>
+      <div class="row">
+        <div class="card"><div class="lbl">Cedar League</div><div class="big green">#4</div><div class="sub">of 20 · 2 days left</div></div>
+        <div class="card"><div class="lbl">Your ripple</div><div class="big green">34</div><div class="sub">people · 2 deep</div></div>
+      </div>
+      <div class="card mt">
+        <div class="lbl">Team Duval feed</div>
+        <div class="feed-item"><span>🏅 MandarinMary earned <b>Both Banks</b></span><button class="hifive">🙌 High five</button></div>
+        <div class="feed-item"><span>⚡ MayportMo hit a 6 week streak</span><button class="hifive">🙌 High five</button></div>
+        <div class="feed-item"><span>🎮 AvondaleAce brought a friend in</span><button class="hifive">🙌 High five</button></div>
+      </div>
+      <button class="btn">➤ Pass it forward now</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- SPHERE -->
+<section id="sphere" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">My Sphere: your influence, visualized</div><div class="sec-hd-sub">Friends appear as dots placed by zip code center, never by address. Color shows how far each conversation has come.</div></div>
+  <div class="phone"><div class="screen">
+    <div class="appbar"><div class="logo">My <span>Sphere</span></div><div class="chip">14 friends</div></div>
+    <div class="appbody">
+      <div class="card" style="padding:8px;">
+        <svg viewBox="0 0 320 300" style="width:100%;display:block;">
+          <circle cx="160" cy="150" r="130" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+          <circle cx="160" cy="150" r="90" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+          <circle cx="160" cy="150" r="50" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="160" y="30" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="Arial">NASSAU</text>
+          <text x="52" y="260" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="Arial">CLAY</text>
+          <text x="272" y="260" text-anchor="middle" font-size="8" fill="#9ca3af" font-family="Arial">ST. JOHNS</text>
+          <circle cx="160" cy="150" r="14" fill="#002d5b"/>
+          <text x="160" y="154" text-anchor="middle" font-size="9" fill="#34D399" font-family="Arial" font-weight="bold">YOU</text>
+          <circle cx="130" cy="112" r="7" fill="#059669"/><circle cx="196" cy="122" r="7" fill="#059669"/>
+          <circle cx="185" cy="185" r="7" fill="#059669"/><circle cx="120" cy="178" r="7" fill="#059669"/>
+          <circle cx="212" cy="150" r="7" fill="#059669"/><circle cx="146" cy="96" r="7" fill="#059669"/>
+          <circle cx="98" cy="140" r="7" fill="#059669"/>
+          <circle cx="228" cy="98" r="7" fill="#002d5b"/><circle cx="86" cy="200" r="7" fill="#002d5b"/>
+          <circle cx="242" cy="196" r="7" fill="#002d5b"/><circle cx="112" cy="70" r="7" fill="#002d5b"/>
+          <circle cx="60" cy="110" r="7" fill="#9ca3af"/><circle cx="258" cy="60" r="7" fill="#9ca3af"/>
+          <circle cx="200" cy="248" r="7" fill="#9ca3af"/>
+          <circle cx="130" cy="112" r="12" fill="none" stroke="#34D399" stroke-width="1.5" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="card">
+        <div style="display:flex;gap:14px;font-size:10px;font-family:'avenir-heavy',Arial,sans-serif;">
+          <span style="color:#059669;">● Acknowledged (7)</span>
+          <span style="color:#002d5b;">● Sent (4)</span>
+          <span style="color:#9ca3af;">● Confirmed (3)</span>
+        </div>
+        <div class="sub">Ringed dot: a friend who joined the game. Your ripple runs 2 generations deep.</div>
+      </div>
+      <div class="row">
+        <div class="card"><div class="lbl">Reach</div><div class="big">6 <span style="font-size:12px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;">zips</span></div><div class="sub">+2 this week</div></div>
+        <div class="card"><div class="lbl">Next badge</div><div class="big green">Wave</div><div class="sub">14 of 25 friends</div></div>
+      </div>
+      <button class="btn ghost">＋ Add a friend to your sphere</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- DISTRICT -->
+<section id="district" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Our District: the shared map</div><div class="sec-hd-sub">Every player's conversations fill the district together. County shapes are illustrative in this mockup.</div></div>
+  <div class="phone"><div class="screen">
+    <div class="appbar"><div class="logo">Our <span>District</span></div><div class="chip">FL-CD4</div></div>
+    <div class="appbody">
+      <div class="card" style="padding:8px;">
+        <svg viewBox="0 0 320 260" style="width:100%;display:block;">
+          <path d="M150 20 L290 20 L300 80 L220 95 L150 75 Z" fill="#059669" fill-opacity="0.18" stroke="#002d5b" stroke-width="1.5"/>
+          <text x="235" y="55" text-anchor="middle" font-size="10" fill="#002d5b" font-family="Arial" font-weight="bold">NASSAU</text>
+          <text x="235" y="70" text-anchor="middle" font-size="9" fill="#059669" font-family="Arial">18%</text>
+          <path d="M60 85 L220 95 L300 80 L295 160 L200 175 L70 165 Z" fill="#059669" fill-opacity="0.55" stroke="#002d5b" stroke-width="1.5"/>
+          <text x="170" y="125" text-anchor="middle" font-size="10" fill="#002d5b" font-family="Arial" font-weight="bold">DUVAL</text>
+          <text x="170" y="140" text-anchor="middle" font-size="9" fill="#065f46" font-family="Arial">46%</text>
+          <path d="M70 165 L160 172 L150 240 L55 235 Z" fill="#059669" fill-opacity="0.38" stroke="#002d5b" stroke-width="1.5"/>
+          <text x="105" y="200" text-anchor="middle" font-size="10" fill="#002d5b" font-family="Arial" font-weight="bold">CLAY</text>
+          <text x="105" y="215" text-anchor="middle" font-size="9" fill="#065f46" font-family="Arial">31%</text>
+          <path d="M160 172 L295 160 L290 235 L150 240 Z" fill="#059669" fill-opacity="0.28" stroke="#002d5b" stroke-width="1.5"/>
+          <text x="225" y="200" text-anchor="middle" font-size="10" fill="#002d5b" font-family="Arial" font-weight="bold">ST. JOHNS</text>
+          <text x="225" y="215" text-anchor="middle" font-size="9" fill="#065f46" font-family="Arial">24%</text>
+          <path d="M195 95 Q205 140 185 175" fill="none" stroke="#7dd3fc" stroke-width="4" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="card">
+        <div class="lbl">District goal · 25,000 conversations</div>
+        <div class="big">8,412</div>
+        <div class="bar"><div style="width:34%"></div></div>
+        <div class="sub">Next milestone at 10,000: Mike drops a new video for every team.</div>
+      </div>
+      <div class="card">
+        <div class="lbl">🏆 River Cup · August standings</div>
+        <div class="mission"><span class="m-name"><b>1. Team Duval</b></span><span class="m-pts">48,210</span></div>
+        <div class="mission"><span class="m-name">2. Team Clay</span><span class="m-pts">31,940</span></div>
+        <div class="mission"><span class="m-name">3. Team St. Johns</span><span class="m-pts">29,150</span></div>
+        <div class="mission"><span class="m-name">4. Team Nassau</span><span class="m-pts">12,800</span></div>
+        <div class="sub">Winning team hosts Mike for neighborhood coffee on Sept 5.</div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- SEND -->
+<section id="send" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Send: one tap from thought to text</div><div class="sec-hd-sub">Pick a friend, pick a framework, make it yours, and your own Messages app opens with it loaded. The game never sends anything.</div></div>
+  <div class="phone"><div class="screen">
+    <div class="appbar"><div class="logo">Pass It <span>Forward</span></div><div class="chip">+10 or +20</div></div>
+    <div class="appbody">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><b style="font-family:'avenir-heavy',Arial,sans-serif;color:#002d5b;">Sarah P.</b><div class="sub" style="margin-top:1px;">Fleming Island</div></div>
+          <span class="tag">✓ District voter</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="lbl">Pick a framework</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag navy">The Straight Ask</span>
+          <span class="tag" style="border:1.5px solid #059669;">The Vote Plan ✓</span>
+          <span class="tag navy">The Forward Three</span>
+        </div>
+      </div>
+      <div class="card" style="background:#f8fffc;border-color:#a7f3d0;">
+        <div class="lbl" style="color:#059669;">Your message · edited ✏️ (+20)</div>
+        <div style="font-size:13px;color:#1a1a18;">Hey Sarah, quick question. Are you voting by mail, early, or on election day this year? I'm helping Mike Sell's campaign (yes, the game I told you about at the cookout). Give him a look before you decide: mikesell.org/f/8f3k</div>
+      </div>
+      <div class="card">
+        <div class="sub" style="margin-top:0;">💡 Messages in your own words get acknowledged twice as often. That cookout line is worth more than any script we could write.</div>
+      </div>
+      <button class="btn">📱 Open in Messages</button>
+      <div class="sub" style="text-align:center;">Your phone sends it. We never do.</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- FRIEND VIEW -->
+<section id="friend" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Friend View: the acknowledgement exchange</div><div class="sec-hd-sub">What Sarah sees when she taps the link. One page, three choices, zero data collected about her. This page is the whole product.</div></div>
+  <div class="note-strip">The only record created here: "link 8f3k was tapped, mail was chosen." No name, no email, no phone, no location. That is the entire exchange.</div>
+  <div class="phone"><div class="fv">
+    <div class="ms-mark">MS</div>
+    <h2>Alex sent you this.</h2>
+    <div class="fv-sub">Fair warning: this is a game, and if you tap a button below, Alex literally scores points.</div>
+    <button class="fv-btn"><span>👍 Got it, I'll give Mike a look</span><span class="pts">+25 to Alex</span></button>
+    <div class="fv-sub" style="margin:16px 0 0;">Want to give Alex a bonus?<br>How do you plan to vote this year?</div>
+    <div class="fv-plan">
+      <button>✉️ By mail</button><button>🗳️ Early</button><button>📍 Election day</button>
+    </div>
+    <div class="fv-sub" style="margin:4px 0 0;font-size:10px;">+50 to Alex · totally anonymous</div>
+    <button class="fv-btn" style="background:#34D399;"><span>🎮 Deal me in. I want to play too</span><span class="pts" style="color:#002d5b;">+100 each</span></button>
+    <div class="fv-link"><a href="https://mikesell.org">Meet Mike Sell → mikesell.org</a></div>
+    <div class="fv-note">We store one thing: that a button was tapped.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+  </div></div>
+</section>
+
+<!-- BADGES -->
+<section id="badges" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Badges: 40 across 7 families</div><div class="sec-hd-sub">Earned badges glow. Locked badges show the goal. Hidden badges keep a little mystery in the district.</div></div>
+  <div class="phone"><div class="screen">
+    <div class="appbar"><div class="logo">Badge <span>Wall</span></div><div class="chip">11 of 40</div></div>
+    <div class="appbody">
+      <span class="sh-label">First Steps</span>
+      <div class="badge-grid">
+        <div class="badge"><div class="b-ico">🌅</div><div class="b-name">Day One</div><div class="b-req">Earned Aug 21</div></div>
+        <div class="badge"><div class="b-ico">🖐️</div><div class="b-name">First Five</div><div class="b-req">Earned Aug 21</div></div>
+        <div class="badge"><div class="b-ico">📣</div><div class="b-name">First Echo</div><div class="b-req">Earned Aug 22</div></div>
+      </div>
+      <span class="sh-label">Sphere Size</span>
+      <div class="badge-grid">
+        <div class="badge"><div class="b-ico">💫</div><div class="b-name">Ripple</div><div class="b-req">10 friends</div></div>
+        <div class="badge locked"><div class="b-ico">🌊</div><div class="b-name">Wave</div><div class="b-req">14 of 25</div></div>
+        <div class="badge locked"><div class="b-ico">🌀</div><div class="b-name">Tide</div><div class="b-req">14 of 50</div></div>
+      </div>
+      <span class="sh-label">Real Words & The Chain</span>
+      <div class="badge-grid">
+        <div class="badge"><div class="b-ico">✏️</div><div class="b-name">In Your Own Words</div><div class="b-req">10 edited sends</div></div>
+        <div class="badge"><div class="b-ico">🔥</div><div class="b-name">Torch Passed</div><div class="b-req">A friend joined</div></div>
+        <div class="badge locked"><div class="b-ico">⛓️</div><div class="b-name">Chain Reaction</div><div class="b-req">1 of 3 joins</div></div>
+      </div>
+      <span class="sh-label">Know Your District</span>
+      <div class="badge-grid">
+        <div class="badge"><div class="b-ico">🌉</div><div class="b-name">Both Banks</div><div class="b-req">Both sides of the St. Johns</div></div>
+        <div class="badge locked"><div class="b-ico">🧭</div><div class="b-name">Four Corners</div><div class="b-req">3 of 4 counties</div></div>
+        <div class="badge locked"><div class="b-ico">🏘️</div><div class="b-name">Home Turf</div><div class="b-req">6 of 10 in your zip</div></div>
+      </div>
+      <span class="sh-label">The Calendar & Hidden</span>
+      <div class="badge-grid">
+        <div class="badge"><div class="b-ico">⭐</div><div class="b-name">Founders Circle</div><div class="b-req">Beta player</div></div>
+        <div class="badge hidden-b"><div class="b-ico">?</div><div class="b-name">???</div><div class="b-req">Keep playing</div></div>
+        <div class="badge hidden-b"><div class="b-ico">?</div><div class="b-name">???</div><div class="b-req">Keep playing</div></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- LEAGUE -->
+<section id="league" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">League: 20 players, one week, fresh start every Monday</div><div class="sec-hd-sub">Small leagues mean a normal person can win a normal week. Top 5 move up, bottom 5 ease down, nicknames only.</div></div>
+  <div class="phone"><div class="screen">
+    <div class="appbar"><div class="logo">Cedar <span>League</span></div><div class="chip">⏳ 2 days left</div></div>
+    <div class="appbody">
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div class="lg-zone">▲ Promotion zone</div>
+        <div class="lg-row"><span class="rank">1</span><span class="nick">MandarinMary</span><span class="pts">610</span></div>
+        <div class="lg-row"><span class="rank">2</span><span class="nick">OrangeParkOllie</span><span class="pts">545</span></div>
+        <div class="lg-row"><span class="rank">3</span><span class="nick">FernandinaFinn</span><span class="pts">520</span></div>
+        <div class="lg-row me"><span class="rank">4</span><span class="nick">RiverRat904 (you)</span><span class="pts">505</span></div>
+        <div class="lg-row"><span class="rank">5</span><span class="nick">MayportMo</span><span class="pts">490</span></div>
+        <div class="lg-row"><span class="rank">6</span><span class="nick">AvondaleAce</span><span class="pts">455</span></div>
+        <div class="lg-row"><span class="rank">7</span><span class="nick">SanMarcoSam</span><span class="pts">430</span></div>
+        <div class="lg-row"><span class="rank">8</span><span class="nick">KingsleyKate</span><span class="pts">395</span></div>
+        <div class="lg-row"><span class="rank">9</span><span class="nick">BaldwinBee</span><span class="pts">350</span></div>
+        <div class="lg-row"><span class="rank">10</span><span class="nick">YuleeYogi</span><span class="pts">340</span></div>
+        <div class="lg-zone down">10 more players below · bottom 5 ease down</div>
+      </div>
+      <div class="card">
+        <div class="lbl">🏅 Neighborhood Anchor · this week's most consistent</div>
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;color:#002d5b;font-size:13px;">BaldwinBee · 7 straight days of showing up</div>
+        <div class="sub">Effort, not totals. Anyone can win this one.</div>
+      </div>
+      <button class="btn ghost">🙌 High five your league</button>
+    </div>
+  </div></div>
+</section>
+
+<!-- SHARE CARD -->
+<section id="share" class="pa-section">
+  <div class="sec-hd"><div class="sec-hd-title">Share Card: the game's own megaphone</div><div class="sec-hd-sub">A story-sized card, aggregate numbers only, no friend ever named. This is how the game recruits its next player for free.</div></div>
+  <div class="phone"><div class="wrapped">
+    <div class="w-ring" style="width:300px;height:300px;top:-80px;right:-90px;"></div>
+    <div class="w-ring" style="width:200px;height:200px;top:-40px;right:-40px;"></div>
+    <div class="w-ring" style="width:220px;height:220px;bottom:-70px;left:-80px;"></div>
+    <div>
+      <div class="w-eye">My August · Pass It Forward</div>
+      <div class="w-big" style="margin-top:14px;">14 friends.<br>6 neighborhoods.<br>1 district.</div>
+      <div class="w-mid">2,318 of us are passing it forward in FL-CD4.</div>
+      <div class="w-stats">
+        <div><div class="w-sv">2</div><div class="w-sl">Ripples deep</div></div>
+        <div><div class="w-sv">Top 10%</div><div class="w-sl">This month</div></div>
+        <div><div class="w-sv">🌉</div><div class="w-sl">Both Banks</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="w-foot">Not Left. Not Right. Forward.</div>
+      <div class="w-sl" style="margin-top:4px;">mikesell.org · Paid for by Mike Sell for Congress</div>
+    </div>
+  </div></div>
+  <div style="max-width:390px;margin:14px auto 0;"><button class="btn navy">⬆ Share to your story</button></div>
+</section>
+
+</main>
+
+<div class="footer">
+  <p>Pass It Forward · Game mockup v1 · August 9, 2026 · Built for review, no live data<br>
+  Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234 · <a href="https://mikesell.org">mikesell.org</a></p>
+</div>
+
+<script>
+function switchTab(id, btn){
+  document.querySelectorAll('.pa-section').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.pa-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  window.scrollTo({top:0});
+}
+</script>
+</body>
+</html>

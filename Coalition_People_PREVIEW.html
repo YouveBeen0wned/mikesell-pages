@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The People Fighting For Us — Mike Sell for Congress FL-CD4 2026</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
+
+.hero{background:linear-gradient(135deg,#002d5b 0%,#087DD6 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;}
+.hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;line-height:1.2;margin-bottom:8px;}
+.hero h1 span{color:#fff;}
+.hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;max-width:560px;}
+
+.filter-band{background:#fff;padding:12px 20px;border-bottom:1.5px solid #e5e7eb;}
+.search-bar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.srch{flex:1;min-width:140px;padding:8px 12px;border-radius:7px;border:1.5px solid #e2e8f0;background:#fff;color:#1a1a18;font-size:12px;font-family:'avenir-light',Arial,sans-serif;}
+.srch:focus{outline:none;border-color:#7c3aed;}
+.dd-filter{padding:7px 10px;border-radius:7px;border:1.5px solid #e2e8f0;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-family:'avenir-light',Arial,sans-serif;}
+.dd-filter:focus{outline:none;border-color:#7c3aed;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.08em;color:#6b7280;text-transform:uppercase;}
+.leg-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.res-count{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#9ca3af;}
+
+.main{padding:16px 20px 48px;}
+
+/* GRID — floats as Wix fallback, CSS grid for modern */
+.org-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:860px){.org-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.org-grid{grid-template-columns:1fr;}}
+
+/* ORG CARD */
+.dd-org{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s;}
+.dd-org:hover{box-shadow:0 6px 20px rgba(0,0,0,0.08);}
+.dd-org.sc-Local{border-top:3px solid #2563EB;}
+.dd-org.sc-State{border-top:3px solid #d97706;}
+.dd-org.sc-National{border-top:3px solid #7C3AED;}
+
+.dd-org-hd{padding:12px 14px 0;display:flex;align-items:flex-start;gap:10px;}
+.dd-org-logo{width:36px;height:36px;min-width:36px;border-radius:7px;background:linear-gradient(135deg,#470D67,#002d5b);display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;text-transform:uppercase;overflow:hidden;position:relative;}
+.dd-org-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;border-radius:7px;}
+.dd-org-name{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#1a1a18;line-height:1.3;margin-bottom:3px;}
+.dd-org-scope{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 6px;border-radius:3px;display:inline-block;letter-spacing:0.06em;text-transform:uppercase;}
+.sb-Local{background:rgba(37,99,235,0.10);color:#2563EB;}
+.sb-State{background:rgba(217,119,6,0.12);color:#b45309;}
+.sb-National{background:rgba(124,58,237,0.10);color:#7C3AED;}
+
+.dd-org-desc{padding:8px 14px 6px;font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;flex:1;}
+.dd-org-issues{padding:0 14px 10px;display:flex;flex-wrap:wrap;gap:4px;}
+.dd-org-issue{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 7px;border-radius:10px;background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb;}
+
+.sh-row{display:flex;gap:5px;align-items:center;padding:9px 14px 11px;border-top:1.5px solid #f3f4f6;margin-top:auto;}
+.sh-icon{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:opacity 0.15s;flex-shrink:0;padding:0;text-decoration:none;vertical-align:middle;}
+.sh-icon:hover{opacity:0.80;}
+.sh-fb{background:#1877F2;}
+.sh-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);}
+.sh-tt{background:#010101;}
+.sh-truth{background:#5448EE;}
+.sh-bsky{background:#0085FF;}
+.sh-connect{background:#f3f4f6;border:1.5px solid #e2e8f0;}
+
+/* SUBMIT */
+.submit-section{margin-top:24px;background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;position:relative;}
+.submit-top-bar{height:3px;background:linear-gradient(90deg,#002d5b,#7C3AED);}
+.submit-inner{padding:20px 22px;}
+.submit-title{font-family:'clarendon-w01-medium',serif;font-size:15px;color:#002d5b;margin-bottom:4px;}
+.submit-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#9ca3af;line-height:1.6;margin-bottom:16px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+@media(max-width:520px){.form-row{grid-template-columns:1fr;}}
+.form-field{display:flex;flex-direction:column;gap:4px;}
+.form-field.full{grid-column:1/-1;}
+.form-label{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;}
+.form-input{padding:7px 10px;border-radius:7px;border:1.5px solid #e2e8f0;font-size:11px;font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;background:#f9fafb;}
+.form-input:focus{outline:none;border-color:#7c3aed;}
+.form-textarea{padding:7px 10px;border-radius:7px;border:1.5px solid #e2e8f0;font-size:11px;font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;background:#f9fafb;height:64px;resize:vertical;}
+.form-textarea:focus{outline:none;border-color:#7c3aed;}
+.btn-submit{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;padding:8px 20px;border-radius:50px;background:#7c3aed;color:#fff;border:none;cursor:pointer;letter-spacing:0.04em;}
+.btn-submit:hover{background:#6d28d9;}
+.form-note{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#9ca3af;}
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:12px;}
+
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
+.footer a{color:#59D7EE;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+  <h1>The People <span>Showing Up.</span></h1>
+  <p>The orgs doing work in our neighborhoods.</p>
+</div>
+
+<div class="filter-band">
+  <div class="search-bar">
+    <input class="srch" id="org-search" placeholder="Search organizations…" oninput="renderOrgs()">
+    <select class="dd-filter" id="org-scope" onchange="renderOrgs()">
+      <option value="all">All scopes</option>
+      <option value="Local">Local</option>
+      <option value="State">State</option>
+      <option value="National">National</option>
+    </select>
+    <select class="dd-filter" id="org-issue" onchange="renderOrgs()">
+      <option value="all">All issue areas</option>
+      <option value="Gun Safety">Gun Safety</option>
+      <option value="Healthcare & Drugs">Healthcare</option>
+      <option value="Democracy & Voting">Democracy &amp; Voting</option>
+      <option value="Housing & Insurance">Housing</option>
+      <option value="Criminal Justice">Criminal Justice</option>
+      <option value="Education & Workforce">Education</option>
+      <option value="Economic Justice & UBI">Economic Justice</option>
+      <option value="Climate & Infrastructure">Climate</option>
+      <option value="Body Autonomy">Body Autonomy</option>
+      <option value="Immigration">Immigration</option>
+      <option value="LGBTQ+ Rights">LGBTQ+ Rights</option>
+      <option value="Mental Health & Addiction">Mental Health</option>
+      <option value="Technology & AI">Technology</option>
+      <option value="Campaign Finance">Campaign Finance</option>
+    </select>
+  </div>
+  <div class="legend">
+    <div class="leg-item"><span class="leg-dot" style="background:#2563EB"></span>Local</div>
+    <div class="leg-item"><span class="leg-dot" style="background:#d97706"></span>State</div>
+    <div class="leg-item"><span class="leg-dot" style="background:#7C3AED"></span>National</div>
+  </div>
+  <div class="res-count" id="org-count"></div>
+</div>
+
+<div class="main">
+  <div class="org-grid" id="org-grid"></div>
+
+  <div class="submit-section">
+    <div class="submit-top-bar"></div>
+    <div class="submit-inner">
+      <div class="submit-title">Is your organization in this fight?</div>
+      <p class="submit-sub">Submit for consideration. The campaign reviews every submission — no auto-add.</p>
+      <div class="form-row">
+        <div class="form-field"><label class="form-label">Organization Name</label><input class="form-input" id="sub-org" type="text" placeholder="Organization name"></div>
+        <div class="form-field"><label class="form-label">Your Name</label><input class="form-input" id="sub-name" type="text" placeholder="First Last"></div>
+        <div class="form-field"><label class="form-label">Contact Email</label><input class="form-input" id="sub-email" type="email" placeholder="you@yourorg.org"></div>
+        <div class="form-field"><label class="form-label">Primary Issue Area</label>
+          <select class="form-input" id="sub-issue">
+            <option value="">Select one…</option>
+            <option>Healthcare</option><option>Housing</option><option>Climate / Energy</option>
+            <option>Workers / Labor</option><option>Education</option><option>Civic Engagement</option>
+            <option>Economic Justice</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-field full"><label class="form-label">What does your org do? (2–3 sentences)</label>
+          <textarea class="form-textarea" id="sub-desc" placeholder="Brief description of your mission and why alignment with this campaign matters…"></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-submit" onclick="submitOrg()">Submit for Review</button>
+        <span class="form-note">Goes directly to the campaign team.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>
+  119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br>
+  <a href="https://mikesell.org">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p>
+</div>
+
+<script>
+var FB_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>';
+var IG_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>';
+var TT_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.05a8.16 8.16 0 004.77 1.52V7.12a4.85 4.85 0 01-1-.43z"/></svg>';
+var TRUTH_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.5 8.5h-3v9h-3v-9h-2v-3h2V4.5C11.5 3 12.5 2 14 2h3.5v3H15c-.6 0-1 .2-1 .8V5.5h3l-.5 3z"/></svg>';
+var BSKY_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 01-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.204-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg>';
+var LINK_SVG='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>';
+
+function getInitials(name){
+  var p=(name||'').replace(/[^a-zA-Z\s]/g,' ').split(/\s+/).filter(Boolean);
+  if(!p.length)return'?';
+  if(p.length===1)return p[0].slice(0,2).toUpperCase();
+  return(p[0][0]+(p[1][0]||'')).toUpperCase();
+}
+
+function submitOrg(){
+  var orgName=document.getElementById('sub-org').value.trim();
+  var contactName=document.getElementById('sub-name').value.trim();
+  var email=document.getElementById('sub-email').value.trim();
+  var issue=document.getElementById('sub-issue').value;
+  var desc=document.getElementById('sub-desc').value.trim();
+  if(!orgName||!email){alert('Please fill in at minimum the organization name and your contact email.');return;}
+  var subject=encodeURIComponent('Coalition Submission: '+orgName);
+  var body=encodeURIComponent('Organization: '+orgName+'\nContact: '+contactName+'\nEmail: '+email+'\nIssue Area: '+issue+'\n\n'+desc+'\n\nSubmitted via mikesell.org/coalition');
+  window.open('mailto:sellforcongress@gmail.com?subject='+subject+'&body='+body);
+}
+
+var ORGS_RAW=[
+{name:"FSCJ – Florida State College at Jacksonville",url:"https://www.fscj.edu",scope:"Local",issue_areas:["Education & Workforce","Democracy & Voting"],description:"37,556-student community college; highest-leverage youth voter registration partner in FL-04."},
+{name:"Jacksonville Public Education Fund (JPEF)",url:"https://www.jaxpef.org",scope:"Local",issue_areas:["Education & Workforce"],description:"Read Jax Coalition convener. Goal: all Duval students reading on grade level by 3rd grade."},
+{name:"NAACP Jacksonville Branch",url:"https://www.naacpjax.org",scope:"Local",issue_areas:["Gun Safety","Criminal Justice","Democracy & Voting"],description:"Largest civil rights chapter in Jacksonville. Civil rights, voter mobilization, JSO accountability."},
+{name:"Florida Rights Restoration Coalition (FRRC)",url:"https://floridarrc.com",scope:"State",issue_areas:["Democracy & Voting","Criminal Justice","Gun Safety"],description:"Led Amendment 4 — largest single voter expansion in FL history. Desmond Meade, Executive Director."},
+{name:"St. Johns Riverkeeper",url:"https://www.stjohnsriverkeeper.org",scope:"Local",issue_areas:["Climate & Infrastructure"],description:"Environmental enforcement and advocacy for the St. Johns River watershed. 20+ years holding polluters accountable."},
+{name:"Groundwork Jacksonville",url:"https://groundworkjacksonville.org",scope:"Local",issue_areas:["Climate & Infrastructure"],description:"Emerald Trail, creek restoration, and youth environmental leadership programs in FL-04."},
+{name:"WJCT Public Media",url:"https://www.wjct.org",scope:"Local",issue_areas:["Technology & AI","Campaign Finance","Democracy & Voting"],description:"NPR/PBS Jacksonville. Accountability journalism and trusted election coverage."},
+{name:"Common Cause Florida",url:"https://www.commoncause.org/florida/",scope:"State",issue_areas:["Technology & AI","Body Autonomy","Campaign Finance","Democracy & Voting"],description:"Civic rights, campaign finance reform, bodily rights advocacy. Active in FL-04."},
+{name:"United Way of Northeast Florida",url:"https://www.unitedwaynefl.org",scope:"Local",issue_areas:["Mental Health & Addiction","Housing & Insurance","Healthcare & Drugs"],description:"211 Helpline; 60+ nonprofit partners. Community bridge across healthcare, housing, and social services."},
+{name:"Shiloh Metropolitan Baptist Church",url:"https://www.shilohmetro.org",scope:"Local",issue_areas:["Mental Health & Addiction","Criminal Justice","Democracy & Voting"],description:"5,000-seat sanctuary; trusted mental health outreach access point and community anchor."},
+{name:"Health Start Coalition",url:"https://www.healthstart.org",scope:"Local",issue_areas:["Mental Health & Addiction","Body Autonomy","Healthcare & Drugs"],description:"Maternal and infant mental health. Only zip-code-level maternal mortality baseline for Duval, Clay, Nassau, St. Johns."},
+{name:"RealTalk Real Change",url:"https://www.realtalkrealchange.org",scope:"Local",issue_areas:["Mental Health & Addiction","Criminal Justice"],description:"Civic action and honest community conversation; grassroots mental health awareness in Jacksonville."},
+{name:"Disability Rights Florida",url:"https://disabilityrightsflorida.org",scope:"State",issue_areas:["Healthcare & Drugs","Criminal Justice"],description:"State protection and advocacy; active litigation on FL HCBS waitlist and $431.5M reversion case."},
+{name:"Equality Florida",url:"https://equalityflorida.org",scope:"State",issue_areas:["LGBTQ+ Rights","Democracy & Voting","Criminal Justice"],description:"Statewide LGBTQ+ civil rights organization. 2025-2026 legislative scorecards."},
+{name:"Jacksonville Urban League",url:"https://www.jacksonvilleurbanleague.org",scope:"Local",issue_areas:["Housing & Insurance","Economic Justice & UBI","Criminal Justice"],description:"FL-04 civic anchor for Black Jacksonville since 1947."},
+{name:"Community Foundation for NE Florida",url:"https://cfnef.org",scope:"Local",issue_areas:["Housing & Insurance","Economic Justice & UBI","Education & Workforce"],description:"Oldest/largest FL community foundation. A.L. Lewis Black Opportunity & Impact Fund."},
+{name:"League of Women Voters JAX First Coast",url:"https://my.lwv.org/florida/jacksonville-first-coast",scope:"Local",issue_areas:["Democracy & Voting","Body Autonomy","Campaign Finance"],description:"Certified voter registrars covering all 4 FL-04 counties."},
+{name:"State Voices Florida",url:"https://statevoices.org/state/florida/",scope:"State",issue_areas:["Democracy & Voting","Body Autonomy"],description:"BIPOC women voter mobilization; 35+ FL partner orgs."},
+{name:"Equal Ground Education Fund",url:"https://equalgroundfl.org",scope:"State",issue_areas:["Democracy & Voting","Campaign Finance","Criminal Justice"],description:"Filed legal challenge to FL's mid-decade redistricting."},
+{name:"Move to Amend Coalition",url:"https://movetoamend.org",scope:"Local",issue_areas:["Campaign Finance","Democracy & Voting"],description:"Human rights and money-in-politics. Active in FL-04 right now."},
+{name:"RepresentUs",url:"https://represent.us",scope:"National",issue_areas:["Campaign Finance","Democracy & Voting"],description:"Anti-corruption, pro-democracy reform. Model legislation for campaign finance reform."},
+{name:"Equal Justice Initiative",url:"https://eji.org",scope:"National",issue_areas:["Criminal Justice"],description:"Founded by Bryan Stevenson. Exonerated 140+ death row prisoners."},
+{name:"Florida Immigrant Coalition (FLIC)",url:"https://floridaimmigrant.org",scope:"State",issue_areas:["Immigration","Criminal Justice","Democracy & Voting"],description:"Statewide immigrant rights organization. Documented Ordinance 2025-0147 detention and Operation Tidal Wave worksite raids."},
+{name:"Moms Demand Action",url:"https://momsdemandaction.org",scope:"State",issue_areas:["Gun Safety"],description:"Largest gun safety organization in the US. Founded by Shannon Watts after Sandy Hook."},
+{name:"Cure Violence Global",url:"https://cvg.org",scope:"Local",issue_areas:["Gun Safety","Criminal Justice","Mental Health & Addiction"],description:"Evidence-based community violence interruption in Jacksonville. Currently unfunded after 2025 federal cut."},
+{name:"Indivisible Jax Riverside (IJR)",url:"https://indivisiblejax.org",scope:"Local",issue_areas:["Democracy & Voting","Education & Workforce","Gun Safety"],description:"Cross-publication comms partner. Mike is co-lead of Find & Elect Good Candidates Action Group."},
+{name:"ICARE – Jacksonville",url:"",scope:"Local",issue_areas:["Criminal Justice","Housing & Insurance","Democracy & Voting"],description:"Interfaith Coalition for Action, Reconciliation, and Empowerment. 38-congregation interfaith coalition for justice reform."},
+{name:"Florida Rising",url:"https://floridarising.org",scope:"State",issue_areas:["Democracy & Voting","Criminal Justice","Economic Justice & UBI"],description:"Civic engagement, voting rights, and justice."},
+{name:"Jax Tenants Union",url:"",scope:"Local",issue_areas:["Housing & Insurance"],description:"Tenant rights and housing justice advocacy in Jacksonville."},
+{name:"904Ward",url:"",scope:"Local",issue_areas:["Criminal Justice","Democracy & Voting","Economic Justice & UBI"],description:"Leading racial-equity organization in Jacksonville."},
+{name:"ACLU of Florida",url:"https://www.aclufl.org",scope:"State",issue_areas:["Criminal Justice","Immigration","LGBTQ+ Rights","Body Autonomy","Democracy & Voting"],description:"Civil liberties and legal aid statewide. Tiffani Lennon, Executive Director."},
+{name:"Dream Defenders",url:"https://dreamdefenders.org",scope:"State",issue_areas:["Criminal Justice","Democracy & Voting","Immigration"],description:"Police reform and racial justice. FL-based statewide organization."},
+{name:"Florida Housing Coalition",url:"https://www.flhousing.org",scope:"State",issue_areas:["Housing & Insurance"],description:"Statewide affordable housing policy advocacy."},
+{name:"Sunrise Movement Florida",url:"https://www.sunrisemovement.org",scope:"State",issue_areas:["Climate & Infrastructure","Economic Justice & UBI","Democracy & Voting"],description:"Youth-led climate action. FL hubs active."},
+{name:"Florida Conservation Voters",url:"https://www.flcv.com",scope:"State",issue_areas:["Climate & Infrastructure"],description:"Electing environmental champions in Florida."},
+{name:"Physicians for a National Health Program (PNHP)",url:"https://pnhp.org",scope:"National",issue_areas:["Healthcare & Drugs"],description:"Medicare for All advocacy. National physician network."},
+{name:"DCPS – Duval County Public Schools",url:"https://dcps.duvalschools.org",scope:"Local",issue_areas:["Education & Workforce"],description:"8 elementary schools closed 2024-25; 3 of 5 closures served 80%+ Black students. $32M in academic acceleration funds lost."},
+{name:"The Kennedy Forum",url:"https://www.thekennedyforum.org",scope:"National",issue_areas:["Mental Health & Addiction"],description:"Mental health parity enforcement and advocacy. Founded by Patrick Kennedy."},
+{name:"Center for Humane Technology",url:"https://www.humanetech.com",scope:"National",issue_areas:["Technology & AI"],description:"Platform design reform advocacy. Founded by Tristan Harris."},
+{name:"Institute for Political Innovation",url:"https://www.politicalinnovation.org",scope:"National",issue_areas:["Democracy & Voting","Campaign Finance"],description:"Final-five voting advocacy. Founded by Katherine Gehl."},
+{name:"Electronic Frontier Foundation (EFF)",url:"https://www.eff.org",scope:"National",issue_areas:["Technology & AI","Democracy & Voting"],description:"Digital rights advocacy. Privacy protections, net neutrality, and oversight of AI and surveillance."},
+{name:"Sulzbacher Center",url:"https://sulzbacher.org",scope:"Local",issue_areas:["Housing & Insurance","Healthcare & Drugs","Mental Health & Addiction"],description:"Jacksonville's largest homeless services provider. Emergency shelter, healthcare clinic, and housing navigation."},
+{name:"Clara White Mission",url:"https://www.clarawhitemission.org",scope:"Local",issue_areas:["Housing & Insurance","Economic Justice & UBI","Education & Workforce"],description:"Historic Jacksonville nonprofit founded 1904. Culinary job training, food programs, and workforce development."},
+{name:"Habitat for Humanity of Jacksonville",url:"https://www.habitatjax.org",scope:"Local",issue_areas:["Housing & Insurance"],description:"Builds and repairs affordable homes across Duval County."},
+{name:"Jacksonville Area Legal Aid (JALA)",url:"https://www.jaxlegalaid.org",scope:"Local",issue_areas:["Criminal Justice","Housing & Insurance","Immigration"],description:"Free civil legal services to low-income Duval County residents."},
+{name:"First Coast YMCA",url:"https://www.firstcoastymca.org",scope:"Local",issue_areas:["Education & Workforce","Mental Health & Addiction","Healthcare & Drugs"],description:"12 branches across Northeast Florida. Youth development, after-school programs, healthy living."},
+{name:"Baptist Health / Baptist Medical Center",url:"https://www.baptistjax.com",scope:"Local",issue_areas:["Healthcare & Drugs","Mental Health & Addiction"],description:"Largest healthcare system in Northeast Florida. Community health programs and behavioral health services."},
+{name:"UF Health Jacksonville",url:"https://ufhealthjax.org",scope:"Local",issue_areas:["Healthcare & Drugs","Education & Workforce"],description:"Academic medical center and Level I trauma center. Safety-net hospital serving uninsured patients across Duval."},
+{name:"University of North Florida (UNF)",url:"https://www.unf.edu",scope:"Local",issue_areas:["Education & Workforce","Technology & AI","Democracy & Voting"],description:"17,000-student public university. Civic research hub and workforce pipeline for tech and business."},
+{name:"JASMYN (Jacksonville's LGBTQ Youth)",url:"https://www.jasmyn.org",scope:"Local",issue_areas:["LGBTQ+ Rights","Mental Health & Addiction","Housing & Insurance"],description:"Drop-in center, housing support, and mental health services for LGBTQ+ youth."},
+{name:"SEIU Florida",url:"https://www.seiu.org",scope:"State",issue_areas:["Economic Justice & UBI","Healthcare & Drugs"],description:"Service Employees International Union Florida. Workers rights, living wage, and healthcare access."},
+{name:"Florida For All",url:"https://floridaforall.org",scope:"State",issue_areas:["Democracy & Voting","Body Autonomy","Economic Justice & UBI"],description:"Ballot initiative and civic campaign organization. Ran Amendment 4 reproductive freedom campaign."},
+{name:"Florida Alliance of Planned Parenthood Affiliates",url:"https://www.plannedparenthood.org",scope:"State",issue_areas:["Body Autonomy","Healthcare & Drugs"],description:"Statewide reproductive healthcare advocacy."},
+{name:"Hispanic Federation Florida",url:"https://hispanicfederation.org",scope:"State",issue_areas:["Immigration","Economic Justice & UBI","Education & Workforce"],description:"Advocacy and services for Latino communities across Florida."},
+{name:"AFL-CIO Florida",url:"https://flaflcio.org",scope:"State",issue_areas:["Economic Justice & UBI","Democracy & Voting"],description:"Florida state federation of the AFL-CIO, representing more than 1 million union workers."},
+{name:"Futures Without Violence",url:"https://www.futureswithoutviolence.org",scope:"National",issue_areas:["Body Autonomy","Gun Safety","Healthcare & Drugs"],description:"National organization ending gender-based violence. Advocacy for domestic violence survivors."},
+{name:"National Low Income Housing Coalition",url:"https://nlihc.org",scope:"National",issue_areas:["Housing & Insurance","Economic Justice & UBI"],description:"Policy advocacy for affordable housing nationwide."},
+{name:"NARAL Pro-Choice America",url:"https://www.prochoiceamerica.org",scope:"National",issue_areas:["Body Autonomy"],description:"National reproductive rights advocacy organization."},
+{name:"Feeding Northeast Florida",url:"https://feedingneflorida.org",scope:"Local",issue_areas:["Economic Justice & UBI","Healthcare & Drugs"],description:"Regional food bank serving Northeast Florida."},
+{name:"IBEW Local 177",url:"https://www.ibew177.com",scope:"Local",issue_areas:["Economic Justice & UBI"],description:"International Brotherhood of Electrical Workers Local 177 representing electricians across Northeast Florida."},
+{name:"Florida State Conference of the NAACP",url:"https://www.floridanaacp.org",scope:"State",issue_areas:["Criminal Justice","Democracy & Voting","Education & Workforce"],description:"Statewide civil rights organization. Voting rights litigation, criminal justice reform, and education equity advocacy."},
+{name:"Florida Alliance for Retired Americans (FLARA)",url:"https://www.floridaara.org",scope:"State",issue_areas:["Healthcare & Drugs","Economic Justice & UBI","Housing & Insurance"],description:"Statewide senior advocacy. Medicare, Social Security, prescription drug pricing, and housing affordability."},
+{name:"Organize Florida",url:"https://www.organizeflorida.org",scope:"State",issue_areas:["Economic Justice & UBI","Democracy & Voting","Immigration"],description:"Statewide grassroots power-building. Workers rights, housing, immigration, and civic engagement."},
+{name:"Northside Coalition of Jacksonville",url:"https://www.northsidecoalition.com",scope:"Local",issue_areas:["Democracy & Voting","Criminal Justice","Economic Justice & UBI"],description:"Community advocacy organization in North Jacksonville neighborhoods."},
+{name:"Rethink Energy Florida",url:"https://rethinkenergyfl.org",scope:"Local",issue_areas:["Climate & Infrastructure"],description:"Northeast Florida clean energy advocacy. Solar access, utility accountability, and ratepayer protections."},
+{name:"Data for Progress",url:"https://www.dataforprogress.org",scope:"National",issue_areas:["Democracy & Voting","Campaign Finance","Technology & AI"],description:"Progressive think tank providing polling, data analysis, and policy research."}
+];
+
+function renderOrgs(){
+  var q=(document.getElementById('org-search').value||'').toLowerCase();
+  var sc=document.getElementById('org-scope').value;
+  var iss=document.getElementById('org-issue').value;
+  var filtered=ORGS_RAW.filter(function(o){
+    if(sc!=='all'&&o.scope!==sc)return false;
+    if(iss!=='all'&&(o.issue_areas||[]).indexOf(iss)<0)return false;
+    if(q&&o.name.toLowerCase().indexOf(q)<0&&(o.description||'').toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  document.getElementById('org-count').textContent='Showing '+filtered.length+' of '+ORGS_RAW.length+' organizations';
+  var html='';
+  var pgUrl=encodeURIComponent('https://mikesell.org/4ps');
+  for(var i=0;i<filtered.length;i++){
+    var o=filtered[i];
+    var initials=(function(name){
+      var p=(name||'').replace(/[^a-zA-Z\s]/g,' ').split(/\s+/).filter(Boolean);
+      if(!p.length)return'?';
+      if(p.length===1)return p[0].slice(0,2).toUpperCase();
+      return(p[0][0]+(p[1][0]||'')).toUpperCase();
+    })(o.name);
+    var imgTag='';
+    try{if(o.url){var host=new URL(o.url).hostname;imgTag='<img src="https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://'+host+'&size=64" onerror="this.style.display=\'none\'" alt="">';}}catch(e){}
+    var logo='<div class="dd-org-logo">'+initials+imgTag+'</div>';
+    var issues=(o.issue_areas||[]).map(function(iss){return'<span class="dd-org-issue">'+iss+'</span>';}).join('');
+    var msg=encodeURIComponent(o.name+' is part of the coalition for real change in FL-CD4. See Mike Sell\'s full agenda → mikesell.org/4ps');
+    var igCaption=o.name+' is fighting for real change in FL-CD4.\n\nSee Mike Sell\'s full Real Change For Us agenda → mikesell.org/4ps';
+    var connectBtn=o.url?'<a class="sh-icon sh-connect" href="'+o.url+'" target="_blank" rel="noopener" title="Visit '+o.name+'">'+LINK_SVG+'</a>':'';
+    var igId='ig-'+i;
+    html+='<div class="dd-org sc-'+o.scope+'">';
+    html+='<div class="dd-org-hd">'+logo+'<div><div class="dd-org-name">'+o.name+'</div><span class="dd-org-scope sb-'+o.scope+'">'+o.scope+'</span></div></div>';
+    html+='<div class="dd-org-desc">'+(o.description||'')+'</div>';
+    html+='<div class="dd-org-issues">'+issues+'</div>';
+    html+='<div class="sh-row">';
+    html+='<button class="sh-icon sh-fb" title="Share on Facebook" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u='+pgUrl+'\',\'_blank\',\'noopener\')">'+FB_SVG+'</button>';
+    html+='<button class="sh-icon sh-ig" id="'+igId+'" title="Copy caption for Instagram" onclick="copyIG('+i+')">'+IG_SVG+'</button>';
+    html+='<button class="sh-icon sh-tt" title="Share on TikTok" onclick="window.open(\'https://www.tiktok.com/share?url='+pgUrl+'\',\'_blank\',\'noopener\')">'+TT_SVG+'</button>';
+    html+='<button class="sh-icon sh-truth" title="Share on Truth Social" onclick="window.open(\'https://truthsocial.com/share?url='+pgUrl+'\',\'_blank\',\'noopener\')">'+TRUTH_SVG+'</button>';
+    html+='<button class="sh-icon sh-bsky" title="Share on Bluesky" onclick="window.open(\'https://bsky.app/intent/compose?text='+msg+'\',\'_blank\',\'noopener\')">'+BSKY_SVG+'</button>';
+    html+=connectBtn;
+    html+='</div></div>';
+  }
+  document.getElementById('org-grid').innerHTML=html;
+  window._igCaptions=filtered.map(function(o){return o.name+' is fighting for real change in FL-CD4.\n\nSee Mike Sell\'s full Real Change For Us agenda → mikesell.org/4ps';});
+}
+
+function copyIG(idx){
+  var txt=window._igCaptions&&window._igCaptions[idx]?window._igCaptions[idx]:'';
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){});}
+}
+
+renderOrgs();
+
+function sendHeight(){var h=document.documentElement.scrollHeight||document.body.scrollHeight;try{window.parent.postMessage({type:'iwResizeHeight',data:{height:h}},'*');}catch(e){}}
+window.addEventListener('load',sendHeight);
+window.addEventListener('resize',sendHeight);
+if(window.MutationObserver){new MutationObserver(sendHeight).observe(document.body,{childList:true,subtree:true,attributes:true});}
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Ps Hub — Variations</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#f0ede8;font-family:'avenir-light',Arial,sans-serif;padding:32px 16px;}
+.page-label{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;margin-top:40px;}
+.page-label:first-child{margin-top:0;}
+.var-note{font-family:'avenir-light',Arial,sans-serif;font-size:12px;color:#6b7280;margin-bottom:16px;max-width:600px;line-height:1.5;}
+.mock{border:1px solid #d1d5db;border-radius:14px;overflow:hidden;max-width:900px;box-shadow:0 4px 24px rgba(0,0,0,0.07);}
+
+/* ── SHARED ── */
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);}
+.issues{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:7px;}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
+.footer a{color:#59D7EE;text-decoration:none;}
+.iss{background:#fff;border:1.5px solid #e2e8f0;border-radius:9px;padding:11px 4px 9px;text-align:center;}
+.iss-icon{font-size:16px;margin-bottom:4px;}
+.iss-name{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#374151;line-height:1.3;}
+.issue-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#9ca3af;margin-bottom:5px;}
+.issue-title{font-family:'clarendon-w01-medium',serif;font-size:17px;color:#002d5b;margin-bottom:4px;}
+.issue-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#9ca3af;line-height:1.6;margin-bottom:14px;}
+
+/* ════════════════════════════════
+   VARIATION A — APPROVED BASE
+   Gradient hero · white card band · purple accent · purple pill CTAs
+   ════════════════════════════════ */
+.a-hero{background:linear-gradient(135deg,#002d5b 0%,#470D67 100%);padding:32px 28px 28px;}
+.a-hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;}
+.a-hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;line-height:1.2;margin-bottom:8px;}
+.a-hero h1 span{color:#59D7EE;}
+.a-hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;}
+.a-pillars-wrap{background:#fff;padding:16px;border-bottom:1.5px solid #e5e7eb;}
+.a-pillars-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;}
+.a-card{padding:16px;border-right:1.5px solid #e2e8f0;display:flex;flex-direction:column;}
+.a-card:last-child{border-right:none;}
+.a-card-accent{height:3px;width:28px;background:#7c3aed;border-radius:2px;margin-bottom:12px;}
+.a-card-icon{font-size:20px;margin-bottom:8px;}
+.a-card-name{font-family:'clarendon-w01-medium',serif;font-size:14px;color:#002d5b;margin-bottom:6px;}
+.a-card-desc{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;flex:1;margin-bottom:12px;}
+.a-card-cta{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#fff;background:#7c3aed;border-radius:50px;padding:6px 0;display:block;text-align:center;letter-spacing:0.04em;}
+.a-issue-wrap{background:#f5f7fa;padding:18px 20px;}
+
+/* ════════════════════════════════
+   VARIATION B — CARD COLORS
+   Same hero · each pillar card gets its own accent color + matching CTA
+   ════════════════════════════════ */
+.b-pillars-wrap{background:#fff;padding:16px;border-bottom:1.5px solid #e5e7eb;}
+.b-pillars-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;}
+.b-card{padding:16px;border-right:1.5px solid #e2e8f0;display:flex;flex-direction:column;}
+.b-card:last-child{border-right:none;}
+.b-card-icon{font-size:20px;margin-bottom:8px;}
+.b-card-name{font-family:'clarendon-w01-medium',serif;font-size:14px;color:#002d5b;margin-bottom:6px;}
+.b-card-desc{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;flex:1;margin-bottom:12px;}
+.b-card-cta{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#fff;border-radius:50px;padding:6px 0;display:block;text-align:center;letter-spacing:0.04em;}
+.b-p1 .b-accent{height:3px;width:28px;border-radius:2px;margin-bottom:12px;background:#7c3aed;}
+.b-p2 .b-accent{height:3px;width:28px;border-radius:2px;margin-bottom:12px;background:#2563eb;}
+.b-p3 .b-accent{height:3px;width:28px;border-radius:2px;margin-bottom:12px;background:#0891b2;}
+.b-p4 .b-accent{height:3px;width:28px;border-radius:2px;margin-bottom:12px;background:#059669;}
+.b-p1 .b-card-cta{background:#7c3aed;}
+.b-p2 .b-card-cta{background:#2563eb;}
+.b-p3 .b-card-cta{background:#0891b2;}
+.b-p4 .b-card-cta{background:#059669;}
+.b-issue-wrap{background:#f5f7fa;padding:18px 20px;}
+
+/* ════════════════════════════════
+   VARIATION C — DARK CARD BAND
+   Same hero · dark navy pillar band · white text cards · cyan accents
+   ════════════════════════════════ */
+.c-pillars-wrap{background:#002d5b;padding:16px;border-bottom:1.5px solid #1a3f6e;}
+.c-pillars-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:12px;}
+.c-card{padding:16px;border-right:1.5px solid rgba(255,255,255,0.1);display:flex;flex-direction:column;}
+.c-card:last-child{border-right:none;}
+.c-card-accent{height:3px;width:28px;background:#59D7EE;border-radius:2px;margin-bottom:12px;}
+.c-card-icon{font-size:20px;margin-bottom:8px;}
+.c-card-name{font-family:'clarendon-w01-medium',serif;font-size:14px;color:#fff;margin-bottom:6px;}
+.c-card-desc{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.55);line-height:1.6;flex:1;margin-bottom:12px;}
+.c-card-cta{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#002d5b;background:#59D7EE;border-radius:50px;padding:6px 0;display:block;text-align:center;letter-spacing:0.04em;}
+.c-issue-wrap{background:#f5f7fa;padding:18px 20px;}
+</style>
+</head>
+<body>
+
+<!-- ── VARIATION A ── APPROVED BASE ── -->
+<div class="page-label">Variation A — Approved Base (gradient hero · white cards · purple CTAs)</div>
+<div class="var-note">The locked design. Warm white card band, single purple accent bar on every card, uniform purple pill buttons.</div>
+<div class="mock">
+  <div class="a-hero">
+    <div class="a-hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+    <h1>Change That Works <span>For Us.</span></h1>
+    <p>Most campaigns give you a talking point. Mike gives you the whole picture — people, process, policy, and purse.</p>
+  </div>
+  <div class="a-pillars-wrap">
+    <div class="a-pillars-eye">The 4Ps Platform</div>
+    <div class="pillars">
+      <div class="a-card"><div class="a-card-accent"></div><div class="a-card-icon">🤝</div><div class="a-card-name">People</div><div class="a-card-desc">Organizations already doing the work who could use our support. Change starts with the people closest to the problem.</div><div class="a-card-cta">Meet the Coalition</div></div>
+      <div class="a-card"><div class="a-card-accent"></div><div class="a-card-icon">⚙️</div><div class="a-card-name">Process</div><div class="a-card-desc">The exact rule or agency built to produce the wrong outcome. Mike names it, then names the fix.</div><div class="a-card-cta">Browse Processes</div></div>
+      <div class="a-card"><div class="a-card-accent"></div><div class="a-card-icon">📋</div><div class="a-card-name">Policy</div><div class="a-card-desc">Bills at every level that would make these changes permanent. A fix not written into law gets reversed.</div><div class="a-card-cta">Track the Bills</div></div>
+      <div class="a-card"><div class="a-card-accent"></div><div class="a-card-icon">💰</div><div class="a-card-name">Purse</div><div class="a-card-desc">Following the money from Washington to your neighborhood — what's spent, what's cut, what should be reclaimed.</div><div class="a-card-cta">Follow the Money</div></div>
+    </div>
+  </div>
+  <div class="a-issue-wrap">
+    <div class="issue-eye">Change that works for us</div>
+    <div class="issue-title">Pick an issue. See the real plan.</div>
+    <div class="issue-sub">See who is fighting, what is broken, what law would fix it, and where the money is.</div>
+    <div class="issues">
+      <div class="iss"><div class="iss-icon">💊</div><div class="iss-name">Healthcare &amp; Drugs</div></div>
+      <div class="iss"><div class="iss-icon">🏘️</div><div class="iss-name">Housing &amp; Affordability</div></div>
+      <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Workers &amp; Wages</div></div>
+      <div class="iss"><div class="iss-icon">🗳️</div><div class="iss-name">Democracy &amp; Voting</div></div>
+      <div class="iss"><div class="iss-icon">🛡️</div><div class="iss-name">Gun Safety</div></div>
+      <div class="iss"><div class="iss-icon">🌿</div><div class="iss-name">Climate &amp; Infrastructure</div></div>
+    </div>
+    <div class="issues">
+      <div class="iss"><div class="iss-icon">🎓</div><div class="iss-name">Education &amp; Workforce</div></div>
+      <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Criminal Justice</div></div>
+      <div class="iss"><div class="iss-icon">🌎</div><div class="iss-name">Immigration</div></div>
+      <div class="iss"><div class="iss-icon">💻</div><div class="iss-name">Technology &amp; AI</div></div>
+      <div class="iss"><div class="iss-icon">🤱</div><div class="iss-name">Body Autonomy</div></div>
+      <div class="iss"><div class="iss-icon">🧠</div><div class="iss-name">Mental Health</div></div>
+    </div>
+  </div>
+  <div class="footer"><p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br><a href="#">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p></div>
+</div>
+
+<!-- ── VARIATION B ── PILLAR COLORS ── -->
+<div class="page-label" style="margin-top:48px;">Variation B — Each pillar gets its own color (People purple · Process blue · Policy teal · Purse green)</div>
+<div class="var-note">Same hero and layout, but each card has a unique accent bar and matching CTA — color-codes the 4Ps so they're instantly distinguishable.</div>
+<div class="mock">
+  <div class="a-hero">
+    <div class="a-hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+    <h1>Change That Works <span>For Us.</span></h1>
+    <p>Most campaigns give you a talking point. Mike gives you the whole picture — people, process, policy, and purse.</p>
+  </div>
+  <div class="b-pillars-wrap">
+    <div class="b-pillars-eye">The 4Ps Platform</div>
+    <div class="pillars">
+      <div class="b-card b-p1"><div class="b-accent"></div><div class="b-card-icon">🤝</div><div class="b-card-name">People</div><div class="b-card-desc">Organizations already doing the work who could use our support. Change starts with the people closest to the problem.</div><div class="b-card-cta">Meet the Coalition</div></div>
+      <div class="b-card b-p2"><div class="b-accent"></div><div class="b-card-icon">⚙️</div><div class="b-card-name">Process</div><div class="b-card-desc">The exact rule or agency built to produce the wrong outcome. Mike names it, then names the fix.</div><div class="b-card-cta">Browse Processes</div></div>
+      <div class="b-card b-p3"><div class="b-accent"></div><div class="b-card-icon">📋</div><div class="b-card-name">Policy</div><div class="b-card-desc">Bills at every level that would make these changes permanent. A fix not written into law gets reversed.</div><div class="b-card-cta">Track the Bills</div></div>
+      <div class="b-card b-p4"><div class="b-accent"></div><div class="b-card-icon">💰</div><div class="b-card-name">Purse</div><div class="b-card-desc">Following the money from Washington to your neighborhood — what's spent, what's cut, what should be reclaimed.</div><div class="b-card-cta">Follow the Money</div></div>
+    </div>
+  </div>
+  <div class="b-issue-wrap">
+    <div class="issue-eye">Change that works for us</div>
+    <div class="issue-title">Pick an issue. See the real plan.</div>
+    <div class="issue-sub">See who is fighting, what is broken, what law would fix it, and where the money is.</div>
+    <div class="issues">
+      <div class="iss"><div class="iss-icon">💊</div><div class="iss-name">Healthcare &amp; Drugs</div></div>
+      <div class="iss"><div class="iss-icon">🏘️</div><div class="iss-name">Housing &amp; Affordability</div></div>
+      <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Workers &amp; Wages</div></div>
+      <div class="iss"><div class="iss-icon">🗳️</div><div class="iss-name">Democracy &amp; Voting</div></div>
+      <div class="iss"><div class="iss-icon">🛡️</div><div class="iss-name">Gun Safety</div></div>
+      <div class="iss"><div class="iss-icon">🌿</div><div class="iss-name">Climate &amp; Infrastructure</div></div>
+    </div>
+    <div class="issues">
+      <div class="iss"><div class="iss-icon">🎓</div><div class="iss-name">Education &amp; Workforce</div></div>
+      <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Criminal Justice</div></div>
+      <div class="iss"><div class="iss-icon">🌎</div><div class="iss-name">Immigration</div></div>
+      <div class="iss"><div class="iss-icon">💻</div><div class="iss-name">Technology &amp; AI</div></div>
+      <div class="iss"><div class="iss-icon">🤱</div><div class="iss-name">Body Autonomy</div></div>
+      <div class="iss"><div class="iss-icon">🧠</div><div class="iss-name">Mental Health</div></div>
+    </div>
+  </div>
+  <div class="footer"><p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br><a href="#">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p></div>
+</div>
+
+<!-- ── VARIATION C ── DARK CARD BAND ── -->
+<div class="page-label" style="margin-top:48px;">Variation C — Dark navy card band (hero flows into pillar section · cyan accents · dark navy CTAs)</div>
+<div class="var-note">The hero gradient bleeds into the card band — the whole top half reads as one dark branded block. Cyan accent bars + CTAs tie back to the hero. Issue grid stays light below.</div>
+<div class="mock">
+  <div class="a-hero">
+    <div class="a-hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+    <h1>Change That Works <span>For Us.</span></h1>
+    <p>Most campaigns give you a talking point. Mike gives you the whole picture — people, process, policy, and purse.</p>
+  </div>
+  <div class="c-pillars-wrap">
+    <div class="c-pillars-eye">The 4Ps Platform</div>
+    <div class="pillars">
+      <div class="c-card"><div class="c-card-accent"></div><div class="c-card-icon">🤝</div><div class="c-card-name">People</div><div class="c-card-desc">Organizations already doing the work who could use our support. Change starts with the people closest to the problem.</div><div class="c-card-cta">Meet the Coalition</div></div>
+      <div class="c-card"><div class="c-card-accent"></div><div class="c-card-icon">⚙️</div><div class="c-card-name">Process</div><div class="c-card-desc">The exact rule or agency built to produce the wrong outcome. Mike names it, then names the fix.</div><div class="c-card-cta">Browse Processes</div></div>
+      <div class="c-card"><div class="c-card-accent"></div><div class="c-card-icon">📋</div><div class="c-card-name">Policy</div><div class="c-card-desc">Bills at every level that would make these changes permanent. A fix not written into law gets reversed.</div><div class="c-card-cta">Track the Bills</div></div>
+      <div class="c-card"><div class="c-card-accent"></div><div class="c-card-icon">💰</div><div class="c-card-name">Purse</div><div class="c-card-desc">Following the money from Washington to your neighborhood — what's spent, what's cut, what should be reclaimed.</div><div class="c-card-cta">Follow the Money</div></div>
+    </div>
+  </div>
+  <div class="c-issue-wrap">
+    <div class="issue-eye">Change that works for us</div>
+    <div class="issue-title">Pick an issue. See the real plan.</div>
+    <div class="issue-sub">See who is fighting, what is broken, what law would fix it, and where the money is.</div>
+    <div class="issues">
+      <div class="iss"><div class="iss-icon">💊</div><div class="iss-name">Healthcare &amp; Drugs</div></div>
+      <div class="iss"><div class="iss-icon">🏘️</div><div class="iss-name">Housing &amp; Affordability</div></div>
+      <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Workers &amp; Wages</div></div>
+      <div class="iss"><div class="iss-icon">🗳️</div><div class="iss-name">Democracy &amp; Voting</div></div>
+      <div class="iss"><div class="iss-icon">🛡️</div><div class="iss-name">Gun Safety</div></div>
+      <div class="iss"><div class="iss-icon">🌿</div><div class="iss-name">Climate &amp; Infrastructure</div></div>
+    </div>
+    <div class="issues">
+      <div class="iss"><div class="iss-icon">🎓</div><div class="iss-name">Education &amp; Workforce</div></div>
+      <div class="iss"><div class="iss-icon">⚖️</div><div class="iss-name">Criminal Justice</div></div>
+      <div class="iss"><div class="iss-icon">🌎</div><div class="iss-name">Immigration</div></div>
+      <div class="iss"><div class="iss-icon">💻</div><div class="iss-name">Technology &amp; AI</div></div>
+      <div class="iss"><div class="iss-icon">🤱</div><div class="iss-name">Body Autonomy</div></div>
+      <div class="iss"><div class="iss-icon">🧠</div><div class="iss-name">Mental Health</div></div>
+    </div>
+  </div>
+  <div class="footer"><p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br><a href="#">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p></div>
+</div>
+
+<div style="height:40px;"></div>
+</body>
+</html>

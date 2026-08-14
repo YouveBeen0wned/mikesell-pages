@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Ps Master Framework — Mike Sell FL-CD4 2026</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f4f0;
+    --text: #1a1a18;
+    --text-secondary: #5f5e5a;
+    --border: rgba(0,0,0,0.12);
+    --border-secondary: rgba(0,0,0,0.22);
+    --purple-bg: #EEEDFE; --purple-text: #3C3489;
+    --teal-bg: #E1F5EE; --teal-text: #085041;
+    --amber-bg: #FAEEDA; --amber-text: #633806;
+    --blue-bg: #E6F1FB; --blue-text: #0C447C;
+    --red-bg: #FCEBEB; --red-text: #791F1F;
+    --green-bg: #EAF3DE; --green-text: #27500A;
+    --coral-bg: #FAECE7; --coral-text: #712B13;
+    --pink-bg: #FBEAF0; --pink-text: #72243E;
+    --accent: #534AB7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18; --bg-secondary: #2c2c2a;
+      --text: #f1efe8; --text-secondary: #b4b2a9;
+      --border: rgba(255,255,255,0.12); --border-secondary: rgba(255,255,255,0.22);
+      --purple-bg: #26215C; --purple-text: #CECBF6;
+      --teal-bg: #04342C; --teal-text: #9FE1CB;
+      --amber-bg: #412402; --amber-text: #FAC775;
+      --blue-bg: #042C53; --blue-text: #B5D4F4;
+      --red-bg: #501313; --red-text: #F7C1C1;
+      --green-bg: #173404; --green-text: #C0DD97;
+      --coral-bg: #4A1B0C; --coral-text: #F5C4B3;
+      --pink-bg: #4B1528; --pink-text: #F4C0D1;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+  .page { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .page-header { margin-bottom: 2rem; border-bottom: 0.5px solid var(--border); padding-bottom: 1rem; }
+  .eyebrow { font-size: 11px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  h1 { font-size: 24px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .page-sub { font-size: 13px; color: var(--text-secondary); }
+  .toc { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 2rem; }
+  .toc-item { background: var(--bg-secondary); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--text); text-decoration: none; border: 0.5px solid var(--border); }
+  .toc-item:hover { border-color: var(--border-secondary); }
+  .toc-num { font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 2px; }
+  .section { margin-bottom: 3rem; }
+  .section-header { background: var(--bg-secondary); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 14px 18px; margin-bottom: 1rem; }
+  .section-title { font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .section-sub { font-size: 12px; color: var(--text-secondary); }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .card-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+  .card-body { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 10px; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 500; }
+  .t-purple { background: var(--purple-bg); color: var(--purple-text); }
+  .t-teal { background: var(--teal-bg); color: var(--teal-text); }
+  .t-amber { background: var(--amber-bg); color: var(--amber-text); }
+  .t-blue { background: var(--blue-bg); color: var(--blue-text); }
+  .t-red { background: var(--red-bg); color: var(--red-text); }
+  .t-green { background: var(--green-bg); color: var(--green-text); }
+  .t-coral { background: var(--coral-bg); color: var(--coral-text); }
+  .t-pink { background: var(--pink-bg); color: var(--pink-text); }
+  .num { color: var(--accent); font-weight: 500; }
+  .field-read { background: var(--bg-secondary); border-radius: 10px; padding: 14px 18px; margin-top: 14px; }
+  .field-read-label { font-size: 11px; font-weight: 500; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .fr-item { font-size: 13px; color: var(--text); line-height: 1.6; padding: 6px 0; border-bottom: 0.5px solid var(--border); }
+  .fr-item:last-child { border-bottom: none; }
+  .fr-arrow { color: var(--accent); margin-right: 6px; }
+  .p3-badge { font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 500; margin-left: 4px; }
+  .b-active { background: var(--teal-bg); color: var(--teal-text); }
+  .b-queued { background: var(--blue-bg); color: var(--blue-text); }
+  .b-engage { background: var(--amber-bg); color: var(--amber-text); }
+  .b-caution { background: var(--red-bg); color: var(--red-text); }
+  .b-expert { background: var(--purple-bg); color: var(--purple-text); }
+  .b-appt { background: var(--pink-bg); color: var(--pink-text); }
+  .heatmap-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+  table.hm { border-collapse: collapse; width: 100%; font-size: 12px; }
+  table.hm th { padding: 6px 10px; font-size: 11px; font-weight: 500; color: var(--text-secondary); text-align: center; border-bottom: 0.5px solid var(--border); }
+  table.hm th.il { text-align: left; }
+  table.hm td { padding: 6px 10px; text-align: center; font-weight: 500; border-bottom: 0.5px solid var(--border); }
+  table.hm td.il { text-align: left; font-weight: 400; font-size: 13px; color: var(--text); }
+  .score-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .score-bar-label { font-size: 13px; color: var(--text); min-width: 180px; }
+  .score-bar-track { flex: 1; height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 4px; }
+  .score-bar-val { font-size: 13px; font-weight: 500; color: var(--text); min-width: 40px; text-align: right; }
+  .metric-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .metric { background: var(--bg-secondary); border-radius: 8px; padding: 12px 14px; }
+  .metric-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+  .metric-val { font-size: 22px; font-weight: 500; color: var(--text); }
+  .metric-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 2rem 0; }
+  .footer { font-size: 12px; color: var(--text-secondary); text-align: center; margin-top: 3rem; padding-top: 1rem; border-top: 0.5px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="page-header">
+  <div class="eyebrow">Mike Sell for Congress · FL-CD4 · 2026</div>
+  <h1>4Ps Master Framework</h1>
+  <div class="page-sub">Process · Policy · People · Purse — locked version as of 2026-05-05. Overall alignment: 83%.</div>
+</div>
+
+<div class="toc">
+  <a class="toc-item" href="#alignment"><span class="toc-num">Overview</span>Alignment heatmap</a>
+  <a class="toc-item" href="#p1"><span class="toc-num">P1</span>Process</a>
+  <a class="toc-item" href="#p2"><span class="toc-num">P2</span>Policy</a>
+  <a class="toc-item" href="#p3"><span class="toc-num">P3</span>People</a>
+  <a class="toc-item" href="#p4-constrain"><span class="toc-num">P4 ①</span>Constrain</a>
+  <a class="toc-item" href="#p4-increase"><span class="toc-num">P4 ②</span>Increase</a>
+  <a class="toc-item" href="#p4-underfunded"><span class="toc-num">P4 ③</span>Underfunded</a>
+  <a class="toc-item" href="#p4-conditions"><span class="toc-num">P4 ④</span>Conditions</a>
+  <a class="toc-item" href="#p4-audit"><span class="toc-num">P4 ⑤</span>Audit + Verify</a>
+  <a class="toc-item" href="#p4-other"><span class="toc-num">P4 ⑥</span>Other Instruments</a>
+</div>
+
+<!-- ALIGNMENT OVERVIEW -->
+<div class="section" id="alignment">
+  <div class="section-header">
+    <div class="section-title">Alignment overview — updated scores</div>
+    <div class="section-sub">Rescored after P3 People rebuild and P4 Purse market research expansion.</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric"><div class="metric-label">Overall alignment</div><div class="metric-val">83%</div><div class="metric-sub">Up from 74%</div></div>
+    <div class="metric"><div class="metric-label">Protect Our Future</div><div class="metric-val">86%</div><div class="metric-sub">Up from 80%</div></div>
+    <div class="metric"><div class="metric-label">Make America Affordable</div><div class="metric-val">87%</div><div class="metric-sub">Up from 82%</div></div>
+    <div class="metric"><div class="metric-label">Fix the System</div><div class="metric-val">76%</div><div class="metric-sub">Up from 60%</div></div>
+  </div>
+  <div class="score-bar"><span class="score-bar-label">Protect Our Future</span><div class="score-bar-track"><div class="score-bar-fill" style="width:86%;background:#185FA5;"></div></div><span class="score-bar-val">86%</span></div>
+  <div class="score-bar"><span class="score-bar-label">Make America Affordable</span><div class="score-bar-track"><div class="score-bar-fill" style="width:87%;background:#1D9E75;"></div></div><span class="score-bar-val">87%</span></div>
+  <div class="score-bar" style="margin-bottom:1.5rem;"><span class="score-bar-label">Fix the System</span><div class="score-bar-track"><div class="score-bar-fill" style="width:76%;background:#D85A30;"></div></div><span class="score-bar-val">76%</span></div>
+  <div class="heatmap-wrap">
+    <table class="hm">
+      <thead><tr><th class="il">Platform position</th><th>P1 Process</th><th>P2 Policy</th><th>P3 People</th><th>P4 Purse</th></tr></thead>
+      <tbody id="hm-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- P1 -->
+<div class="section" id="p1">
+  <div class="section-header">
+    <div class="section-title">P1 — Process</div>
+    <div class="section-sub">The structural fixes. How systems are designed, who controls them, and how decisions get made.</div>
+  </div>
+  <div class="card"><p class="card-title">Electoral reform — ranked choice voting + open primaries</p><p class="card-meta">Katherine Gehl model · Alaska final-five in operation · Process precondition for every other reform</p><p class="card-body">Ranked choice voting and open primaries are not just policy preferences — they are the process changes that make every other reform possible. Career politicians serve donors, not voters, because the primary system selects for ideological purity over problem-solving. Katherine Gehl's final-five model is operating in Alaska now. The process change is proven.</p><div class="tags"><span class="tag t-purple">Fix the System</span><span class="tag t-blue">Democracy Reform</span></div></div>
+  <div class="card"><p class="card-title">Redistricting — independent commissions, end mid-decade redrawing</p><p class="card-meta">H.R. 5449 / S. 2885 · 15-member IRCs · DeSantis signed new FL gerrymander 2026 · Michigan IRC proof of concept</p><p class="card-body">The Redistricting Reform Act of 2025 requires every state to use independent commissions for congressional maps and bans mid-decade redrawing. DeSantis signed a new gerrymandered Florida map in 2026 — the eighth state to redraw mid-decade in modern history. Michigan's IRC created genuine competitive seats where none existed before. The process fix is named and proven.</p><div class="tags"><span class="tag t-purple">Fix the System</span><span class="tag t-coral">FL-CD4 Direct</span></div></div>
+  <div class="card"><p class="card-title">Term limits — constitutional amendment path</p><p class="card-meta">H.J.Res.5 + H.J.Res.12 active · 14 states passed convention applications · 34 needed for Article V convention</p><p class="card-body">Two active joint resolutions in the 119th Congress propose 6-term House / 2-term Senate limits. Fourteen states have passed U.S. Term Limits convention applications. The process requires 34 states. The argument is bipartisan — the mechanism is constitutional, not legislative.</p><div class="tags"><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">Continuous improvement discipline — apply Six Sigma to government operations</p><p class="card-meta">Mike's $250M+ documented savings · 20 years fixing broken complex operational systems · Apply to federal process waste</p><p class="card-body">The same Continuous Improvement methodology that produced <span class="num">$250M+</span> in documented savings inside the U.S. healthcare system applies directly to federal agency operations. Process waste, rework loops, and broken handoffs inside federal bureaucracies cost more than the programs themselves. This is Mike's differentiated credential — not a talking point, a track record.</p><div class="tags"><span class="tag t-amber">Make America Affordable</span><span class="tag t-teal">Mike's Credential</span></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- P2 -->
+<div class="section" id="p2">
+  <div class="section-header">
+    <div class="section-title">P2 — Policy</div>
+    <div class="section-sub">The specific commitments. Exact positions sourced from Bio + FAQs. No invention, no softening.</div>
+  </div>
+  <div class="card"><p class="card-title">Gun safety — universal background checks + red flag laws + ghost gun regulation</p><p class="card-meta">Bipartisan Safer Communities Act baseline · Shannon Watts coalition · ATF enforcement backbone</p><p class="card-body">Universal background checks, red flag laws, and ghost gun serial number requirements are the policy floor. The Bipartisan Safer Communities Act (2022) is the most recent federal action — it is not enough. Ghost gun recoveries by law enforcement grew <span class="num">1,484%</span> from 2017 to 2022. The policy positions are clear and sourced.</p><div class="tags"><span class="tag t-red">Gun Safety</span><span class="tag t-blue">Protect Our Future</span></div></div>
+  <div class="card"><p class="card-title">Healthcare — public option + drug price negotiation expansion</p><p class="card-meta">IRA drug negotiation active on 10 drugs · Medicare for All as floor · Public option as immediate step</p><p class="card-body">The IRA authorized Medicare drug price negotiation for the first time. Year 1 covers 10 drugs with <span class="num">$6B+</span> in projected savings. A public health insurance option — with Medicare negotiation savings designated as seed funding — is the next step. The policy path from current law to public option is named and financed.</p><div class="tags"><span class="tag t-blue">Healthcare</span><span class="tag t-amber">Make America Affordable</span></div></div>
+  <div class="card"><p class="card-title">Body autonomy — full reproductive rights, repeal Hyde Amendment</p><p class="card-meta">Hyde Amendment reinstated + expanded Jan 2025 EO · H.R. 7 seeks to make permanent · EACH Act not reintroduced in 119th Congress</p><p class="card-body">The Hyde Amendment is a federal funding prohibition on reproductive healthcare for anyone on Medicaid, military insurance, VA, or federal employment plans. Trump's January 2025 EO reinstated and expanded its reach. H.R. 7 in the 119th Congress would make it permanent. Repealing Hyde is the policy vote that makes body autonomy real for the people who need it most.</p><div class="tags"><span class="tag t-pink">Body Autonomy</span><span class="tag t-blue">Protect Our Future</span></div></div>
+  <div class="card"><p class="card-title">Immigration — humane, orderly, legal pathways</p><p class="card-meta">Reform over enforcement-only · Economic contribution framing · FL-CD4 workforce reality</p><p class="card-body">A humane immigration system with clear legal pathways, due process protections, and reform of the asylum backlog is the policy position. The enforcement-only approach has not reduced irregular migration in 40 years. FL-CD4's economy depends on immigrant labor. The policy argument is economic and moral.</p><div class="tags"><span class="tag t-teal">Immigration</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">Cannabis — full federal legalization</p><p class="card-meta">Expungement of prior convictions · Community reinvestment revenue sharing · FL-CD4 equity lens</p><p class="card-body">Full federal legalization with automatic expungement of prior convictions and a community reinvestment revenue share — directing 20-40% of tax revenue to the zip codes with the highest arrest rates under prohibition. The same communities that absorbed the cost of prohibition receive a share of the revenue from ending it.</p><div class="tags"><span class="tag t-green">Cannabis</span><span class="tag t-amber">Community Reinvestment</span></div></div>
+  <div class="card"><p class="card-title">Workers — double overtime threshold + 2 weeks paid vacation mandate</p><p class="card-meta">CPC alignment · Double overtime + paid vacation · Davis-Bacon enforcement</p><p class="card-body">Double the overtime salary threshold — currently <span class="num">$43,888</span> — so millions of salaried workers qualify for overtime pay again. Mandate 2 weeks paid vacation. Both are CPC-aligned positions with strong overlap to Make America Affordable. The policy is specific and the dollar impact on FL-CD4 workers is calculable.</p><div class="tags"><span class="tag t-teal">Workers</span><span class="tag t-amber">Make America Affordable</span></div></div>
+  <div class="card"><p class="card-title">Tech accountability — AI surveillance pricing ban + algorithmic transparency</p><p class="card-meta">RealPage DOJ settlement 2025 · FTC Operation AI Comply active · Section 230 reform in motion · March 2026 federal court precedents</p><p class="card-body">Codify the FTC surveillance pricing ban into statute. Require algorithmic transparency for platforms above 50M monthly users. Two March 2026 federal courts found Meta and Google liable for algorithmic harm — the legal foundation is built. The policy needs a vote.</p><div class="tags"><span class="tag t-blue">Tech / Digital Rights</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">UBI — guaranteed income pilots</p><p class="card-meta">H.R. 5830 · $495M/year FY2026-2030 · Stockton SEED evidence base · Payments don't count against SNAP/Medicaid</p><p class="card-body">Support H.R. 5830 (Guaranteed Income Pilot Program Act of 2025) authorizing <span class="num">$495M/year</span> for a three-year HHS-administered pilot. Monthly payments set to fair market rent for a 2-bedroom home in the participant's zip code. Does not count against SNAP or Medicaid eligibility — the benefit cliff objection is answered in the bill text.</p><div class="tags"><span class="tag t-purple">UBI</span><span class="tag t-blue">H.R. 5830</span></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- P3 -->
+<div class="section" id="p3">
+  <div class="section-header">
+    <div class="section-title">P3 — People</div>
+    <div class="section-sub">Organizations, community anchors, field experts, and appointment targets. Implementers only — not researchers standing with the crowd waiting for leadership.</div>
+  </div>
+
+  <p style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin:1rem 0 8px;">Active partners</p>
+  <div class="card"><span class="p3-badge b-active">Partner</span><p class="card-title">Indivisible Jax Riverside</p><p class="card-meta">FL-04 grassroots org / cross-pub partner · Mike co-leads Find &amp; Elect Good Candidates AG with Jean Tanler</p><p class="card-body">Cross-publication model approved: essay + intro hook + bio → Michele Coppola (blog editor) → IJR website + Monday newsletter + FB/IG. Lead time: 5-7 days before Substack publish. Distribution: default Yes on C/S/H/V content; default No on F and E sections.</p></div>
+  <div class="card"><span class="p3-badge b-active">Partner</span><p class="card-title">Florida Forward Party</p><p class="card-meta">Scott Long (FFP Comms Lead) · Link amplification model · Every F2 Substack post</p><p class="card-body">Scott Long amplifies links across Forward Party channels. Hand-off: 2-sentence summary + Quotable Claim + hashtags + canonical link. Bridge methodology: match article argument to FFP institutional move. No local news anchor required.</p></div>
+  <div class="card"><span class="p3-badge b-active">Partner</span><p class="card-title">Jacksonville NextGen Coalition</p><p class="card-meta">C1 fully adopted · 12-member Policy Council · 20-30 Captains · Open General Members</p><p class="card-body">June 23 City Council testimony is the W8D2 flagship moment. Recruitment pipeline: UNF, EWU, NextUp JAX, YPLJ alum networks. Three-layer governance built and operational.</p></div>
+  <div class="card"><span class="p3-badge b-active">Active</span><p class="card-title">Progressive Caucus (CPC) — 4 confirmed strong overlaps</p><p class="card-meta">AI surveillance pricing ban · Affordable Drug Manufacturing Act · Double overtime + 2 weeks paid vacation · Monopoly utility price gouging</p><p class="card-body">Engage only on these four. Mike's differentiators — UBI, ranked choice voting, open primaries, full cannabis — stay separate and are not diluted for CPC alignment.</p></div>
+
+  <p style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin:1rem 0 8px;">C4 outreach queue — 6 approved emails, none yet sent</p>
+  <div class="card"><span class="p3-badge b-queued">Email queued</span><p class="card-title">JASMYN · UNF Dr. Freeder · EWU Dean · NextUp JAX · YPLJ Alum · AME Pastor</p><p class="card-meta">First ask: mutual amplification, not endorsement</p><p class="card-body">Six 1:1 intro emails approved. Angles: youth safety + housing (JASMYN), student mobilization (UNF), HBCU constituency (EWU), NextGen captain pipeline (NextUp JAX), persuadable professionals (YPLJ), faith community (AME). None yet sent as of 2026-05-05.</p></div>
+
+  <p style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin:1rem 0 8px;">Engage now</p>
+  <div class="card"><span class="p3-badge b-engage">Engage</span><p class="card-title">Northside Coalition · Florida Rising · FYAF · Katie Hathaway / Public School Defenders · Digital Democracy Project · Indivisible Mandarin / Indivisible Springfield · Landlord Registry Coalition</p><p class="card-meta">No formal relationship yet — ready for outreach</p><p class="card-body">Northside Coalition: co-amplify their environmental fights. Florida Rising: voter registration alignment. FYAF: parallel to NextGen Coalition. Katie Hathaway: Title I and public education policy alignment. Digital Democracy Project: peer relationship to CCM's information equity mission. Indivisible Mandarin/Springfield: introduce through IJR network. Landlord Registry: co-sign the specific policy ask — 700+ U.S. cities already have registries.</p></div>
+
+  <p style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin:1rem 0 8px;">Caution / COI exclusions</p>
+  <div class="card"><span class="p3-badge b-caution">Caution</span><p class="card-title">Hands Off Cuba / Hakim Jihad</p><p class="card-meta">Private community relationship only · Zero public campaign association · NAS Jacksonville is in this district</p><p class="card-body">Hakim Jihad is a credible community organizer. The Cuba solidarity framing is politically radioactive in a district containing NAS Jacksonville. Never named in social, press, mailers, or Substack.</p></div>
+  <div class="card"><span class="p3-badge b-caution">Excluded</span><p class="card-title">E3 Business Group · Boys &amp; Girls Club</p><p class="card-meta">COI exclusions — never named in any campaign output</p><p class="card-body">Conflict-of-interest exclusions. Do not name in any policy brief, partner list, social, or press output.</p></div>
+
+  <p style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin:1rem 0 8px;">Field experts — implementers, not researchers</p>
+  <div class="card"><span class="p3-badge b-expert">Tech accountability</span><p class="card-title">Tristan Harris — Center for Humane Technology</p><p class="card-body">Testified before the U.S. Senate in 2023. Authored the framework behind platform design reform legislation. Already doing the work of rewriting how tech companies are held liable for harm by design. The policy language exists. What's missing is a vote.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Economic justice</span><p class="card-title">Rutger Bregman</p><p class="card-body">Took UBI from academic proposal to mainstream political argument. Went to Davos and told billionaires to their faces that tax evasion is the problem. Built the public case that UBI is affordable and already proven. Has a seat at any table willing to make the ask.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Labor / wages</span><p class="card-title">Heidi Shierholz — Economic Policy Institute</p><p class="card-body">Served as Chief Economist at DOL under Obama. Ran policy that produced the overtime rule expansion and wage theft enforcement frameworks. Knows how to get the rule written, staffed, and enforced — not just proposed.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Gun safety</span><p class="card-title">Shannon Watts — Moms Demand Action</p><p class="card-body">Built the largest gun safety organization in the country from zero in 72 hours after Sandy Hook. Passed red flag laws in 21 states. Knows which legislators can be moved and what the ask has to look like. Not studying the problem — running the campaign that's already changing the map.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Gun safety</span><p class="card-title">Garen Wintemute — UC Davis Violence Prevention Research Program</p><p class="card-body">Runs the only federally-funded gun violence research program that survived the Dickey Amendment era. His firearm industry infiltration study became the legal foundation for California's gun dealer accountability law. He publishes and lets the policy follow.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Housing</span><p class="card-title">Jenny Schuetz — Brookings Institution</p><p class="card-body">Designed zoning reform frameworks now adopted in multiple states. Testified on missing middle housing and TIF reform. Her work produced the policy language behind "yes in my backyard" legislation. The arguments are written. The votes are the only thing left.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Healthcare cost</span><p class="card-title">Mariana Mazzucato — UCL Institute for Innovation and Public Purpose</p><p class="card-body">Documented how taxpayer-funded NIH research underwrites the drugs pharma then prices out of reach. Her framework is the intellectual foundation for the Affordable Drug Manufacturing Act. She doesn't ask whether the government should act — she shows exactly where it already did.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Democracy / voting</span><p class="card-title">Katherine Gehl — Institute for Political Innovation</p><p class="card-body">Co-author of The Politics Industry. Designed and lobbied the final-five voting framework now in use in Alaska. Not arguing that ranked choice voting is good — building the political coalition and state-by-state infrastructure to install it. The model is running. It needs federal champions.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Information equity</span><p class="card-title">Safiya Umoja Noble — Author, Algorithms of Oppression</p><p class="card-body">Named exactly how search and recommendation algorithms encode and amplify bias. Her framework is used by platforms being sued under algorithmic accountability laws. Doesn't argue that the problem exists — maps it precisely enough to litigate it.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Tax / IRS</span><p class="card-title">Chuck Marr — Center on Budget and Policy Priorities</p><p class="card-body">Built the legislative and budget case for IRS enforcement funding over 20 years. His team's analysis — $11 returned per $1 invested by IRS Criminal Investigation — is the number that belongs in every floor speech. The argument is already unanswerable. Use it.</p></div>
+  <div class="card"><span class="p3-badge b-expert">Public education</span><p class="card-title">Linda Darling-Hammond — Learning Policy Institute</p><p class="card-body">Served as chair of the California State Board of Education and Biden's education transition team. Designed teacher pipeline programs that reduced attrition by 30% in pilot districts. Not advocating for education investment — deploying it. Her policy architecture is shovel-ready.</p></div>
+
+  <p style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin:1rem 0 8px;">Appointment targets — roles where aligned appointees determine whether policy becomes reality</p>
+  <div class="card"><span class="p3-badge b-appt">Appointments</span><p class="card-title">Secretary of Labor · IRS Commissioner · FTC Chair · HUD Secretary · EPA Administrator · Secretary of Education · CFPB Director · Inspector General network</p><p class="card-meta">Eight roles that determine whether platform commitments are enforced or ignored</p><p class="card-body">DOL: sets overtime threshold and wage theft enforcement priority. IRS Commissioner: decides whether 1,700 CI agents return from ICE to white-collar crime. FTC Chair: determines whether AI surveillance pricing ban has teeth. HUD: controls Section 8 vouchers for 5.2M households. EPA: directs IRA environmental justice funding. Education: manages $18B in annual Title I. CFPB: $19B returned to consumers — gutting it transfers that back. IG network: 17+ vacancies = $186B in uncorrected payment errors annually.</p></div>
+</div>
+
+<hr class="divider">
+
+<!-- P4 CONSTRAIN -->
+<div class="section" id="p4-constrain">
+  <div class="section-header">
+    <div class="section-title">P4 Purse ① — Constrain</div>
+    <div class="section-sub">Cut off the money that fuels the problem. Tax breaks, windfalls, and subsidies that transfer wealth upward.</div>
+  </div>
+  <div class="card"><p class="card-title">Data center tax breaks — end preferential treatment</p><p class="card-meta">State + federal sales tax exemptions · Property tax abatements · No community benefit requirement</p><p class="card-body">Florida and dozens of states give data centers sales tax exemptions and property tax abatements worth hundreds of millions annually. The companies collecting them are among the most profitable in history. Ending these preferences does not slow AI development — it stops transferring public money to private infrastructure with nothing required in return.</p><div class="tags"><span class="tag t-purple">Fix the System</span><span class="tag t-blue">Tech / Digital Rights</span></div></div>
+  <div class="card"><p class="card-title">Windfall profits tax — energy and pharmaceutical sectors</p><p class="card-meta">ExxonMobil $55.7B profit 2022 · Pfizer $31.4B on NIH-underwritten research · 50% above 10-year baseline margin</p><p class="card-body">A 50% levy on profits above a 10-year baseline margin captures rent extraction without penalizing normal growth. Applies directly to pharmaceutical companies whose NIH-funded drugs are then priced out of reach — the same taxpayer who funded the research pays again at the pharmacy.</p><div class="tags"><span class="tag t-red">Constrain Extraction</span><span class="tag t-teal">Revenue Generation</span></div></div>
+  <div class="card"><p class="card-title">Stock buyback excise tax — raise from 1% to 4%</p><p class="card-meta">Current: 1% (IRA 2022) · Brown-Wyden: 4% · $1.3T in buybacks 2022 · $165B over 10 years at 4%</p><p class="card-body">Companies spent <span class="num">$1.3 trillion</span> on buybacks in 2022. Raising the rate to 4% generates <span class="num">$165B</span> over a decade and shifts the incentive structure — reward workers and infrastructure over shareholder returns.</p><div class="tags"><span class="tag t-purple">Fix the System</span><span class="tag t-teal">Worker Investment</span></div></div>
+  <div class="card"><p class="card-title">AI surveillance pricing — codify the FTC rule</p><p class="card-meta">RealPage DOJ settlement 2025 · FTC surveillance pricing study Jan 2025 · March 2026 federal court precedents</p><p class="card-body">The DOJ settled with RealPage in 2025 — confirming the Sherman Act violation. The FTC's January 2025 study documented firms using location and browser history to set individualized consumer prices. Two March 2026 courts found Meta and Google liable for algorithmic harm. The legal foundation is built. Codifying the rule constrains the revenue model.</p><div class="tags"><span class="tag t-red">Constrain Extraction</span><span class="tag t-blue">Tech / Digital Rights</span></div></div>
+  <div class="card"><p class="card-title">Pharmaceutical patent evergreening — end it</p><p class="card-meta">12+ year monopoly extensions via cosmetic modifications · Generic suppression · Affordable Drug Manufacturing Act</p><p class="card-body">Drug companies extend patents by changing pill coatings — not the drug. This blocks generics for an average of <span class="num">12 additional years</span>. The FTC can challenge these practices today. The Affordable Drug Manufacturing Act closes the loophole legislatively.</p><div class="tags"><span class="tag t-red">Healthcare Cost</span><span class="tag t-purple">Fix the System</span></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- P4 INCREASE -->
+<div class="section" id="p4-increase">
+  <div class="section-header">
+    <div class="section-title">P4 Purse ② — Increase</div>
+    <div class="section-sub">Fund what works and what's been deliberately gutted. These cuts were policy choices, not budget necessity.</div>
+  </div>
+  <div class="card"><p class="card-title">ATF — reverse $417M defunding, restore 500+ investigators</p><p class="card-meta">FY2026 proposed cut: $417M · 40% reduction in dealer inspection capacity · eTrace processing now 2 weeks · Ghost gun recoveries up 1,484% since 2017</p><p class="card-body">The ATF processed <span class="num">654,879</span> firearm trace requests in FY2025 with fewer staff than a decade ago. Ghost gun recoveries by law enforcement grew from <span class="num">1,629</span> in 2017 to <span class="num">25,785</span> in 2022. Cutting the ATF by 40% of its inspection capacity defunds the police that track illegal guns.</p><div class="tags"><span class="tag t-red">Gun Safety</span><span class="tag t-blue">Protect Our Future</span></div></div>
+  <div class="card"><p class="card-title">CDC / NIH gun violence research — restore $100M+ canceled portfolio</p><p class="card-meta">Entire portfolio canceled 2025 · National Violent Death Reporting System at risk · H.R. 5622: $25M/year FY2026-2031</p><p class="card-body">The Trump administration canceled the entire CDC and NIH gun violence research grant portfolio in 2025. The National Violent Death Reporting System is at risk of losing the staff to maintain it. H.R. 5622 authorizes <span class="num">$25M/year</span> through 2031 to restore research capacity. This is not a gun policy vote — it is a decision about whether the federal government is allowed to count the bodies.</p><div class="tags"><span class="tag t-red">Gun Safety</span><span class="tag t-blue">Protect Our Future</span></div></div>
+  <div class="card"><p class="card-title">Community Violence Intervention — restore CVIPI funding</p><p class="card-meta">CVIPI shut down by Trump admin · House FY2026 bill completely defunds · Biden FY2025 proposed $50M · Bipartisan since FY2022</p><p class="card-body">Community Violence Intervention programs — credible messengers and hospital-based intervention workers — were funded on a bipartisan basis every year since FY2022. The Trump administration shut the initiative down entirely. Biden's last proposal: <span class="num">$50M</span>. These programs work where policing alone does not.</p><div class="tags"><span class="tag t-red">Gun Safety</span><span class="tag t-teal">Community Investment</span></div></div>
+  <div class="card"><p class="card-title">FTC — fund the agency that regulates trillion-dollar platforms</p><p class="card-meta">Annual FTC budget smaller than one quarter of Meta's legal fees · Operation AI Comply active but under-resourced</p><p class="card-body">The FTC's entire annual budget is smaller than the quarterly legal fees of the companies it investigates. Operation AI Comply is active. Two March 2026 courts established liability precedent for algorithmic harm. The FTC has the authority to act at scale — it does not have the staff.</p><div class="tags"><span class="tag t-blue">Tech / Digital Rights</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">Independent Redistricting Commission funding — H.R. 5449 / S. 2885</p><p class="card-meta">Federal funding makes IRCs operational, not aspirational · FL signed new gerrymander 2026</p><p class="card-body">The Redistricting Reform Act of 2025 requires 15-member independent commissions in every state. Federal funding is the Purse mechanism that makes implementation real — without it, states pass the mandate and defund the execution. Michigan's IRC proved the model. It needs a budget line.</p><div class="tags"><span class="tag t-purple">Redistricting</span><span class="tag t-coral">FL-CD4 Direct</span></div></div>
+  <div class="card"><p class="card-title">IRS Criminal Investigation — restore 1,700 reassigned agents</p><p class="card-meta">$800M budget · $11 returned per $1 invested · 1,700 agents reassigned to ICE since Jan 2025</p><p class="card-body">IRS CI is the only federal unit that specializes in financial crime. <span class="num">1,700 agents</span> were reassigned to immigration enforcement since January 2025. No new appropriation needed — a restored mandate is enough.</p><div class="tags"><span class="tag t-purple">Fix the System</span><span class="tag t-teal">IRS CI</span></div></div>
+  <div class="card"><p class="card-title">Title I education — reverse the 26-27% proposed House cut</p><p class="card-meta">Half of FL K-12 students in Title I schools · Duval County direct impact</p><p class="card-body">The 2025 House proposal cuts Title I by <span class="num">26-27%</span>. Half of Florida's K-12 students are in Title I schools. In Duval County, that means fewer reading specialists and counselors — with no vote taken on education policy. It is a budget vote dressed as a line item.</p><div class="tags"><span class="tag t-blue">Protect Our Future</span><span class="tag t-amber">Public Education</span></div></div>
+  <div class="card"><p class="card-title">CPB / Public broadcasting — restore federal funding</p><p class="card-meta">WJCT ~15% operating revenue lost · CPB shutdown · DeSantis $500K state veto</p><p class="card-body">WJCT lost approximately <span class="num">15%</span> of its operating revenue from the CPB cut alone. Public broadcasting is the only local news infrastructure in much of FL-CD4. Defunding it creates a vacuum that disinformation fills.</p><div class="tags"><span class="tag t-blue">Information Equity</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">DOL Wage and Hour Division — staff the enforcement backlog</p><p class="card-meta">175K+ pending cases · $2B recovered annually · Under $300M budget</p><p class="card-body">The Wage and Hour Division recovers <span class="num">$2B+</span> annually from a budget under <span class="num">$300M</span>. Every unfilled investigator position represents thousands of workers whose wage theft claims expire. The return on staffing this office is immediate and measurable.</p><div class="tags"><span class="tag t-teal">Worker Protection</span><span class="tag t-amber">Make America Affordable</span></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- P4 UNDERFUNDED -->
+<div class="section" id="p4-underfunded">
+  <div class="section-header">
+    <div class="section-title">P4 Purse ③ — Underfunded</div>
+    <div class="section-sub">Agencies with authority they can't afford to use. The law gives them the power to act. The budget takes it away.</div>
+  </div>
+  <div class="card"><p class="card-title">ATF — eTrace and ghost gun tracking at the breaking point</p><p class="card-meta">654,879 trace requests FY2025 · Non-urgent processing: 2 weeks · 500+ inspectors being cut · Ghost gun recoveries +1,484% since 2017</p><p class="card-body">The ATF's National Tracing Center is processing more requests than ever with fewer resources. Ghost gun recoveries by law enforcement went from <span class="num">1,629</span> in 2017 to <span class="num">25,785</span> in 2022. The agency tracking every untraceable weapon is being cut by 40% of inspection capacity.</p><div class="tags"><span class="tag t-red">Gun Safety</span><span class="tag t-amber">Chronically Underfunded</span></div></div>
+  <div class="card"><p class="card-title">BEAD broadband — $42.5B program with gutted equity conditions</p><p class="card-meta">Operational April 2026 · Digital equity conditions stripped · Revised plans at ~half original scope · Rural FL-CD4 access gaps remain</p><p class="card-body">The <span class="num">$42.5B</span> BEAD program became operational in April 2026 with its digital equity conditions removed and coverage scope roughly halved. Rural Clay and Nassau County in FL-CD4 have documented access gaps. Restoring the equity conditions turns BEAD into the digital rights program it was funded to be.</p><div class="tags"><span class="tag t-blue">Tech / Digital Rights</span><span class="tag t-green">Rural FL-CD4</span></div></div>
+  <div class="card"><p class="card-title">IRS Criminal Investigation — 50-year staffing low</p><p class="card-meta">2,000 agents (down from 3,000 in 2010) · $11:$1 ROI · 1,700 reassigned</p><p class="card-body">IRS CI staffing is at a 50-year low. The <span class="num">$11:$1</span> return makes this the highest-ROI federal budget line available. The choice to reassign agents to immigration enforcement is a deliberate decision to stop pursuing financial crime. No new money required.</p><div class="tags"><span class="tag t-red">Chronically Underfunded</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">Inspector General network — 17+ vacancies, $186B in errors</p><p class="card-meta">70+ IG offices · Vacancies are strategy, not accident · $186B payment errors FY2025</p><p class="card-body">Vacant IG positions are deliberate. The GAO found <span class="num">$186B</span> in federal payment errors in FY2025. Filling every IG position costs a fraction of what they recover. The <span class="num">$186B</span> is the cost of leaving the seats empty.</p><div class="tags"><span class="tag t-red">$186B Errors</span><span class="tag t-purple">Audit Backbone</span></div></div>
+  <div class="card"><p class="card-title">CFPB — $19B returned to consumers, now under siege</p><p class="card-meta">$19B recovered since 2011 · Constant legal and political attack · Postal banking regulatory home</p><p class="card-body">Every attempt to defund the CFPB transfers <span class="num">$19B</span> back to the institutions that extracted it. A fully funded CFPB is also the regulatory foundation for postal banking expansion.</p><div class="tags"><span class="tag t-blue">Consumer Protection</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">OSHA — one inspection every 165 years per workplace</p><p class="card-meta">2,000 inspectors · 10M+ workplaces · FL-CD4 construction + healthcare = high-injury sectors</p><p class="card-body">At current staffing, a workplace can statistically expect an OSHA inspection once every <span class="num">165 years</span>. FL-CD4 has significant construction and healthcare workforces. Doubling inspection capacity is a worker safety decision with a documented return.</p><div class="tags"><span class="tag t-teal">Worker Safety</span><span class="tag t-amber">Make America Affordable</span></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- P4 CONDITIONS -->
+<div class="section" id="p4-conditions">
+  <div class="section-header">
+    <div class="section-title">P4 Purse ④ — Conditions</div>
+    <div class="section-sub">Every federal dollar should do more than one job. Attach strings. Withhold funds to deter non-compliance.</div>
+  </div>
+  <div class="card"><p class="card-title">Defense appropriations — no new authorization without a clean audit</p><p class="card-meta">8 consecutive failed audits · 44% assets unaccountable FY2024 · NDAA Dec 2028 deadline · F-35 $2T+ lifetime, spare parts unverifiable</p><p class="card-body">Congress appropriates nearly <span class="num">$1 trillion</span> annually to an agency that has never passed a clean audit. No new conflict authorization, no new major weapons procurement, no defense budget increase until DOD can account for what it already has. The F-35 — projected at <span class="num">$2+ trillion</span> lifetime — cannot verify its own spare parts inventory. That is where the condition starts.</p><div class="tags"><span class="tag t-amber">Overseas Conflicts</span><span class="tag t-red">Audit Condition</span></div></div>
+  <div class="card"><p class="card-title">BEAD equity conditions — restore as disbursement requirement</p><p class="card-meta">$42.5B program · Equity conditions stripped · Rural FL-CD4 fiber promise broken</p><p class="card-body">Disbursement of BEAD funds should be conditioned on restoring the original digital equity requirements. The money is already appropriated. The condition determines whether it reaches the communities it was designed for.</p><div class="tags"><span class="tag t-blue">Tech / Digital Rights</span><span class="tag t-green">Rural FL-CD4</span></div></div>
+  <div class="card"><p class="card-title">Community Benefit Agreements — all federal grants above $5M</p><p class="card-meta">IRA + BIL precedent set · FL-CD4 infrastructure projects · Local hiring + wage standards as disbursement conditions</p><p class="card-body">Every IRA and BIL project in FL-CD4 is subject to existing community benefit provisions. Expanding to all federal grants above <span class="num">$5M</span> means every highway project, data center subsidy, and utility grant must show local hiring commitments and wage standards before funds are released.</p><div class="tags"><span class="tag t-teal">Community Investment</span><span class="tag t-blue">FL-CD4 Local</span></div></div>
+  <div class="card"><p class="card-title">LIHTC deep affordability adder — 20% at 30% AMI + CHDO 15% set-aside</p><p class="card-meta">Targets the bottom of Jacksonville's housing crisis · CLT anti-displacement condition</p><p class="card-body">The deep affordability adder requires <span class="num">20%+</span> of units at <span class="num">30% AMI</span> or below. CHDO set-asides at <span class="num">15%</span> of HOME funds direct capital to community-controlled development. No-net-loss of affordable units as a condition of receipt keeps displacement from being federally funded.</p><div class="tags"><span class="tag t-amber">Housing</span><span class="tag t-coral">Anti-Displacement</span></div></div>
+  <div class="card"><p class="card-title">Public utility accountability — federal energy assistance as audit trigger</p><p class="card-meta">JEA case study · $40M transfer to city general fund · Plant Vogtle long-term debt</p><p class="card-body">Any publicly owned utility receiving federal energy assistance must undergo independent audits as a condition of that funding. JEA's <span class="num">$40M</span> transfer to Jacksonville's general fund while carrying Plant Vogtle debt is exactly the transaction this condition would surface.</p><div class="tags"><span class="tag t-blue">FL-CD4 Local</span><span class="tag t-purple">Public Utility</span></div></div>
+  <div class="card"><p class="card-title">Davis-Bacon — wage compliance as disbursement condition</p><p class="card-meta">Prevailing wage law exists · Pre-payment certification required · Real withholding for non-compliance</p><p class="card-body">Making wage compliance certification a condition of payment — not a filing requirement — means contractors who underpay workers face withheld funds. The law exists on every federal contract. The condition needs a consequence.</p><div class="tags"><span class="tag t-amber">Labor Compliance</span><span class="tag t-teal">Worker Protection</span></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- P4 AUDIT -->
+<div class="section" id="p4-audit">
+  <div class="section-header">
+    <div class="section-title">P4 Purse ⑤ — Audit + Verify</div>
+    <div class="section-sub">Accountability without verification is a press release. Every dollar committed must have a named mechanism for proving it was used right.</div>
+  </div>
+  <div class="card"><p class="card-title">Pentagon financial audit — enforce the NDAA Dec 2028 deadline</p><p class="card-meta">8 consecutive failed audits · 44% assets unaccountable · $1T Fund Balance unverified · NDAA requires clean opinion by Dec 2028</p><p class="card-body">The DOD is the only federal agency that has never passed a clean audit under the Chief Financial Officers Act of 1990. Without a funded Congressional oversight mechanism and real withholding consequences, the 2028 deadline is aspirational. Every year the Pentagon fails is a year Congress appropriated nearly <span class="num">$1 trillion</span> to an agency that cannot show what it spent.</p><div class="tags"><span class="tag t-amber">Overseas Conflicts</span><span class="tag t-red">Pentagon Accountability</span></div></div>
+  <div class="card"><p class="card-title">USAspending.gov — mandate 100% agency reporting</p><p class="card-meta">49 agencies not reporting · OMB inventory excludes defense + foreign assistance · DATA Act enforcement gap</p><p class="card-body"><span class="num">49 agencies</span> are not reporting data to USAspending.gov. The OMB inventory required by law does not yet include defense, acquisitions, or foreign assistance. Mandating full compliance — with penalties for non-reporting — turns the transparency infrastructure into enforceable law.</p><div class="tags"><span class="tag t-blue">Government Accountability</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">Inspector General offices — restore and staff all 70+</p><p class="card-meta">17+ vacancies · $186B payment errors FY2025 · Cost of vacancies = $186B and counting</p><p class="card-body">Filling every IG position costs a fraction of what they recover. The <span class="num">$186B</span> in FY2025 payment errors is the cost of leaving the seats empty.</p><div class="tags"><span class="tag t-red">$186B Errors</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">Single Audit Requirement — enforce 2 CFR Part 200</p><p class="card-meta">Already federal law · $750K+ recipients · Public disclosure of findings · Enforcement is missing</p><p class="card-body">Any entity receiving <span class="num">$750,000+</span> in federal funds must undergo an independent annual audit. The requirement exists. Public disclosure of all findings creates the accountability layer. Enforcement of the requirement does not exist.</p><div class="tags"><span class="tag t-blue">Law Exists — Enforce It</span><span class="tag t-teal">Subrecipient Monitoring</span></div></div>
+  <div class="card"><p class="card-title">JEA — public utility audit as local case study</p><p class="card-meta">$40M transfer to city general fund · Plant Vogtle debt · FL-CD4 local precedent for national standard</p><p class="card-body">A federal requirement for mandatory independent audits of all publicly owned utilities receiving federal energy assistance makes JEA's <span class="num">$40M</span> transfer standard scrutiny, not exceptional. JEA is the local case study for a national standard.</p><div class="tags"><span class="tag t-blue">Local Case Study</span><span class="tag t-purple">Public Utility</span></div></div>
+  <div class="card"><p class="card-title">GAO performance audits — expand to outcome accountability</p><p class="card-meta">Current: financial statement audits · Expand: did spending achieve outcomes? · Title I, VA, OSHA as first targets</p><p class="card-body">Title I audited for student outcome improvement. VA audited for veteran access and wait times. OSHA audited for injury rate reduction. Outcome accountability closes the loop between appropriation and result.</p><div class="tags"><span class="tag t-green">Outcome Accountability</span><span class="tag t-teal">Expand GAO Mandate</span></div></div>
+  <div class="card"><p class="card-title">Campaign finance — real-time disclosure and super PAC audits</p><p class="card-meta">FEC enforcement degraded · Dark money at scale · Real-time digital disclosure is the fix</p><p class="card-body">Real-time digital disclosure, mandatory independent super PAC audits, and criminal referral standards for willful violations make the "get money out of politics" plank enforceable rather than aspirational.</p><div class="tags"><span class="tag t-purple">Fix the System</span><span class="tag t-red">FEC Reform</span></div></div>
+  <div class="field-read">
+    <div class="field-read-label">Field read</div>
+    <div class="fr-item"><span class="fr-arrow">→</span>Pentagon: 8 consecutive failed audits. 44% of assets unaccountable FY2024. Congress appropriated ~$1T anyway. NDAA Dec 2028 deadline needs a funded enforcer or it means nothing.</div>
+    <div class="fr-item"><span class="fr-arrow">→</span>$186B in federal payment errors FY2025. 49 agencies not reporting to USAspending.gov. The infrastructure exists. The mandate to use it does not.</div>
+    <div class="fr-item"><span class="fr-arrow">→</span>Single Audit (2 CFR Part 200) mandates independent audits for $750K+ recipients. The requirement exists. Enforcement does not.</div>
+    <div class="fr-item"><span class="fr-arrow">→</span>JEA's $40M transfer to the city general fund while carrying Plant Vogtle debt is exactly what a federal public utility audit requirement would surface. Make it the local case study.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- P4 OTHER INSTRUMENTS -->
+<div class="section" id="p4-other">
+  <div class="section-header">
+    <div class="section-title">P4 Purse ⑥ — Other Instruments</div>
+    <div class="section-sub">Financing structures, revenue sharing, and market rules that determine how money moves through the economy.</div>
+  </div>
+  <div class="card"><p class="card-title">Guaranteed Income Pilot — H.R. 5830, $495M/year authorized</p><p class="card-meta">Guaranteed Income Pilot Program Act of 2025 · $495M/year FY2026-2030 · HHS administered · Payments don't count against SNAP/Medicaid</p><p class="card-body">H.R. 5830 authorizes <span class="num">$495M/year</span> through 2030. Monthly payments set to fair market rent for a 2-bedroom home in the participant's zip code — Jacksonville-relevant benchmark. Payments do not count against SNAP or Medicaid eligibility. Combined with the Social Impact Bond model: two-track financing argument, legislative and market-based.</p><div class="tags"><span class="tag t-purple">UBI Platform</span><span class="tag t-blue">H.R. 5830</span></div></div>
+  <div class="card"><p class="card-title">Social Impact Bonds — private capital for UBI pilots</p><p class="card-meta">Private investors fund · Government pays only on outcomes · Stockton SEED: employment up, mental health improved</p><p class="card-body">Private investors fund the pilot. Government pays a return only if agreed outcomes are achieved. Stockton SEED — <span class="num">$500/month</span> unconditional cash — showed full-time employment rose, mental health improved, and income volatility dropped. The "blank check" objection is answered.</p><div class="tags"><span class="tag t-purple">UBI Platform</span><span class="tag t-green">Outcomes-Based Financing</span></div></div>
+  <div class="card"><p class="card-title">Postal banking — expand the active pilot</p><p class="card-meta">Live in 4 post offices today · 33M unbanked Americans · $2,400/year in payday fees · Infrastructure in every FL-CD4 zip code</p><p class="card-body">Postal banking is operating in <span class="num">4</span> post offices right now — a proven pilot awaiting authorization to scale. Unbanked Americans pay <span class="num">$2,400/year</span> in fees. A postal savings account eliminates that cost. The infrastructure is in every zip code in FL-CD4 already.</p><div class="tags"><span class="tag t-blue">Proven Pilot</span><span class="tag t-amber">Make America Affordable</span></div></div>
+  <div class="card"><p class="card-title">TIF + Community Land Trust — 20% set-aside</p><p class="card-meta">TIF already operating in Jacksonville · CLT land never returns to market · Permanent vs. compliance-period affordability</p><p class="card-body">Requiring <span class="num">20%</span> of TIF revenue to fund Community Land Trust land acquisition makes anti-displacement permanent. CLT land is removed from the speculative market forever — not just for the duration of a LIHTC compliance period.</p><div class="tags"><span class="tag t-coral">Anti-Displacement</span><span class="tag t-blue">FL-CD4 Local</span></div></div>
+  <div class="card"><p class="card-title">Impoundment Control Act — enforce the law</p><p class="card-meta">$26B behind spending pace July 2025 · Presidential withholding is illegal · Congressional prerogative</p><p class="card-body">The ICA makes presidential refusal to spend appropriated funds illegal. The current administration is <span class="num">$26B</span> behind statutory spending pace. Every dollar withheld is a dollar stolen from the communities Congress voted to fund.</p><div class="tags"><span class="tag t-red">Constitutional Enforcement</span><span class="tag t-purple">Fix the System</span></div></div>
+  <div class="card"><p class="card-title">Cannabis legalization — community reinvestment revenue sharing</p><p class="card-meta">20-40% of tax revenue to highest-arrest zip codes · Repair, not just reform</p><p class="card-body">Full cannabis legalization generates federal tax revenue. Directing <span class="num">20-40%</span> to community reinvestment in the zip codes with the highest arrest rates under prohibition turns revenue into repair. The same communities that absorbed the cost of prohibition receive a share of the revenue from ending it.</p><div class="tags"><span class="tag t-green">Cannabis Platform</span><span class="tag t-amber">Community Reinvestment</span></div></div>
+  <div class="card"><p class="card-title">Medicare drug negotiation savings — seed the public option</p><p class="card-meta">IRA negotiation active on 10 drugs · Year 1 savings $6B+ · Self-financing mechanism</p><p class="card-body">Designating Medicare drug negotiation savings — by statute — as seed funding for a public health insurance option creates a self-financing mechanism. Drug cost reduction funds healthcare access expansion. The savings fund the solution.</p><div class="tags"><span class="tag t-blue">Healthcare Platform</span><span class="tag t-teal">Make America Affordable</span></div></div>
+</div>
+
+<div class="footer">Mike Sell for Congress · FL-CD4 · 2026 · 4Ps Master Framework · Locked 2026-05-05 · Overall alignment 83%</div>
+
+</div>
+
+<script>
+const issues = [
+  {name:'Education funding',         p1:85,p2:80,p3:75,p4:75},
+  {name:'Gun safety',                p1:90,p2:95,p3:80,p4:85},
+  {name:'Overseas conflicts',        p1:75,p2:70,p3:55,p4:75},
+  {name:'Tech / digital rights',     p1:60,p2:55,p3:70,p4:75},
+  {name:'Accountability / prosecute',p1:80,p2:85,p3:65,p4:75},
+  {name:'Higher wages',              p1:85,p2:90,p3:75,p4:85},
+  {name:'Price gouging / cost',      p1:75,p2:80,p3:65,p4:80},
+  {name:'Corporate taxes',           p1:70,p2:80,p3:60,p4:75},
+  {name:'Body autonomy',             p1:80,p2:95,p3:65,p4:55},
+  {name:'UBI pilots',                p1:70,p2:80,p3:75,p4:80},
+  {name:'Money in politics',         p1:90,p2:85,p3:60,p4:70},
+  {name:'Redistricting',             p1:85,p2:80,p3:65,p4:70},
+  {name:'Government accountability', p1:80,p2:80,p3:70,p4:80},
+  {name:'Term limits',               p1:85,p2:80,p3:55,p4:50},
+];
+function cellColor(v){
+  if(v>=90)return{bg:'#E1F5EE',color:'#085041'};
+  if(v>=70)return{bg:'#E6F1FB',color:'#0C447C'};
+  if(v>=50)return{bg:'#FAEEDA',color:'#633806'};
+  return{bg:'#FCEBEB',color:'#791F1F'};
+}
+const tbody=document.getElementById('hm-body');
+issues.forEach(r=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="il">${r.name}</td>`+
+    [r.p1,r.p2,r.p3,r.p4].map(v=>{
+      const c=cellColor(v);
+      return`<td style="background:${c.bg};color:${c.color};border-radius:4px;">${v}%</td>`;
+    }).join('');
+  tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>

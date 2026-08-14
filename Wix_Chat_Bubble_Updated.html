@@ -1,0 +1,135 @@
+<script>
+(function() {
+  var API_BASE = 'https://mikesell-bot-backend-production.up.railway.app';
+
+  if (document.getElementById('ms-chat-root')) return;
+
+  var s = document.createElement('style');
+  s.textContent = [
+    '@keyframes ms-pd{0%,100%{opacity:1}50%{opacity:.4}}',
+    '@keyframes ms-pr{0%{transform:scale(1);opacity:.3}70%{transform:scale(1.45);opacity:0}100%{transform:scale(1.45);opacity:0}}',
+    '@keyframes ms-bl{0%,100%{opacity:.3}50%{opacity:1}}',
+    '#ms-chat-root{position:fixed;bottom:20px;right:20px;z-index:2147483647;display:inline-flex;align-items:center;pointer-events:none;}',
+    '#ms-pr{position:absolute;inset:0;border-radius:50px;background:#9d6fe8;opacity:0;animation:ms-pr 2.8s ease-out infinite;pointer-events:none;z-index:-1;}',
+    '#ms-lb{position:relative;background:#002d5b;height:44px;padding:0 20px 0 14px;border-radius:50px;display:flex;align-items:center;gap:9px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);transition:transform .2s,background .2s;white-space:nowrap;border:2px solid #7c3aed;pointer-events:auto;}',
+    '#ms-lb:hover{transform:translateY(-2px);background:#003a75;}',
+    '#ms-lb .d{width:8px;height:8px;background:#5dde7a;border-radius:50%;animation:ms-pd 1.8s ease-in-out infinite;flex-shrink:0;}',
+    '#ms-lb .i{font-size:18px;line-height:1;}',
+    '#ms-lb .l{font-family:"Open Sans","Helvetica Neue",Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:.4px;color:#fff;}',
+    '#ms-cw{position:fixed;bottom:90px;right:20px;width:380px;height:600px;max-height:80vh;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.25);display:none;flex-direction:column;z-index:2147483647;overflow:hidden;font-family:Arial,sans-serif;pointer-events:auto;}',
+    '#ms-ch{background:#002d5b;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}',
+    '#ms-ch h3{margin:0;font-size:16px;font-weight:bold;}',
+    '#ms-xb{cursor:pointer;font-size:24px;font-weight:bold;line-height:1;color:#fff;}',
+    '#ms-cn{padding:15px;display:flex;flex-direction:column;flex:1 1 auto;min-height:0;box-sizing:border-box;}',
+    '#ms-sf{margin-top:20px;}',
+    '#ms-sf input{width:100%;box-sizing:border-box;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:5px;font-size:15px;}',
+    '#ms-sf button{width:100%;padding:14px;background:#7c3aed;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;font-size:16px;}',
+    '#ms-sf button:hover{background:#6528d0;}',
+    '#ms-cc{display:none;flex-direction:column;flex:1 1 auto;min-height:0;overflow:hidden;}',
+    '#ms-bx{flex:1 1 auto;min-height:0;border:1px solid #e0e0e0;padding:15px;overflow-y:auto;margin-bottom:10px;background:#fafafa;border-radius:5px;}',
+    '.ms-m{margin-bottom:15px;padding:12px;border-radius:8px;line-height:1.4;font-size:15px;word-wrap:break-word;}',
+    '.ms-u{background:#002d5b;color:#fff;text-align:right;margin-left:15%;}',
+    '.ms-b{background:#e2e3e5;color:#000;text-align:left;margin-right:15%;}',
+    '.ms-dt{display:inline-block;animation:ms-bl 1.2s infinite;}',
+    '#ms-ia{display:flex;gap:8px;padding-bottom:10px;flex:0 0 auto;}',
+    '#ms-ia input{flex:1;padding:12px;border:1px solid #ccc;border-radius:5px;font-size:15px;}',
+    '#ms-ia button{padding:12px 20px;background:#c60018;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;font-size:15px;}',
+    '@media(max-width:600px){#ms-cw{width:100vw;height:100vh;max-height:100vh;bottom:0;right:0;border-radius:0;}#ms-chat-root{bottom:16px;right:16px;}}'
+  ].join('');
+  document.head.appendChild(s);
+
+  // Bubble
+  var root = document.createElement('div');
+  root.id = 'ms-chat-root';
+  root.innerHTML = '<div id="ms-pr"></div><div id="ms-lb"><span class="d"></span><span class="i">&#x1F4AC;</span><span class="l">Ask Mike</span></div>';
+  document.body.appendChild(root);
+
+  // Chat window
+  var cw = document.createElement('div');
+  cw.id = 'ms-cw';
+  cw.innerHTML =
+    '<div id="ms-ch"><h3>Mike\'s Campaign Chat</h3><span id="ms-xb">&times;</span></div>' +
+    '<div id="ms-cn">' +
+      '<div id="ms-sf">' +
+        '<p style="text-align:center;color:#555;margin:0 0 20px">Enter info to start chatting:</p>' +
+        '<input type="text"  id="ms-nm" placeholder="Your Name">' +
+        '<input type="email" id="ms-em" placeholder="Your Email">' +
+        '<input type="text"  id="ms-zp" placeholder="Your ZIP Code">' +
+        '<button id="ms-sb">Start a Conversation</button>' +
+        '<p id="ms-fe" style="color:red;display:none;text-align:center;margin-top:8px">Please fill out all fields!</p>' +
+      '</div>' +
+      '<div id="ms-cc"><div id="ms-bx"></div><div id="ms-ia"><input type="text" id="ms-ui" placeholder="Type a message..."><button id="ms-sd">Send</button></div></div>' +
+    '</div>';
+  document.body.appendChild(cw);
+
+  if (!window.__ms) window.__ms = { sid:'session-'+Date.now()+'-'+Math.random().toString(36).slice(2), open:false, up:false, msgs:[], pend:false };
+  var st = window.__ms;
+
+  function open()   { cw.style.display='flex'; st.open=true; }
+  function close()  { cw.style.display='none'; st.open=false; }
+  function toggle() { st.open ? close() : open(); }
+
+  document.getElementById('ms-lb').addEventListener('click', toggle);
+  document.getElementById('ms-xb').addEventListener('click', close);
+
+  // Listen for button widget trigger — works both from postMessage and direct call
+  window.msOpenChat = open;
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.action === 'ms-open-chat') open();
+  });
+
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function fmt(s){return esc(s).replace(/\n/g,'<br>');}
+  function render(){
+    var b=document.getElementById('ms-bx');if(!b)return;
+    b.innerHTML=st.msgs.map(function(m){
+      return m.role==='user'
+        ?'<div class="ms-m ms-u"><b>You:</b> '+esc(m.text)+'</div>'
+        :'<div class="ms-m ms-b"><b>Bot:</b> '+(m.text?fmt(m.text):'<i>Typing<span class="ms-dt">...</span></i>')+'</div>';
+    }).join('');
+    b.scrollTop=b.scrollHeight;
+  }
+
+  async function stream(msg,bm){
+    var r=await fetch(API_BASE+'/chat-stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,sessionId:st.sid})});
+    if(!r.ok||!r.body)throw new Error('fail');
+    var rd=r.body.getReader(),dc=new TextDecoder(),buf='';
+    while(true){
+      var x=await rd.read();if(x.done)break;
+      buf+=dc.decode(x.value,{stream:true});
+      var pts=buf.split('\n\n');buf=pts.pop();
+      for(var i=0;i<pts.length;i++){
+        var ln=pts[i].trim();if(ln.indexOf('data:')!==0)continue;
+        var js=ln.slice(5).trim();if(!js)continue;
+        try{var e=JSON.parse(js);if(e.chunk){bm.text+=e.chunk;render();}else if(e.error){bm.text=(bm.text||'')+'\n[Error] '+e.error;render();}}catch(e){}
+      }
+    }
+  }
+
+  document.getElementById('ms-sb').addEventListener('click', async function(){
+    var n=document.getElementById('ms-nm').value,e=document.getElementById('ms-em').value,z=document.getElementById('ms-zp').value;
+    if(!n||!e||!z){document.getElementById('ms-fe').style.display='block';return;}
+    document.getElementById('ms-fe').style.display='none';
+    var btn=document.getElementById('ms-sb');btn.textContent='Connecting...';
+    try{
+      await fetch(API_BASE+'/start-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,zip:z})});
+      st.up=true;
+      document.getElementById('ms-sf').style.display='none';
+      document.getElementById('ms-cc').style.display='flex';
+      st.pend=true;var bm={role:'bot',text:''};st.msgs.push(bm);render();
+      await stream('hi',bm);st.pend=false;render();
+    }catch(err){st.pend=false;btn.textContent='Error connecting to server';}
+  });
+
+  var ui=document.getElementById('ms-ui'),sd=document.getElementById('ms-sd');
+  async function send(){
+    var msg=ui.value;if(!msg)return;
+    st.msgs.push({role:'user',text:msg});ui.value='';ui.disabled=true;sd.disabled=true;st.pend=true;
+    var bm={role:'bot',text:''};st.msgs.push(bm);render();
+    try{await stream(msg,bm);}catch(err){bm.text=(bm.text||'')+'\n[Error] Connection failed.';}
+    finally{st.pend=false;render();ui.disabled=false;ui.focus();sd.disabled=false;}
+  }
+  sd.addEventListener('click',send);
+  ui.addEventListener('keypress',function(e){if(e.key==='Enter')send();});
+})();
+</script>

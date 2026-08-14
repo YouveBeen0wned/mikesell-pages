@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Open Sans', Arial, sans-serif;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100%;
+    }
+
+    /* Pulse wrapper — positions the ring behind the button */
+    .btn-pulse-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);    opacity: 0.5; }
+      70%  { transform: scale(1.45); opacity: 0; }
+      100% { transform: scale(1.45); opacity: 0; }
+    }
+    .btn-pulse-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50px;
+      background: #9d6fe8;
+      animation: pulse-ring 2.4s ease-out infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .ms-sms-btn {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #c8102e;
+      color: #ffffff;
+      padding: 14px 36px;
+      border-radius: 50px;
+      font-family: 'Open Sans', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+      box-shadow: 0 2px 8px rgba(200, 16, 46, 0.35);
+    }
+    .ms-sms-btn:hover {
+      background: #a50d25;
+      box-shadow: 0 4px 14px rgba(200, 16, 46, 0.45);
+      transform: translateY(-1px);
+    }
+    .ms-sms-btn:active {
+      background: #8e0b1f;
+      transform: translateY(0);
+      box-shadow: 0 1px 4px rgba(200, 16, 46, 0.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="btn-pulse-wrap">
+    <button class="ms-sms-btn" onclick="sendSMS()">
+      Text a friend!
+    </button>
+  </div>
+  <script>
+    function sendSMS() {
+      var message = 'Hi, I just found mikesell.org. This is the change we need! Check it out and let\'s vote for Mike for Congress!';
+      var smsLink = 'sms:?body=' + encodeURIComponent(message);
+      window.location.href = smsLink;
+    }
+  </script>
+</body>
+</html>

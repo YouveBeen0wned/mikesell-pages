@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track the Bills — Mike Sell for Congress FL-CD4 2026</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
+.hero{background:linear-gradient(135deg,#002d5b 0%,#8B0000 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;}
+.hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;line-height:1.2;margin-bottom:8px;}
+.hero h1 span{color:#fff;}
+.hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;max-width:600px;}
+.filter-band{background:#fff;padding:12px 20px;border-bottom:1.5px solid #e5e7eb;}
+.search-bar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.srch{flex:1;min-width:140px;padding:8px 12px;border-radius:7px;border:1.5px solid #e2e8f0;background:#fff;color:#1a1a18;font-size:12px;font-family:'avenir-light',Arial,sans-serif;}
+.srch:focus{outline:none;border-color:#0891b2;}
+.dd-filter{padding:7px 10px;border-radius:7px;border:1.5px solid #e2e8f0;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-family:'avenir-light',Arial,sans-serif;}
+.dd-filter:focus{outline:none;border-color:#0891b2;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;align-items:center;}
+.leg-item{display:flex;align-items:center;gap:5px;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.08em;color:#6b7280;text-transform:uppercase;}
+.leg-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.res-count{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#9ca3af;}
+.main{padding:16px 20px 48px;}
+.bill-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
+@media(max-width:860px){.bill-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.bill-grid{grid-template-columns:1fr;}}
+.dd-bill{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;display:flex;flex-direction:column;}
+.dd-bill:hover{box-shadow:0 6px 20px rgba(0,0,0,0.08);}
+.dd-bill-hd{padding:12px 14px 0;display:flex;align-items:flex-start;gap:10px;}
+.dd-bill-icon{width:36px;height:36px;min-width:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#fff;flex-shrink:0;}
+.icon-Federal{background:linear-gradient(135deg,#2563EB,#002d5b);}
+.icon-Florida{background:linear-gradient(135deg,#d97706,#78350f);}
+.icon-Jacksonville{background:linear-gradient(135deg,#7C3AED,#470D67);}
+.dd-bill-hd-meta{flex:1;min-width:0;}
+.dd-bill-name{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#1a1a18;line-height:1.3;margin-bottom:4px;}
+.dd-bill-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:2px;}
+.dd-bill-lvl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 6px;border-radius:3px;display:inline-block;letter-spacing:0.06em;text-transform:uppercase;}
+.lv-badge-Federal{background:rgba(37,99,235,0.10);color:#2563EB;}
+.lv-badge-Florida{background:rgba(217,119,6,0.12);color:#b45309;}
+.lv-badge-Jacksonville{background:rgba(124,58,237,0.10);color:#7C3AED;}
+.alg-PRO{background:#D4EDDA;color:#1C4A28;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 7px;border-radius:3px;letter-spacing:0.04em;}
+.alg-ANTI{background:#FFDEDE;color:#9B2226;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 7px;border-radius:3px;letter-spacing:0.04em;}
+.alg-MIXED{background:#FFF8DC;color:#7B6914;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 7px;border-radius:3px;letter-spacing:0.04em;}
+.dd-bill-cause{font-family:'avenir-light',Arial,sans-serif;font-size:9px;padding:1px 7px;border-radius:10px;background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb;}
+.dd-bill-num{padding:4px 14px 0;font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#9ca3af;}
+.dd-bill-status{padding:2px 14px 0;font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#6b7280;}
+.dd-bill-plain{padding:8px 14px 10px;font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;flex:1;}
+.sh-row{display:flex;gap:5px;align-items:center;padding:9px 14px 11px;border-top:1.5px solid #f3f4f6;margin-top:auto;flex-wrap:wrap;}
+.sh-icon{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:opacity 0.15s;flex-shrink:0;padding:0;text-decoration:none;vertical-align:middle;}
+.sh-icon:hover{opacity:0.80;}
+.sh-fb{background:#1877F2;}
+.sh-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);}
+.sh-tt{background:#010101;}
+.sh-truth{background:#5448EE;}
+.sh-bsky{background:#0085FF;}
+.sh-sms{background:#34C759;}
+.sh-bill{background:#f3f4f6;border:1.5px solid #e2e8f0;}
+.dd-bill-logo{width:36px;height:36px;min-width:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#fff;flex-shrink:0;position:relative;overflow:hidden;}
+.dd-bill-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;border-radius:7px;}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
+.footer a{color:#59D7EE;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+  <h1>The Policies <span>We Track.</span></h1>
+  <p>Every bill with a direct impact on us.</p>
+</div>
+
+<div class="filter-band">
+  <div class="search-bar">
+    <input class="srch" id="bill-search" placeholder="Search bills…" oninput="renderBills()">
+    <select class="dd-filter" id="bill-level" onchange="renderBills()">
+      <option value="all">All levels</option>
+      <option value="Federal">Federal</option>
+      <option value="Florida">Florida</option>
+      <option value="Jacksonville">Jacksonville</option>
+    </select>
+    <select class="dd-filter" id="bill-alg" onchange="renderBills()">
+      <option value="all">All alignments</option>
+      <option value="PRO">PRO — Mike supports</option>
+      <option value="ANTI">ANTI — Mike opposes</option>
+      <option value="MIXED">MIXED</option>
+    </select>
+    <select class="dd-filter" id="bill-cause" onchange="renderBills()">
+      <option value="all">All issues</option>
+      <option value="Healthcare & Drugs">Healthcare</option>
+      <option value="Gun Safety">Gun Safety</option>
+      <option value="Democracy & Voting">Democracy &amp; Voting</option>
+      <option value="Housing & Insurance">Housing</option>
+      <option value="Criminal Justice">Criminal Justice</option>
+      <option value="Economic Justice & UBI">Economic Justice</option>
+      <option value="Body Autonomy">Body Autonomy</option>
+      <option value="Climate & Infrastructure">Climate</option>
+      <option value="Immigration">Immigration</option>
+      <option value="Technology & AI">Technology</option>
+      <option value="Education & Workforce">Education</option>
+      <option value="LGBTQ+ Rights">LGBTQ+ Rights</option>
+      <option value="Disability Rights">Disability Rights</option>
+      <option value="Small Business">Small Business</option>
+      <option value="Mental Health & Addiction">Mental Health</option>
+    </select>
+  </div>
+  <div class="legend">
+    <div class="leg-item"><span class="leg-dot" style="background:#2563EB"></span>Federal</div>
+    <div class="leg-item"><span class="leg-dot" style="background:#d97706"></span>Florida</div>
+    <div class="leg-item"><span class="leg-dot" style="background:#7C3AED"></span>Jacksonville</div>
+    <div class="leg-item"><span class="alg-PRO">PRO</span></div>
+    <div class="leg-item"><span class="alg-ANTI">ANTI</span></div>
+    <div class="leg-item"><span class="alg-MIXED">MIXED</span></div>
+  </div>
+  <div class="res-count" id="bill-count"></div>
+</div>
+
+<div class="main">
+  <div class="bill-grid" id="bill-list"></div>
+</div>
+
+<div class="footer">
+  <p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>
+  119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br>
+  <a href="https://mikesell.org">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p>
+</div>
+
+<script>
+var FB_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>';
+var IG_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>';
+var TT_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.05a8.16 8.16 0 004.77 1.52V7.12a4.85 4.85 0 01-1-.43z"/></svg>';
+var TRUTH_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.5 8.5h-3v9h-3v-9h-2v-3h2V4.5C11.5 3 12.5 2 14 2h3.5v3H15c-.6 0-1 .2-1 .8V5.5h3l-.5 3z"/></svg>';
+var BSKY_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 01-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.204-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg>';
+var DOC_SVG='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+var SMS_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>';
+
+var ACCENT={Federal:'#2563EB',Florida:'#d97706',Jacksonville:'#7C3AED'};
+
+var BILLS=[
+{level:"Federal",cause:"Healthcare & Drugs",name:"FAMILY Act",num:"S.2823 / H.R.5390",sponsor:"Gillibrand(D-NY) / DeLauro(D-CT)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/2823",plain:"If you need time off to care for a new baby or sick family member, this bill makes sure you still get paid."},
+{level:"Federal",cause:"Healthcare & Drugs",name:"Mental Health Access Improvement Act",num:"H.R.432",sponsor:"Bipartisan",status:"Passed House — Senate Pending",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/432",plain:"Lets Medicare cover more types of mental health counselors so seniors can actually get the help they need."},
+{level:"Federal",cause:"Healthcare & Drugs",name:"Black Maternal Health Momnibus Act",num:"H.R.959",sponsor:"Underwood(D-IL) / Pressley(D-MA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/959",plain:"Black mothers die during childbirth at more than twice the rate of white mothers. This package addresses root causes including racism in healthcare."},
+{level:"Federal",cause:"Healthcare & Drugs",name:"MOMMA's Act",num:"S.1658",sponsor:"Booker(D-NJ)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1658",plain:"Requires hospitals to track why mothers die in childbirth and train doctors to fix biased care that puts Black mothers at higher risk."},
+{level:"Federal",cause:"Healthcare & Drugs",name:"MORE Act — Cannabis",num:"H.R.5601",sponsor:"Nadler(D-NY)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/5601",plain:"Removes marijuana from the federal list of illegal drugs so states can set their own rules without conflicting with federal law."},
+{level:"Federal",cause:"Healthcare & Drugs",name:"Cannabis Administration & Opportunity Act",num:"S.1360",sponsor:"Schumer(D-NY)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1360",plain:"Makes cannabis federally legal with programs to support communities hit hardest by the old drug war."},
+{level:"Federal",cause:"Healthcare & Drugs",name:"PFAS Action Act",num:"H.R.1512",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/1512",plain:"Forces the government to set strict legal limits on 'forever chemicals' that have contaminated drinking water in thousands of communities."},
+{level:"Federal",cause:"Gun Safety",name:"Bipartisan Background Checks Act",num:"H.R.715",sponsor:"Thompson(D-CA) / King(R-ME)",status:"Passed House — Senate Pending",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/715",plain:"Closes the loophole that lets people buy guns at gun shows or online without a background check."},
+{level:"Federal",cause:"Gun Safety",name:"Child Gunshot Victim Protection Act",num:"H.R.4855",sponsor:"Cicilline(D-RI)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/4855",plain:"Requires gun owners to lock up their weapons so kids can't access them."},
+{level:"Federal",cause:"Gun Safety",name:"George Floyd Justice in Policing Act",num:"H.R.5361",sponsor:"Bass(D-CA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/5361",plain:"Sets national rules for when police can use force, bans chokeholds and no-knock warrants in most cases, and creates better accountability."},
+{level:"Federal",cause:"Climate & Infrastructure",name:"Saving America's Pollinators Act",num:"H.R.1515",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/1515",plain:"Restricts pesticides that are killing off bee populations — which pollinate about a third of our food supply."},
+{level:"Federal",cause:"Technology & AI",name:"Kids Online Safety Act",num:"S.1409",sponsor:"Blumenthal(D-CT) / Blackburn(R-TN)",status:"Passed Senate — House Pending",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1409",plain:"Social media platforms must take reasonable steps to protect kids from harmful content."},
+{level:"Federal",cause:"Technology & AI",name:"COPPA 2.0",num:"S.1291",sponsor:"Markey(D-MA) / Cassidy(R-LA)",status:"Passed Senate — House Pending",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1291",plain:"Updates online privacy rules for children and bans platforms from targeting ads at kids and teens."},
+{level:"Federal",cause:"Technology & AI",name:"Fourth Amendment Is Not For Sale Act",num:"H.R.946",sponsor:"Davidson(R-OH) — Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/946",plain:"Stops the government from buying your private data from data brokers to spy on you without a warrant."},
+{level:"Federal",cause:"Economic Justice & UBI",name:"Raise the Wage Act",num:"S.1332 / H.R.2743",sponsor:"Murray(D-WA) / Scott(D-VA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1332",plain:"Raises the federal minimum wage — stuck at $7.25/hr since 2009 — to $17/hr over several years."},
+{level:"Federal",cause:"Economic Justice & UBI",name:"Domestic Workers Bill of Rights Act",num:"H.R.3971 / S.3396",sponsor:"Jayapal(D-WA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/3971",plain:"Gives nannies, house cleaners, and home health aides the same basic labor protections most other workers already have."},
+{level:"Federal",cause:"Economic Justice & UBI",name:"PRO Act",num:"H.R.20",sponsor:"Scott(D-VA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/20",plain:"The biggest update to labor law in 80 years. Makes it easier for workers to form unions and harder for employers to union-bust."},
+{level:"Federal",cause:"Economic Justice & UBI",name:"Food Deserts Act",num:"H.R.484",sponsor:"Fudge(D-OH)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/484",plain:"Offers tax incentives to grocery stores that open locations in neighborhoods where residents have no easy access to fresh, healthy food."},
+{level:"Federal",cause:"Housing & Insurance",name:"Housing Supply and Affordability Act",num:"S.1576",sponsor:"Klobuchar(D-MN)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1576",plain:"Gives cities grants to relax outdated zoning rules that block new apartments — one of the biggest drivers of the housing crisis."},
+{level:"Federal",cause:"Housing & Insurance",name:"Landlord Accountability Act",num:"H.R.206",sponsor:"Waters(D-CA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/206",plain:"Protects renters from landlords who try to evict or harass tenants for complaining about bad conditions or trying to organize."},
+{level:"Federal",cause:"Housing & Insurance",name:"Affordable Housing Credit Improvement Act",num:"S.1557",sponsor:"Cantwell(D-WA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1557",plain:"Expands the main federal program that funds affordable apartment construction."},
+{level:"Federal",cause:"Housing & Insurance",name:"Child Care for Working Families Act",num:"S.1360",sponsor:"Murray(D-WA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1360",plain:"Makes pre-K and child care free or affordable for working families so parents can actually afford to go to work."},
+{level:"Federal",cause:"Democracy & Voting",name:"Automatic Voter Registration Act",num:"H.R.4128",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/4128",plain:"Automatically registers eligible citizens to vote when they interact with government agencies — unless they opt out."},
+{level:"Federal",cause:"Democracy & Voting",name:"Election Day Holiday Act",num:"H.R.281 / S.198",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/281",plain:"Makes Election Day a federal holiday so working people don't have to choose between voting and keeping their jobs."},
+{level:"Federal",cause:"Democracy & Voting",name:"Early Voting Act",num:"H.R.2980",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/2980",plain:"Requires at least two weeks of early voting before elections, giving people more flexibility to cast their ballots."},
+{level:"Federal",cause:"Democracy & Voting",name:"DISCLOSE Act",num:"S. pending",sponsor:"Whitehouse(D-RI)",status:"Floor Pending",alignment:"PRO",url:"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22DISCLOSE+Act%22%7D",plain:"Forces super PACs and dark money groups to reveal who is funding their political ads."},
+{level:"Federal",cause:"Criminal Justice",name:"End For-Profit Prisons Act",num:"H.R.3612",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/3612",plain:"Phases out private prison companies that profit from incarcerating people."},
+{level:"Federal",cause:"Criminal Justice",name:"Pretrial Integrity and Safety Act",num:"H.R.6859",sponsor:"Harris(D-CA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/6859",plain:"Reduces the number of people held in jail before trial simply because they cannot afford bail."},
+{level:"Federal",cause:"Criminal Justice",name:"CROWN Act",num:"H.R.5151",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/5151",plain:"Makes it illegal to discriminate against people for wearing natural hairstyles like locs or braids."},
+{level:"Federal",cause:"Criminal Justice",name:"MENTOR Act",num:"H.R.726",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/726",plain:"Funds community programs that work directly with people most at risk of gun violence."},
+{level:"Federal",cause:"Body Autonomy",name:"Women's Health Protection Act",num:"H.R.12",sponsor:"Bipartisan(D)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/12",plain:"Would guarantee the right to abortion nationwide, effectively restoring protections that existed under Roe v. Wade."},
+{level:"Federal",cause:"Body Autonomy",name:"Access to Contraception Act",num:"Pending 119th",sponsor:"Bipartisan(D)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22access+to+contraception%22%7D",plain:"Protects access to birth control nationwide."},
+{level:"Federal",cause:"LGBTQ+ Rights",name:"Equality Act",num:"H.R.15",sponsor:"Bipartisan(D)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/15",plain:"Adds LGBTQ+ people to federal civil rights law so they cannot be fired, denied housing, or turned away from a business."},
+{level:"Federal",cause:"Immigration",name:"Immigration Detainee Civil Rights Act",num:"Pending 119th",sponsor:"Jayapal(D-WA)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22Immigration+Detainee+Civil+Rights%22%7D",plain:"Sets minimum standards for humane treatment in immigration detention."},
+{level:"Federal",cause:"Education & Workforce",name:"Civics Secures Democracy Act",num:"H.R.5784 / S.3069",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/5784",plain:"Puts $1 billion toward teaching kids civics and history."},
+{level:"Federal",cause:"Education & Workforce",name:"National Apprenticeship Act",num:"H.R.447",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/447",plain:"Expands apprenticeship programs that let people learn a trade on the job — earning while they learn."},
+{level:"Federal",cause:"Disability Rights",name:"IDEA Reauthorization",num:"Pending 119th",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22IDEA+reauthorization%22%7D",plain:"Renews the law that guarantees children with disabilities the right to a free, appropriate public education."},
+{level:"Federal",cause:"Small Business",name:"SAFER Banking Act",num:"S.2860",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/2860",plain:"Lets marijuana businesses — legal in many states — open bank accounts and take credit cards."},
+{level:"Florida",cause:"Democracy & Voting",name:"FL SAVE Act — Federal Lawsuits Active",num:"HB 991",sponsor:"House Republican Majority",status:"Signed Apr 2026 — ACLU/NAACP Suing",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2026/991",plain:"Requires citizenship proof to register to vote. ACLU, NAACP, LWV, and FL Immigrant Coalition sued the same day it was signed."},
+{level:"Florida",cause:"Democracy & Voting",name:"Voting Rights Restoration — Enforcement Failures",num:"Amendment 4 (2018) / SB 7066",sponsor:"FL Division of Elections",status:"Active Legal Dispute",alignment:"ANTI",url:"https://www.aclufl.org/en/cases/jones-v-desantis",plain:"Florida voters voted overwhelmingly to restore voting rights to returning citizens. Tallahassee added a fee/fine requirement that courts keep ruling unconstitutional."},
+{level:"Florida",cause:"Gun Safety",name:"Open Carry — Cities Assessing Liability",num:"Post-1st DCA Ruling",sponsor:"FL Legislature",status:"In Effect Sep 2025",alignment:"ANTI",url:"https://efacts.flcourts.org",plain:"A court struck FL's ban on openly carrying guns. Now anyone legally allowed to own a gun can carry openly almost anywhere."},
+{level:"Florida",cause:"Gun Safety",name:"Red Flag Law — Repeal Threat Returns 2027",num:"HB 31 precedent",sponsor:"Senate/House Republicans",status:"Active Threat — Expected 2027",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bills/2027",plain:"Florida's red flag law lets courts temporarily remove guns from people in crisis. Republican legislators keep trying to repeal it."},
+{level:"Florida",cause:"Healthcare & Drugs",name:"Federal Medicaid Cuts — FL Impact",num:"HB 693 / Federal OBBA",sponsor:"FL Legislature / U.S. Congress",status:"Legislature Must Return 2027 — 800K+ Floridians at Risk",alignment:"ANTI",url:"https://floridahealthjustice.org",plain:"Federal Medicaid cuts of nearly a trillion dollars threaten 800,000+ FL residents."},
+{level:"Florida",cause:"Healthcare & Drugs",name:"Medicaid Work Requirements — Returns 2027",num:"SB 1758",sponsor:"Senate Republican Majority",status:"Died 2026 — Expected Return 2027",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2026/1758",plain:"Would impose work requirements on 111,000+ FL Medicaid recipients."},
+{level:"Florida",cause:"Healthcare & Drugs",name:"Cannabis Legalization — Ballot Path Blocked Until 2028",num:"SB 1398 / HB 1501",sponsor:"Senate/House Democrats",status:"Blocked 6+ Sessions — Next Ballot Opportunity 2028",alignment:"PRO",url:"https://www.flsenate.gov/Session/Bill/2026/1398",plain:"73% of Floridians support legalizing marijuana but Republican leaders keep blocking it without a vote."},
+{level:"Florida",cause:"Body Autonomy",name:"6-Week Abortion Ban — Amendment 4 Strategy for 2028",num:"HB 7 (2023) / Amendment 4 (2024)",sponsor:"FL Legislature",status:"In Effect — Amendment 4 Got 57%, Needs 60% — Advocates Regrouping 2028",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2023/7",plain:"Florida bans abortion after ~6 weeks. In 2024, 57% of voters tried to restore rights but FL requires 60%."},
+{level:"Florida",cause:"Body Autonomy",name:"Fetal Personhood — Returns 2027 with Momentum",num:"HB 289 / SB 164",sponsor:"Greco(R) / Grall(R)",status:"HB Passed House 2026 — SB Died — Returns 2027",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2026/289",plain:"A bill to let families sue over the death of a fetus at any pregnancy stage passed the FL House."},
+{level:"Florida",cause:"Body Autonomy",name:"Abortion Pill / Telehealth Bounty — Returns 2027",num:"HB 663 / SB 1374",sponsor:"House Republicans",status:"Died 2026 — High Probability Return 2027",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2026/663",plain:"A $100K civil suit bill for abortion medication by mail or telehealth. Failed this year. Expect it back in 2027."},
+{level:"Florida",cause:"Economic Justice & UBI",name:"Public Sector Union Restrictions — Legal Challenge",num:"SB 1296",sponsor:"Senate Republican Majority",status:"Signed May 2026 — Constitutional Challenge Expected",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2026/1296",plain:"Makes it much harder for public workers — teachers, social workers, city employees — to keep their unions."},
+{level:"Florida",cause:"Climate & Infrastructure",name:"Net-Zero Preemption — Signed, Challenges Evaluated",num:"HB 1217",sponsor:"House Republican Majority",status:"Signed Apr 22 2026 — Preemption Challenges Active",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2026/1217",plain:"Bans FL cities and counties from adopting climate goals or net-zero targets. Signed in Jacksonville — the city most vulnerable to sea-level rise."},
+{level:"Florida",cause:"Technology & AI",name:"AI Bill of Rights — Returns 2027",num:"CS/SB 482 / HB 1395",sponsor:"Leek(R) — Bipartisan",status:"Passed Senate 35-2 — Killed by House Speaker — Returns 2027",alignment:"PRO",url:"https://www.flsenate.gov/Session/Bill/2026/482",plain:"Passed FL Senate 35-2 protecting Floridians from AI deception. House Speaker killed it. It will be back in 2027."},
+{level:"Florida",cause:"LGBTQ+ Rights",name:"Anti-DEI Law — Legal Challenges Being Evaluated",num:"SB 1134",sponsor:"Senate Republican Majority",status:"Signed Apr 22 2026 — Cities Assessing Compliance",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2026/1134",plain:"Bans local governments from funding DEI programs — meaning cities cannot fund LGBTQ+ training or related initiatives."},
+{level:"Florida",cause:"Immigration",name:"TRUMP Acts — Active Enforcement, Legal Challenges",num:"SB 2-C / SB 4-C",sponsor:"Senate Republican Majority",status:"In Effect Feb 2025 — Provisions Under Federal Court Scrutiny",alignment:"ANTI",url:"https://www.flsenate.gov/Session/Bill/2025C/2C",plain:"FL's toughest anti-immigration laws are in effect but several provisions are in federal court."},
+{level:"Jacksonville",cause:"Housing & Insurance",name:"Eviction Diversion Program — FY2026-27 Funding Fight",num:"Admin / Budget 2026",sponsor:"Mayor Deegan",status:"Active — Funding at Risk",alignment:"PRO",url:"https://nlihc.org/resource/jacksonville-floridas-eviction-diversion-program-increased-housing-stability-0",plain:"City program that pays up to 3 months of back rent to prevent evictions. 84% success rate."},
+{level:"Jacksonville",cause:"Housing & Insurance",name:"Affordable Housing Trust Fund — $10M Push",num:"Budget Initiative 2026",sponsor:"Mayor Deegan / ICARE",status:"Pre-Budget — Deegan Committed for July 2026",alignment:"PRO",url:"https://jaxtoday.org",plain:"ICARE is demanding a permanent $10M affordable housing fund. Mayor Deegan is pushing to include it in the July 2026 budget."},
+{level:"Jacksonville",cause:"Housing & Insurance",name:"Zoning Deviation Deregulation — Remove Public Hearings",num:"Ordinance 2026-0364",sponsor:"CM Diamond",status:"Pending — In Committee",alignment:"ANTI",url:"https://www.jaxdailyrecord.com",plain:"Would let Jacksonville's Planning Department approve zoning exceptions without public hearings."},
+{level:"Jacksonville",cause:"Climate & Infrastructure",name:"Resilient Jacksonville — 50-Year Plan Implementation",num:"Executive Strategy Oct 2023",sponsor:"Mayor Deegan",status:"Active — 38 of 45 Actions Underway",alignment:"PRO",url:"https://www.jacksonville.gov/climateactionplan",plain:"A 50-year plan to protect Jacksonville from flooding, hurricanes, and sea-level rise."},
+{level:"Jacksonville",cause:"Climate & Infrastructure",name:"JEA Workforce Investigation — Active",num:"Resolution 2026",sponsor:"CP Carrico / CM Salem",status:"Active Investigation May 2026",alignment:"MIXED",url:"https://jaxtoday.org/2026/05/05/city-council-jea-investigation/",plain:"A City Council investigation into JEA's city-owned utility, looking into allegations of a toxic, racially biased workplace."},
+{level:"Jacksonville",cause:"Criminal Justice",name:"Journey Forward — 2026 Funding Continuation",num:"Admin Program 2023+",sponsor:"Mayor Deegan",status:"Active — Annual Budget Review",alignment:"PRO",url:"https://www.jacksonville.gov/mayor/initiatives/journeyforward",plain:"Community violence interruption program. Jacksonville's murder rate hit a decade low in 2024 — a 47% drop from 2020."},
+{level:"Jacksonville",cause:"Mental Health & Addiction",name:"Mental Health Matters Jax — FY2026-27 Expansion",num:"Executive Initiative 2024+",sponsor:"Mayor Deegan",status:"Active — Expansion Proposed in FY2026-27 Budget",alignment:"PRO",url:"https://jaxtoday.org/2024/05/06/jacksonville-aims-to-curb-its-mental-health-issues/",plain:"City initiative funding mental health services for children and the 988 crisis line."},
+{level:"Jacksonville",cause:"Immigration",name:"Jacksonville Immigration Enforcement Act — Legal Challenge",num:"Ordinance 2025-0147-E",sponsor:"CM Carrico / Diamond / Freeman",status:"Passed 12-5 — Deegan Did Not Sign — Under Legal Challenge",alignment:"ANTI",url:"https://jaxcityc.legistar.com/LegislationDetail.aspx?ID=7144241",plain:"Criminalizes undocumented presence locally and requires ICE cooperation. Mayor Deegan refused to sign it."},
+{level:"Jacksonville",cause:"Economic Justice & UBI",name:"Eastside CBA $40M Grants — First Cycle Open",num:"Ordinance 2026-0036",sponsor:"City Council / Eastside Grants Committee",status:"Active — Awards Pending",alignment:"PRO",url:"https://www.jaxdailyrecord.com",plain:"Distributes $40M from the Jaguars stadium deal to the Eastside neighborhood for affordable housing, jobs, and economic development."},
+{level:"Federal",cause:"Democracy & Voting",name:"John R. Lewis Voting Rights Advancement Act",num:"S.2523 / H.R.14",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/2523",plain:"Restores the federal preclearance requirement so states with a history of voter suppression must get approval before changing voting rules."},
+{level:"Federal",cause:"Democracy & Voting",name:"Ranked Choice Voting Act",num:"S.3425 / H.R.6589",sponsor:"Welch(D-VT) / Kim(D-NJ)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/3425",plain:"Requires ranked choice voting in federal elections so your second choice still counts even if your first pick doesn't win — no more spoiler problem."},
+{level:"Federal",cause:"Democracy & Voting",name:"Let America Vote Act — Open Primaries",num:"H.R.155",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/155",plain:"Requires states to let unaffiliated voters participate in federal primary elections — so independents don't get shut out of the most important race."},
+{level:"Federal",cause:"Gun Safety",name:"Assault Weapons Ban of 2025",num:"S.1531 / H.R.3115",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/1531",plain:"Bans the sale, manufacture, and transfer of semiautomatic assault weapons and large-capacity magazines to civilians."},
+{level:"Federal",cause:"Gun Safety",name:"Extreme Risk Protection Order Expansion Act",num:"S.889 / H.R.4252",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/senate-bill/889",plain:"Funds states to implement red flag laws and makes federal firearms restrictions apply to anyone under an extreme risk protection order."},
+{level:"Federal",cause:"Gun Safety",name:"Raise the Age Act of 2025",num:"H.R.2368 / S.597",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/2368",plain:"Raises the minimum age to purchase semiautomatic rifles and large-capacity magazines from 18 to 21."},
+{level:"Federal",cause:"Healthcare & Drugs",name:"Medicare for All Act",num:"H.R.3069 / S.1506",sponsor:"Jayapal(D-WA) / Sanders(I-VT)",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/3069",plain:"Creates a single national health insurance program covering every American — no premiums, no deductibles, no gaps based on your job or zip code."},
+{level:"Federal",cause:"Immigration",name:"American Dream and Promise Act of 2025",num:"H.R.1589",sponsor:"Bipartisan — 213 cosponsors",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/1589",plain:"Gives Dreamers — people brought to the US as children — a clear path to permanent residency and citizenship."},
+{level:"Federal",cause:"Technology & AI",name:"Algorithmic Accountability Act of 2025",num:"H.R.5511 / S.2164",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/5511",plain:"Requires companies to audit their automated decision systems for bias and harm before using them on the public — housing, hiring, healthcare, lending."},
+{level:"Federal",cause:"Economic Justice & UBI",name:"Guaranteed Income Pilot Program Act of 2025",num:"H.R.5830",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/5830",plain:"Funds a 3-year federal pilot to test guaranteed monthly income for eligible Americans — real data on what works instead of ideology."},
+{level:"Federal",cause:"Education & Workforce",name:"Educators Expense Deduction Modernization Act",num:"H.R.1054",sponsor:"Bipartisan",status:"In Committee",alignment:"PRO",url:"https://www.congress.gov/bill/119th-congress/house-bill/1054",plain:"Raises the tax deduction for teachers buying their own classroom supplies from $300 to $1,000 — because teachers shouldn't have to subsidize public education out of pocket."},
+{level:"Federal",cause:"Democracy & Voting",name:"CPB Defunding — Rescissions Act of 2025",num:"Rescissions Act of 2025",sponsor:"House Republican Majority",status:"Enacted Jul 2025 — CPB Winding Down",alignment:"ANTI",url:"https://www.congress.gov/bill/119th-congress/senate-bill/746",plain:"Congress zeroed out the Corporation for Public Broadcasting in July 2025. NPR and PBS affiliates are losing federal funding — the fight to restore it is live."}
+];
+
+function renderBills(){
+  var q=(document.getElementById('bill-search').value||'').toLowerCase();
+  var lv=document.getElementById('bill-level').value;
+  var alg=document.getElementById('bill-alg').value;
+  var cause=document.getElementById('bill-cause').value;
+  var filtered=BILLS.filter(function(b){
+    if(lv!=='all'&&b.level!==lv)return false;
+    if(alg!=='all'&&b.alignment!==alg)return false;
+    if(cause!=='all'&&b.cause!==cause)return false;
+    if(q&&b.name.toLowerCase().indexOf(q)<0&&b.cause.toLowerCase().indexOf(q)<0&&b.plain.toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  document.getElementById('bill-count').textContent='Showing '+filtered.length+' of '+BILLS.length+' bills';
+  var html='';
+  var iconLbl={Federal:'FED',Florida:'FL',Jacksonville:'JAX'};
+  var pgUrl=encodeURIComponent('https://mikesell.org/policies');
+  window._billCaptions=[];
+  for(var i=0;i<filtered.length;i++){
+    var b=filtered[i];
+    var accent=ACCENT[b.level]||'#2563EB';
+    var lbl=iconLbl[b.level]||'FED';
+    var shareText=encodeURIComponent(b.name+': '+b.plain+' — Mike Sell for Congress FL-CD4 mikesell.org/policies');
+    var smsMsg=encodeURIComponent('I just found this — '+b.name+': '+b.plain.slice(0,100)+'... See the full agenda at mikesell.org/policies');
+    var billBtn=b.url?'<a class="sh-icon sh-bill" href="'+b.url+'" target="_blank" rel="noopener" title="View bill" style="color:#374151">'+DOC_SVG+'</a>':'';
+    window._billCaptions.push(b.name+': '+b.plain+'\n\nSee Mike Sell\'s full Real Change For Us agenda at mikesell.org/policies');
+    var faviconTag='';
+    if(b.url){try{var fhost=new URL(b.url).hostname;faviconTag='<img src="https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://'+fhost+'&size=64" onerror="this.style.display=\'none\'" alt="">';}catch(e){}}
+    var logoHtml='<div class="dd-bill-logo" style="background:'+accent+';">'+lbl+faviconTag+'</div>';
+    html+='<div class="dd-bill" style="border-top:3px solid '+accent+';">';
+    html+='<div class="dd-bill-hd">';
+    html+=logoHtml;
+    html+='<div class="dd-bill-hd-meta">';
+    html+='<div class="dd-bill-name">'+b.name+'</div>';
+    html+='<div class="dd-bill-badges">';
+    html+='<span class="dd-bill-lvl lv-badge-'+b.level+'">'+b.level+'</span>';
+    html+='<span class="alg-'+b.alignment+'">'+b.alignment+'</span>';
+    html+='<span class="dd-bill-cause">'+b.cause+'</span>';
+    html+='</div></div></div>';
+    html+='<div class="dd-bill-num">'+b.num+(b.sponsor?' &nbsp;·&nbsp; '+b.sponsor:'')+'</div>';
+    html+='<div class="dd-bill-status">'+b.status+'</div>';
+    html+='<div class="dd-bill-plain">'+b.plain+'</div>';
+    html+='<div class="sh-row">';
+    html+='<button class="sh-icon sh-fb" title="Share on Facebook" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u='+pgUrl+'\',\'_blank\',\'noopener\')">'+FB_SVG+'</button>';
+    html+='<button class="sh-icon sh-ig" title="Copy caption for Instagram" onclick="copyIG('+i+')">'+IG_SVG+'</button>';
+    html+='<button class="sh-icon sh-tt" title="Share on TikTok" onclick="window.open(\'https://www.tiktok.com/share?url='+pgUrl+'\',\'_blank\',\'noopener\')">'+TT_SVG+'</button>';
+    html+='<button class="sh-icon sh-truth" title="Share on Truth Social" onclick="window.open(\'https://truthsocial.com/share?url='+pgUrl+'\',\'_blank\',\'noopener\')">'+TRUTH_SVG+'</button>';
+    html+='<button class="sh-icon sh-bsky" title="Share on Bluesky" onclick="window.open(\'https://bsky.app/intent/compose?text='+shareText+'\',\'_blank\',\'noopener\')">'+BSKY_SVG+'</button>';
+    html+='<a class="sh-icon sh-sms" title="Text a friend" href="sms:?body='+smsMsg+'">'+SMS_SVG+'</a>';
+    html+=billBtn;
+    html+='</div></div>';
+  }
+  document.getElementById('bill-list').innerHTML=html;
+}
+
+function copyIG(idx){
+  var txt=window._billCaptions&&window._billCaptions[idx]?window._billCaptions[idx]:'';
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){});}
+}
+
+renderBills();
+
+function sendHeight(){var h=document.documentElement.scrollHeight||document.body.scrollHeight;try{window.parent.postMessage({type:'iwResizeHeight',data:{height:h}},'*');}catch(e){}}
+window.addEventListener('load',sendHeight);
+window.addEventListener('resize',sendHeight);
+if(window.MutationObserver){new MutationObserver(sendHeight).observe(document.body,{childList:true,subtree:true,attributes:true});}
+</script>
+</body>
+</html>

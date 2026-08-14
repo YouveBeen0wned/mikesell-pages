@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>F That Templates v2 — Forward Party (bold editorial)</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#44234D; --purple-deep:#2E1736; --red:#94261B;
+    --blue:#3974B5; --off:#EAEAE5; --lilac:#CABCD0; --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#33343a;font-family:'Inter',sans-serif;color:#fff;padding:32px;}
+  .wrap{max-width:1240px;margin:0 auto;}
+  h1{font-family:'Oswald';font-weight:700;font-size:46px;letter-spacing:1px;text-transform:uppercase;}
+  .sub{color:#b9bac1;font-size:15px;margin:4px 0 8px;max-width:760px;line-height:1.6;}
+  .palette{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 30px;}
+  .sw{border-radius:8px;overflow:hidden;width:138px;border:1px solid #4a4b52;}
+  .sw .chip{height:46px;} .sw .lbl{background:#26272c;padding:6px 8px;font-size:11px;}
+  .sw .lbl b{display:block;font-size:12px;} .sw .lbl span{color:#9a9ba2;font-family:monospace;}
+  .tname{font-family:'Oswald';font-weight:600;font-size:24px;letter-spacing:1px;text-transform:uppercase;margin:30px 0 6px;border-top:1px solid #4a4b52;padding-top:22px;}
+  .tnote{color:#b9bac1;font-size:14px;margin-bottom:16px;}
+  .row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;}
+  .legend{font-size:13px;color:#9a9ba2;max-width:230px;}
+
+  /* IG card base 1:1 shown at 440px (export 1080) */
+  .ig{position:relative;width:440px;height:440px;border-radius:14px;overflow:hidden;
+      box-shadow:0 12px 34px rgba(0,0,0,.4);padding:30px 28px;display:flex;flex-direction:column;}
+  .ig.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.10;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .ig>*{position:relative;z-index:2;}
+  .ghost{position:absolute;z-index:1;font-family:'Oswald';font-weight:700;line-height:.8;color:#fff;}
+  .head{display:flex;justify-content:space-between;align-items:center;}
+  .mark{font-family:'Oswald';font-weight:600;font-size:17px;letter-spacing:3px;}
+  .flag{width:40px;height:40px;}
+  .fact{font-weight:800;font-size:26px;line-height:1.12;color:#fff;margin-top:26px;}
+  .ul{border-bottom:4px solid var(--red);}
+  .stamp{align-self:flex-start;background:var(--red);transform:rotate(-2.5deg);padding:4px 17px 7px;margin:18px 0 15px;}
+  .stamp span{font-family:'Oswald';font-weight:700;font-size:54px;line-height:.95;color:#fff;letter-spacing:1px;}
+  .fix{font-weight:500;font-size:15px;line-height:1.4;color:var(--off);}
+  .fix b{color:#fff;font-weight:700;}
+  .foot{margin-top:auto;padding-top:14px;}
+  .tags{font-weight:700;font-size:12px;color:#fff;}
+  .tags .x{color:var(--lilac);font-weight:600;}
+  .src{font-size:10px;color:#9E8AA6;margin-top:6px;letter-spacing:.3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>F That — template kit v2</h1>
+  <div class="sub">Bold editorial rebuild. Forward Party brand verified from floridaforwardparty.com. Fixes: stamped F THAT lockup, real scale contrast, brand-only accent, ghosted type, grain, source tag on every card, IG safe margins. Headline font Oswald, body Inter. Export at 1080&times;1080 or 1080&times;1350; drop in the official logo PNG.</div>
+  <div class="palette" id="pal"></div>
+
+  <!-- A -->
+  <div class="tname">A. Purple core (default)</div>
+  <div class="tnote">The everyday workhorse. Ghosted stat behind, red-underlined number, stamped turn.</div>
+  <div class="row">
+    <div class="ig grain" style="background:var(--purple)">
+      <div class="ghost" style="right:-18px;top:30px;font-size:210px;opacity:.05;letter-spacing:-4px;">42%</div>
+      <div class="head"><span class="mark" style="color:var(--lilac)">FORWARD</span><span class="flagslot"></span></div>
+      <div class="fact">Duval home insurance is up about <span class="ul">42%</span> in five years.</div>
+      <div class="stamp"><span>F THAT.</span></div>
+      <div class="fix"><b>The fix &rarr;</b> cap junk rate hikes and back a state reinsurance program so premiums track real risk.</div>
+      <div class="foot"><div class="tags">#HomeInsurance <span class="x">#FThat #ILikeMike #FFP</span></div>
+        <div class="src">SOURCE: FL OIR / Insurance Information Institute</div></div>
+    </div>
+    <div class="legend">Edit: fact, the underlined number, fix line, on-topic tag, source. Everything else stays.</div>
+  </div>
+
+  <!-- B -->
+  <div class="tname">B. Stat spotlight</div>
+  <div class="tnote">One number does the work. Red rule down the left edge, huge Oswald figure.</div>
+  <div class="row">
+    <div class="ig grain" style="background:var(--purple-deep);justify-content:center">
+      <div style="position:absolute;left:0;top:0;width:8px;height:100%;background:var(--red);z-index:1"></div>
+      <div class="mark" style="position:absolute;right:24px;top:22px;font-size:15px;color:var(--lilac)">FORWARD</div>
+      <div style="font-family:'Oswald';font-weight:700;font-size:132px;line-height:.82;color:#fff;letter-spacing:-2px">795</div>
+      <div style="font-family:'Oswald';font-weight:600;font-size:18px;letter-spacing:1px;color:#E8836F;text-transform:uppercase">people per 100k locked up in FL</div>
+      <div style="font-weight:500;font-size:15px;color:var(--off);margin-top:10px;line-height:1.35">Higher than any democracy on Earth.</div>
+      <div class="stamp" style="margin:14px 0 0;padding:3px 14px 5px"><span style="font-size:36px">F THAT.</span></div>
+      <div class="foot" style="margin-top:18px"><div class="tags">#JusticeReform <span class="x">#FThat #ILikeMike #FFP</span></div>
+        <div class="src">SOURCE: Prison Policy Initiative, 2024</div></div>
+    </div>
+    <div class="legend">Number + unit + one line of context, under 8 words. Smaller stamp so the number wins.</div>
+  </div>
+
+  <!-- C -->
+  <div class="tname">C. Red alarm</div>
+  <div class="tnote">Hardest facts only, so it stays loud. Stamp flips to deep plum on red.</div>
+  <div class="row">
+    <div class="ig grain" style="background:var(--red)">
+      <div class="ghost" style="right:-24px;bottom:-12px;font-size:200px;color:#000;opacity:.09">$17K</div>
+      <div class="head"><span class="mark" style="color:#F0C8C3">FORWARD</span><span class="flagslot light"></span></div>
+      <div class="fact">A full-time minimum-wage job in Duval falls about <span style="border-bottom:4px solid var(--purple-deep)">$17,000</span> short of the cost of living.</div>
+      <div class="stamp" style="background:var(--purple-deep)"><span>F THAT.</span></div>
+      <div class="fix" style="color:#FBEAE8"><b>The fix &rarr;</b> a living-wage floor tied to what it actually costs to live here.</div>
+      <div class="foot"><div class="tags">#LivingWage <span class="x" style="color:#F0C8C3">#FThat #ILikeMike #FFP</span></div>
+        <div class="src" style="color:#E0A59E">SOURCE: MIT Living Wage Calculator, Duval Co.</div></div>
+    </div>
+    <div class="legend">Use rarely. Red is the loudest card; overuse kills the alarm.</div>
+  </div>
+
+  <!-- D -->
+  <div class="tname">D. Blue forward-fix</div>
+  <div class="tnote">Solution-forward. The hopeful close of a thread. Ghost arrow drives motion.</div>
+  <div class="row">
+    <div class="ig grain" style="background:var(--blue)">
+      <div class="ghost" style="right:-16px;top:18px;font-size:170px;opacity:.07">&rarr;</div>
+      <div class="head"><span class="mark" style="color:#CFE0F2">FORWARD</span><span class="flagslot light"></span></div>
+      <div style="font-family:'Oswald';font-weight:600;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#CFE0F2;margin-top:26px">Here's what we build</div>
+      <div class="fact" style="margin-top:10px;font-size:31px">Fund what already works: Narcan, recovery, prevention.</div>
+      <div class="fix" style="color:#E3EEFA;margin-top:12px">Duval overdose calls are falling. Protect the progress, don't cut it.</div>
+      <div class="foot"><div class="tags">#PublicHealth <span class="x" style="color:#CFE0F2">#FThat #ILikeMike #FFP</span></div>
+        <div class="src" style="color:#B9D0EC">SOURCE: JFRD / FL Dept. of Health, 2025</div></div>
+    </div>
+    <div class="legend">No "F THAT" stamp here, this is the resolution card. Reframe is honest: overdoses are down.</div>
+  </div>
+
+  <div style="margin-top:40px;border-top:1px solid #4a4b52;padding-top:20px;color:#9a9ba2;font-size:13px;line-height:1.6">
+    Carousel pattern (Template E): slide 1 = the fact (screenshot-bait) &middot; slide 2 = full-bleed F THAT stamp &middot; slide 3 = the fix &middot; optional slide 4 = source/proof.
+    Build these as locked Brand Templates in Canva (see FThat_Canva_Build_Guide.md). Every number is a placeholder &mdash; verify against the cited source before posting.
+  </div>
+</div>
+
+<script>
+  const pal=[
+    ['Forward purple','#44234D'],['Purple deep','#2E1736'],['Forward red','#94261B'],
+    ['Forward blue','#3974B5'],['Muted lilac','#CABCD0'],['Off-white','#EAEAE5'],['White','#FFFFFF']
+  ];
+  document.getElementById('pal').innerHTML = pal.map(p=>
+    `<div class="sw"><div class="chip" style="background:${p[1]}"></div><div class="lbl"><b>${p[0]}</b><span>${p[1]}</span></div></div>`).join('');
+  const flag=(light)=>`<svg class="flag" viewBox="0 0 100 100" aria-label="Forward flag (placeholder, swap official PNG)">
+    <defs><linearGradient id="g${light?1:0}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a3072"/><stop offset="1" stop-color="#94261B"/></linearGradient></defs>
+    <g fill="${light?'#fff':'url(#g0)'}" transform="skewX(-8) translate(6,0)">
+      <rect x="8" y="22" width="36" height="6"/><rect x="8" y="36" width="36" height="6"/>
+      <rect x="8" y="50" width="6" height="6"/><rect x="22" y="50" width="6" height="6"/><rect x="36" y="50" width="6" height="6"/>
+      <rect x="50" y="22" width="42" height="6"/><rect x="50" y="36" width="42" height="6"/><rect x="8" y="64" width="84" height="6"/>
+    </g></svg>`;
+  document.querySelectorAll('.flagslot').forEach(s=>s.innerHTML=flag(s.classList.contains('light')));
+</script>
+</body>
+</html>

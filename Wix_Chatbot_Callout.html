@@ -1,0 +1,206 @@
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; overflow: hidden; height: 100%; }
+
+  @keyframes pulse-dot  { 0%,100%{opacity:1} 50%{opacity:.4} }
+  @keyframes pulse-ring { 0%{transform:scale(1);opacity:.3} 70%{transform:scale(1.45);opacity:0} 100%{transform:scale(1.45);opacity:0} }
+  @keyframes ms-blink   { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* CTA BUTTON */
+  #ms-cta-wrap { display: flex; justify-content: center; align-items: center; padding: 16px 0; }
+  .cta-btn {
+    font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    background: #7c3aed; color: #fff; font-size: 16px; font-weight: 700;
+    padding: 16px 40px; border-radius: 6px; border: none; cursor: pointer;
+    letter-spacing: 0.3px; transition: background 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 4px 18px rgba(124,58,237,0.45); display: inline-flex; align-items: center;
+  }
+  .cta-btn:hover { background: #6528d0; transform: translateY(-2px); }
+  .cta-btn:active { transform: translateY(0); }
+  .live-dot {
+    display: inline-block; width: 8px; height: 8px; background: #5dde7a;
+    border-radius: 50%; margin-right: 10px;
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+
+  /* FLOATING BUBBLE */
+  #ms-launcher-wrap {
+    position: fixed; bottom: 20px; right: 20px; z-index: 2147483647;
+    display: inline-flex; align-items: center;
+  }
+  #ms-pulse-ring {
+    position: absolute; inset: 0; border-radius: 50px; background: #9d6fe8;
+    opacity: 0; animation: pulse-ring 2.8s ease-out infinite;
+    pointer-events: none; z-index: -1;
+  }
+  #ms-launcher {
+    position: relative; background: #002d5b; height: 44px; padding: 0 20px 0 14px;
+    border-radius: 50px; display: flex; align-items: center; gap: 9px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35); transition: transform .2s, background .2s;
+    white-space: nowrap; border: 2px solid #7c3aed;
+  }
+  #ms-launcher:hover { transform: translateY(-2px); background: #003a75; }
+  #ms-launcher .ms-dot { width:8px;height:8px;background:#5dde7a;border-radius:50%;animation:pulse-dot 1.8s ease-in-out infinite;flex-shrink:0; }
+  #ms-launcher .ms-icon { font-size:18px;line-height:1; }
+  #ms-launcher .ms-label { font-family:'Open Sans','Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:.4px;color:#fff; }
+
+  /* CHAT WINDOW */
+  #ms-chat-window {
+    position: fixed; bottom: 90px; right: 20px;
+    width: 380px; height: 600px; max-height: 80vh;
+    background: #fff; border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.25);
+    display: none; flex-direction: column;
+    z-index: 2147483647; overflow: hidden; font-family: Arial, sans-serif;
+  }
+  #ms-chat-header { background:#002d5b;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0; }
+  #ms-chat-header h3 { margin:0;font-size:16px;font-weight:bold; }
+  #ms-close-btn { cursor:pointer;font-size:24px;font-weight:bold;line-height:1;color:#fff; }
+  #ms-container { padding:15px;display:flex;flex-direction:column;flex:1 1 auto;min-height:0;box-sizing:border-box; }
+  #ms-signup-form { margin-top:20px; }
+  #ms-signup-form input { width:100%;box-sizing:border-box;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:5px;font-size:15px; }
+  #ms-signup-form button { width:100%;padding:14px;background:#7c3aed;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;font-size:16px; }
+  #ms-signup-form button:hover { background:#6528d0; }
+  #ms-chat-container { display:none;flex-direction:column;flex:1 1 auto;min-height:0;overflow:hidden; }
+  #ms-chat-box { flex:1 1 auto;min-height:0;border:1px solid #e0e0e0;padding:15px;overflow-y:auto;margin-bottom:10px;background:#fafafa;border-radius:5px; }
+  .ms-message { margin-bottom:15px;padding:12px;border-radius:8px;line-height:1.4;font-size:15px;word-wrap:break-word; }
+  .ms-user { background:#002d5b;color:#fff;text-align:right;margin-left:15%; }
+  .ms-bot  { background:#e2e3e5;color:#000;text-align:left;margin-right:15%; }
+  .ms-dots { display:inline-block;animation:ms-blink 1.2s infinite; }
+  #ms-input-area { display:flex;gap:8px;padding-bottom:10px;flex:0 0 auto; }
+  #ms-input-area input { flex:1;padding:12px;border:1px solid #ccc;border-radius:5px;font-size:15px; }
+  #ms-input-area button { padding:12px 20px;background:#c60018;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold;font-size:15px; }
+  @media(max-width:600px) {
+    #ms-chat-window { width:100vw;height:100vh;max-height:100vh;bottom:0;right:0;border-radius:0; }
+  }
+</style>
+
+<!-- CTA BUTTON -->
+<div id="ms-cta-wrap">
+  <button class="cta-btn" id="ms-cta-btn">
+    <span class="live-dot"></span>
+    Ask Mike Anything
+  </button>
+</div>
+
+<!-- FLOATING BUBBLE -->
+<div id="ms-launcher-wrap">
+  <div id="ms-pulse-ring"></div>
+  <div id="ms-launcher">
+    <span class="ms-dot"></span>
+    <span class="ms-icon">&#x1F4AC;</span>
+    <span class="ms-label">Ask Mike</span>
+  </div>
+</div>
+
+<!-- CHAT WINDOW -->
+<div id="ms-chat-window">
+  <div id="ms-chat-header">
+    <h3>Mike's Campaign Chat</h3>
+    <span id="ms-close-btn">&times;</span>
+  </div>
+  <div id="ms-container">
+    <div id="ms-signup-form">
+      <p style="text-align:center;color:#555;margin:0 0 20px">Enter info to start chatting:</p>
+      <input type="text"  id="ms-name"  placeholder="Your Name">
+      <input type="email" id="ms-email" placeholder="Your Email">
+      <input type="text"  id="ms-zip"   placeholder="Your ZIP Code">
+      <button id="ms-start-btn">Start a Conversation</button>
+      <p id="ms-form-error" style="color:red;display:none;text-align:center;margin-top:8px">Please fill out all fields!</p>
+    </div>
+    <div id="ms-chat-container">
+      <div id="ms-chat-box"></div>
+      <div id="ms-input-area">
+        <input type="text" id="ms-user-input" placeholder="Type a message...">
+        <button id="ms-send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var API_BASE = 'https://mikesell-bot-backend-production.up.railway.app';
+
+  if (!window.__ms) window.__ms = {
+    sid: 'session-'+Date.now()+'-'+Math.random().toString(36).slice(2),
+    open:false, up:false, msgs:[], pend:false
+  };
+  var st = window.__ms;
+
+  var cw  = document.getElementById('ms-chat-window');
+  var lb  = document.getElementById('ms-launcher');
+  var cta = document.getElementById('ms-cta-btn');
+  var xb  = document.getElementById('ms-close-btn');
+
+  function open()   { cw.style.display='flex'; st.open=true; }
+  function close()  { cw.style.display='none'; st.open=false; }
+  function toggle() { st.open ? close() : open(); }
+
+  cta.addEventListener('click', open);
+  lb.addEventListener('click', toggle);
+  xb.addEventListener('click', close);
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g,function(c){
+      return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function fmt(s) { return esc(s).replace(/\n/g,'<br>'); }
+
+  function render() {
+    var b=document.getElementById('ms-chat-box'); if(!b) return;
+    b.innerHTML=st.msgs.map(function(m){
+      return m.role==='user'
+        ? '<div class="ms-message ms-user"><b>You:</b> '+esc(m.text)+'</div>'
+        : '<div class="ms-message ms-bot"><b>Bot:</b> '+(m.text?fmt(m.text):'<i>Typing<span class="ms-dots">...</span></i>')+'</div>';
+    }).join('');
+    b.scrollTop=b.scrollHeight;
+  }
+
+  async function stream(msg,bm) {
+    var r=await fetch(API_BASE+'/chat-stream',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,sessionId:st.sid})});
+    if(!r.ok||!r.body) throw new Error('fail');
+    var rd=r.body.getReader(),dc=new TextDecoder(),buf='';
+    while(true){
+      var x=await rd.read(); if(x.done) break;
+      buf+=dc.decode(x.value,{stream:true});
+      var pts=buf.split('\n\n'); buf=pts.pop();
+      for(var i=0;i<pts.length;i++){
+        var ln=pts[i].trim(); if(ln.indexOf('data:')!==0) continue;
+        var js=ln.slice(5).trim(); if(!js) continue;
+        try{var e=JSON.parse(js);if(e.chunk){bm.text+=e.chunk;render();}else if(e.error){bm.text=(bm.text||'')+'\n[Error] '+e.error;render();}}catch(e){}
+      }
+    }
+  }
+
+  document.getElementById('ms-start-btn').addEventListener('click', async function() {
+    var n=document.getElementById('ms-name').value,
+        e=document.getElementById('ms-email').value,
+        z=document.getElementById('ms-zip').value;
+    if(!n||!e||!z){document.getElementById('ms-form-error').style.display='block';return;}
+    document.getElementById('ms-form-error').style.display='none';
+    var btn=document.getElementById('ms-start-btn'); btn.textContent='Connecting...';
+    try{
+      await fetch(API_BASE+'/start-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,zip:z})});
+      st.up=true;
+      document.getElementById('ms-signup-form').style.display='none';
+      document.getElementById('ms-chat-container').style.display='flex';
+      st.pend=true; var bm={role:'bot',text:''}; st.msgs.push(bm); render();
+      await stream('hi',bm); st.pend=false; render();
+    }catch(err){st.pend=false;btn.textContent='Error connecting to server';}
+  });
+
+  var ui=document.getElementById('ms-user-input'),sd=document.getElementById('ms-send-btn');
+  async function send(){
+    var msg=ui.value; if(!msg) return;
+    st.msgs.push({role:'user',text:msg}); ui.value=''; ui.disabled=true; sd.disabled=true; st.pend=true;
+    var bm={role:'bot',text:''}; st.msgs.push(bm); render();
+    try{await stream(msg,bm);}catch(err){bm.text=(bm.text||'')+'\n[Error] Connection failed.';}
+    finally{st.pend=false;render();ui.disabled=false;ui.focus();sd.disabled=false;}
+  }
+  sd.addEventListener('click',send);
+  ui.addEventListener('keypress',function(e){if(e.key==='Enter')send();});
+})();
+</script>

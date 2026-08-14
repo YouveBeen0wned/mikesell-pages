@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Ps Hub — Mike Sell for Congress FL-CD4 2026</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'clarendon-bold';font-style:normal;font-weight:700;src:url('https://db.onlinewebfonts.com/t/47c119b46a64815c975257f0c8a17fbb.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#087DD6 0%,#8B0000 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;}
+.hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;position:relative;}
+.hero h1{font-family:'clarendon-bold','clarendon-w01-medium',serif;font-size:32px;color:#fff;line-height:1.2;margin-bottom:8px;position:relative;font-weight:700;}
+.hero h1 span{color:#fff;}
+.hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;max-width:600px;position:relative;}
+
+/* Pillars */
+.pillars-wrap{background:#fff;padding:20px 24px 24px;border-bottom:1.5px solid #e5e7eb;max-width:860px;width:100%;}
+.pillars-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#9ca3af;margin-bottom:12px;}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.card{padding:20px 18px;border-right:1.5px solid #e2e8f0;border-bottom:1.5px solid #e2e8f0;display:flex;flex-direction:column;min-width:0;text-decoration:none;color:inherit;}
+.card:last-child{border-right:none;border-bottom:none;}
+.card:nth-last-child(2){border-bottom:none;}
+.card:nth-child(4){border-right:none;}
+.card:hover{background:#f9fafb;}
+.card-accent{height:3px;width:28px;border-radius:2px;margin-bottom:12px;}
+.card-icon{font-size:20px;margin-bottom:8px;}
+.card-name{font-family:'clarendon-w01-medium',serif;font-size:14px;color:#002d5b;margin-bottom:6px;}
+.card-desc{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;flex:1;margin-bottom:12px;}
+.card-cta{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#fff;border-radius:50px;padding:6px 8px;display:block;text-align:center;letter-spacing:0.04em;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.p-people .card-accent{background:#087DD6;}
+.p-people .card-cta{background:#087DD6;}
+.p-process .card-accent{background:#6b21a8;}
+.p-process .card-cta{background:#6b21a8;}
+.p-policy .card-accent{background:#8B0000;}
+.p-policy .card-cta{background:#8B0000;}
+.p-purse .card-accent{background:#059669;}
+.p-purse .card-cta{background:#059669;}
+
+/* Issue section */
+.issue-wrap{background:#f5f7fa;padding:18px 20px 28px;}
+.issue-eye{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#9ca3af;margin-bottom:5px;}
+.issue-title{font-family:'clarendon-w01-medium',serif;font-size:17px;color:#002d5b;margin-bottom:4px;}
+.issue-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#9ca3af;line-height:1.6;margin-bottom:14px;}
+
+/* Issue selector grid */
+.issues{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:7px;}
+.iss{background:#fff;border:1.5px solid #e2e8f0;border-radius:9px;padding:11px 4px 9px;text-align:center;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;}
+.iss:hover{border-color:#087DD6;box-shadow:0 2px 8px rgba(8,125,214,0.12);}
+.iss.selected{border-color:#087DD6;background:#eff8ff;}
+.iss-icon{font-size:16px;margin-bottom:4px;}
+.iss-name{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#374151;line-height:1.3;}
+
+/* 4Ps panel */
+.ps-panel{display:none;margin-top:14px;}
+.ps-issue-title{font-family:'clarendon-w01-medium',serif;font-size:15px;color:#002d5b;margin-bottom:12px;}
+.ps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:14px;}
+.p-card{background:#fff;border:1px solid #e2e8f0;border-top:3px solid var(--pc,#087DD6);border-radius:10px;padding:18px;}
+.p-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.07);}
+.pc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+.pc-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px;}
+.pc-meta{flex:1;}
+.pc-label{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;font-weight:800;letter-spacing:0.13em;text-transform:uppercase;color:var(--pc,#087DD6);margin-bottom:3px;}
+.pc-headline{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.3;font-style:italic;}
+.pc-list{list-style:none;display:flex;flex-direction:column;gap:7px;padding:0;}
+.pc-list li{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.55;padding-left:13px;position:relative;}
+.pc-list li::before{content:'→';position:absolute;left:0;color:var(--pc,#087DD6);font-size:10px;top:2px;}
+.pc-footer{margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0;}
+.pc-deep-link{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:var(--pc,#087DD6);text-decoration:none;letter-spacing:0.03em;}
+.pc-deep-link:hover{text-decoration:underline;}
+.ps-back{font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9ca3af;background:none;border:none;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;padding:0;}
+.ps-back:hover{color:#374151;}
+
+/* Footer */
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
+.footer a{color:#59D7EE;text-decoration:none;}
+
+@media(max-width:860px){
+  /* Pillars: 2 even columns */
+  .pillars{grid-template-columns:repeat(2,1fr) !important;}
+  .card{border-right:1.5px solid #e2e8f0 !important;border-bottom:1.5px solid #e2e8f0 !important;}
+  .card:nth-child(2n){border-right:none !important;}
+  .card:nth-child(3),.card:nth-child(4){border-bottom:none !important;}
+  .card:nth-child(4){border-right:none !important;}
+  .card-cta{font-size:11px;padding:8px 10px;white-space:normal;overflow:visible;text-overflow:unset;}
+  .pillars-wrap{padding:16px 16px 20px;}
+
+  /* Issue grid: 2 even columns — 15 items = 7 rows of 2 + 1 centred lone item */
+  .issues{grid-template-columns:repeat(2,1fr);}
+  /* Centre the 7th (last) item when it sits alone in its row */
+  .issues .iss:last-child:nth-child(odd){
+    grid-column: 1 / -1;
+    max-width: calc(50% - 3.5px);
+    margin: 0 auto;
+  }
+
+  .iss-name{font-size:8px;}
+  .ps-grid{grid-template-columns:1fr;}
+  .hero{padding:24px 18px 20px;}
+  .hero h1{font-size:26px;}
+  .issue-wrap{padding:14px 14px 22px;}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye">Mike Sell for Congress · FL-CD4 2026 · Forward Party</div>
+  <h1>Change That Works <span>For Us.</span></h1>
+  <p>My vision, our agenda. Built from living here and listening to you, taking it to Washington to make it law.</p>
+</div>
+
+<div class="issue-wrap">
+  <div class="issue-eye">We will</div>
+  <div class="issue-title" id="issue-title">Protect our future. Make life affordable. Fix the system.</div>
+  <div class="issue-sub" id="issue-sub">Pick an issue. See who is fighting, what is broken, what laws would fix it, and where the money is.</div>
+
+  <div class="issues" id="row1">
+    <div class="iss" data-id="autonomy"><div class="iss-icon">🤱</div><div class="iss-name">Body Autonomy</div></div>
+    <div class="iss" data-id="rights"><div class="iss-icon">✊</div><div class="iss-name">Civil Rights</div></div>
+    <div class="iss" data-id="climate"><div class="iss-icon">🌿</div><div class="iss-name">Climate &amp; Infrastructure</div></div>
+    <div class="iss" data-id="justice"><div class="iss-icon">⚖️</div><div class="iss-name">Criminal Justice &amp; Cannabis</div></div>
+    <div class="iss" data-id="education"><div class="iss-icon">🎓</div><div class="iss-name">Education &amp; Workforce</div></div>
+    <div class="iss" data-id="wars"><div class="iss-icon">✌️</div><div class="iss-name">End Foreign Wars</div></div>
+    <div class="iss" data-id="system"><div class="iss-icon">🗳️</div><div class="iss-name">Fix the System</div></div>
+    <div class="iss" data-id="guns"><div class="iss-icon">🛡️</div><div class="iss-name">Gun Safety</div></div>
+    <div class="iss" data-id="healthcare"><div class="iss-icon">💊</div><div class="iss-name">Healthcare &amp; Drugs</div></div>
+    <div class="iss" data-id="housing"><div class="iss-icon">🏘️</div><div class="iss-name">Housing &amp; Affordability</div></div>
+    <div class="iss" data-id="immigration"><div class="iss-icon">🌎</div><div class="iss-name">Immigration</div></div>
+    <div class="iss" data-id="mental"><div class="iss-icon">🧠</div><div class="iss-name">Mental Health</div></div>
+    <div class="iss" data-id="tax"><div class="iss-icon">💰</div><div class="iss-name">Tax the Wealthy</div></div>
+    <div class="iss" data-id="tech"><div class="iss-icon">💻</div><div class="iss-name">Technology &amp; AI</div></div>
+    <div class="iss" data-id="workers"><div class="iss-icon">⚖️</div><div class="iss-name">Workers, Wages &amp; UBI</div></div>
+  </div>
+
+  <!-- 4Ps panel — injected below the grid rows -->
+  <div class="ps-panel" id="ps-panel">
+    <div class="ps-grid" id="ps-grid"></div>
+    <button class="ps-back" onclick="resetPanel()">← Back to all issues</button>
+  </div>
+</div>
+
+<div class="pillars-wrap">
+  <div class="pillars-eye">The 4Ps Platform</div>
+  <div class="pillars" id="pillars-grid">
+    <a class="card p-people" href="https://mikesell.org/people" target="_blank" rel="noopener">
+      <div class="card-accent"></div>
+      <div class="card-icon">🤝</div>
+      <div class="card-name">People</div>
+      <div class="card-desc">The orgs doing work in our neighborhoods.</div>
+      <div class="card-cta">Meet the Activists</div>
+    </a>
+    <a class="card p-process" href="https://mikesell.org/process" target="_blank" rel="noopener">
+      <div class="card-accent"></div>
+      <div class="card-icon">⚙️</div>
+      <div class="card-name">Process</div>
+      <div class="card-desc">We can't fix what we won't name.</div>
+      <div class="card-cta">Browse Processes</div>
+    </a>
+    <a class="card p-policy" href="https://mikesell.org/policies" target="_blank" rel="noopener">
+      <div class="card-accent"></div>
+      <div class="card-icon">📋</div>
+      <div class="card-name">Policy</div>
+      <div class="card-desc">Every bill with a direct impact on us.</div>
+      <div class="card-cta">Track the Bills</div>
+    </a>
+    <a class="card p-purse" href="https://mikesell.org/purse" target="_blank" rel="noopener">
+      <div class="card-accent"></div>
+      <div class="card-icon">💰</div>
+      <div class="card-name">Purse</div>
+      <div class="card-desc">From Washington to Tallahassee to Northeast Florida.</div>
+      <div class="card-cta">Follow the Money</div>
+    </a>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>
+  119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br>
+  <a href="https://mikesell.org">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p>
+</div>
+
+<script>
+var ISSUES = {
+  healthcare:{
+    emoji:'💊', title:'Healthcare & Drug Pricing',
+    p_fix:{headline:'The fix',items:['Federal ban on AI-only claim denials without physician review.','Mandatory 24-hour prior authorization decisions for urgent care.','Reverse the burden: the insurer must justify denial, not the patient justify need.','Enforce mental health parity with the same rigor as physical health — annual insurer compliance reports.','Guarantee postpartum care through 12 months under Medicaid.']},
+    p1:{headline:'The broken process',items:['Insurance AI (Cigna\'s PxDx) denied 60,000 claims in a single month without opening a patient file.','90% of UnitedHealth nursing home denials reversed on appeal — but most patients never know to appeal.','25-week average wait for an outpatient mental health appointment. Mental health parity has been law since 2008. It isn\'t enforced.','U.S. maternal mortality: 32.9 deaths per 100,000 births. Finland: 3.8. The gap is a process failure, not a medical one.','Medicare was legally banned from negotiating drug prices until 2022. We still pay 5× what other countries pay.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Black Maternal Health Momnibus Act (H.R.959) — addresses root causes of racial disparity in maternal care.','Mental Health Access Improvement Act (H.R.432) — passed House, Senate pending; expands Medicare coverage.','PFAS Action Act (H.R.1512) — sets enforceable limits on forever chemicals in drinking water.','FL Medicaid Cuts (Federal OBBA) — 800K+ Floridians at risk; Legislature must return in 2027.','Medicaid Work Requirements (SB 1758) — died 2026, returns 2027 with federal pressure behind it.']},
+    p3:{headline:'Organizations already doing the work',items:['Health Start Coalition — maternal/infant mental health; 2,000+ FL-04 mothers served annually.','Disability Rights Florida — active litigation on FL HCBS waitlist and $431.5M reversion case.','United Way of NE Florida — 211 Helpline; 60+ nonprofit partners across healthcare and housing.','Baptist Health / UF Health Jacksonville — safety-net hospital serving uninsured and underinsured patients.','Physicians for a National Health Program (PNHP) — Medicare for All advocacy, national network.']},
+    p4:{headline:'Where the money flows',items:['Medicare: $987B federal FY2025. FL receives ~$30B. Duval County: ~$1.8B annually.','Medicaid + CHIP: $626B federal. FL Medicaid covers 4.5M residents — 800K+ at cut risk under OBBA.','Drug pricing gap: U.S. pays 5× peer nations. Pharma lobby spent $374M to block Medicare negotiation.','FL\'s HCBS waiver program: $431.5M reversion risk — affecting 20,000+ disabled Floridians in FL-04.','Maternal health fix cost: $1.7B over 5 years (Black Maternal Health Momnibus). Preventable deaths cost far more.']}
+  },
+  housing:{
+    emoji:'🏘️', title:'Housing & Affordability',
+    p_fix:{headline:'The fix',items:['Seal eviction filing records until a final adverse judgment — ban tenant screening services from reporting dismissed cases.','Federal housing incentives conditioned on local zoning reform that allows missing-middle density.','Full public dashboard for unspent SHIP funds — updated monthly, searchable by city and county.','Restore the $147M MobilityWorks grant and make septic-to-sewer conversion a funded federal infrastructure priority.','Require cities to spend allocated housing trust funds within 24 months or face clawback.']},
+    p1:{headline:'The broken process',items:['Eviction filing appears on a tenant\'s screening record within 24 hours — before any judge rules.','Local zoning blocks new affordable construction while median home price hits $420K on $80K median income.','Jacksonville has $13M in state SHIP housing funds sitting unspent while the mayor calls it a crisis.','Build-to-rent homes in Jacksonville grew 600% since 2019. 1 in 10 homes is now institutional — never for sale.','Zoning Deregulation Ordinance (2026-0364) would strip public hearings from land-use decisions.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Eviction Diversion Program — FY2026-27 funding fight. 84% success rate. Deegan seeking $12M in July budget.','Affordable Housing Trust Fund — ICARE demands $10M permanent fund; Deegan committed for July 2026.','$3.2M Affordable Housing Loan (Ord. 2026-0266) — 110 units; in committee, awaiting full Council vote.','Housing Supply and Affordability Act (S.1576) — federal grants to cities that reform exclusionary zoning.','Landlord Accountability Act (H.R.206) — protects tenants from eviction/harassment for organizing.','Neighborhood Bill of Rights — resident-led protections against displacement, predatory development, and loss of community voice in land-use decisions.']},
+    p3:{headline:'Organizations already doing the work',items:['Habitat for Humanity of Jacksonville — homeownership pathway for working families.','Sulzbacher Center — 1,000+ individuals served annually; emergency shelter and housing navigation.','Jax Tenants Union — tenant rights and housing justice advocacy.','ICARE Jacksonville — 38-congregation interfaith coalition demanding permanent housing fund.','Florida Housing Coalition — statewide affordable housing policy advocacy.']},
+    p4:{headline:'Where the money flows',items:['Jacksonville FY2026-27 budget: $2B total — less than 1% allocated to affordable housing.','Eastside CBA $40M — Jaguars stadium deal funds for affordable housing and jobs; first grant cycle open.','Federal Low Income Housing Tax Credit (LIHTC): $13.5B/yr nationally. FL-CD4 share is chronically underutilized.','OBBA housing cuts risk: Section 8 voucher reductions could affect 12,000+ FL-CD4 households.','JAX septic-to-sewer backlog: $1B needed. Federal IIJA water infrastructure funds available but unapplied.']}
+  },
+  workers:{
+    emoji:'⚖️', title:'Workers, Wages & UBI',
+    p_fix:{headline:'The fix',items:['Federal ABC test for worker classification — misclassification as a contractor is a process violation, not a business model.','Triple the DOL Wage and Hour Division staffing — recovered wages pay for it within a year.','Guaranteed Income Pilot Program Act — fund a 3-year federal pilot with real data, not ideology.','Repeal sub-minimum wage provisions entirely — every worker earns at least $17/hr.','Remove public sector union restriction language signed in May 2026 through federal labor law floor standards.']},
+    p1:{headline:'The broken process',items:['Employers steal $50B+/yr from workers through unpaid overtime and tip theft — more than all property crime combined.','20% of workers are misclassified as contractors — no overtime, no benefits, no unemployment insurance.','FL sub-minimum training wage tried 3 times. Failed each time. Returns in 2027 as $15 minimum takes full effect.','Public sector union restrictions (SB 1296) signed May 2026 — constitutional challenge expected July 2026.','Gig economy workers lack access to unemployment insurance, workers\' comp, or paid leave.']},
+    p2:{headline:'The legislation that locks in the fix',items:['PRO Act (H.R.20) — biggest labor law update in 80 years; makes it easier to form unions, harder for employers to bust them.','Raise the Wage Act (S.1332 / H.R.2743) — raises federal minimum from $7.25 to $17/hr over several years.','Domestic Workers Bill of Rights Act (H.R.3971) — gives nannies, house cleaners, and home care aides basic labor protections.','Guaranteed Income Pilot Program Act (H.R.5830) — funds a 3-year federal pilot to test guaranteed monthly income; real data, not ideology.','Eastside CBA $40M Grants (JAX Ord. 2026-0036) — first grant cycle open for jobs and housing in Duval\'s most underserved areas.']},
+    p3:{headline:'Organizations already doing the work',items:['AFL-CIO Florida — 1M+ union workers represented statewide.','IBEW Local 177, Teamsters 512, UFCW 1625 — Northeast Florida union partners.','Clara White Mission — culinary job training and workforce development since 1904.','Jacksonville Urban League — workforce pipeline and economic opportunity programs.','SEIU Florida — living wage and healthcare access for service workers.']},
+    p4:{headline:'Where the money flows',items:['Federal minimum wage at $7.25/hr since 2009 — inflation-adjusted value has fallen 27% in real terms.','Wage theft recovery: less than 3% of $50B+ stolen annually is ever returned to workers.','Eastside CBA: $40M from Jaguars stadium deal — first grant cycle for jobs and housing now open.','SNAP cuts (OBBA): $300B+ in food assistance cuts over 10 years. FL has 4M+ recipients.','UBI pilots show $500/month reduces poverty without reducing employment — tested cost vs. status quo.']}
+  },
+  guns:{
+    emoji:'🛡️', title:'Gun Safety',
+    p_fix:{headline:'The fix',items:['Close the gun show and private sale loophole — universal background checks for every transfer, no exceptions.','Fund states to implement red flag laws through the Extreme Risk Protection Order Expansion Act.','Federal safe storage mandate — no accessible firearm in a home with children without a trigger lock or safe.','Restore the Community Violence Intervention (CVIPI) anchor grant to Jacksonville — proven 47% murder rate reduction.','End qualified immunity through the George Floyd Justice in Policing Act to restore accountability for use of force.']},
+    p1:{headline:'The broken process',items:['Gun show and online sales loophole: purchases without background checks remain legal in most states.','FL open carry: court struck the ban in Sep 2025. Cities can\'t pass stricter rules — preemption prevents it.','FL red flag law repeal attempts return every session. Last attempt failed; expected back in 2027.','Jacksonville lost its federal Community Violence Intervention (CVIPI) anchor grant in 2025.','Safe storage: no federal requirement. Child gunshot accidents and suicides track directly to unsecured firearms.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Bipartisan Background Checks Act (H.R.715) — closes the gun show loophole. Passed House, Senate pending.','Assault Weapons Ban of 2025 (S.1531 / H.R.3115) — bans sale and manufacture of semiautomatic assault weapons and large-capacity magazines.','Raise the Age Act (H.R.2368 / S.597) — raises minimum purchase age for semiautomatic rifles from 18 to 21.','Extreme Risk Protection Order Expansion Act (S.889) — funds states to implement red flag laws; FL repeal threat returns 2027.','Child Gunshot Victim Protection Act (H.R.4855) — requires gun owners to secure weapons so children can\'t access them.']},
+    p3:{headline:'Organizations already doing the work',items:['Moms Demand Action — largest gun safety org in the U.S.; active in FL-04.','Cure Violence Global — evidence-based violence interruption operating in Jacksonville.','NAACP Jacksonville — civil rights chapter tracking SYG enforcement and JSO accountability.','Journey Forward (Mayor Deegan) — community violence interruption; 47% murder rate drop since 2020.','Students Demand Action UNF — campus chapter advocating for commonsense reform.']},
+    p4:{headline:'Where the money flows',items:['Cure Violence Jacksonville: federal CVIPI anchor grant lost in 2025 — program now unfunded.','Journey Forward program: annual city budget review; Deegan seeking continued FY2026-27 funding.','Gun violence costs: CDC estimates $229B annually in medical costs, lost productivity, and criminal justice.','Background check system (NICS): chronically underfunded; 3-day default-proceed loophole still in effect.','MENTOR Act investment: $50M to fund violence interruption in communities with highest documented risk.']}
+  },
+  climate:{
+    emoji:'🌿', title:'Climate & Infrastructure',
+    p_fix:{headline:'The fix',items:['Public capital project tracker — updated monthly, searchable by district, tied to the $2.5B backlog.','Prioritize septic conversion zones by environmental and health risk score — not by political district.','Apply for every available IIJA water infrastructure dollar before the window closes.','Repeal HB 1217 (Net-Zero Preemption) — cities must be able to set their own climate goals.','Replace the clawed-back $147M MobilityWorks grant with a local gas tax and federal resilience bond.']},
+    p1:{headline:'The broken process',items:['Jacksonville\'s capital backlog: $2.5B. At $250M/yr pace it takes a decade to clear — with nothing new added.','Septic-to-sewer conversion: $1B needed, no fully funded timeline, no public dashboard by zone.','Net-Zero Preemption (HB 1217) signed April 22, 2026 — bans FL cities from setting climate goals.','$147M federal MobilityWorks grant clawed back in 2025. Emerald Trail now dependent on local gas tax.','Extreme drought expanded ~24% in one week in Feb 2026 across NE Florida.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Resilient Jacksonville — 50-year plan. 38 of 45 action items underway. Needs sustained funding.','Regional Climate Action Plan (Feb 2026) — NE FL partners in implementation phase.','PFAS Action Act (H.R.1512) — enforceable limits on forever chemicals in FL drinking water.','MobilityWorks 2.0 / Emerald Trail — local option gas tax vote needed to close the $147M federal gap.','Saving America\'s Pollinators Act (H.R.1515) — restricts pesticides killing bee populations.']},
+    p3:{headline:'Organizations already doing the work',items:['St. Johns Riverkeeper — 20+ years enforcing environmental law in the watershed.','Groundwork Jacksonville — Emerald Trail, creek restoration, youth environmental leadership.','Rethink Energy Florida — solar access, utility accountability, and ratepayer protection.','Sierra Club Florida — statewide environmental advocacy and policy.','Sunrise Movement Florida — youth-led climate action with active FL hubs.']},
+    p4:{headline:'Where the money flows',items:['Jacksonville capital budget: $250M/yr against a $2.5B backlog — a 10-year deficit with no new additions.','Federal IIJA water infrastructure: funds available for septic-to-sewer. JAX has not fully applied.','Emerald Trail: $490M 30-year plan. $147M federal grant clawed back. Local gas tax must fill the gap.','Net-Zero Preemption: Jacksonville\'s flood risk = $3.1B in annual property loss by 2050 if no climate action.','JEA investigation: Council probing allegations of racially biased workplace under current CEO.']}
+  },
+  education:{
+    emoji:'🎓', title:'Education & Workforce',
+    p_fix:{headline:'The fix',items:['Universal school meals with no application required — Community Eligibility Provision expansion at the federal level.','End zero-tolerance mandates at the federal funding level — discipline must be proportionate and restorative.','Auto-enroll every eligible student for school meals; no meal debt, no withheld activities.','Close the per-student funding gap with weighted federal Title I allocation tied to district poverty rate.','Pass the National Apprenticeship Act — earn-while-you-learn pathways starting at age 16.']},
+    p1:{headline:'The broken process',items:['Property taxes fund schools: $10,000+ per-student funding gap between richest and poorest districts.','DCPS closed 8 elementary schools in 2024-25. 3 of 5 closures served 80%+ Black students.','FL Book Ban (HB 1467): complaint removes a book before any review. Teachers cleared shelves out of fear.','School-to-prison pipeline: Black students suspended 3× more often for equivalent behavior.','MOHELA denied 2M borrowers accurate repayment info — documented "call deflection" playbook.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Civics Secures Democracy Act (H.R.5784) — $1B to teach civics and history in schools.','National Apprenticeship Act (H.R.447) — expands earn-while-you-learn pathways as college alternatives.','IDEA Reauthorization (Pending 119th) — renews right to free, appropriate education for disabled children.','Read Jax Coalition (JPEF) — goal: all Duval students reading on grade level by 3rd grade.','Fund public education fully and fairly — Mike\'s specific commitment to close the FL per-student funding gap.']},
+    p3:{headline:'Organizations already doing the work',items:['FSCJ — 37,556 students; highest-leverage youth voter registration partner in FL-04.','Jacksonville Public Education Fund (JPEF) — Read Jax Coalition convener.','DCPS / Duval County School Board — 130,000+ students; workforce pipeline programs.','Clara White Mission — culinary workforce training; serving urban core residents since 1904.','CareerSource Northeast Florida — workforce development and job placement across the region.']},
+    p4:{headline:'Where the money flows',items:['DCPS: $32M in academic acceleration funds lost after 2024-25 school closures.','Federal Title I: $18.4B/yr nationally. FL-04 schools chronically underfunded relative to state average.','OBBA education cuts: Pell Grant reductions affect 40,000+ FL-CD4 students.','Teacher shortage in FL: 8,000+ unfilled positions. Pay gap vs. comparable professions: $12,000/yr.','Apprenticeship gap: Germany spends 3× more per capita on workforce training than the U.S.']}
+  },
+  tax:{
+    emoji:'💰', title:'Tax the Wealthy',
+    p_fix:{headline:'The fix',items:['Public financing through a small-donor matching system (6:1 match) — takes corporate PAC money off the table.','Five-year cooling-off period before any senior regulatory official can work for the industry they regulated.','Close the carried interest loophole — hedge fund managers pay income tax rates, same as everyone else.','Enforce the DISCLOSE Act — super PACs reveal donors within 24 hours of any expenditure.','Restore IRS audit capacity for high-income filers — $1 in audit enforcement returns $12 in compliance.']},
+    p1:{headline:'The broken process',items:['IRS audit rates for millionaires fell 72% between 2010 and 2019. Working-class filers face higher audit rates than the wealthy.','Carried interest loophole: hedge fund managers pay capital gains rates (20%) instead of income tax rates (37%) — a structural carve-out written by lobbyists.','Step-up in basis: heirs avoid taxes on unrealized gains entirely — a mechanism that primarily benefits the ultra-wealthy, not working families.','Corporate tax avoidance: 55 of America\'s largest corporations paid zero federal income tax in 2020 — all legal under the current code.','Dark money: corporations spend unlimited amounts influencing elections with zero public disclosure required — the system protects itself.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Carried Interest Fairness Act — closes the loophole that lets hedge fund managers pay capital gains rates (20%) instead of income tax rates (37%).','DISCLOSE Act (S. pending) — forces super PACs and dark money groups to reveal their donors within 24 hours.','Billionaire Minimum Income Tax — ensures individuals with $100M+ in assets pay at least 20% annually.','Raise the Wage Act (S.1332 / H.R.2743) — raising the floor for working families is the most direct way to rebalance who bears the tax burden.','PRO Act (H.R.20) — union membership is the strongest historical predictor of wage gains for the bottom 90%.']},
+    p3:{headline:'Organizations already doing the work',items:['Americans for Tax Fairness — national coalition tracking corporate tax avoidance.','Tax Policy Center — independent analysis of who benefits from tax code changes.','Patriotic Millionaires — wealthy individuals advocating for higher taxes on themselves.','AFL-CIO — labor advocacy for tax policy that raises worker wages instead of executive bonuses.','Local small business coalitions — tired of competing against corporations with effective rates near zero.']},
+    p4:{headline:'Where the money flows',items:['The 2017 Tax Cuts and Jobs Act added $1.9T to the deficit while cutting the corporate rate from 35% to 21% — the wealthy kept the savings, everyone else got the debt.','Corporate tax avoidance costs the U.S. $700B+ per year — enough to fund Medicare drug negotiations twice over.','FL-CD4 effective tax rate for median household: ~28%. S&P 500 CEOs: ~8% effective rate.','Dark money flooded FL congressional races with $47M+ in 2024. Aaron Bean received $2.1M from PACs with no local presence.','Revenue from closing the carried interest loophole alone: $14B over 10 years per CBO.']}
+  },
+  justice:{
+    emoji:'⚖️', title:'Criminal Justice & Cannabis',
+    p_fix:{headline:'The fix',items:['No cash bail for nonviolent offenses — pretrial detention must be based on risk, not wealth.','Ban mandatory minimum occupancy contracts with private prison operators — end the financial incentive to incarcerate.','Federal cannabis legalization — expunge prior records automatically; tax revenue goes to impacted communities.','End qualified immunity through the George Floyd Justice in Policing Act.','Restore the CVIPI anchor grant to Jacksonville — Journey Forward\'s 47% murder rate reduction proves the model works.']},
+    p1:{headline:'The broken process',items:['400,000 people sit in jail today who haven\'t been convicted — the only reason is they can\'t afford bail.','Qualified immunity: 56% of civil rights cases against law enforcement dismissed before trial.','Private prison occupancy quotas: contracts guarantee 80-90% bed fill — a financial incentive to incarcerate.','Cannabis remains federally illegal while 24 states have legalized it. Arrests still fall disproportionately on Black residents.','Federal convictions: zero expungement statutes. A record follows you for life regardless of rehabilitation.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Federal legalization of recreational cannabis — Mike\'s specific commitment.','Home growing rights for registered medical patients — Mike\'s specific commitment.','End For-Profit Prisons Act (H.R.3612) — phases out private prison companies.','George Floyd Justice in Policing Act (H.R.5361) — ends qualified immunity, national use-of-force standards.','Pretrial Integrity and Safety Act (H.R.6859) — reduces pretrial detention for those who can\'t afford bail.']},
+    p3:{headline:'Organizations already doing the work',items:['NAACP Jacksonville — civil rights chapter tracking SYG enforcement and JSO accountability.','Dream Defenders — police reform and racial justice, FL-based statewide organization.','Florida Rights Restoration Coalition — led Amendment 4; returning citizens to the ballot.','ACLU of Florida / First Coast Office — civil liberties litigation in FL-04.','RealTalk Real Change — grassroots civic action and community accountability in Jacksonville.','JCAC — criminal justice reform and accountability advocacy in Jacksonville.']},
+    p4:{headline:'Where the money flows',items:['Private prison industry: $8.5B/yr in revenue — guaranteed by occupancy-quota contracts.','Cash bail industry: $15B/yr in bonds. People who can\'t pay lose jobs, housing, and custody of children.','JAX spends $638M/year on JSO. Legal cannabis is a $33B industry nationally — FL-CD4 should share in that.','Journey Forward: funded annually in Jacksonville budget. 47% murder rate reduction = verifiable ROI.','CVIPI anchor grant (Jacksonville): $0 since 2025 federal cut. Cure Violence program now unfunded.']}
+  },
+  immigration:{
+    emoji:'🌎', title:'Immigration',
+    p_fix:{headline:'The fix',items:['Eliminate per-country visa caps for employment-based categories — end the 80-year wait for Indian H-1B holders who followed every rule.','Fund USCIS to clear its 12-million-case backlog — staffing, not budget, is the bottleneck.','American Dream and Promise Act — Dreamers get a clear, immediate pathway to permanent residency.','Repeal Jacksonville Ordinance 2025-0147 — local criminalization of undocumented presence is unconstitutional.','Increase border funding to process asylum seekers effectively and humanely — not detain them indefinitely.']},
+    p1:{headline:'The broken process',items:['Green card backlog: Indian H-1B holders who followed every rule wait 80+ years at current processing rates.','FL TRUMP Acts (SB 2-C / SB 4-C): in effect Feb 2025. Immigrant families pulling kids from school out of fear.','Jacksonville Ordinance 2025-0147: criminalizes undocumented presence locally. Deegan refused to sign. In court.','USCIS has 12 million pending cases — tripled in a decade.','Operation Tidal Wave: documented worksite raids across FL. Florida Immigrant Coalition tracking impacts.']},
+    p2:{headline:'The legislation that locks in the fix',items:['American Dream and Promise Act (H.R.1589) — 213 cosponsors; gives Dreamers a clear path to permanent residency and citizenship.','Immigration Detainee Civil Rights Act (Pending 119th) — sets minimum humane standards in immigration detention facilities.','Per-country visa cap elimination — employment-based green card backlog fix; H-1B holders who followed every rule wait 80+ years at current rates.','FL TRUMP Acts (SB 2-C / SB 4-C / ANTI) — in effect Feb 2025; multiple provisions under federal court scrutiny.','JAX Ordinance 2025-0147 (ANTI) — Deegan refused to sign; under constitutional legal challenge; Mike opposes it.']},
+    p3:{headline:'Organizations already doing the work',items:['Florida Immigrant Coalition (FLIC) — documented Ordinance 2025-0147 and Operation Tidal Wave.','Jacksonville Immigration Rights Alliance (JIRA) — active mobilization network in FL-04.','ACLU of Florida — civil liberties litigation on immigration enforcement overreach.','Indian Cultural Society of Jacksonville (JAXICS) — immigrant community voice since 2011.','Hispanic Federation Florida — advocacy and services for Latino communities.']},
+    p4:{headline:'Where the money flows',items:['ICE detention: $200-$300/day per detainee. 38,000+ average daily population. $3.4B/yr.','Immigrant contribution: undocumented immigrants pay $11.7B/yr in state and local taxes nationally.','FL-CD4 workforce impact: construction, agriculture, and healthcare sectors most exposed to enforcement.','Economic cost of mass deportation: CBO estimates $300B+ in GDP reduction over 10 years.','USCIS processing fees: fully self-funded agency. Backlogs driven by staffing, not budget — a policy choice.']}
+  },
+  tech:{
+    emoji:'💻', title:'Technology & AI',
+    p_fix:{headline:'The fix',items:['Any federal system access containing PII requires confirmed security clearance, documented purpose, and 72-hour congressional notification.','Pass the FL AI Bill of Rights (CS/SB 482) — consumer AI protections the House Speaker killed without a floor vote.','Fix the FCC broadband map — self-reported ISP data leaves 6.4M households invisible to $42.5B in federal funding.','Fourth Amendment Is Not For Sale Act — government cannot buy private data to circumvent warrant requirements.','Kids Online Safety Act — platforms must protect minors from documented harms; no hiding behind Section 230.']},
+    p1:{headline:'The broken process',items:['DOGE accessed SSA, IRS, HHS, and DHS data for every American — no clearance verified, no congressional notice.','FL AI Bill of Rights: passed Senate 35-2, then House Speaker killed it in a single decision.','IRS robo-audits: 100-minute average wait to dispute an automated error.','ISPs self-report broadband coverage to the FCC. 6.4M households invisible. $42.5B follows the bad map.','Car companies are selling your driving data. No federal law stops them.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Regulate 5G tower placement — Mike\'s specific commitment.','Stop data center tax breaks — Mike\'s specific commitment.','Kids Online Safety Act (S.1409) — passed Senate; requires platforms to protect children from harm.','Fourth Amendment Is Not For Sale Act (H.R.946) — stops government buying private data without a warrant.','FL AI Bill of Rights (CS/SB 482) — passed Senate 35-2; killed by House Speaker; returns 2027.']},
+    p3:{headline:'Organizations already doing the work',items:['Electronic Frontier Foundation (EFF) — digital rights, privacy, and AI oversight.','Center for Humane Technology — platform design reform; founded by Tristan Harris.','Jacksonville Public Library — 21-branch digital literacy hub across Duval County.','University of North Florida (UNF) — civic research and tech workforce pipeline.','Center for Responsible AI (CRAI) — algorithmic accountability and AI governance.']},
+    p4:{headline:'Where the money flows',items:['Federal broadband ($42.5B IIJA): follows FCC maps that undercount 6.4M households — including parts of FL-04.','FL data center tax exemptions: $140M+ given to industry with little community return.','Kids\' data economy: Meta, TikTok, and Google earn $11B+/yr in ad revenue from users under 18.','DOGE data access: 14 lawsuits filed, 8 agencies affected. Cost of breach cleanup: estimated $1.7B.','FL AI Bill of Rights: zero cost to implement. House Speaker killed a consumer protection with no price tag.']}
+  },
+  autonomy:{
+    emoji:'🤱', title:'Body Autonomy',
+    p_fix:{headline:'The fix',items:['Women\'s Health Protection Act — restore nationwide abortion access as a federal floor, not a state option.','Access to Contraception Act — no state may ban birth control; the decision belongs to the individual.','Guarantee postpartum Medicaid coverage through 12 months — maternal death doesn\'t stop at six weeks.','Defeat FL Fetal Personhood in 2027 — the bill that passed the House must not pass the Senate.','12-month postpartum Medicaid = $1.2B investment with $3.4B in prevented costs — the math is not close.']},
+    p1:{headline:'The broken process',items:['Florida bans abortion after ~6 weeks — before most people know they\'re pregnant.','57% of FL voters approved Amendment 4 in 2024. The state requires 60%. One threshold blocked the majority.','Fetal Personhood bill passed the FL House 2026. Senate died — but it returns in 2027 with momentum.','Telehealth abortion bounty bill (HB 663): $100K civil suit — even an abuser could sue the provider.','Access to contraception at risk: legal experts warn Dobbs opened the door to state bans on birth control.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Women\'s Health Protection Act (H.R.12) — would restore nationwide abortion access; Mike supports passage as floor legislation.','Access to Contraception Act (Pending 119th) — protects birth control access in all 50 states from state-level bans.','FL 6-Week Abortion Ban (HB 7 / ANTI) — Mike opposes it; the 2028 ballot campaign needs 60% to overturn it.','FL Fetal Personhood (HB 289 / SB 164 / ANTI) — HB passed the FL House; SB died in 2026; returns 2027 with more momentum.','FL Abortion Pill / Telehealth Bounty (HB 663 / ANTI) — $100K civil suit bill; died 2026 but expected back in 2027.']},
+    p3:{headline:'Organizations already doing the work',items:['Florida Alliance of Planned Parenthood Affiliates — reproductive healthcare statewide.','Florida For All — ran Amendment 4 reproductive freedom campaign; planning 2028 ballot strategy.','ACLU FL Reproductive Rights Project — civil liberties litigation in Florida courts.','UltraViolet — online feminist advocacy; reproductive rights and gender equity campaigns.','Common Cause Florida — bodily rights advocacy and civil rights work in FL-04.']},
+    p4:{headline:'Where the money flows',items:['FL 6-week ban: 67,000+ fewer abortions in FL in the first year. Cost of forced birth: $20K+ per delivery.','Amendment 4 campaign (2024): $80M raised — most expensive ballot campaign in FL history.','Abortion travel costs: FL residents driving to NC or IL — average $1,500-2,500 per out-of-state procedure.','2028 ballot campaign estimate: $100M+ needed to hit 60% threshold. Organizing starts now.','Medicaid maternal coverage: 12-month postpartum Medicaid = $1.2B investment with $3.4B in prevented costs.']}
+  },
+  mental:{
+    emoji:'🧠', title:'Mental Health',
+    p_fix:{headline:'The fix',items:['Enforce mental health parity with the same rigor as physical health — annual insurer compliance reports, penalties for violations.','Mental Health Access Improvement Act — expand Medicare to cover licensed counselors and marriage and family therapists.','988 Lifeline funding increase — $432M current budget is chronically below demand; Jacksonville expansion proposed.','Address SNAP cuts and housing instability directly — the two strongest predictors of mental health crisis.','Prevention at $80/session vs. hospitalization at $2,400/day — the math makes the investment obvious.']},
+    p1:{headline:'The broken process',items:['Mental health parity law: on the books since 2008. Insurers still apply stricter limits. Enforcement is sparse.','60% of people with a mental health condition receive no treatment at all.','Jacksonville\'s mental health hospitalization rate: 13% above Florida average.','25-week average wait for an outpatient mental health appointment across the country.','SNAP cuts and housing instability are the two strongest predictors of mental health crisis — both being cut.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Mental Health Access Improvement Act (H.R.432) — passed House; expands Medicare to cover more counselors.','Expand mental health services and addiction recovery programs — Mike\'s specific commitment.','Mental Health Matters Jax — Mayor Deegan\'s initiative; expansion proposed in FY2026-27 budget.','988 Suicide & Crisis Lifeline — federally funded; Jacksonville expansion proposed in FY2026-27.','IDEA Reauthorization — ensures school-based mental health services for students with documented needs.','Equality Act (H.R.15) — prohibits discrimination based on sexual orientation and gender identity; LGBTQ+ people face disproportionate mental health burdens without federal legal protection.']},
+    p3:{headline:'Organizations already doing the work',items:['SMA Healthcare — largest behavioral health provider in NE Florida.','NAMI Jacksonville — mental health education, advocacy, and peer support.','Health Start Coalition — maternal and infant mental health; only zip-code-level baseline in Duval.','United Way of NE Florida — 211 Helpline and 60+ social service partners.','The Kennedy Forum — mental health parity enforcement; founded by Patrick Kennedy.']},
+    p4:{headline:'Where the money flows',items:['Mental health parity enforcement: $0 in dedicated federal enforcement budget. Law exists; funding doesn\'t.','Mental health hospitalization: Duval County costs ~$2,400/day per inpatient stay. Prevention costs $80/session.','988 Lifeline: $432M federal FY2025 — chronically underfunded vs. demand.','Mental Health Matters Jax: city-funded initiative; expansion in July 2026 budget proposal.','Untreated mental illness costs the U.S. $193B/yr in lost earnings — more than the entire Medicaid mental health budget.']}
+  },
+  wars:{
+    emoji:'✌️', title:'End Foreign Wars',
+    p_fix:{headline:'The fix',items:['Congressional Review Act reform — require affirmative congressional approval for any sustained military engagement.','Repeal the 2001 AUMF — a 25-year-old blank check that has authorized operations in 19+ countries must expire.','Audit the Pentagon — pass the financial audit DoD has failed 6 consecutive times before the next dollar is approved.','Afghanistan War Commission Act — full accountability review of the 20-year occupation before the next war starts.','Every $1B diverted from overseas conflict is $1B available for JAX infrastructure, schools, and VA healthcare.']},
+    p1:{headline:'The broken process',items:['Congress has not formally declared war since 1942 — every conflict since runs on open-ended authorizations that never expire.','The Authorization for Use of Military Force (AUMF) passed in 2001 is still active — used to justify operations in 19+ countries.','The Pentagon has failed its own financial audit 6 consecutive years. No accountability, no consequences, no correction.','Defense contractors spend $126M/yr lobbying to keep conflicts funded — a financial incentive built into the process itself.','Duval County carries one of the highest concentrations of active and veteran military families in Florida — they pay the human cost of these choices.']},
+    p2:{headline:'The legislation that locks in the fix',items:['War Powers Reform Act — requires congressional approval before any sustained military engagement.','Afghanistan War Commission Act — mandates a full accountability review of the 20-year occupation.','Audit the Pentagon Act — requires DoD to pass the financial audit it has failed since 2018.','CPB Defunding (Rescissions Act of 2025) — ANTI: Congress zeroed out public broadcasting in July 2025; Mike supports restoring it as a civic investment.','Election Day Holiday Act (H.R.281) — makes Election Day federal; FL-CD4 military families disproportionately affected by Tuesday voting.']},
+    p3:{headline:'Organizations already doing the work',items:['Veterans for Peace Chapter 136 JAX — advocates for diplomatic over military solutions.','Gold Star Families — military families who have paid the highest cost of foreign wars.','Iraq and Afghanistan Veterans of America (IAVA) — veterans policy and accountability advocacy.','Common Defense — progressive veterans organizing for peace and diplomacy.','Quincy Institute for Responsible Statecraft — research and policy on restraint in foreign policy.']},
+    p4:{headline:'Where the money flows',items:['Post-9/11 wars total cost: $8T+ including interest on debt, long-term VA care, and overseas infrastructure.','Defense budget FY2025: $886B — more than the next 10 countries combined. Growing every year with no audit passed.','Every $1B in war spending is $1B not flowing to JAX infrastructure, schools, or healthcare.','FL-CD4 veterans: 14% of the district population. VA healthcare access remains local, underfunded, and inconsistent.','Defense contractor lobbying: $126M spent in 2023 to protect contracts tied to ongoing overseas engagements.']}
+  },
+  system:{
+    emoji:'🗳️', title:'Fix the System',
+    p_fix:{headline:'The fix',items:['Independent redistricting commissions in every state — maps drawn by citizens, not politicians protecting their seats.','Federal ranked choice voting legislation — eliminate the spoiler effect that keeps the two-party duopoly in place.','Public financing through a 6:1 small-donor match system — democratize fundraising without corporate PAC money.','Make Election Day a federal holiday — hourly workers and military families should not have to choose between work and voting.','Repeal FL SAVE Act provisions under court challenge — citizenship proof requirements designed to suppress, not protect.']},
+    p1:{headline:'The broken process',items:['Gerrymandering: a 50-50 electorate can elect a 70-30 delegation. Maps drawn before a vote is cast.','Third parties need thousands of petition signatures to get on the FL ballot. Major parties need zero.','Election Day is a Tuesday. Most hourly workers get no paid time off. Low-income turnout gap: 35 points.','FL SAVE Act signed April 2026 — requires citizenship proof to register. ACLU, NAACP, LWV sued immediately.','Campaign finance: average winning House race costs $2M+. Corporate PAC money dominates both parties.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Get money out of politics completely — Mike\'s specific commitment.','Ranked choice voting and open primaries — Forward Party platform.','Independent redistricting — Mike\'s specific commitment to fair district maps.','Term limits so no one overstays their welcome — Mike\'s specific commitment.','DISCLOSE Act (S. pending) — forces super PACs to reveal dark money donors within 24 hours.']},
+    p3:{headline:'Organizations already doing the work',items:['Forward Party FL — ranked choice voting, open primaries, government that answers to voters.','League of Women Voters JAX / NE Florida — certified voter registrars covering all 4 FL-04 counties.','Indivisible Jax Riverside (IJR) — civic engagement and voter mobilization in FL-04.','Florida Rights Restoration Coalition (FRRC) — led Amendment 4; Desmond Meade, Executive Director.','Equal Ground Education Fund — filed legal challenge to FL\'s mid-decade redistricting.']},
+    p4:{headline:'Where the money flows',items:['Dark money flooded FL congressional races with $47M+ in 2024. Aaron Bean received $2.1M from PACs.','Mike Sell: $0 in corporate PAC money. Self-funded and accountable only to voters.','Election administration: Duval County election budget cut 3 consecutive cycles despite voter roll growth.','FL SAVE Act compliance cost: $2-4M in new state infrastructure — paid by taxpayers while courts challenge it.','Public financing option: 6:1 small-donor match system would democratize fundraising without taxpayer subsidy.']
+    }
+  },
+  rights:{
+    emoji:'✊', title:'Civil Rights',
+    p_fix:{headline:'The fix',items:['Certify the ERA as the 28th Amendment — 38 states ratified it; the archivists\' refusal is political, not constitutional.','Pass the Equality Act — make federal discrimination protection based on sexual orientation and gender identity the law in all 50 states.','John Lewis Voting Rights Advancement Act — restore the preclearance protections stripped by Shelby County v. Holder in 2013.','Ban conversion therapy for minors at the federal level — documented harm is not a protected practice.','Full ADA enforcement — accessibility is a right; the DOJ backlog must be cleared.']},
+    p1:{headline:'The broken process',items:['ERA: 38 states ratified — the constitutional threshold — but federal archivists refused to certify it under political pressure.','Shelby County v. Holder (2013) gutted the Voting Rights Act preclearance provision; FL\'s SAVE Act is the direct result.','Equality Act has passed the House twice; the Senate has never held a vote — LGBTQ+ discrimination is legal in 27 states.','Conversion therapy is still practiced on minors in Florida — no state ban exists.','ADA cases take 3+ years to resolve; the DOJ Civil Rights Division is chronically understaffed.']},
+    p2:{headline:'The legislation that locks in the fix',items:['Equal Rights Amendment (ERA) — Mike supports recognition as the validly ratified 28th Amendment; separate from but complementary to the JLVRA.','Equality Act (H.R.15) — prohibits discrimination based on sex, sexual orientation, and gender identity in employment, housing, and public accommodations.','John Lewis Voting Rights Advancement Act (H.R.14) — restores federal oversight for states with documented discrimination history.','CROWN Act (H.R.1475) — bans race-based hair discrimination; passed the House; Senate pending.','Disability Integration Act (Pending 119th) — ensures people with disabilities can live in the community rather than institutions.']},
+    p3:{headline:'Organizations already doing the work',items:['NAACP Jacksonville — civil rights chapter tracking JSO accountability and voting rights.','ACLU of Florida / First Coast Office — civil liberties litigation across FL-04.','Equal Ground Education Fund — redistricting accountability and voter protection in Florida.','JASMYN — advocacy and support for LGBTQ+ youth in Jacksonville.','Disability Rights Florida — active litigation and advocacy for Floridians with disabilities.']},
+    p4:{headline:'Where the money flows',items:['Voting rights enforcement: DOJ Civil Rights Division budget is $180M — inadequate for the scale of documented suppression.','ERA certification: zero cost — refusal is a political choice, not a budgetary constraint.','LGBTQ+ workplace discrimination costs an estimated $9B+ per year in lost productivity and increased healthcare costs.','Conversion therapy: 700,000 LGBTQ+ adults in the U.S. underwent it as minors — zero evidence of benefit; documented harm.','FL-CD4 civil rights landscape: documented disparities in voting access, housing, and criminal justice across all 4 counties.']}
+  }
+};
+
+var PDEFS = [
+  {key:'p3', label:'People',   icon:'🤝', color:'#087DD6', link:'https://mikesell.org/people',      linkText:'Browse coalition partners →', headlineOverride:'The orgs doing work in our neighborhoods.'},
+  {key:'p_fix', label:'Process',  icon:'⚙️', color:'#6b21a8', link:'https://mikesell.org/process',        linkText:'Explore all fixes →', headlineOverride:'We can\'t fix what we won\'t name.'},
+  {key:'p2', label:'Policy',   icon:'📋', color:'#8B0000', link:'https://mikesell.org/policies',   linkText:'Track live legislation →', headlineOverride:'Every bill with a direct impact on us.'},
+  {key:'p4', label:'Purse',    icon:'💰', color:'#059669', link:'https://mikesell.org/purse',         linkText:'Open full Purse analysis →', headlineOverride:'From Washington to Tallahassee to Northeast Florida.'}
+];
+
+var activeId = null;
+
+function selectIssue(id) {
+  var iss = ISSUES[id];
+  if (!iss) return;
+
+  if (activeId === id) { resetPanel(); return; }
+  activeId = id;
+
+  document.querySelectorAll('.iss').forEach(function(el) {
+    el.classList.toggle('selected', el.getAttribute('data-id') === id);
+  });
+
+  document.getElementById('issue-title').textContent = iss.emoji + ' ' + iss.title;
+  document.getElementById('issue-sub').textContent = 'All four Ps apply. Here\'s the complete picture for this issue.';
+
+  var grid = document.getElementById('ps-grid');
+  grid.innerHTML = '';
+  PDEFS.forEach(function(def) {
+    var d = iss[def.key];
+    var headline = def.headlineOverride || d.headline;
+    var items = d.items.map(function(it) { return '<li>' + it + '</li>'; }).join('');
+    var card = document.createElement('div');
+    card.className = 'p-card';
+    card.style.setProperty('--pc', def.color);
+    card.innerHTML =
+      '<div class="pc-top">' +
+        '<div class="pc-icon">' + def.icon + '</div>' +
+        '<div class="pc-meta">' +
+          '<div class="pc-label">' + def.label + '</div>' +
+          '<div class="pc-headline">' + headline + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<ul class="pc-list">' + items + '</ul>' +
+      '<div class="pc-footer">' +
+        '<a class="pc-deep-link" href="' + def.link + '" target="_blank" rel="noopener">' + def.linkText + '</a>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+
+  var panel = document.getElementById('ps-panel');
+  panel.style.display = 'block';
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function resetPanel() {
+  activeId = null;
+  document.getElementById('ps-panel').style.display = 'none';
+  document.getElementById('issue-title').textContent = 'Protect our future. Make life affordable. Fix the system.';
+  document.getElementById('issue-sub').textContent = 'Pick an issue. See who is fighting, what is broken, what laws would fix it, and where the money is.';
+  document.querySelectorAll('.iss').forEach(function(el) { el.classList.remove('selected'); });
+}
+
+function setPillarsLayout() {
+  var grid = document.getElementById('pillars-grid');
+  if (!grid) return;
+  var w = grid.offsetWidth;
+  if (w < 600) {
+    grid.style.gridTemplateColumns = 'repeat(2,1fr)';
+  } else {
+    grid.style.gridTemplateColumns = 'repeat(4,1fr)';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.iss[data-id]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      selectIssue(this.getAttribute('data-id'));
+    });
+  });
+  setPillarsLayout();
+  window.addEventListener('resize', setPillarsLayout);
+});
+</script>
+
+</body>
+</html>

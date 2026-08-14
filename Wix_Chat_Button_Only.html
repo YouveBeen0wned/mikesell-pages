@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100%; pointer-events: none; }
+    .cta-btn { pointer-events: auto; }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .live-dot {
+      display: inline-block; width: 8px; height: 8px; background: #5dde7a;
+      border-radius: 50%; margin-right: 10px;
+      animation: pulse-dot 1.8s ease-in-out infinite; flex-shrink: 0;
+    }
+    .cta-btn {
+      font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+      background: #7c3aed; color: #fff; font-size: 16px; font-weight: 700;
+      padding: 16px 40px; border-radius: 6px; border: none; cursor: pointer;
+      letter-spacing: 0.3px; transition: background 0.2s ease, transform 0.15s ease;
+      box-shadow: 0 4px 18px rgba(124,58,237,0.45);
+      display: inline-flex; align-items: center;
+    }
+    .cta-btn:hover { background: #6528d0; transform: translateY(-2px); }
+    .cta-btn:active { transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <button class="cta-btn" id="ms-btn">
+    <span class="live-dot"></span>
+    Ask Mike Anything
+  </button>
+  <script>
+    document.getElementById('ms-btn').addEventListener('click', function() {
+      try {
+        if (window.parent && window.parent.msOpenChat) {
+          window.parent.msOpenChat();
+        } else {
+          window.parent.postMessage({ action: 'ms-open-chat' }, '*');
+        }
+      } catch(e) {
+        window.parent.postMessage({ action: 'ms-open-chat' }, '*');
+      }
+    });
+  </script>
+</body>
+</html>
