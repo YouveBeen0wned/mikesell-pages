@@ -12,15 +12,15 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;background:#dfe8f2;height:100%;overflow:hidden;}
 body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
-#shell{max-width:430px;margin:0 auto;min-height:100dvh;background:#fff;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(10,30,60,0.18);}
-.screen{display:none;flex-direction:column;flex:1;min-height:100dvh;position:relative;}
+#shell{max-width:430px;margin:0 auto;height:100dvh;background:#fff;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(10,30,60,0.18);}
+.screen{display:none;flex-direction:column;flex:1;height:100dvh;overflow-y:auto;position:relative;}
 .screen.on{display:flex;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 9px;position:relative;z-index:5;}
 .gametitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--ink);white-space:nowrap;}
 .pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fff;border:2px solid #c9def2;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #c9def2;}
 .rule{height:5px;display:flex;position:relative;z-index:5;}
 .rule i{flex:1;}.rule i:nth-child(1){background:var(--blue);}.rule i:nth-child(2){background:var(--purple);}.rule i:nth-child(3){background:var(--red);}
-.bottomnav{display:flex;justify-content:center;background:#fff;border-top:2px solid #c9def2;padding:10px 6px calc(12px + env(safe-area-inset-bottom));margin-top:auto;position:relative;z-index:6;}
+.bottomnav{display:flex;justify-content:center;background:#fff;border-top:2px solid #c9def2;padding:10px 6px calc(12px + env(safe-area-inset-bottom));margin-top:auto;position:sticky;bottom:0;z-index:6;}
 .bn{opacity:0.45;text-align:center;cursor:pointer;flex:1;border:none;background:none;padding:0;}
 .bn.on{opacity:1;transform:scale(1.12);}
 .bn small{display:block;font-size:9px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;margin-top:2px;}
@@ -471,6 +471,7 @@ const DEMO = /[?&]demo=1/.test(location.search);
 const HOUR = DEMO ? 60 * 1000 : 3600 * 1000;
 const KEY = 'bloomers_v7';
 let S = null;
+let agendaIdx = 0;
 
 function freshState(first, last, garden, contacts) {
   return {
@@ -478,7 +479,7 @@ function freshState(first, last, garden, contacts) {
     created: Date.now(), lifetime: 0, weekly: 0, pool: 0, poolTick: Date.now(),
     rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, textsDay: dayKey(),
     visits: 0, plants: [], beds: [ { id: 1, n: 2 }, { id: 2, n: 2 }, { id: 3, n: 3 } ],
-    shed: [], // {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
+    shed: [{ kind: 'gift', shelf: 'b' }], // welcome gift — {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
   };
@@ -514,9 +515,8 @@ function rollTraits(kind, pity) {
 function checkAvailability(name) {
   let h = 0; for (const c of name.toLowerCase().replace(/\s/g, '')) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const m = h % 10;
-  if (m <= 5) return { state: 'available' };
-  if (m <= 7) return { state: 'multi', sides: [CONFIG.sides[h % 6], CONFIG.sides[(h + 3) % 6]] };
-  return { state: 'nomatch' };
+  if (m <= 7) return { state: 'available' };
+  return { state: 'multi', sides: [CONFIG.sides[h % 6], CONFIG.sides[(h + 3) % 6]] };
 }
 
 /* ---------------- praise engine ---------------- */
@@ -646,9 +646,9 @@ function renderGarden() {
   $('hud-shed').textContent = S.shed.length;
   $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap());
   $('btn-collect').disabled = S.pool <= 0;
-  const ag = CONFIG.agenda[S.visits % CONFIG.agenda.length];
+  const ag = CONFIG.agenda[agendaIdx];
   $('agenda-topic').textContent = ag[0]; $('agenda-line').textContent = ag[1];
-  $('agenda-dots').innerHTML = CONFIG.agenda.map((_, i) => `<span style="width:5px;height:5px;border-radius:50%;background:${i === S.visits % CONFIG.agenda.length ? 'var(--blue)' : '#d4e2ef'};"></span>`).join('');
+  $('agenda-dots').innerHTML = CONFIG.agenda.map((_, i) => `<span onclick="event.stopPropagation();setAgenda(${i})" style="width:8px;height:8px;border-radius:50%;background:${i === agendaIdx ? 'var(--blue)' : '#d4e2ef'};cursor:pointer;display:inline-block;padding:2px;"></span>`).join('');
 
   const { placed, h } = layoutBeds();
   const el = $('gardensvg');
@@ -685,6 +685,13 @@ function renderGarden() {
   el.innerHTML = out;
 }
 function fmt(n) { return n >= 1000 ? (n / 1000).toFixed(n % 1000 ? 1 : 0) + 'K' : String(n); }
+function setAgenda(i) {
+  agendaIdx = i;
+  const ag = CONFIG.agenda[agendaIdx];
+  $('agenda-topic').textContent = ag[0];
+  $('agenda-line').textContent = ag[1];
+  $('agenda-dots').querySelectorAll('span').forEach((s, j) => s.style.background = j === agendaIdx ? 'var(--blue)' : '#d4e2ef');
+}
 function sealSvg(rank, size) {
   const stars = { 0: [], 1: [[17, 20]], 2: [[12.8, 18.5], [21.2, 18.5]], 3: [[10.5, 19.5], [17, 16.5], [23.5, 19.5]], 4: [[9.8, 18.5], [14.4, 15.5], [19.6, 15.5], [24.2, 18.5]], 5: [[9.8, 18.5], [14.4, 15.5], [19.6, 15.5], [24.2, 18.5]], 6: [[8.8, 20], [12.8, 16.8], [17, 15.6], [21.2, 16.8], [25.2, 20]] }[rank] || [];
   const fills = ['#f2f8e8', '#e9cba6', '#eef1f5', '#fde68a', '#fde68a', '#f3f6fa', '#fde68a'];
@@ -733,7 +740,7 @@ function availCard(first) {
 function nomatchCard(first) {
   return `<div class="statecard nomatch">
     <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #c9b3dd);"><use href="#f-seed"/></svg>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">It looks like ${esc(first)} may live outside<br>the district or may not be registered.</div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">We couldn't confirm ${esc(first)} in the voter rolls — a registration reminder is always welcome.</div>
     <div style="font-size:11.5px;color:#5b6470;margin:7px 8px 0;line-height:1.5;">But that's okay: a friendly note about the registration deadline still counts.</div>
     <div class="field" style="margin:12px 2px 0;"><label>CELL PHONE</label><input id="dl-phone" inputmode="tel" placeholder="(904) 555-0000"></div>
     <div style="font-size:9.5px;color:#9aa3ad;margin-top:5px;">used once to open your text · never saved</div>
@@ -780,8 +787,7 @@ function seedTap(id) {
   } else {
     inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Watering again in ${hoursLeft(p)}${DEMO ? ' minutes' : ' hours'}. Seeds need a little patience 🌱</div>`;
   }
-  inner += `<button class="bigbtn" style="background:#fff;color:var(--blue);border:2px solid var(--blue);box-shadow:none;" onclick="closeOv('ov-plantpick');window.open(friendLink('${id}'),'_blank')">Preview their page</button>
-    <div style="font-size:9.5px;color:#9aa3ad;text-align:center;margin-top:8px;">Their page blooms this flower when they tap "I will be voting."</div>`;
+  inner += `<div style="font-size:9.5px;color:#9aa3ad;text-align:center;margin-top:8px;">Their page blooms this flower when they tap "I will be voting."</div>`;
   sheet.innerHTML = inner;
   openOv('ov-plantpick');
 }
@@ -955,10 +961,36 @@ function renderChampions() {
   ).join('');
 }
 
+/* ---------------- contact picker ---------------- */
+async function tryLoadContacts() {
+  const el = $('plant-contactlist');
+  el.style.display = 'none'; el.innerHTML = '';
+  if (!S || !S.contacts) return;
+  if (!('contacts' in navigator)) return;
+  try {
+    const list = await navigator.contacts.select(['name'], { multiple: true });
+    if (!list || !list.length) return;
+    const items = list.filter(c => c.name && c.name[0]).map(c => {
+      const name = c.name[0]; const first = name.split(/\s+/)[0];
+      return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectContact(${JSON.stringify(name)})">
+        <div style="width:32px;height:32px;border-radius:50%;background:#e0eefc;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--blue);flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(name)}</div>
+      </div>`;
+    }).join('');
+    el.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9aa3ad;letter-spacing:0.12em;margin:10px 18px 4px;">FROM YOUR CONTACTS</div>` + items
+      + `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9aa3ad;letter-spacing:0.1em;margin:10px 18px 4px;">OR SEARCH BY NAME</div>`;
+    el.style.display = 'block';
+  } catch(e) {}
+}
+function selectContact(name) {
+  $('plant-q').value = name; doSearch();
+  $('plant-searchwrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 /* ---------------- nav + decos ---------------- */
 function showTab(tab) {
   if (tab === 'garden') { tickPraise(); renderGarden(); show('scr-garden'); }
-  if (tab === 'plant') { $('plant-result').innerHTML = ''; show('scr-plant'); }
+  if (tab === 'plant') { $('plant-result').innerHTML = ''; show('scr-plant'); tryLoadContacts(); }
   if (tab === 'collection') { renderCollection(); show('scr-collection'); }
   if (tab === 'champions') { renderChampions(); show('scr-champions'); }
   document.querySelectorAll('.bottomnav').forEach((nav) => {
@@ -968,14 +1000,12 @@ function showTab(tab) {
 function buildNavs() {
   const html = `
     <button class="bn" data-tab="garden" onclick="showTab('garden')"><svg class="navic"><use href="#n-farm"/></svg><small>GARDEN</small></button>
-    <button class="bn" data-tab="plant" onclick="showTab('plant')"><svg class="navic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#002d5b" stroke-width="2"/><path d="M12 8 v8 M8 12 h8" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/></svg><small>PLANT A SEED</small></button>
     <button class="bn" data-tab="collection" onclick="showTab('collection')"><svg class="navic"><use href="#n-almanac"/></svg><small>COLLECTION</small></button>
     <button class="bn" data-tab="champions" onclick="showTab('champions')"><svg class="navic"><use href="#n-club"/></svg><small>CHAMPIONS</small></button>`;
   for (const id of ['nav-garden', 'nav-plant', 'nav-collection', 'nav-champions']) { $(id).innerHTML = html; }
   showTabMark();
   function showTabMark() {
     $('nav-garden').querySelector('[data-tab="garden"]').classList.add('on');
-    $('nav-plant').querySelector('[data-tab="plant"]').classList.add('on');
     $('nav-collection').querySelector('[data-tab="collection"]').classList.add('on');
     $('nav-champions').querySelector('[data-tab="champions"]').classList.add('on');
   }
@@ -993,7 +1023,21 @@ function buildDecos() {
   for (const id of ['deco-signup', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { $(id).innerHTML = deco; }
 }
 
-document.addEventListener('DOMContentLoaded', boot);
+document.addEventListener('DOMContentLoaded', function() {
+  boot();
+  // Agenda swipe
+  let _agX = null;
+  const agEl = document.querySelector('.agenda');
+  if (agEl) {
+    agEl.addEventListener('touchstart', function(e) { _agX = e.touches[0].clientX; }, {passive:true});
+    agEl.addEventListener('touchend', function(e) {
+      if (_agX === null) return;
+      const dx = e.changedTouches[0].clientX - _agX; _agX = null;
+      if (Math.abs(dx) < 30) return;
+      setAgenda((agendaIdx + (dx < 0 ? 1 : -1) + CONFIG.agenda.length) % CONFIG.agenda.length);
+    });
+  }
+});
 
 
 </script>
