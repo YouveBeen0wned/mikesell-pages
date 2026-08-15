@@ -33,6 +33,8 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .screen>.petal{position:absolute;}
 .petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
 .field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:9px 14px 10px;margin:10px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
+.pindot{width:48px;height:58px;font-size:26px;text-align:center;border:2px solid #c9def2;border-radius:12px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#fff;}
+.pindot:focus{border-color:var(--blue);outline:none;}
 .field label{display:block;font-size:9px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;letter-spacing:0.09em;}
 .field input{border:none;outline:none;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:var(--ink);margin-top:3px;background:transparent;}
 .field.focus{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(3,122,216,0.1);padding:8px 13px 9px;}
@@ -265,6 +267,16 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     </div>
     <div class="field focus"><div class="fieldnote"><label style="color:var(--blue);">GARDEN NAME</label><em>what other gardeners see</em></div><input id="f-garden" placeholder="RiverRat904" maxlength="20"></div>
     <div class="field"><div class="fieldnote"><label>DATE OF BIRTH</label><em>Age Verification</em></div><input id="f-dob" inputmode="numeric" placeholder="MM / DD / YYYY" maxlength="14"></div>
+    <div class="field" style="margin-left:16px;margin-right:16px;">
+      <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your garden</em></div>
+      <div style="display:flex;gap:10px;margin-top:6px;">
+        <input class="pindot" id="s-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin0','s-pin1')">
+        <input class="pindot" id="s-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin1','s-pin2')">
+        <input class="pindot" id="s-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin2','s-pin3')">
+        <input class="pindot" id="s-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin3',null)">
+      </div>
+      <div style="font-size:9px;color:#9aa3ad;margin-top:5px;">Optional — 4 digits. Protects your garden on shared devices.</div>
+    </div>
     <div class="field" style="display:flex;align-items:center;gap:10px;background:#f4f9ff;border:2px solid var(--blue);cursor:pointer;" onclick="toggleContacts()">
       <span style="font-size:16px;">🔎</span>
       <div style="flex:1;">
@@ -280,10 +292,30 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   </div>
 </section>
 
+<!-- ============ LOCK ============ -->
+<section id="scr-lock" class="screen">
+  <div class="bgdeco" id="deco-lock"></div>
+  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:26px 24px 10px;">
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:28px;color:var(--blue);">Welcome back</div>
+    <div id="lock-gname" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:18px;color:var(--ink);margin-top:4px;"></div>
+    <div id="lock-seal" style="margin:14px 0 10px;"></div>
+    <div style="font-size:12px;color:#5b6470;margin-bottom:16px;">Enter your PIN to continue</div>
+    <div style="display:flex;gap:12px;margin-bottom:6px;">
+      <input class="pindot" id="lock-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin0','lock-pin1')">
+      <input class="pindot" id="lock-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin1','lock-pin2')">
+      <input class="pindot" id="lock-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin2','lock-pin3')">
+      <input class="pindot" id="lock-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin3',null)" onkeydown="if(event.key==='Enter')doUnlock()">
+    </div>
+    <div id="lock-err" style="display:none;font-size:11px;color:var(--red);margin:4px 0 8px;text-align:center;"></div>
+    <button class="bigbtn" style="margin-top:10px;" onclick="doUnlock()">Unlock my garden</button>
+    <div style="margin-top:22px;"><span onclick="confirmReset()" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Forgot PIN · start fresh</span></div>
+  </div>
+</section>
+
 <!-- ============ GARDEN ============ -->
 <section id="scr-garden" class="screen">
   <div class="bgdeco" id="deco-garden"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#f-sproutling"/></svg> My Garden</div><div class="pill">👏 <span id="hud-lifetime">0</span></div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#f-sproutling"/></svg> My Garden</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">👏 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;">⇥</button></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;" onclick="openLadder()">
     <span id="hud-seal" style="width:40px;flex-shrink:0;"></span>
@@ -582,6 +614,43 @@ function show(id) {
 function closeOv(id) { $(id).classList.remove('on'); }
 function openOv(id) { $(id).classList.add('on'); }
 
+function pinAdv(fromId, toId) {
+  const el = $(fromId);
+  el.value = el.value.replace(/\D/g, '').slice(-1);
+  if (el.value && toId) $(toId).focus();
+}
+function showLock() {
+  $('lock-gname').textContent = S.garden;
+  $('lock-seal').innerHTML = sealSvg(Math.min(S.rank || 0, 6), 52);
+  ['lock-pin0','lock-pin1','lock-pin2','lock-pin3'].forEach(id => $(id).value = '');
+  $('lock-err').style.display = 'none';
+  show('scr-lock');
+  setTimeout(() => $('lock-pin0').focus(), 300);
+}
+function doUnlock() {
+  const pin = ['lock-pin0','lock-pin1','lock-pin2','lock-pin3'].map(id => $(id).value.replace(/\D/g,'')).join('');
+  if (pin === S.pin) {
+    sessionStorage.setItem('bl_auth', '1');
+    S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
+    tickPraise(); save();
+    renderGarden(); show('scr-garden'); maybeRankup();
+  } else {
+    $('lock-err').textContent = 'Wrong PIN — try again.';
+    $('lock-err').style.display = 'block';
+    ['lock-pin0','lock-pin1','lock-pin2','lock-pin3'].forEach(id => $(id).value = '');
+    $('lock-pin0').focus();
+  }
+}
+function doLogout() {
+  if (!confirm('Log out? Your garden stays saved in this browser.')) return;
+  sessionStorage.removeItem('bl_auth');
+  showLock();
+}
+function confirmReset() {
+  if (confirm('This clears ALL your progress and cannot be undone. Are you sure?')) {
+    localStorage.removeItem(KEY); sessionStorage.removeItem('bl_auth'); location.reload();
+  }
+}
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildDecos(); buildNavs();
@@ -589,6 +658,7 @@ function boot() {
   if (m) { initFriend(m[1]); return; }
   load();
   if (!S) { show('scr-signup'); return; }
+  if (S.pin && sessionStorage.getItem('bl_auth') !== '1') { showLock(); return; }
   S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
   checkActive().then((ok) => { if (!ok) return; }); // [SERVER] deactivation gate
   consumeBloomQueue();
@@ -607,11 +677,14 @@ function toggleContacts() {
 function doSignup() {
   const first = $('f-first').value.trim(), last = $('f-last').value.trim();
   const garden = $('f-garden').value.trim(), dob = $('f-dob').value.trim();
+  const pin = ['s-pin0','s-pin1','s-pin2','s-pin3'].map(id => $(id).value.replace(/\D/g,'')).join('');
   const err = $('signup-err');
   if (!first || !last || !garden || !dob) { err.textContent = 'All four fields make the account. Nothing else, ever.'; err.style.display = 'block'; return; }
+  if (pin && pin.length !== 4) { err.textContent = 'PIN needs all 4 digits, or leave it blank.'; err.style.display = 'block'; return; }
   const yr = parseInt((dob.match(/(\d{4})/) || [])[1] || '0', 10);
   if (!yr || new Date().getFullYear() - yr < 18) { err.textContent = 'Bloomers is for gardeners 18 and up.'; err.style.display = 'block'; return; }
   S = freshState(first, last, garden, $('f-contacts').dataset.on === '1');
+  if (pin) { S.pin = pin; sessionStorage.setItem('bl_auth', '1'); }
   save();
   api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
   renderGarden(); show('scr-garden');
@@ -1056,7 +1129,7 @@ function buildDecos() {
     </div>
     <span class="petal" style="left:14%;animation-duration:8s;color:#f2a9c4;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#f-petal"/></svg></span>
     <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#f-petal"/></svg></span>`;
-  for (const id of ['deco-signup', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { $(id).innerHTML = deco; }
+  for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { $(id).innerHTML = deco; }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
