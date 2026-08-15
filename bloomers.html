@@ -368,12 +368,12 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div class="bgdeco" id="deco-plant"></div>
   <div style="padding-top:18px;"></div>
   <div class="qtitle">Find a friend in the <b>voter registration</b> file 🌱</div>
-  <div id="plant-contactlist" style="display:none;"></div>
   <div id="plant-searchwrap">
     <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="First and last name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch();}"></div>
     <div style="text-align:center;"><button id="plant-go" class="bigbtn" style="margin-top:12px;padding:12px 26px;font-size:14px;" onclick="doSearch()">Check Voter Rolls</button></div>
   </div>
   <div id="plant-result"></div>
+  <div id="plant-contactlist" style="display:none;"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-plant"></nav>
 </section>
@@ -593,7 +593,7 @@ async function voterSearch(firstName, lastName) {
 }
 
 function availCardVoter(first, last, city, age) {
-  const loc = [city, age ? 'age ' + age : ''].filter(Boolean).join(' · ');
+  const loc = city || '';
   return `<div class="statecard avail">
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#059669;letter-spacing:0.06em;margin-bottom:6px;">✓ REGISTERED VOTER · ${esc(loc.toUpperCase())}</div>
     <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#f-seed"/></svg>
@@ -682,6 +682,7 @@ async function checkActive() {
 function show(id) {
   document.querySelectorAll('.screen').forEach((s) => s.classList.remove('on'));
   $(id).classList.add('on');
+  $(id).scrollTop = 0;
   window.scrollTo(0, 0);
 }
 function closeOv(id) { $(id).classList.remove('on'); }
@@ -795,7 +796,7 @@ function confirmReset() {
 }
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
-  buildDecos(); buildNavs(); attachGardenDrag();
+  buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
   const m = location.search.match(/[?&]b=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
   load();
@@ -806,7 +807,7 @@ function boot() {
   consumeBloomQueue();
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
-  setInterval(() => { if ($('scr-garden').classList.contains('on')) { tickPraise(); renderGarden(); } }, 30 * 1000);
+  setInterval(() => { if ($('scr-garden').classList.contains('on')) { const hadNew = consumeBloomQueue(); tickPraise(); renderGarden(); if (hadNew) showToast('A friend said yes! Tap their glowing seed to see it bloom 🌱'); } }, 30 * 1000);
 }
 
 /* ---------------- signup ---------------- */
@@ -891,6 +892,12 @@ function renderGarden() {
         out += deco + `<use href="#${s.art}" x="${cx - 12}" y="${b.y + 4}" width="24" height="24" style="cursor:pointer;${s.shelf === 'au' ? 'animation:goldshine 2.6s infinite;' : ''}" onclick="showPlaque('${p.species}','${p.id}')"/>`;
         if (p.traits.gli) out += `<text x="${cx - 8}" y="${b.y + 9}" font-size="6" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text><text x="${cx + 7}" y="${b.y + 15}" font-size="5" fill="#fde68a" style="animation:glint 3s 1.2s infinite;">✦</text>`;
         if (p.traits.pol) out += `<use href="#${p.id.charCodeAt(0) % 2 ? 'f-bee' : 'f-bfly'}" x="${cx + 7}" y="${b.y + 2}" width="12" height="12" style="animation:${p.id.charCodeAt(0) % 2 ? 'bee' : 'flutter'} 5s infinite;"/>`;
+        out += lbl;
+      } else if (p.state === 'ready') {
+        out += `<circle cx="${cx}" cy="${b.y + 16}" r="10" fill="#dcfce7" opacity="0.7"/>`;
+        out += `<circle cx="${cx}" cy="${b.y + 16}" r="13.5" fill="none" stroke="#059669" stroke-width="2" style="animation:ringpulse 1.3s ease-out infinite;transform-origin:${cx}px ${b.y + 16}px;"/>`;
+        out += `<use href="#f-seed" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;filter:drop-shadow(0 0 4px #059669);" onclick="seedTap('${p.id}')"/>`;
+        out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#059669" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">✓ TAP</text>`;
         out += lbl;
       } else {
         out += `<use href="#f-seed" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>` + lbl;
@@ -1008,6 +1015,7 @@ function friendLink(id) { return 'https://mikesell.org/bloomers?b=' + id + '&f='
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
+  if (p.state === 'ready') { doBloom(p, 'tap'); return; }
   const sheet = $('plantpick-sheet');
   let inner = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;">${esc(p.tag)}'s Reminder Seed</div>`;
   if (waterReady(p)) {
@@ -1054,10 +1062,13 @@ function consumeBloomQueue() {
   try { q = JSON.parse(localStorage.getItem(KEY + '_taps') || '[]'); } catch (e) {}
   if (!q.length) return;
   localStorage.setItem(KEY + '_taps', '[]');
+  let changed = false;
   for (const id of q) {
     const p = S.plants.find((x) => x.id === id && x.state === 'seed');
-    if (p) setTimeout(() => doBloom(p, 'tap'), 700);
+    if (p) { p.state = 'ready'; changed = true; }
   }
+  if (changed) { save(); return true; }
+  return false;
 }
 function doBloom(p, kind) {
   S.blooms++;
@@ -1145,8 +1156,8 @@ function openShed() {
   else {
     sheet.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;margin-bottom:10px;">The Shed</div>` + S.shed.map((it, i) =>
       it.kind === 'bed'
-        ? `<div class="rankrow"><svg width="46" height="26" viewBox="0 0 80 40"><rect x="2" y="2" width="76" height="36" rx="18" fill="#c49766" stroke="#8a6238" stroke-width="2.5"/></svg><div class="rlab">${it.n}-spot flower bed</div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
-        : `<div class="rankrow"><svg width="26" height="26"><use href="#f-seed"/></svg><div class="rlab">🎁 Gift seed<small>Drop it on any open spot to see what blooms.</small></div><button class="collectbtn" onclick="plantGift(${i})">PLANT</button></div>`
+        ? `<div class="rankrow"><svg width="46" height="26" viewBox="0 0 80 40"><rect x="2" y="2" width="76" height="36" rx="18" fill="#c49766" stroke="#8a6238" stroke-width="2.5"/></svg><div class="rlab"><strong>${it.n}-spot flower bed</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLACE to add to your garden</small></div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
+        : `<div class="rankrow"><svg width="26" height="26"><use href="#f-seed"/></svg><div class="rlab"><strong>🎁 Mystery Gift Seed</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLANT to reveal what blooms.</small></div><button class="collectbtn" onclick="plantGift(${i})">PLANT</button></div>`
     ).join('');
   }
   openOv('ov-shed');
@@ -1211,85 +1222,79 @@ function renderChampions() {
 }
 
 /* ---------------- contact picker ---------------- */
+let _registeredCache = []; // contacts filtered to registered voters
+
+async function filterRegisteredContacts(contacts) {
+  const results = [];
+  // Group contacts by last-name prefix to batch fetches
+  const groups = {};
+  for (const c of contacts) {
+    const parts = c.name.trim().split(/\s+/);
+    if (parts.length < 2) continue;
+    const first = parts[0], last = parts[parts.length - 1];
+    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
+    if (!groups[prefix]) groups[prefix] = [];
+    groups[prefix].push({ ...c, _first: first, _last: last });
+  }
+  // Fetch each unique prefix bucket, then match
+  for (const [prefix, group] of Object.entries(groups)) {
+    const bucket = await fetchVoterBucket(prefix);
+    for (const contact of group) {
+      const qlast = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const qfirst = contact._first.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const fl = Math.min(3, qfirst.length);
+      const match = bucket.find(([f, l]) => {
+        return l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast &&
+               f.replace(/[^A-Za-z]/g, '').toUpperCase().startsWith(qfirst.slice(0, fl));
+      });
+      if (match) results.push({ ...contact, voterCity: match[2] });
+    }
+  }
+  return results;
+}
 async function tryLoadContacts() {
   if (!S || !S.contacts) return;
-
-  // Already loaded this session — just re-render
-  if (_contactsCache !== null) { _renderContactList(); return; }
-
-  // First open: show loading state, then call Contact Picker (user gesture from ➕ tap satisfies requirement)
+  if (_contactsCache !== null) { await _renderContactList(); return; }
+  if (!('contacts' in navigator)) { _contactsCache = []; return; }
   const listEl = $('plant-contactlist');
-  listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#9aa3ad;font-family:avenir-heavy,Arial,sans-serif;font-size:13px;">Loading your contacts…</div>';
+  listEl.innerHTML = '<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING CONTACTS WITH VOTER ROLLS…</div>';
   listEl.style.display = 'block';
-  $('plant-searchwrap').style.display = 'none';
-
-  if ('contacts' in navigator) {
-    try {
-      const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
-      _contactsCache = (raw || [])
-        .filter(c => c.name && c.name[0] && c.tel && c.tel.length)
-        .map(c => ({ name: c.name[0], phone: c.tel[0] }));
-    } catch(e) { _contactsCache = []; }
-  } else { _contactsCache = []; } // Contact Picker not available (cross-origin iframe blocks it)
-
-  _renderContactList();
+  try {
+    const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+    _contactsCache = (raw || []).filter(c => c.name && c.name[0])
+      .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
+  } catch(e) { _contactsCache = []; }
+  await _renderContactList();
 }
-function _renderContactList() {
+async function _renderContactList() {
   const listEl = $('plant-contactlist');
-  const searchEl = $('plant-searchwrap');
-  if (!_contactsCache || !_contactsCache.length) {
-    // No contacts loaded — fall back to search
-    listEl.style.display = 'none'; searchEl.style.display = 'block';
-    // In a cross-origin iframe the Contact Picker API is blocked — suggest opening directly
-    if (window.self !== window.top && !$('contact-hint')) {
-      const hint = document.createElement('div');
-      hint.id = 'contact-hint';
-      hint.style.cssText = 'font-size:11px;color:#9aa3ad;margin:10px 16px 0;text-align:center;line-height:1.6;';
-      hint.innerHTML = 'For contact matching, <a href="https://mikesell.org/bloomers" target="_blank" style="color:var(--blue);font-family:avenir-heavy,Arial,sans-serif;">open Bloomers directly</a> in your browser.';
-      searchEl.insertAdjacentElement('afterend', hint);
-    }
+  if (!_contactsCache || !_contactsCache.length) { listEl.style.display = 'none'; return; }
+  listEl.innerHTML = '<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING WITH VOTER ROLLS…</div>';
+  listEl.style.display = 'block';
+  _registeredCache = await filterRegisteredContacts(_contactsCache);
+  if (!_registeredCache.length) {
+    listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No contacts matched the voter rolls — use the search above.</div>';
     return;
   }
-  searchEl.style.display = 'none';
-  const items = _contactsCache.map((c, i) => {
-    const first = c.name.split(/\s+/)[0];
+  const items = _registeredCache.map((c, i) => {
+    const first = c._first || c.name.split(/\s+/)[0];
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectContact(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:#e0eefc;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--blue);flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
-      <div>
+      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
+      <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        <div style="font-size:10px;color:#9aa3ad;margin-top:1px;">${esc(c.phone)}</div>
+        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity || '')}</div>
       </div>
     </div>`;
   }).join('');
-  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9aa3ad;letter-spacing:0.12em;margin:10px 18px 6px;">TAP A FRIEND TO PLANT</div>` + items
-    + `<div style="text-align:center;margin:14px 0 6px;"><span onclick="showContactSearch()" style="font-size:11px;color:var(--blue);cursor:pointer;text-decoration:underline;">or search a name instead</span></div>`;
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${_registeredCache.length} FOUND</div>` + items;
   listEl.style.display = 'block';
 }
-function showContactSearch() {
-  $('plant-contactlist').style.display = 'none';
-  $('plant-searchwrap').style.display = 'block';
-}
-async function selectContact(idx) {
-  const c = _contactsCache[idx];
+function selectContact(idx) {
+  const c = _registeredCache[idx];
   if (!c) return;
-  const parts = c.name.trim().split(/\s+/);
-  const first = parts[0], last = parts[parts.length - 1];
-  pendingPlant = { name: c.name, first, phone: c.phone };
+  pendingPlant = { name: c.name, first: c._first, phone: c.phone || '' };
   $('plant-contactlist').style.display = 'none';
-  $('plant-result').innerHTML = `<div class="statecard" style="text-align:center;padding:20px;">
-    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#5b6470;">Checking voter rolls for ${esc(first)}…</div>
-  </div>`;
-  const matches = await voterSearch(first, last);
-  if (matches.length === 1) {
-    const [mf, ml, mc, ma] = matches[0];
-    pendingPlant.first = mf;
-    $('plant-result').innerHTML = availCardVoter(mf, ml, mc, ma);
-  } else if (matches.length > 1) {
-    $('plant-result').innerHTML = multiMatchCard(matches, first, last);
-  } else {
-    pendingPlant.deadline = true;
-    $('plant-result').innerHTML = nomatchCard(first);
-  }
+  $('plant-result').innerHTML = availCardVoter(c._first, c._last, c.voterCity, null);
   $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -1327,6 +1332,23 @@ function buildDecos() {
     <span class="petal" style="left:14%;animation-duration:8s;color:#f2a9c4;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#f-petal"/></svg></span>
     <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#f-petal"/></svg></span>`;
   for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { $(id).innerHTML = deco; }
+}
+
+/* ---------------- back-button intercept ---------------- */
+function setupBackButton() {
+  if (!window.history || !window.history.pushState) return;
+  history.pushState({ bl: 1 }, '');
+  window.addEventListener('popstate', function() {
+    // Always re-push so we keep intercepting
+    history.pushState({ bl: 1 }, '');
+    // Close any open overlay first
+    const openOv = document.querySelector('.overlay.on');
+    if (openOv) { openOv.classList.remove('on'); return; }
+    // Navigate back to garden from any other tab
+    if (!$('scr-garden') || !$('scr-garden').classList.contains('on')) {
+      showTab('garden');
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
