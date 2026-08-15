@@ -22,7 +22,18 @@ if ([string]::IsNullOrWhiteSpace($msg)) {
 }
 
 git commit -m $msg
-git push
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "Commit failed." -ForegroundColor Red
+    exit 1
+}
+
+git push origin main
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "Push failed - run: git push --set-upstream origin main" -ForegroundColor Red
+    exit 1
+}
 
 Write-Host ""
 Write-Host "Pushed to GitHub." -ForegroundColor Green
