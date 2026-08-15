@@ -167,7 +167,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 </symbol>
 
 <symbol id="f-primrose" viewBox="0 0 40 40">
-  <g fill="#f7e08d" stroke="#e3c65e" stroke-width="0.8"><path d="M20 21 C12 15 12 5 20 6 C28 5 28 15 20 21 Z"/><path d="M20 19 C26 27 36 27 35 19 C36 11 26 11 20 19 Z" transform="rotate(90 20 20)"/><path d="M20 19 C12 25 12 35 20 34 C28 35 28 25 20 19 Z"/><path d="M19 20 C13 12 3 12 4 20 C3 28 13 28 19 20 Z"/></g>
+  <g fill="#f7e08d" stroke="#e3c65e" stroke-width="0.8"><path d="M20 21 C12 15 12 5 20 6 C28 5 28 15 20 21 Z"/><path d="M20 19 C26 27 36 27 35 19 C36 11 26 11 20 19 Z"/><path d="M20 19 C12 25 12 35 20 34 C28 35 28 25 20 19 Z"/><path d="M19 20 C13 12 3 12 4 20 C3 28 13 28 19 20 Z"/></g>
   <circle cx="20" cy="20" r="3.6" fill="#e8a53c"/><circle cx="20" cy="20" r="1.5" fill="#fbf3d8"/>
 </symbol>
 
@@ -535,6 +535,7 @@ function freshState(first, last, garden, contacts) {
     shed: [{ kind: 'gift', shelf: 'b' }], // welcome gift — {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
+    registeredFriends: [], // [{name,first,last,phone,voterCity}] — filled at signup
   };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -798,6 +799,14 @@ function confirmReset() {
     localStorage.removeItem(KEY); sessionStorage.removeItem('bl_auth'); location.reload();
   });
 }
+
+// Listen for b= param forwarded via postMessage from Wix parent frame
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'bloom_friend' && e.data.b) {
+    initFriend(e.data.b, e.data.f || '');
+  }
+});
+
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
@@ -834,7 +843,8 @@ function doSignup() {
   if (pin) { S.pin = pin; sessionStorage.setItem('bl_auth', '1'); }
   save();
   api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
-  renderGarden(); show('scr-garden');
+  renderGarden();
+  if (S.contacts && ('contacts' in navigator)) { show('scr-friends-setup'); } else { show('scr-garden'); }
 }
 
 /* ---------------- garden render ---------------- */
@@ -1126,6 +1136,7 @@ function showPlaque(spid, pid) {
   const row = (icon, name, found) => `<div style="display:flex;align-items:center;gap:8px;background:${found ? '#fdf6e3' : '#f3f4f6'};border:2px solid ${found ? '#f0b429' : '#e5e7eb'};border-radius:12px;padding:8px 13px;margin-top:7px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:${found ? '#b45309' : '#9ca3af'};">${icon} ${name} · ${found ? 'Discovered' : 'Undiscovered'}</div>`;
   $('plaque-sheet').innerHTML = `
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);">${esc(s.name)}</div>
+    <div style="font-size:9.5px;letter-spacing:0.14em;color:${shelfColor(s.shelf)};margin-top:3px;font-family:'avenir-heavy',Arial,sans-serif;">${shelfName(s.shelf).toUpperCase()} RARITY</div>
     <div style="width:120px;height:120px;margin:10px auto 0;background:radial-gradient(circle,#fff 30%,#fdf6e3 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg style="width:86px;height:86px;"><use href="#${s.art}"/></svg></div>
     <div style="display:flex;gap:7px;justify-content:center;margin-top:10px;"><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:${shelfColor(s.shelf)};border:2px solid ${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">Unlocked!</div><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">${shelfName(s.shelf)}</div></div>
     <div style="font-size:12px;color:#5b6470;margin-top:9px;">Commonly found: ${esc(s.loc)}</div>
@@ -1256,6 +1267,52 @@ async function filterRegisteredContacts(contacts) {
   }
   return results;
 }
+
+async function runContactMatch() {
+  const btn = $('friends-setup-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Matching…'; }
+  try {
+    const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+    const contacts = (raw || []).filter(c => c.name && c.name[0])
+      .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
+    if (contacts.length) {
+      const matched = await filterRegisteredContacts(contacts);
+      S.registeredFriends = matched.map(c => ({
+        name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '', voterCity: c.voterCity || ''
+      }));
+      save();
+      showToast('Found ' + S.registeredFriends.length + ' registered friends! 🌱');
+    }
+  } catch(e) {}
+  show('scr-garden');
+}
+
+function renderRegisteredFriends() {
+  const listEl = $('plant-contactlist');
+  if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
+  const items = S.registeredFriends.map((c, i) => {
+    const initials = (c.first || c.name || '?')[0].toUpperCase();
+    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
+      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${initials}</div>
+      <div style="flex:1;">
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
+        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} FOUND</div>` + items;
+  listEl.style.display = 'block';
+}
+
+function selectRegisteredFriend(idx) {
+  const c = (S.registeredFriends || [])[idx];
+  if (!c) return;
+  pendingPlant = { name: c.name, first: c.first || c.name.split(/\s+/)[0], phone: c.phone || '' };
+  $('plant-contactlist').style.display = 'none';
+  $('plant-result').innerHTML = availCardVoter(c.first || c.name.split(/\s+/)[0], c.last || '', c.voterCity, null);
+  $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 async function tryLoadContacts() {
   if (!S || !S.contacts) return;
   if (_contactsCache !== null) { await _renderContactList(); return; }
@@ -1305,7 +1362,7 @@ function selectContact(idx) {
 /* ---------------- nav + decos ---------------- */
 function showTab(tab) {
   if (tab === 'garden') { tickPraise(); renderGarden(); show('scr-garden'); }
-  if (tab === 'plant') { $('plant-result').innerHTML = ''; show('scr-plant'); tryLoadContacts(); }
+  if (tab === 'plant') { $('plant-result').innerHTML = ''; show('scr-plant'); renderRegisteredFriends(); }
   if (tab === 'collection') { renderCollection(); show('scr-collection'); }
   if (tab === 'champions') { renderChampions(); show('scr-champions'); }
   document.querySelectorAll('.bottomnav').forEach((nav) => {
@@ -1373,5 +1430,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </script>
+
+<!-- ============ FRIENDS SETUP ============ -->
+<section id="scr-friends-setup" class="screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 24px;text-align:center;">
+  <div style="font-size:48px;margin-bottom:12px;">🌱</div>
+  <div class="qtitle">Find your registered friends</div>
+  <div style="font-size:13px;color:#5b6470;margin:10px 0 24px;line-height:1.65;">Bloomers matches your contacts against the FL-04 voter rolls so you always know exactly who to reach out to. This happens once, on your phone — nothing is ever uploaded.</div>
+  <button class="bigbtn" id="friends-setup-btn" onclick="runContactMatch()">Find My Friends</button>
+  <button onclick="show('scr-garden')" style="margin-top:14px;background:none;border:none;font-size:12px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Skip for now</button>
+</section>
 </body>
 </html>
