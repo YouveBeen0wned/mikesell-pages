@@ -57,6 +57,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .tchip{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #bcd9f2;border-radius:14px;padding:8px 12px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;color:var(--ink);cursor:pointer;}
 .collectbtn{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;letter-spacing:0.05em;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:7px 14px;box-shadow:0 3px 0 #a05a04;cursor:pointer;}
 .collectbtn:disabled{background:#d3ddea;box-shadow:none;}
+#gardensvg{touch-action:none;-webkit-touch-callout:none;user-select:none;}
 #gardensvg *{transform-box:fill-box;}
 #gardensvg circle[style*="pulsehint"],#gardensvg circle[style*="ringpulse"]{transform-origin:center;}
 svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a33;paint-order:stroke;stroke:#fff;stroke-width:1.5px;}
@@ -689,7 +690,7 @@ function closeOv(id) { $(id).classList.remove('on'); }
 function openOv(id) { $(id).classList.add('on'); }
 
 let _toastTimer = null;
-let _pressTimer = null, _pressPid = null, _isDragging = false, _pressPointerId = null;
+let _pressTimer = null, _pressPid = null, _isDragging = false, _pressPointerId = null, _startX = 0, _startY = 0;
 function findSeedPid(el) {
   while (el && el !== document.body) {
     const oc = el.getAttribute && el.getAttribute('onclick');
@@ -704,19 +705,22 @@ function attachGardenDrag() {
   svg.addEventListener('pointerdown', function(e) {
     const pid = findSeedPid(e.target);
     if (!pid) return;
+    e.preventDefault(); // stop iOS context menu / scroll from stealing the touch
     _pressPid = pid; _isDragging = false; _pressPointerId = e.pointerId;
+    _startX = e.clientX; _startY = e.clientY;
     _pressTimer = setTimeout(function() {
       _isDragging = true;
       try { svg.setPointerCapture(_pressPointerId); } catch(_) {}
       $('remove-hint').style.display = 'block';
       const g = $('drag-ghost'); g.style.display = 'block';
-      g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+      g.style.left = _startX + 'px'; g.style.top = _startY + 'px';
     }, 600);
   });
   svg.addEventListener('pointermove', function(e) {
     if (!_pressPid) return;
     if (!_isDragging) {
-      if (Math.hypot(e.movementX || 0, e.movementY || 0) > 8) { clearTimeout(_pressTimer); _pressPid = null; }
+      // Use absolute delta from start — movementX/Y is unreliable on mobile
+      if (Math.hypot(e.clientX - _startX, e.clientY - _startY) > 10) { clearTimeout(_pressTimer); _pressPid = null; }
       return;
     }
     const g = $('drag-ghost');
@@ -1011,7 +1015,7 @@ function plantNow(deadline) {
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
 }
-function friendLink(id) { return 'https://mikesell.org/bloomers?b=' + id + '&f=' + encodeURIComponent(S.first); }
+function friendLink(id) { return 'https://youvebeen0wned.github.io/mikesell-pages/bloomers.html?b=' + id + '&f=' + encodeURIComponent(S.first); }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
