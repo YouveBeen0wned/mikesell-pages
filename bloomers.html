@@ -1257,7 +1257,7 @@ async function tryLoadContacts() {
   if (_contactsCache !== null) { await _renderContactList(); return; }
   if (!('contacts' in navigator)) { _contactsCache = []; return; }
   const listEl = $('plant-contactlist');
-  listEl.innerHTML = '<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING CONTACTS WITH VOTER ROLLS…</div>';
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING CONTACTS WITH VOTER ROLLS…</div>`;
   listEl.style.display = 'block';
   try {
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
@@ -1269,7 +1269,7 @@ async function tryLoadContacts() {
 async function _renderContactList() {
   const listEl = $('plant-contactlist');
   if (!_contactsCache || !_contactsCache.length) { listEl.style.display = 'none'; return; }
-  listEl.innerHTML = '<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING WITH VOTER ROLLS…</div>';
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING WITH VOTER ROLLS…</div>`;
   listEl.style.display = 'block';
   _registeredCache = await filterRegisteredContacts(_contactsCache);
   if (!_registeredCache.length) {
