@@ -35,6 +35,8 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:9px 14px 10px;margin:10px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
 .pindot{width:48px;height:58px;font-size:26px;text-align:center;border:2px solid #c9def2;border-radius:12px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#fff;}
 .pindot:focus{border-color:var(--blue);outline:none;}
+#drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
+#remove-hint{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#dc2626;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;padding:8px 18px;border-radius:20px;z-index:601;display:none;pointer-events:none;white-space:nowrap;}
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);max-width:390px;width:calc(100% - 28px);background:#1a2a4a;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:13px 18px;border-radius:14px;text-align:center;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;line-height:1.5;}
 .field label{display:block;font-size:9px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;letter-spacing:0.09em;}
 .field input{border:none;outline:none;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:var(--ink);margin-top:3px;background:transparent;}
@@ -243,6 +245,8 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 <div id="shell">
 
 <div id="toast"></div>
+<div id="drag-ghost"></div>
+<div id="remove-hint">🗑 Release to remove</div>
 <!-- ============ SIGN UP ============ -->
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
@@ -450,7 +454,7 @@ const CONFIG = {
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
   // one ask, active voice, no partisan labels. Player can edit before sending.
-  msgFriend: (first, link) => `Hi NAME, it's ${first}. I'm playing a game to help spread the word about Mike Sell for Congress here in our district this November! You can play along with one tap. Will you remember to vote? ${link}`,
+  msgFriend: (first, link) => `Hi NAME, I'm playing a game that reminds you to vote, and to consider Mike Sell for Congress. You can help me with just one tap — will you remember to vote this November? ${link}`,
   msgFollow: (first, link) => `Hi NAME, it's ${first} again. My Bloomers flower is still waiting on you 🌱 One tap and it blooms: ${link}`,
   msgDeadline: (first) => `Hi NAME, it's ${first}. Florida's voter registration deadline comes up fast before the November election, and it takes about two minutes to check or register at registertovoteflorida.gov. Consider this your friendly reminder 🌱`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
@@ -626,6 +630,61 @@ function closeOv(id) { $(id).classList.remove('on'); }
 function openOv(id) { $(id).classList.add('on'); }
 
 let _toastTimer = null;
+let _pressTimer = null, _pressPid = null, _isDragging = false, _pressPointerId = null;
+function findSeedPid(el) {
+  while (el && el !== document.body) {
+    const oc = el.getAttribute && el.getAttribute('onclick');
+    if (oc) { const m = oc.match(/seedTap\('(\w+)'\)/); if (m) return m[1]; }
+    el = el.parentElement;
+  }
+  return null;
+}
+function attachGardenDrag() {
+  const svg = $('gardensvg');
+  if (!svg) return;
+  svg.addEventListener('pointerdown', function(e) {
+    const pid = findSeedPid(e.target);
+    if (!pid) return;
+    _pressPid = pid; _isDragging = false; _pressPointerId = e.pointerId;
+    _pressTimer = setTimeout(function() {
+      _isDragging = true;
+      try { svg.setPointerCapture(_pressPointerId); } catch(_) {}
+      $('remove-hint').style.display = 'block';
+      const g = $('drag-ghost'); g.style.display = 'block';
+      g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+    }, 600);
+  });
+  svg.addEventListener('pointermove', function(e) {
+    if (!_pressPid) return;
+    if (!_isDragging) {
+      if (Math.hypot(e.movementX || 0, e.movementY || 0) > 8) { clearTimeout(_pressTimer); _pressPid = null; }
+      return;
+    }
+    const g = $('drag-ghost');
+    g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+    const garden = $('gardenwrap').getBoundingClientRect();
+    const out = e.clientX < garden.left - 10 || e.clientX > garden.right + 10 || e.clientY < garden.top - 10 || e.clientY > garden.bottom + 10;
+    g.style.background = out ? '#dc2626' : '#fee2e2';
+    g.style.borderColor = out ? '#991b1b' : '#dc2626';
+  });
+  svg.addEventListener('pointerup', function(e) {
+    clearTimeout(_pressTimer);
+    $('drag-ghost').style.display = 'none'; $('remove-hint').style.display = 'none';
+    if (!_pressPid || !_isDragging) { _pressPid = null; return; }
+    const garden = $('gardenwrap').getBoundingClientRect();
+    const out = e.clientX < garden.left - 10 || e.clientX > garden.right + 10 || e.clientY < garden.top - 10 || e.clientY > garden.bottom + 10;
+    if (out) {
+      S.plants = S.plants.filter(function(p) { return p.id !== _pressPid; });
+      save(); showToast('Seed removed.'); renderGarden();
+    }
+    _pressPid = null; _isDragging = false;
+  });
+  svg.addEventListener('pointercancel', function() {
+    clearTimeout(_pressTimer);
+    $('drag-ghost').style.display = 'none'; $('remove-hint').style.display = 'none';
+    _pressPid = null; _isDragging = false;
+  });
+}
 function showToast(msg) {
   const t = $('toast'); t.textContent = msg; t.style.opacity = '1';
   clearTimeout(_toastTimer);
@@ -678,7 +737,7 @@ function confirmReset() {
 }
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
-  buildDecos(); buildNavs();
+  buildDecos(); buildNavs(); attachGardenDrag();
   const m = location.search.match(/[?&]b=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
   load();
@@ -810,9 +869,18 @@ let pendingPlant = null;
 function doSearch() {
   const q = $('plant-q').value.trim();
   if (!q) return;
-  const res = checkAvailability(q);
-  const first = q.split(/\s+/)[0];
   const box = $('plant-result');
+  // Require at least two words, letters/hyphens/apostrophes only, each part ≥2 chars
+  const nameParts = q.split(/\s+/).filter(w => /^[a-zA-Z'\u2019-]{2,}$/.test(w));
+  if (nameParts.length < 2) {
+    box.innerHTML = `<div class="statecard" style="text-align:center;padding:16px;">
+      <div style="font-size:14px;color:#5b6470;font-family:'avenir-heavy',Arial,sans-serif;">Enter a first and last name.</div>
+      <div style="font-size:11px;color:#9aa3ad;margin-top:6px;">Example: Sarah Johnson</div>
+    </div>`;
+    return;
+  }
+  const res = checkAvailability(q);
+  const first = nameParts[0];
   if (res.state === 'multi') {
     box.innerHTML = `<div style="text-align:center;font-size:12px;color:#6b7280;margin-top:10px;">There is more than one ${esc(first)}. Which one do you know?</div>
       <div class="pickrow">${res.sides.map((s, i) => `<button class="pick" onclick="pickSide(this)">${esc(first)} from ${esc(s)}</button>`).join('')}</div>
@@ -834,7 +902,7 @@ function availCard(first) {
     <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Let's plant a seed with
       <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
     </button>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">Default message opens in Messages. You can edit or just hit send.</div>
+    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">You click the button, we populate the message. You can edit or just hit send.</div>
   </div>`;
 }
 function nomatchCard(first) {
@@ -870,7 +938,9 @@ function plantNow(deadline) {
   save();
   api('seed', { seedId: id, kind: deadline ? 'deadline' : 'friend' }); // [SERVER] link ID only; no name, tag, or number
   const link = friendLink(id);
-  const body = (deadline ? CONFIG.msgDeadline(S.first) : CONFIG.msgFriend(S.first, link)).replace('NAME', pendingPlant.first);
+  const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
+  const _nick = _rawNick.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  const body = (deadline ? CONFIG.msgDeadline(S.first) : CONFIG.msgFriend(S.first, link)).replace('NAME', _nick);
   const _phone = (pendingPlant && pendingPlant.phone) || ($('dl-phone') ? $('dl-phone').value : '');
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
