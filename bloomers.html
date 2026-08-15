@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bloomers · Grow our community, one friend at a time</title>
+<meta name="description" content="Bloomers is a garden game where a text to a friend plants a seed, and their promise to vote makes it bloom. Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.">
+<style>
+@font-face{font-family:'clarendon-w01-medium';src:url('https://static.parastorage.com/services/santa-resources/resources/viewer/user-site-fonts/fonts/e2ffff81-a48c-42fc-9b03-6a4a5d0d052e.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';src:url('https://static.parastorage.com/services/santa-resources/resources/viewer/user-site-fonts/fonts/da923d0d-1e6b-4a02-8ba6-3bfb21f0a889.woff2') format('woff2');font-display:swap;}
+:root{--blue:#037ad8;--purple:#8555ab;--red:#ea504e;--ink:#1a2a4a;--gold:#f59e0b;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:#dfe8f2;}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
+#shell{max-width:430px;margin:0 auto;min-height:100dvh;background:#fff;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(10,30,60,0.18);}
+.screen{display:none;flex-direction:column;flex:1;min-height:100dvh;position:relative;}
+.screen.on{display:flex;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 9px;position:relative;z-index:5;}
+.gametitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--ink);white-space:nowrap;}
+.pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fff;border:2px solid #c9def2;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #c9def2;}
+.rule{height:5px;display:flex;position:relative;z-index:5;}
+.rule i{flex:1;}.rule i:nth-child(1){background:var(--blue);}.rule i:nth-child(2){background:var(--purple);}.rule i:nth-child(3){background:var(--red);}
+.bottomnav{display:flex;justify-content:center;background:#fff;border-top:2px solid #c9def2;padding:10px 6px calc(12px + env(safe-area-inset-bottom));margin-top:auto;position:relative;z-index:6;}
+.bn{opacity:0.45;text-align:center;cursor:pointer;flex:1;border:none;background:none;padding:0;}
+.bn.on{opacity:1;transform:scale(1.12);}
+.bn small{display:block;font-size:9px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;margin-top:2px;}
+.navic{width:26px;height:26px;}
+.bigbtn{display:block;margin:14px auto 0;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:#fff;background:var(--blue);border:none;border-radius:18px;padding:15px 30px;cursor:pointer;box-shadow:0 5px 0 #045ea6;}
+.bigbtn:active{transform:translateY(2px);box-shadow:0 3px 0 #045ea6;}
+.tinytxt{font-size:10px;line-height:1.55;text-align:center;color:#9aa3ad;padding:8px 16px 6px;position:relative;z-index:5;}
+.bgdeco{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+#shell .screen>*:not(.bgdeco){position:relative;z-index:1;}
+.screen>.petal{position:absolute;}
+.petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
+.field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:9px 14px 10px;margin:10px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
+.field label{display:block;font-size:9px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;letter-spacing:0.09em;}
+.field input{border:none;outline:none;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:var(--ink);margin-top:3px;background:transparent;}
+.field.focus{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(3,122,216,0.1);padding:8px 13px 9px;}
+.fieldnote{display:flex;justify-content:space-between;align-items:baseline;}
+.fieldnote em{font-style:normal;font-size:8.5px;color:#9aa3ad;}
+.card{background:#fff;border:2px solid #c9def2;border-radius:16px;padding:12px 15px;margin:12px 16px 0;box-shadow:0 2px 0 #dfeaf5;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(6,20,35,0.55);z-index:40;align-items:center;justify-content:center;padding:20px;}
+.overlay.on{display:flex;}
+.sheet{background:#fff;border-radius:22px;max-width:390px;width:100%;max-height:88dvh;overflow-y:auto;padding:18px;position:relative;}
+.rankrow{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid #c9def2;border-radius:14px;padding:8px 12px;margin:0 0 7px;}
+.rankrow.now{border-color:var(--blue);background:#eef6fd;}
+.rankrow.locked{opacity:0.65;}
+.rlab{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:var(--ink);flex:1;}
+.rlab small{display:block;font-family:Georgia,serif;font-size:9.5px;color:#8a94a3;font-weight:400;margin-top:1px;}
+.rnum{font-family:'clarendon-w01-medium',Georgia,serif;font-size:12px;color:var(--blue);white-space:nowrap;}
+.toolbar{display:flex;gap:8px;margin:10px 14px 0;}
+.tchip{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #bcd9f2;border-radius:14px;padding:8px 12px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;color:var(--ink);cursor:pointer;}
+.collectbtn{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;letter-spacing:0.05em;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:7px 14px;box-shadow:0 3px 0 #a05a04;cursor:pointer;}
+.collectbtn:disabled{background:#d3ddea;box-shadow:none;}
+#gardensvg *{transform-box:fill-box;}
+#gardensvg circle[style*="pulsehint"],#gardensvg circle[style*="ringpulse"]{transform-origin:center;}
+svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a33;paint-order:stroke;stroke:#fff;stroke-width:1.5px;}
+.almgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:12px 16px;}
+.almcell{aspect-ratio:1;border:2.5px solid #c9def2;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer;}
+.almcell.g{border-color:#059669;}.almcell.b{border-color:#2563eb;}.almcell.p{border-color:#7c3aed;}.almcell.au{border-color:var(--gold);box-shadow:0 0 10px rgba(245,158,11,0.35);}
+.almcell.locked svg{filter:grayscale(1);opacity:0.3;}
+.qtitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin:10px 18px 2px;line-height:1.4;text-align:center;text-shadow:0 2px 0 #fff;}
+.qtitle b{color:var(--purple);font-weight:400;}
+.searchbox{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--blue);border-radius:16px;padding:11px 14px;margin:12px 16px 0;box-shadow:0 2px 0 #bcd9f2;}
+.searchbox input{border:none;outline:none;flex:1;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:var(--ink);background:transparent;}
+.statecard{position:relative;border-radius:20px;padding:16px;margin:14px 16px 0;text-align:center;overflow:hidden;}
+.statecard.avail{background:#f4f9ff;border:2.5px solid var(--blue);box-shadow:0 6px 16px rgba(3,122,216,0.16);}
+.statecard.nomatch{background:#faf7fd;border:2.5px solid var(--purple);box-shadow:0 6px 16px rgba(133,85,171,0.16);}
+.plantbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:#fff;border:none;border-radius:18px;padding:13px 16px;cursor:pointer;margin-top:12px;}
+.namechip{display:inline-flex;align-items:center;gap:5px;background:#fff;border-radius:10px;padding:3px 9px;}
+.namechip input{border:none;outline:none;width:90px;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:transparent;}
+.pickrow{display:flex;gap:7px;justify-content:center;margin:6px 12px 0;flex-wrap:wrap;}
+.pick{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;background:#fff;border:2px solid #c9def2;border-radius:12px;padding:7px 12px;color:#9aa3ad;cursor:pointer;}
+.pick.on{background:#eef6fd;border-color:var(--blue);color:var(--blue);}
+.agenda{background:#fff;border:2px solid #c9def2;border-radius:16px;padding:11px 15px;margin:14px 16px 0;text-align:left;box-shadow:0 2px 0 #dfeaf5;}
+.chip-anim{opacity:0;animation:revealpop 0.5s forwards;}
+@media (min-width:500px){ body{padding:0;} }
+</style>
+<style id="anim">
+@keyframes petals{0%{transform:translateY(-20px) rotate(0);opacity:0;}10%{opacity:0.8;}90%{opacity:0.7;}100%{transform:translateY(105vh) rotate(300deg);opacity:0;}}
+@keyframes sparkle{0%,100%{opacity:1;}50%{opacity:0;}}
+@keyframes grow{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+@keyframes popglow{0%,100%{box-shadow:0 5px 0 #045ea6;}50%{box-shadow:0 5px 0 #045ea6,0 0 18px rgba(3,122,216,0.5);}}
+@keyframes bee{0%,100%{transform:translate(0,0) rotate(-6deg);}25%{transform:translate(5px,-4px) rotate(6deg);}50%{transform:translate(9px,2px) rotate(-4deg);}75%{transform:translate(4px,5px) rotate(5deg);}}
+@keyframes flutter{0%,100%{transform:translate(0,0) rotate(-4deg);}30%{transform:translate(6px,-6px) rotate(7deg);}60%{transform:translate(-4px,-2px) rotate(-6deg);}}
+@keyframes goldshine{0%,100%{filter:drop-shadow(0 0 3px #fde68a);}50%{filter:drop-shadow(0 0 9px #f59e0b);}}
+@keyframes dropbob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+@keyframes ringpulse{0%{transform:scale(0.9);opacity:0.8;}100%{transform:scale(1.35);opacity:0;}}
+@keyframes glint{0%,100%{opacity:1;}45%{opacity:0.15;}}
+@keyframes pulsehint{0%,100%{transform:scale(1);opacity:0.85;}50%{transform:scale(1.12);opacity:1;}}
+@keyframes cinebean{0%{transform:translateX(-50%) scale(1);}70%{transform:translateX(-50%) scale(1.15);}100%{transform:translateX(-50%) scale(0);opacity:0;}}
+@keyframes cinesprout{0%{opacity:0;transform:scale(0.3);}100%{opacity:1;transform:scale(1);}}
+@keyframes cinesproutout{to{opacity:0;}}
+@keyframes cineflower{0%{opacity:0;transform:translateX(-50%) scale(0.15);}70%{opacity:1;transform:translateX(-50%) scale(1.12);}100%{opacity:1;transform:translateX(-50%) scale(1);}}
+@keyframes revealpop{0%{opacity:0;transform:scale(0.6) translateY(8px);}70%{opacity:1;transform:scale(1.06);}100%{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes popring{0%{transform:scale(0.4);opacity:0.9;}100%{transform:scale(1.5);opacity:0;}}
+.popring{position:absolute;border-radius:50%;border:3px solid #fcd34d;opacity:0;pointer-events:none;}
+</style>
+</head>
+
+<body>
+<svg width="0" height="0" style="position:absolute">
+<defs>
+
+<symbol id="f-camellia" viewBox="0 0 40 40">
+  <g stroke="#e78fb3" stroke-width="0.7"><ellipse cx="20" cy="8.5" rx="5.5" ry="7" fill="#f2a9c4"/><ellipse cx="20" cy="31.5" rx="5.5" ry="7" fill="#f2a9c4"/><ellipse cx="8.5" cy="20" rx="7" ry="5.5" fill="#f2a9c4"/><ellipse cx="31.5" cy="20" rx="7" ry="5.5" fill="#f2a9c4"/>
+  <ellipse cx="12" cy="12" rx="5.5" ry="5.5" fill="#f6bcd2"/><ellipse cx="28" cy="12" rx="5.5" ry="5.5" fill="#f6bcd2"/><ellipse cx="12" cy="28" rx="5.5" ry="5.5" fill="#f6bcd2"/><ellipse cx="28" cy="28" rx="5.5" ry="5.5" fill="#f6bcd2"/></g>
+  <g stroke="#d96f9d" stroke-width="0.6"><ellipse cx="20" cy="13.5" rx="4" ry="5" fill="#ee96b8"/><ellipse cx="26" cy="20" rx="5" ry="4" fill="#ee96b8"/><ellipse cx="20" cy="26.5" rx="4" ry="5" fill="#ee96b8"/><ellipse cx="14" cy="20" rx="5" ry="4" fill="#ee96b8"/></g>
+  <circle cx="20" cy="20" r="5.8" fill="#ea7fa9"/><circle cx="20" cy="20" r="3.6" fill="#f7c3d8"/><path d="M20 17.4 a2.6 2.6 0 0 1 2.6 2.6 a2 2 0 0 1 -2 2 a1.5 1.5 0 0 1 -1.5 -1.5 a1.1 1.1 0 0 1 1.1 -1.1" fill="none" stroke="#c25c86" stroke-width="0.9" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="f-tulip" viewBox="0 0 40 40">
+  <path d="M9 16 Q9 34 20 35 Q31 34 31 16 Q27 20 24 17 Q22 21 20 21 Q18 21 16 17 Q13 20 9 16 Z" fill="#e05252"/>
+  <path d="M9 16 Q9 34 20 35 L20 21 Q18 21 16 17 Q13 20 9 16 Z" fill="#c93b3b"/>
+  <path d="M16 17 Q22 8 24 17 Q22 21 20 21 Q18 21 16 17 Z" fill="#f07575"/>
+</symbol>
+
+<symbol id="f-daisy" viewBox="0 0 40 40">
+  <g fill="#fffdf4" stroke="#cfc6a8" stroke-width="1">
+  <ellipse cx="20" cy="7" rx="3.4" ry="7"/><ellipse cx="20" cy="33" rx="3.4" ry="7"/><ellipse cx="7" cy="20" rx="7" ry="3.4"/><ellipse cx="33" cy="20" rx="7" ry="3.4"/>
+  <ellipse cx="11" cy="11" rx="3.2" ry="6.6" transform="rotate(-45 11 11)"/><ellipse cx="29" cy="11" rx="3.2" ry="6.6" transform="rotate(45 29 11)"/><ellipse cx="11" cy="29" rx="3.2" ry="6.6" transform="rotate(45 11 29)"/><ellipse cx="29" cy="29" rx="3.2" ry="6.6" transform="rotate(-45 29 29)"/></g>
+  <circle cx="20" cy="20" r="6.2" fill="#f0b429"/><circle cx="18" cy="18.4" r="1.9" fill="#f7ce63"/>
+</symbol>
+
+<symbol id="f-marigold" viewBox="0 0 40 40">
+  <g fill="#f59e0b"><circle cx="20" cy="9" r="4.6"/><circle cx="28" cy="12" r="4.6"/><circle cx="31" cy="20" r="4.6"/><circle cx="28" cy="28" r="4.6"/><circle cx="20" cy="31" r="4.6"/><circle cx="12" cy="28" r="4.6"/><circle cx="9" cy="20" r="4.6"/><circle cx="12" cy="12" r="4.6"/></g>
+  <g fill="#e17f10"><circle cx="20" cy="13.5" r="3.8"/><circle cx="26.5" cy="20" r="3.8"/><circle cx="20" cy="26.5" r="3.8"/><circle cx="13.5" cy="20" r="3.8"/></g>
+  <circle cx="20" cy="20" r="4.6" fill="#c2590e"/><circle cx="20" cy="20" r="2" fill="#f7c04a"/>
+</symbol>
+
+<symbol id="f-iris" viewBox="0 0 40 40">
+  <path d="M20 4 Q25 11 20 19 Q15 11 20 4 Z" fill="#6d5bd0"/>
+  <path d="M11 8 Q19 12 19.5 19 Q11 17 11 8 Z" fill="#5b4ab8"/>
+  <path d="M29 8 Q21 12 20.5 19 Q29 17 29 8 Z" fill="#5b4ab8"/>
+  <path d="M20 19 Q9 21 7 32 Q16 31 20 22 Z" fill="#4f46a5"/>
+  <path d="M20 19 Q31 21 33 32 Q24 31 20 22 Z" fill="#4f46a5"/>
+  <path d="M20 19 Q16 28 20 35 Q24 28 20 19 Z" fill="#6d5bd0"/>
+  <path d="M17.5 20 Q20 17.5 22.5 20" fill="none" stroke="#f0b429" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="f-poppy" viewBox="0 0 40 40">
+  <circle cx="13.5" cy="13.5" r="9.5" fill="#d64545"/><circle cx="26.5" cy="13.5" r="9.5" fill="#c93b3b"/><circle cx="13.5" cy="26.5" r="9.5" fill="#c93b3b"/><circle cx="26.5" cy="26.5" r="9.5" fill="#d64545"/>
+  <circle cx="20" cy="20" r="5.4" fill="#3b2430"/><g fill="#e9b6c9"><circle cx="20" cy="16.4" r="1"/><circle cx="23.2" cy="18.6" r="1"/><circle cx="22" cy="22.8" r="1"/><circle cx="18" cy="22.8" r="1"/><circle cx="16.8" cy="18.6" r="1"/></g>
+</symbol>
+
+<symbol id="f-phlox" viewBox="0 0 40 40">
+  <g fill="#b79ae0"><path d="M20 20 L14.6 5.8 Q20 2.6 25.4 5.8 Z M20 20 L34 12.5 Q36.4 18.2 33 23 Z M20 20 L28.6 33.6 Q23.4 37 18 35 Z M20 20 L11.4 33.6 Q6.4 30 6.2 24.4 Z M20 20 L6 12.5 Q7.6 6.8 13 5.4 Z"/></g>
+  <g fill="#cdb7ec"><ellipse cx="20" cy="10" rx="4.4" ry="6.4"/><ellipse cx="29.4" cy="16.6" rx="4.4" ry="6.4" transform="rotate(72 29.4 16.6)"/><ellipse cx="25.8" cy="27.8" rx="4.4" ry="6.4" transform="rotate(144 25.8 27.8)"/><ellipse cx="14.2" cy="27.8" rx="4.4" ry="6.4" transform="rotate(-144 14.2 27.8)"/><ellipse cx="10.6" cy="16.6" rx="4.4" ry="6.4" transform="rotate(-72 10.6 16.6)"/></g>
+  <circle cx="20" cy="20" r="3.4" fill="#fffdf4"/><circle cx="20" cy="20" r="1.4" fill="#8f6cc9"/>
+</symbol>
+
+<symbol id="f-zinnia" viewBox="0 0 40 40">
+  <g fill="#ef6a5a"><ellipse cx="20" cy="7.5" rx="2.6" ry="6.5"/><ellipse cx="20" cy="32.5" rx="2.6" ry="6.5"/><ellipse cx="7.5" cy="20" rx="6.5" ry="2.6"/><ellipse cx="32.5" cy="20" rx="6.5" ry="2.6"/><ellipse cx="11.2" cy="11.2" rx="2.5" ry="6.2" transform="rotate(-45 11.2 11.2)"/><ellipse cx="28.8" cy="11.2" rx="2.5" ry="6.2" transform="rotate(45 28.8 11.2)"/><ellipse cx="11.2" cy="28.8" rx="2.5" ry="6.2" transform="rotate(45 11.2 28.8)"/><ellipse cx="28.8" cy="28.8" rx="2.5" ry="6.2" transform="rotate(-45 28.8 28.8)"/></g>
+  <g fill="#f9917f"><ellipse cx="20" cy="12" rx="2.3" ry="5"/><ellipse cx="27" cy="15" rx="2.3" ry="5" transform="rotate(67 27 15)"/><ellipse cx="24.5" cy="26" rx="2.3" ry="5" transform="rotate(135 24.5 26)"/><ellipse cx="15.5" cy="26" rx="2.3" ry="5" transform="rotate(-135 15.5 26)"/><ellipse cx="13" cy="15" rx="2.3" ry="5" transform="rotate(-67 13 15)"/></g>
+  <circle cx="20" cy="20" r="4.4" fill="#7a3040"/><g fill="#f0b429"><circle cx="20" cy="17.6" r="0.9"/><circle cx="22.2" cy="20.6" r="0.9"/><circle cx="17.8" cy="20.6" r="0.9"/><circle cx="20" cy="22.6" r="0.9"/></g>
+</symbol>
+
+<symbol id="f-aster" viewBox="0 0 40 40">
+  <g fill="#8b6ff0"><path d="M20 20 L18 4 L22 4 Z M20 20 L28 6 L31 9 Z M20 20 L34 12 L36 16 Z M20 20 L36 22 L34 26 Z M20 20 L31 31 L28 34 Z M20 20 L22 36 L18 36 Z M20 20 L12 34 L9 31 Z M20 20 L4 26 L4 22 Z M20 20 L4 16 L6 12 Z M20 20 L9 9 L12 6 Z"/></g>
+  <circle cx="20" cy="20" r="5.6" fill="#f0b429"/><circle cx="20" cy="20" r="2.6" fill="#e17f10"/>
+</symbol>
+
+<symbol id="f-primrose" viewBox="0 0 40 40">
+  <g fill="#f7e08d" stroke="#e3c65e" stroke-width="0.8"><path d="M20 21 C12 15 12 5 20 6 C28 5 28 15 20 21 Z"/><path d="M20 19 C26 27 36 27 35 19 C36 11 26 11 20 19 Z" transform="rotate(90 20 20)"/><path d="M20 19 C12 25 12 35 20 34 C28 35 28 25 20 19 Z"/><path d="M19 20 C13 12 3 12 4 20 C3 28 13 28 19 20 Z"/></g>
+  <circle cx="20" cy="20" r="3.6" fill="#e8a53c"/><circle cx="20" cy="20" r="1.5" fill="#fbf3d8"/>
+</symbol>
+
+<symbol id="f-blazing" viewBox="0 0 40 40">
+  <g fill="#9d6fe8"><circle cx="20" cy="6" r="3"/><circle cx="17" cy="10" r="3.4"/><circle cx="23" cy="10.5" r="3.2"/><circle cx="19" cy="15" r="3.8"/><circle cx="24" cy="16" r="3.2"/><circle cx="16" cy="20" r="3.6"/><circle cx="22" cy="21" r="3.8"/><circle cx="18" cy="26" r="3.6"/><circle cx="23" cy="27" r="3.2"/><circle cx="20" cy="31" r="3.4"/><circle cx="20" cy="35.5" r="2.6"/></g>
+  <g fill="#c5a6f5"><circle cx="20.5" cy="8" r="1.2"/><circle cx="21" cy="13" r="1.3"/><circle cx="18" cy="18" r="1.3"/><circle cx="21.5" cy="23.5" r="1.3"/><circle cx="19" cy="29" r="1.2"/><circle cx="20.5" cy="33.5" r="1.1"/></g>
+</symbol>
+
+<symbol id="f-passion" viewBox="0 0 40 40">
+  <g fill="#e4d9f4"><ellipse cx="20" cy="7.5" rx="4" ry="6.6"/><ellipse cx="30" cy="11.5" rx="4" ry="6.6" transform="rotate(52 30 11.5)"/><ellipse cx="33.5" cy="22" rx="4" ry="6.6" transform="rotate(105 33.5 22)"/><ellipse cx="27.5" cy="31" rx="4" ry="6.6" transform="rotate(150 27.5 31)"/><ellipse cx="16.5" cy="33" rx="4" ry="6.6" transform="rotate(195 16.5 33)"/><ellipse cx="8" cy="27" rx="4" ry="6.6" transform="rotate(240 8 27)"/><ellipse cx="6.5" cy="16" rx="4" ry="6.6" transform="rotate(295 6.5 16)"/><ellipse cx="12.5" cy="8.5" rx="4" ry="6.6" transform="rotate(337 12.5 8.5)"/></g>
+  <g stroke="#6d3fb0" stroke-width="1.1" stroke-linecap="round"><line x1="20" y1="20" x2="20" y2="10.5"/><line x1="20" y1="20" x2="26.8" y2="13.4"/><line x1="20" y1="20" x2="29.5" y2="20"/><line x1="20" y1="20" x2="26.8" y2="26.6"/><line x1="20" y1="20" x2="20" y2="29.5"/><line x1="20" y1="20" x2="13.2" y2="26.6"/><line x1="20" y1="20" x2="10.5" y2="20"/><line x1="20" y1="20" x2="13.2" y2="13.4"/><line x1="20" y1="20" x2="24.7" y2="11.7"/><line x1="20" y1="20" x2="28.3" y2="15.3"/><line x1="20" y1="20" x2="28.3" y2="24.7"/><line x1="20" y1="20" x2="24.7" y2="28.3"/><line x1="20" y1="20" x2="15.3" y2="28.3"/><line x1="20" y1="20" x2="11.7" y2="24.7"/><line x1="20" y1="20" x2="11.7" y2="15.3"/><line x1="20" y1="20" x2="15.3" y2="11.7"/></g>
+  <circle cx="20" cy="20" r="5" fill="#8f5fd6"/><circle cx="20" cy="20" r="2.4" fill="#bcf0c9"/>
+</symbol>
+
+<symbol id="f-ghost" viewBox="0 0 40 40">
+  <g fill="#ffffff" stroke="#d5dce4" stroke-width="0.9">
+  <path d="M20 17 Q11 13 8 5 Q17 7 20.5 14 Z"/>
+  <path d="M20 17 Q29 13 32 5 Q23 7 19.5 14 Z"/>
+  <ellipse cx="14" cy="17.5" rx="6.4" ry="3.6" transform="rotate(-18 14 17.5)"/>
+  <ellipse cx="26" cy="17.5" rx="6.4" ry="3.6" transform="rotate(18 26 17.5)"/>
+  <path d="M20 15.5 Q26 20 24 26 Q22 30 20 30.5 Q18 30 16 26 Q14 20 20 15.5 Z"/>
+  <path d="M17.5 28 Q12 33 12.5 38 Q16 35 18.6 29.8 Z"/>
+  <path d="M22.5 28 Q28 33 27.5 38 Q24 35 21.4 29.8 Z"/></g>
+  <circle cx="20" cy="18.6" r="1.7" fill="#c8d4b8"/>
+</symbol>
+
+<symbol id="f-seed" viewBox="0 0 40 40">
+  <path d="M20 4 C28.5 8 32.5 16.5 31.5 24 C30.5 32 25.5 36.5 20 36.5 C14.5 36.5 9.5 32 8.5 24 C7.5 16.5 11.5 8 20 4 Z" fill="#0b4176"/>
+  <path d="M20 4 C28.5 8 32.5 16.5 31.5 24 C30.8 30.2 28 34.4 24 35.9 C27 30 28 21.5 26 14.8 C24.6 10.3 22.5 6.8 20 4 Z" fill="#002d5b"/>
+  <ellipse cx="15.5" cy="14.5" rx="3" ry="5.2" fill="#f59e0b" transform="rotate(18 15.5 14.5)"/>
+  <ellipse cx="14.8" cy="13.2" rx="1.2" ry="2.1" fill="#fbd27e" transform="rotate(18 14.8 13.2)"/>
+</symbol>
+
+<symbol id="f-drop" viewBox="0 0 20 20">
+  <circle cx="10" cy="10" r="9" fill="#fff" stroke="#a8cbeb" stroke-width="1.2"/>
+  <path d="M10 4.2 C13 8.3 14.6 10.7 14.6 12.6 A4.6 4.6 0 0 1 5.4 12.6 C5.4 10.7 7 8.3 10 4.2 Z" fill="#4a9fe0"/>
+  <ellipse cx="8.5" cy="12.5" rx="1.1" ry="1.6" fill="#c3e2f8" transform="rotate(-20 8.5 12.5)"/>
+</symbol>
+
+<symbol id="f-sproutling" viewBox="0 0 40 40">
+  <path d="M20 36 L20 20" stroke="#4e8a45" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M20 21 Q8 20 7 9 Q19 10 20.5 20 Z" fill="#67a85b"/>
+  <path d="M20 21 Q32 20 33 9 Q21 10 19.5 20 Z" fill="#7fbb6f"/>
+</symbol>
+
+<symbol id="f-bfly" viewBox="0 0 40 40">
+  <ellipse cx="20" cy="21" rx="1.7" ry="7" fill="#5a4632"/>
+  <path d="M18.6 18 Q7 6 4.5 14 Q3.5 21 18 21.5 Z" fill="#f59e0b"/>
+  <path d="M21.4 18 Q33 6 35.5 14 Q36.5 21 22 21.5 Z" fill="#f59e0b"/>
+  <path d="M18.4 22 Q8 24 9 30.5 Q11 35 18.6 24.5 Z" fill="#e17f10"/>
+  <path d="M21.6 22 Q32 24 31 30.5 Q29 35 21.4 24.5 Z" fill="#e17f10"/>
+  <circle cx="9.5" cy="14.5" r="1.6" fill="#fdf3d9"/><circle cx="30.5" cy="14.5" r="1.6" fill="#fdf3d9"/>
+  <path d="M18.8 14.5 Q16 10 14 9 M21.2 14.5 Q24 10 26 9" stroke="#5a4632" stroke-width="1" fill="none" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="f-bee" viewBox="0 0 40 40">
+  <ellipse cx="20" cy="23" rx="9" ry="7" fill="#f0b429"/>
+  <path d="M14.5 18.5 q5.5 -3 11 0 M12.8 23 h14.4 M14.5 27.5 q5.5 3 11 0" stroke="#5a4632" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="13" cy="12" rx="6" ry="4.4" fill="#dcecf5" opacity="0.9" transform="rotate(-25 13 12)"/>
+  <ellipse cx="27" cy="12" rx="6" ry="4.4" fill="#dcecf5" opacity="0.9" transform="rotate(25 27 12)"/>
+</symbol>
+
+<symbol id="f-petal" viewBox="0 0 12 16"><path d="M6 0 Q12 6 6 16 Q0 6 6 0 Z" fill="currentColor"/></symbol>
+
+<symbol id="n-shed" viewBox="0 0 24 24"><path d="M2.5 10.5 L12 3.5 L21.5 10.5" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 9.5 V20 H19.5 V9.5" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round"/><path d="M9.5 20 V12.5 H14.5 V20" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linejoin="round"/><path d="M12 12.5 V20" stroke="#3d4d3d" stroke-width="1.4"/></symbol>
+<symbol id="n-trowel" viewBox="0 0 24 24"><path d="M14.5 9.5 L19.5 4.5" stroke="#3d4d3d" stroke-width="2.6" stroke-linecap="round"/><path d="M13 8 C10 5.5 6.5 6.5 4.5 9 C7 9.5 8.5 10.5 9.5 12 C10.5 13.5 11.5 15 14 15.5 C16.5 13.5 17.5 10 15 7.5 Z" fill="#3d4d3d" transform="rotate(8 12 11)"/><path d="M4.5 19.5 h6" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round" opacity="0.5"/></symbol>
+<symbol id="n-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.5 V12 L15.2 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="n-farm" viewBox="0 0 24 24"><path d="M3.5 11 L12 3.5 L20.5 11" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.8 10 V19.5 H18.2 V10" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/><path d="M9.5 19.5 V14.5 H14.5 V19.5" fill="none" stroke="#002d5b" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="n-ladder" viewBox="0 0 24 24"><circle cx="12" cy="9.5" r="6" fill="none" stroke="#002d5b" stroke-width="2"/><path d="M12 6.5 l0.95 1.95 2.1 0.3 -1.5 1.5 0.35 2.1 -1.9 -1 -1.9 1 0.35 -2.1 -1.5 -1.5 2.1 -0.3 Z" fill="#002d5b"/><path d="M9 14.8 L7.5 20.5 L12 18 L16.5 20.5 L15 14.8" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="n-almanac" viewBox="0 0 24 24"><path d="M12 5.5 Q8.5 3.5 3.5 4 V19 Q8.5 18.5 12 20.5 Q15.5 18.5 20.5 19 V4 Q15.5 3.5 12 5.5 Z" fill="none" stroke="#002d5b" stroke-width="2" stroke-linejoin="round"/><path d="M12 5.5 V20.5" stroke="#002d5b" stroke-width="2"/></symbol>
+<symbol id="n-club" viewBox="0 0 24 24"><circle cx="8.5" cy="8.5" r="3.4" fill="none" stroke="#002d5b" stroke-width="2"/><circle cx="16.5" cy="9.8" r="2.7" fill="none" stroke="#002d5b" stroke-width="2"/><path d="M3 19.5 Q3.5 13.8 8.5 13.8 Q13.5 13.8 14 19.5" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/><path d="M15.2 15.5 Q20.5 14.6 21 19.5" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/></symbol>
+
+</defs>
+</svg>
+
+<div id="shell">
+
+<!-- ============ SIGN UP ============ -->
+<section id="scr-signup" class="screen">
+  <div class="bgdeco" id="deco-signup"></div>
+  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:26px 0 10px;">
+    <div style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:56px;">
+      <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#f-tulip"/></svg>
+      <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#f-blazing"/></svg>
+      <svg style="width:30px;height:30px;margin-bottom:12px;"><use href="#f-passion"/></svg>
+      <svg style="width:40px;height:40px;margin-bottom:14px;filter:drop-shadow(0 0 7px #fde68a);"><use href="#f-ghost"/></svg>
+      <svg style="width:30px;height:30px;margin-bottom:12px;"><use href="#f-camellia"/></svg>
+      <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#f-primrose"/></svg>
+      <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#f-daisy"/></svg>
+    </div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:32px;color:var(--blue);margin-top:2px;">Bloomers</div>
+    <svg viewBox="0 0 220 26" style="width:220px;height:26px;margin-top:2px;">
+      <path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/>
+      <path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/>
+      <path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/>
+    </svg>
+    <div style="font-size:12px;color:#5b6470;margin-top:4px;letter-spacing:0.03em;">Grow our community, one friend at a time</div>
+    <div style="display:flex;gap:10px;margin:18px 24px 0;align-self:stretch;">
+      <div class="field" style="flex:1;margin:0;"><label>FIRST NAME</label><input id="f-first" autocomplete="given-name" placeholder="Alex"></div>
+      <div class="field" style="flex:1;margin:0;"><label>LAST NAME</label><input id="f-last" autocomplete="family-name" placeholder="Rivera"></div>
+    </div>
+    <div class="field focus"><div class="fieldnote"><label style="color:var(--blue);">GARDEN NAME</label><em>what other gardeners see</em></div><input id="f-garden" placeholder="RiverRat904" maxlength="20"></div>
+    <div class="field"><div class="fieldnote"><label>DATE OF BIRTH</label><em>Age Verification</em></div><input id="f-dob" inputmode="numeric" placeholder="MM / DD / YYYY" maxlength="14"></div>
+    <div class="field" style="display:flex;align-items:center;gap:10px;background:#f4f9ff;border:2px solid var(--blue);cursor:pointer;" onclick="toggleContacts()">
+      <span style="font-size:16px;">🔎</span>
+      <div style="flex:1;">
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">Find friends from my contacts</div>
+        <div style="font-size:9px;color:#9aa3ad;margin-top:1px;">Compared once on your phone. Never saved.</div>
+      </div>
+      <span id="f-contacts" data-on="0" style="width:36px;height:20px;background:#c9d4de;border-radius:10px;position:relative;flex-shrink:0;transition:background 0.2s;"><i style="position:absolute;left:3px;top:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left 0.2s;"></i></span>
+    </div>
+    <div id="signup-err" style="display:none;font-size:11px;color:var(--red);margin-top:8px;"></div>
+    <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;"><use href="#f-seed"/></svg>Start my garden</button>
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:16px;">NOT LEFT. NOT RIGHT. FORWARD.</div>
+    <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+  </div>
+</section>
+
+<!-- ============ GARDEN ============ -->
+<section id="scr-garden" class="screen">
+  <div class="bgdeco" id="deco-garden"></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#f-sproutling"/></svg> My Garden</div><div class="pill">👏 <span id="hud-lifetime">0</span></div></div>
+  <div class="rule"><i></i><i></i><i></i></div>
+  <div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;" onclick="openLadder()">
+    <span id="hud-seal" style="width:40px;flex-shrink:0;"></span>
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13.5px;"><span id="hud-gname">...</span> · <span id="hud-rank" style="color:var(--blue);">Good Neighbor</span></div>
+      <div style="height:7px;background:#dbe7f3;border-radius:5px;margin-top:6px;overflow:hidden;"><i id="hud-xp" style="display:block;height:100%;width:0;background:var(--blue);border-radius:5px;"></i></div>
+    </div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:11.5px;color:var(--blue);white-space:nowrap;text-align:right;"><span id="hud-plots">0</span> plots<br><small style="font-family:Arial;font-size:8.5px;color:#6b7280;">next: <span id="hud-next">500</span>👏</small></div>
+  </div>
+  <div style="margin:8px 30px -4px;"><svg viewBox="0 0 300 44" style="width:100%;display:block;">
+    <path d="M12 44 V26 Q150 -10 288 26 V44" fill="none" stroke="#3d4d3d" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M24 40 V27 Q150 -3 276 27 V40" fill="none" stroke="#3d4d3d" stroke-width="1.4" opacity="0.55"/>
+    <circle cx="12" cy="22" r="2.6" fill="#3d4d3d"/><circle cx="288" cy="22" r="2.6" fill="#3d4d3d"/>
+    <circle cx="150" cy="7" r="2.2" fill="#f59e0b"/>
+    <text id="arch-name" x="150" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#3d4d3d">MY GARDEN</text>
+  </svg></div>
+  <div id="gardenwrap" style="background:linear-gradient(180deg,#cfe6a8,#b9d68a);border:3px solid #8fae62;border-radius:22px;margin:0 12px;padding:6px;">
+    <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
+  </div>
+  <div class="toolbar">
+    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> SHED (<span id="hud-shed">0</span>)</div>
+    <div class="tchip" style="flex:1;justify-content:space-between;">
+      <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
+      <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT</button>
+    </div>
+  </div>
+  <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <span style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.1em;color:var(--purple);">MIKE'S AGENDA · <span id="agenda-topic"></span></span>
+      <span style="font-size:8.5px;color:#9aa3ad;">mikesell.org</span>
+    </div>
+    <div id="agenda-line" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:13.5px;color:var(--ink);margin-top:4px;line-height:1.45;"></div>
+    <div id="agenda-dots" style="display:flex;gap:4px;justify-content:center;margin-top:8px;"></div>
+  </div>
+  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <nav class="bottomnav" id="nav-garden"></nav>
+</section>
+
+<!-- ============ PLANT ============ -->
+<section id="scr-plant" class="screen">
+  <div class="bgdeco" id="deco-plant"></div>
+  <div style="padding-top:18px;"></div>
+  <div class="qtitle">Which of your friends would benefit from a <b>vote reminder</b>? 🌱</div>
+  <div id="plant-contactlist" style="display:none;"></div>
+  <div id="plant-searchwrap">
+    <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="Type a friend's name" autocomplete="off"></div>
+    <div style="text-align:center;"><button id="plant-go" class="bigbtn" style="margin-top:12px;padding:12px 26px;font-size:14px;" onclick="doSearch()">Search</button></div>
+  </div>
+  <div id="plant-result"></div>
+  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <nav class="bottomnav" id="nav-plant"></nav>
+</section>
+
+<!-- ============ COLLECTION ============ -->
+<section id="scr-collection" class="screen">
+  <div class="bgdeco" id="deco-collection"></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Collection</div></div>
+  <div class="rule"><i></i><i></i><i></i></div>
+  <div class="almgrid" id="almgrid"></div>
+  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <nav class="bottomnav" id="nav-collection"></nav>
+</section>
+
+<!-- ============ CHAMPIONS ============ -->
+<section id="scr-champions" class="screen">
+  <div class="bgdeco" id="deco-champions"></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Community Champions</div></div>
+  <div class="rule"><i></i><i></i><i></i></div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">THIS WEEK · RESETS SUNDAY</div>
+  <div id="champlist" style="padding:0 14px;"></div>
+  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <nav class="bottomnav" id="nav-champions"></nav>
+</section>
+
+<!-- ============ FRIEND VIEW (?b=) ============ -->
+<section id="scr-friend" class="screen">
+  <div class="bgdeco" id="deco-friend"></div>
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:20px 0;">
+    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:24px;color:var(--ink);text-align:center;line-height:1.35;">A friend planted a seed<br><span style="color:#d97706;">in your name</span> 🌱</div>
+    <div style="margin:16px 0 0;filter:drop-shadow(0 4px 10px rgba(3,122,216,0.35));animation:grow 1.8s infinite;"><svg style="width:66px;height:66px;display:block;"><use href="#f-seed"/></svg></div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap makes it bloom.</div>
+    <button class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I will be voting this November</button>
+    <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🌸 It bloomed! Thank you.</div>
+    <div class="card" style="align-self:stretch;">
+      <div style="font-size:12px;">While you are here, get to know Mike:</div>
+      <a href="https://mikesell.org" target="_blank" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;color:var(--blue);text-decoration:none;">mikesell.org →</a>
+    </div>
+    <button class="bigbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;" onclick="location.href=location.pathname">Start my own garden</button>
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:16px;opacity:0.75;">NOT LEFT. NOT RIGHT. FORWARD.</div>
+    <div class="tinytxt">This game was created and is sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>No personal data is saved. This game is for entertainment purposes only, and scoring runs on the honor system. We never learn who tapped.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+  </div>
+</section>
+
+<!-- ============ OVERLAYS ============ -->
+<div class="overlay" id="ov-bloom"><div class="sheet" id="bloom-sheet" style="text-align:center;"></div></div>
+<div class="overlay" id="ov-ladder" onclick="if(event.target===this)closeOv('ov-ladder')"><div class="sheet" id="ladder-sheet"></div></div>
+<div class="overlay" id="ov-plaque" onclick="if(event.target===this)closeOv('ov-plaque')"><div class="sheet" id="plaque-sheet" style="text-align:center;max-width:330px;background:#fffdf5;"></div></div>
+<div class="overlay" id="ov-rankup"><div class="sheet" id="rankup-sheet" style="text-align:center;max-width:340px;"></div></div>
+<div class="overlay" id="ov-shed" onclick="if(event.target===this)closeOv('ov-shed')"><div class="sheet" id="shed-sheet"></div></div>
+<div class="overlay" id="ov-plantpick" onclick="if(event.target===this)closeOv('ov-plantpick')"><div class="sheet" id="plantpick-sheet" style="max-width:340px;"></div></div>
+
+</div>
+
+<script>
+
+'use strict';
+/* ============================================================
+   BLOOMERS · mikesell.org/bloomers · v7.0
+   Single-file client build. Everything in CONFIG is meant to be
+   edited by the campaign; everything marked [SERVER] is a demo
+   stand-in awaiting the production backend.
+   ============================================================ */
+
+const CONFIG = {
+  // [SERVER] Backend wiring. Leave base empty until the API exists; the game
+  // runs fully offline without it. When set, the app reports: account sign-ups,
+  // seed events by LINK ID ONLY (never the friend's name, tag, or number),
+  // waterings, blooms, and checks the account's active flag on every open.
+  api: { base: '', key: '' },
+  agendaUrl: 'https://mikesell.org',
+  registerUrl: 'https://registertovoteflorida.gov',
+  // Messages follow the campaign outreach voice manual: neighbor voice,
+  // one ask, active voice, no partisan labels. Player can edit before sending.
+  msgFriend: (first, link) => `Hi NAME, it's ${first}. I'm playing Bloomers, a garden game backing Mike Sell for Congress here this November. Would you play along? One tap on my link and a flower blooms in my garden. ${link}`,
+  msgFollow: (first, link) => `Hi NAME, it's ${first} again. My Bloomers flower is still waiting on you 🌱 One tap and it blooms: ${link}`,
+  msgDeadline: (first) => `Hi NAME, it's ${first}. Florida's voter registration deadline comes up fast before the November election, and it takes about two minutes to check or register at registertovoteflorida.gov. Consider this your friendly reminder 🌱`,
+  // Timing (hours). ?demo=1 turns hours into minutes for testing.
+  waterGapH: 48, praiseCycleH: 4, maxTouches: 3, dailyTextCap: 5,
+  poolBaseCycles: 3, // + 1 per rank
+  yields: { g: 1, b: 2, p: 5, au: 10 },
+  ranks: [
+    { name: 'Good Neighbor',       at: 0 },
+    { name: 'Block Captain',       at: 500,   unlock: 'Move flowers',  teach: 'Hold and drag any flower to move it between open spots.' },
+    { name: 'Community Organizer', at: 2000,  unlock: 'Bed editing',   teach: 'Hold and drag any bed to rearrange your garden.' },
+    { name: 'Civic Leader',        at: 6000 },
+    { name: 'Council Member',      at: 15000 },
+    { name: 'Mayor',               at: 35000 },
+    { name: 'Governor',            at: 75000 },
+  ],
+  // [SERVER] internal gift schedule: shelf of the gift seed per rank reached (index 1..6)
+  giftShelf: { 1: 'b', 2: 'b', 3: 'p', 4: 'p', 5: 'au', 6: 'au' },
+  // Trait odds: tap blooms roll luckier than earned blooms. Pity: every 10th bloom ≥1 trait.
+  odds: {
+    tap:    { sun: 0.18, pol: 0.15, gli: 0.22 },
+    earned: { sun: 0.08, pol: 0.06, gli: 0.10 },
+  },
+  shelfOdds: {
+    tap:    [['g', 0.60], ['b', 0.24], ['p', 0.12], ['au', 0.04]],
+    earned: [['g', 0.78], ['b', 0.15], ['p', 0.06], ['au', 0.01]],
+  },
+  species: [
+    { id: 'camellia', art: 'f-camellia', name: 'River City Camellia', shelf: 'g', loc: 'shady yards across Duval County' },
+    { id: 'tulip',    art: 'f-tulip',    name: 'Ancient City Tulip',  shelf: 'g', loc: 'the old garden squares of St. Augustine' },
+    { id: 'daisy',    art: 'f-daisy',    name: 'Amelia Daisy',        shelf: 'g', loc: 'Fernandina Beach roadsides' },
+    { id: 'marigold', art: 'f-marigold', name: 'Amelia Marigold',     shelf: 'g', loc: 'porch pots on Amelia Island' },
+    { id: 'poppy',    art: 'f-poppy',    name: 'Black Creek Poppy',   shelf: 'g', loc: 'sunny clearings in Clay County' },
+    { id: 'phlox',    art: 'f-phlox',    name: 'Ancient City Phlox',  shelf: 'g', loc: 'the coquina walls of St. Augustine' },
+    { id: 'zinnia',   art: 'f-zinnia',   name: 'River City Zinnia',   shelf: 'g', loc: 'community beds across Jacksonville' },
+    { id: 'aster',    art: 'f-aster',    name: 'Black Creek Aster',   shelf: 'g', loc: 'the banks of Black Creek in Clay County' },
+    { id: 'iris',     art: 'f-iris',     name: 'River City Iris',     shelf: 'b', loc: 'the wet banks of the St. Johns River' },
+    { id: 'primrose', art: 'f-primrose', name: 'Dune Primrose',       shelf: 'b', loc: 'the dunes of Little Talbot Island' },
+    { id: 'blazing',  art: 'f-blazing',  name: 'Blazing Star',        shelf: 'b', loc: 'pine flatwoods across the First Coast' },
+    { id: 'passion',  art: 'f-passion',  name: 'Passion Vine',        shelf: 'p', loc: 'sunny fence lines across northeast Florida' },
+    { id: 'ghost',    art: 'f-ghost',    name: 'Ghost Orchid',        shelf: 'au', loc: 'deep southern swamps, almost never seen' },
+  ],
+  agenda: [
+    ['EDUCATION', 'Fully fund public education, and pay teachers like the professionals they are.'],
+    ['AFFORDABILITY', 'End price gouging in rent, groceries, healthcare, and prescriptions.'],
+    ['GUN SAFETY', 'Universal background checks, with due process for everyone.'],
+    ['VETERANS', 'Cut VA wait times for the military families of northeast Florida.'],
+    ['SMALL BUSINESS', 'Make small business loans simpler for local owners, not just big firms.'],
+    ['DEMOCRACY', 'Get money out of politics. Term limits for Congress.'],
+    ['HOUSING', 'More homes people can actually afford to own, not just rent.'],
+    ['HEALTHCARE', 'Lower drug costs and protect care people already count on.'],
+    ['CLIMATE', 'Protect our coast and fix flooding before it reaches the front door.'],
+  ],
+  sides: ['Westside', 'Arlington', 'Mandarin', 'Northside', 'the Beaches', 'Orange Park'],
+  champs: [ // [SERVER] weekly board comes from the backend later
+    ['MandarinMary', 5, 940], ['DuvalDaisy', 3, 610], ['AmeliaOaks', 2, 350], ['CoveKeeper', 1, 210], ['PalmValleyPete', 1, 180],
+  ],
+};
+
+/* ---------------- state ---------------- */
+const DEMO = /[?&]demo=1/.test(location.search);
+const HOUR = DEMO ? 60 * 1000 : 3600 * 1000;
+const KEY = 'bloomers_v7';
+let S = null;
+
+function freshState(first, last, garden, contacts) {
+  return {
+    first, last, garden, contacts,
+    created: Date.now(), lifetime: 0, weekly: 0, pool: 0, poolTick: Date.now(),
+    rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, textsDay: dayKey(),
+    visits: 0, plants: [], beds: [ { id: 1, n: 2 }, { id: 2, n: 2 }, { id: 3, n: 3 } ],
+    shed: [], // {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
+    coll: {}, // speciesId -> {sun,pol,gli}
+    nextId: 4, pendingRankup: null,
+  };
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function load() { try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; } }
+function dayKey() { const d = new Date(); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); }
+
+/* ---------------- helpers ---------------- */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function sp(id) { return CONFIG.species.find((s) => s.id === id); }
+function shelfColor(sh) { return { g: '#059669', b: '#2563eb', p: '#7c3aed', au: '#f59e0b' }[sh]; }
+function shelfName(sh) { return { g: 'Garden', b: 'Wildflower', p: 'Exotic', au: 'Gold' }[sh]; }
+function smsHref(body) {
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  return 'sms:' + (ios ? '&' : '?') + 'body=' + encodeURIComponent(body);
+}
+function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
+function rollShelf(kind) {
+  const r = Math.random(); let acc = 0;
+  for (const [sh, p] of CONFIG.shelfOdds[kind]) { acc += p; if (r < acc) return sh; }
+  return 'g';
+}
+function rollSpecies(shelf) { return pick(CONFIG.species.filter((s) => s.shelf === shelf)); }
+function rollTraits(kind, pity) {
+  const o = CONFIG.odds[kind];
+  const t = { sun: Math.random() < o.sun, pol: Math.random() < o.pol, gli: Math.random() < o.gli };
+  if (pity && !t.sun && !t.pol && !t.gli) t[pick(['sun', 'pol', 'gli'])] = true;
+  return t;
+}
+// [SERVER] demo availability: deterministic per name so testing feels real.
+function checkAvailability(name) {
+  let h = 0; for (const c of name.toLowerCase().replace(/\s/g, '')) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const m = h % 10;
+  if (m <= 5) return { state: 'available' };
+  if (m <= 7) return { state: 'multi', sides: [CONFIG.sides[h % 6], CONFIG.sides[(h + 3) % 6]] };
+  return { state: 'nomatch' };
+}
+
+/* ---------------- praise engine ---------------- */
+function flowerYield(p) { return CONFIG.yields[sp(p.species).shelf] || 1; }
+function perCycle() { return S.plants.filter((p) => p.state === 'bloomed').reduce((a, p) => a + flowerYield(p), 0); }
+function poolCap() { return (CONFIG.poolBaseCycles + S.rank) * Math.max(perCycle(), 10); }
+function tickPraise() {
+  const cyc = CONFIG.praiseCycleH * HOUR;
+  const n = Math.floor((Date.now() - S.poolTick) / cyc);
+  if (n > 0) {
+    S.pool = Math.min(poolCap(), S.pool + n * perCycle());
+    S.poolTick += n * cyc;
+    save();
+  }
+}
+function addPraise(n) {
+  S.lifetime += n; S.weekly += n;
+  const prev = S.rank;
+  while (S.rank + 1 < CONFIG.ranks.length && S.lifetime >= CONFIG.ranks[S.rank + 1].at) S.rank++;
+  if (S.rank > prev) S.pendingRankup = S.rank;
+  save();
+}
+function collectPraise() {
+  tickPraise();
+  if (S.pool <= 0) return;
+  addPraise(S.pool); S.pool = 0; S.poolTick = Date.now(); save();
+  renderGarden(); maybeRankup();
+}
+
+/* ---------------- backend adapter [SERVER] ---------------- */
+async function api(path, data) {
+  if (!CONFIG.api.base) return null; // offline mode: game is fully playable
+  try {
+    const r = await fetch(CONFIG.api.base.replace(/\/$/, '') + '/' + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Bloomers-Key': CONFIG.api.key },
+      body: JSON.stringify(Object.assign({ garden: S ? S.garden : null }, data)),
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+async function checkActive() {
+  const st = await api('status', {});
+  if (st && st.active === false) {
+    document.body.innerHTML = '<div style="max-width:430px;margin:0 auto;min-height:100dvh;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:Arial,sans-serif;color:#1a2a4a;">' +
+      '<div style="font-family:Georgia,serif;font-size:24px;color:#037ad8;">This garden is paused.</div>' +
+      '<div style="font-size:13px;color:#5b6470;margin-top:10px;line-height:1.6;">If you think this is a mistake, reach the campaign through mikesell.org and we will take a look together.</div>' +
+      '<div style="font-size:10px;color:#9aa3ad;margin-top:20px;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04</div></div>';
+    return false;
+  }
+  return true;
+}
+
+/* ---------------- router ---------------- */
+function show(id) {
+  document.querySelectorAll('.screen').forEach((s) => s.classList.remove('on'));
+  $(id).classList.add('on');
+  window.scrollTo(0, 0);
+}
+function closeOv(id) { $(id).classList.remove('on'); }
+function openOv(id) { $(id).classList.add('on'); }
+
+function boot() {
+  if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
+  buildDecos(); buildNavs();
+  const m = location.search.match(/[?&]b=([\w-]+)/);
+  if (m) { initFriend(m[1]); return; }
+  load();
+  if (!S) { show('scr-signup'); return; }
+  S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
+  checkActive().then((ok) => { if (!ok) return; }); // [SERVER] deactivation gate
+  consumeBloomQueue();
+  tickPraise(); save();
+  renderGarden(); show('scr-garden'); maybeRankup();
+  setInterval(() => { if ($('scr-garden').classList.contains('on')) { tickPraise(); renderGarden(); } }, 30 * 1000);
+}
+
+/* ---------------- signup ---------------- */
+function toggleContacts() {
+  const el = $('f-contacts'); const on = el.dataset.on !== '1';
+  el.dataset.on = on ? '1' : '0';
+  el.style.background = on ? 'var(--blue)' : '#c9d4de';
+  el.firstElementChild.style.left = on ? '19px' : '3px';
+}
+function doSignup() {
+  const first = $('f-first').value.trim(), last = $('f-last').value.trim();
+  const garden = $('f-garden').value.trim(), dob = $('f-dob').value.trim();
+  const err = $('signup-err');
+  if (!first || !last || !garden || !dob) { err.textContent = 'All four fields make the account. Nothing else, ever.'; err.style.display = 'block'; return; }
+  const yr = parseInt((dob.match(/(\d{4})/) || [])[1] || '0', 10);
+  if (!yr || new Date().getFullYear() - yr < 18) { err.textContent = 'Bloomers is for gardeners 18 and up.'; err.style.display = 'block'; return; }
+  S = freshState(first, last, garden, $('f-contacts').dataset.on === '1');
+  save();
+  api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
+  renderGarden(); show('scr-garden');
+}
+
+/* ---------------- garden render ---------------- */
+function layoutBeds() {
+  // simple row packer on the 364-wide viewBox, 40-tall beds, 48 row pitch
+  const rows = []; const placed = [];
+  for (const b of S.beds) {
+    const w = b.n * 40; let done = false;
+    for (const r of rows) { if (r.x + w + 6 <= 354) { placed.push({ ...b, x: r.x + 6, y: r.y, w }); r.x += w + 12; done = true; break; } }
+    if (!done) { const y = 10 + rows.length * 48; rows.push({ x: 6 + w + 6, y }); placed.push({ ...b, x: 12, y, w }); }
+  }
+  const h = Math.max(154, 10 + rows.length * 48 + 6);
+  return { placed, h };
+}
+function plantsInBed(id) { return S.plants.filter((p) => p.bedId === id); }
+function waterReady(p) { return p.state === 'seed' && p.touches < CONFIG.maxTouches && Date.now() - p.lastTouch >= CONFIG.waterGapH * HOUR; }
+function hoursLeft(p) { return Math.max(0, Math.ceil((CONFIG.waterGapH * HOUR - (Date.now() - p.lastTouch)) / HOUR)); }
+
+function renderGarden() {
+  tickPraise();
+  $('hud-gname').textContent = S.garden; $('arch-name').textContent = (S.garden + "'S GARDEN").toUpperCase();
+  $('hud-lifetime').textContent = fmt(S.lifetime);
+  $('hud-rank').textContent = CONFIG.ranks[S.rank].name;
+  const spots = S.beds.reduce((a, b) => a + b.n, 0);
+  $('hud-plots').textContent = spots;
+  const nxt = CONFIG.ranks[S.rank + 1];
+  $('hud-next').textContent = nxt ? fmt(nxt.at) : 'MAX';
+  const base = CONFIG.ranks[S.rank].at, span = nxt ? nxt.at - base : 1;
+  $('hud-xp').style.width = Math.min(100, Math.round(((S.lifetime - base) / span) * 100)) + '%';
+  $('hud-seal').innerHTML = sealSvg(S.rank, 40);
+  $('hud-shed').textContent = S.shed.length;
+  $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap());
+  $('btn-collect').disabled = S.pool <= 0;
+  const ag = CONFIG.agenda[S.visits % CONFIG.agenda.length];
+  $('agenda-topic').textContent = ag[0]; $('agenda-line').textContent = ag[1];
+  $('agenda-dots').innerHTML = CONFIG.agenda.map((_, i) => `<span style="width:5px;height:5px;border-radius:50%;background:${i === S.visits % CONFIG.agenda.length ? 'var(--blue)' : '#d4e2ef'};"></span>`).join('');
+
+  const { placed, h } = layoutBeds();
+  const el = $('gardensvg');
+  el.setAttribute('viewBox', `0 0 364 ${h}`);
+  let out = '';
+  for (let gx = 10; gx < 364; gx += 44) for (let gy = 8; gy < h; gy += 44) out += `<circle cx="${gx}" cy="${gy}" r="1.1" fill="#6f8f5f" opacity="0.22"/>`;
+  for (const b of placed) {
+    const gold = plantsInBed(b.id).some((p) => p.state === 'bloomed' && sp(p.species).shelf === 'au');
+    out += `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="40" rx="19" fill="${b.id % 2 ? '#b98d5f' : '#c49766'}" stroke="${gold ? '#f59e0b' : '#8a6238'}" stroke-width="2.5"/>`;
+    const inbed = plantsInBed(b.id);
+    for (let i = 0; i < b.n; i++) {
+      const cx = b.x + 20 + i * 40, p = inbed.find((q) => q.slot === i);
+      if (!p) {
+        out += `<g style="cursor:pointer;" onclick="goPlant()"><circle cx="${cx}" cy="${b.y + 20}" r="8" fill="#4d9fe6" opacity="0.5" style="animation:pulsehint 2.2s infinite;"/><path d="M${cx} ${b.y + 15} v10 M${cx - 5} ${b.y + 20} h10" stroke="#1a2a4a" stroke-width="2.2" stroke-linecap="round"/></g>`;
+        continue;
+      }
+      const lbl = `<text x="${cx}" y="${b.y + 36}" text-anchor="middle" class="lbl">${esc(p.tag.toUpperCase())}</text>`;
+      if (p.state === 'bloomed') {
+        const s = sp(p.species);
+        let deco = '';
+        if (s.shelf === 'au') deco += `<circle cx="${cx}" cy="${b.y + 16}" r="13" fill="#fde68a" opacity="0.5"/>`;
+        if (p.traits.sun) deco += `<circle cx="${cx}" cy="${b.y + 16}" r="13.5" fill="none" stroke="#f0b429" stroke-width="1.8" style="animation:goldshine 2.6s infinite;"/>`;
+        out += deco + `<use href="#${s.art}" x="${cx - 12}" y="${b.y + 4}" width="24" height="24" style="cursor:pointer;${s.shelf === 'au' ? 'animation:goldshine 2.6s infinite;' : ''}" onclick="showPlaque('${p.species}','${p.id}')"/>`;
+        if (p.traits.gli) out += `<text x="${cx - 8}" y="${b.y + 9}" font-size="6" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text><text x="${cx + 7}" y="${b.y + 15}" font-size="5" fill="#fde68a" style="animation:glint 3s 1.2s infinite;">✦</text>`;
+        if (p.traits.pol) out += `<use href="#${p.id.charCodeAt(0) % 2 ? 'f-bee' : 'f-bfly'}" x="${cx + 7}" y="${b.y + 2}" width="12" height="12" style="animation:${p.id.charCodeAt(0) % 2 ? 'bee' : 'flutter'} 5s infinite;"/>`;
+        out += lbl;
+      } else {
+        out += `<use href="#f-seed" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>` + lbl;
+        if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#4a9fe0" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;transform-origin:${cx}px ${b.y + 16}px;"/><use href="#f-drop" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
+        else if (p.touches < CONFIG.maxTouches) out += `<g opacity="0.92"><rect x="${cx - 11}" y="${b.y - 9}" width="26" height="12" rx="6" fill="#fff" stroke="#ddd5c2"/><text x="${cx + 2}" y="${b.y}" font-size="7.5" text-anchor="middle" fill="#8a8272" font-family="Arial">${hoursLeft(p)}${DEMO ? 'm' : 'h'}</text></g>`;
+      }
+    }
+  }
+  el.innerHTML = out;
+}
+function fmt(n) { return n >= 1000 ? (n / 1000).toFixed(n % 1000 ? 1 : 0) + 'K' : String(n); }
+function sealSvg(rank, size) {
+  const stars = { 0: [], 1: [[17, 20]], 2: [[12.8, 18.5], [21.2, 18.5]], 3: [[10.5, 19.5], [17, 16.5], [23.5, 19.5]], 4: [[9.8, 18.5], [14.4, 15.5], [19.6, 15.5], [24.2, 18.5]], 5: [[9.8, 18.5], [14.4, 15.5], [19.6, 15.5], [24.2, 18.5]], 6: [[8.8, 20], [12.8, 16.8], [17, 15.6], [21.2, 16.8], [25.2, 20]] }[rank] || [];
+  const fills = ['#f2f8e8', '#e9cba6', '#eef1f5', '#fde68a', '#fde68a', '#f3f6fa', '#fde68a'];
+  const strokes = ['#8fae62', '#8a6238', '#9ca3af', '#d97706', '#d97706', '#64748b', '#b45309'];
+  const starfill = ['#8fae62', '#8a6238', '#6b7280', '#b45309', '#b45309', '#475569', '#b45309'];
+  let g = `<svg width="${size}" height="${size * 1.1}" viewBox="0 0 34 40"><circle cx="17" cy="16" r="12" fill="${fills[rank]}" stroke="${strokes[rank]}" stroke-width="2.5"/>`;
+  if (rank === 0) g += `<use href="#f-sproutling" x="11" y="10" width="12" height="12"/>`;
+  g += stars.map(([x, y]) => `<text x="${x}" y="${y}" font-size="${rank >= 4 ? 5 : 6.5}" text-anchor="middle" fill="${starfill[rank]}">★</text>`).join('');
+  if (rank >= 1) g += `<path d="M12 27 l-3 9 l5 -3 Z" fill="#037ad8"/><path d="M22 27 l3 9 l-5 -3 Z" fill="#037ad8"/>`;
+  return g + '</svg>';
+}
+
+/* ---------------- plant flow ---------------- */
+function goPlant() { showTab('plant'); }
+let pendingPlant = null;
+function doSearch() {
+  const q = $('plant-q').value.trim();
+  if (!q) return;
+  const res = checkAvailability(q);
+  const first = q.split(/\s+/)[0];
+  const box = $('plant-result');
+  if (res.state === 'multi') {
+    box.innerHTML = `<div style="text-align:center;font-size:12px;color:#6b7280;margin-top:10px;">There is more than one ${esc(first)}. Which one do you know?</div>
+      <div class="pickrow">${res.sides.map((s, i) => `<button class="pick" onclick="pickSide(this)">${esc(first)} from ${esc(s)}</button>`).join('')}</div>
+      <div id="afterpick"></div>`;
+    pendingPlant = { name: q, first };
+    return;
+  }
+  if (res.state === 'available') { pendingPlant = { name: q, first }; box.innerHTML = availCard(first); }
+  else { pendingPlant = { name: q, first, deadline: true }; box.innerHTML = nomatchCard(first); }
+}
+function pickSide(btn) {
+  document.querySelectorAll('.pick').forEach((b) => { b.classList.remove('on'); b.textContent = b.textContent.replace(' ✓', ''); });
+  btn.classList.add('on'); btn.textContent += ' ✓';
+  $('afterpick').innerHTML = availCard(pendingPlant.first);
+}
+function availCard(first) {
+  return `<div class="statecard avail">
+    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#f-seed"/></svg>
+    <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Let's plant a seed with
+      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
+    </button>
+    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">Default message opens in Messages. You can edit or just hit send.</div>
+  </div>`;
+}
+function nomatchCard(first) {
+  return `<div class="statecard nomatch">
+    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #c9b3dd);"><use href="#f-seed"/></svg>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">It looks like ${esc(first)} may live outside<br>the district or may not be registered.</div>
+    <div style="font-size:11.5px;color:#5b6470;margin:7px 8px 0;line-height:1.5;">But that's okay: a friendly note about the registration deadline still counts.</div>
+    <div class="field" style="margin:12px 2px 0;"><label>CELL PHONE</label><input id="dl-phone" inputmode="tel" placeholder="(904) 555-0000"></div>
+    <div style="font-size:9.5px;color:#9aa3ad;margin-top:5px;">used once to open your text · never saved</div>
+    <button class="plantbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;" onclick="plantNow(true)">Let's plant a seed with
+      <span class="namechip" style="border:2px dashed #cdb3e0;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#8555ab" stroke-width="2" stroke-linejoin="round"/></svg></span>
+    </button>
+    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">A deadline reminder opens in Messages. You can edit or just hit send.</div>
+  </div>`;
+}
+function openSpot() {
+  for (const b of S.beds) {
+    const used = plantsInBed(b.id).map((p) => p.slot);
+    for (let i = 0; i < b.n; i++) if (!used.includes(i)) return { bedId: b.id, slot: i };
+  }
+  return null;
+}
+function plantNow(deadline) {
+  if (S.textsToday >= CONFIG.dailyTextCap) { alert('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
+  const spot = openSpot();
+  if (!spot) { alert('Your garden is full! Place a bed from your Shed, or wait for a bloom to earn one.'); return; }
+  const tag = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first.toUpperCase();
+  const id = 'p' + (S.nextId++);
+  S.plants.push({ id, tag, bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!deadline });
+  S.seedsPlanted++; S.textsToday++;
+  if (S.seedsPlanted % 3 === 0) S.shed.push({ kind: 'bed', n: 2 });
+  save();
+  api('seed', { seedId: id, kind: deadline ? 'deadline' : 'friend' }); // [SERVER] link ID only; no name, tag, or number
+  const link = friendLink(id);
+  const body = (deadline ? CONFIG.msgDeadline(S.first) : CONFIG.msgFriend(S.first, link)).replace('NAME', pendingPlant.first);
+  location.href = smsHref(body);
+  setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
+}
+function friendLink(id) { return location.origin + location.pathname + '?b=' + id; }
+function seedTap(id) {
+  const p = S.plants.find((q) => q.id === id);
+  if (!p) return;
+  const sheet = $('plantpick-sheet');
+  let inner = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;">${esc(p.tag)}'s Reminder Seed</div>`;
+  if (waterReady(p)) {
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Ready for a friendly follow-up (${p.touches} of ${CONFIG.maxTouches} touches used).</div>
+      <button class="bigbtn" onclick="waterNow('${id}')"><svg style="width:16px;height:16px;vertical-align:-3px;"><use href="#f-drop"/></svg> Water it (send a follow-up)</button>`;
+  } else if (p.touches >= CONFIG.maxTouches) {
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">All ${CONFIG.maxTouches} touches used. It can still bloom the moment they tap.</div>`;
+  } else {
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Watering again in ${hoursLeft(p)}${DEMO ? ' minutes' : ' hours'}. Seeds need a little patience 🌱</div>`;
+  }
+  inner += `<button class="bigbtn" style="background:#fff;color:var(--blue);border:2px solid var(--blue);box-shadow:none;" onclick="closeOv('ov-plantpick');window.open(friendLink('${id}'),'_blank')">Preview their page</button>
+    <div style="font-size:9.5px;color:#9aa3ad;text-align:center;margin-top:8px;">Their page blooms this flower when they tap "I will be voting."</div>`;
+  sheet.innerHTML = inner;
+  openOv('ov-plantpick');
+}
+function waterNow(id) {
+  const p = S.plants.find((q) => q.id === id);
+  if (!p || !waterReady(p)) return;
+  if (S.textsToday >= CONFIG.dailyTextCap) { alert('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
+  p.touches++; p.lastTouch = Date.now(); S.textsToday++;
+  save(); closeOv('ov-plantpick');
+  api('touch', { seedId: id, n: p.touches }); // [SERVER]
+  location.href = smsHref(CONFIG.msgFollow(S.first, friendLink(id)).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()));
+  if (p.touches >= CONFIG.maxTouches) setTimeout(() => doBloom(p, 'earned'), 800);
+  else renderGarden();
+}
+
+/* ---------------- friend view + bloom ---------------- */
+function initFriend(id) { $('scr-friend').dataset.pid = id; show('scr-friend'); }
+function friendTap() {
+  const id = $('scr-friend').dataset.pid;
+  try {
+    const q = JSON.parse(localStorage.getItem(KEY + '_taps') || '[]');
+    if (!q.includes(id)) { q.push(id); localStorage.setItem(KEY + '_taps', JSON.stringify(q)); }
+  } catch (e) {}
+  $('friend-done').style.display = 'block';
+}
+function consumeBloomQueue() {
+  let q = [];
+  try { q = JSON.parse(localStorage.getItem(KEY + '_taps') || '[]'); } catch (e) {}
+  if (!q.length) return;
+  localStorage.setItem(KEY + '_taps', '[]');
+  for (const id of q) {
+    const p = S.plants.find((x) => x.id === id && x.state === 'seed');
+    if (p) setTimeout(() => doBloom(p, 'tap'), 700);
+  }
+}
+function doBloom(p, kind) {
+  S.blooms++;
+  const pity = S.blooms % 10 === 0;
+  const shelf = p.deadline ? 'b' : rollShelf(kind);
+  const s = rollSpecies(shelf);
+  const traits = rollTraits(kind, pity);
+  p.state = 'bloomed'; p.species = s.id; p.traits = traits;
+  const firstEver = !S.coll[s.id];
+  S.coll[s.id] = S.coll[s.id] || { sun: false, pol: false, gli: false };
+  for (const k of ['sun', 'pol', 'gli']) if (traits[k]) S.coll[s.id][k] = true;
+  let bed = null;
+  if (kind === 'tap') bed = { kind: 'bed', n: 3 };
+  else if (kind === 'earned') bed = { kind: 'bed', n: 2 };
+  if (bed) S.shed.push(bed);
+  addPraise(kind === 'tap' ? 50 : 25);
+  save();
+  api('bloom', { seedId: p.id, kind, species: s.id }); // [SERVER] species code + kind, per the one-record rule
+  showBloomCinematic(p, s, traits, firstEver, !!bed, kind);
+}
+function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
+  const el = $('bloom-sheet');
+  const anns = [];
+  if (traits.sun) anns.push(['☀ A Sun Bloom!', '#d97706']);
+  if (traits.pol) anns.push(['🦋🐝 Pollinators moved in!', '#8555ab']);
+  if (traits.gli) anns.push(['✦ Glitter Petals!', '#b48908']);
+  let t = 4.2;
+  const annHtml = anns.map(([txt, col]) => { t += 0.6; return `<div class="chip-anim" style="animation-delay:${t}s;font-family:'clarendon-w01-medium',Georgia,serif;font-size:16px;color:${col};text-shadow:0 1px 0 #fff,0 0 12px #fde68a;">${txt}</div>`; }).join('');
+  el.innerHTML = `
+    <div style="height:${anns.length ? 70 : 12}px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;">${annHtml}</div>
+    <div style="position:relative;width:250px;height:250px;margin:6px auto 0;border-radius:22px;overflow:hidden;border:3px solid #8a6238;background:linear-gradient(180deg,#cfe9f4 0%,#eaf5da 80%,#d4e6b4 100%);">
+      <span style="position:absolute;left:50%;top:74%;transform:translateX(-50%);animation:cinebean 1.4s ease forwards;"><svg style="width:26px;height:26px;display:block;"><use href="#f-seed"/></svg></span>
+      <span style="position:absolute;left:50%;top:50%;opacity:0;transform:translateX(-50%);animation:cinesprout 0.8s 1.1s ease forwards,cinesproutout 0.4s 2s forwards;"><svg style="width:38px;height:38px;"><use href="#f-sproutling"/></svg></span>
+      ${traits.sun ? `<span style="position:absolute;left:calc(50% - 70px);top:55px;width:140px;height:140px;border-radius:50%;border:3.5px solid #f0b429;opacity:0;animation:revealpop 0.6s 3.4s forwards,goldshine 2.6s 4s infinite;"></span>` : ''}
+      <span style="position:absolute;left:50%;top:60px;opacity:0;animation:cineflower 1s 2s ease forwards;"><svg style="width:130px;height:130px;display:block;"><use href="#${s.art}"/></svg></span>
+      ${traits.pol ? `<span style="position:absolute;left:14%;top:18%;opacity:0;animation:revealpop 0.5s 3.6s forwards,flutter 6s 4.2s infinite;"><svg style="width:30px;height:30px;"><use href="#f-bfly"/></svg></span><span style="position:absolute;right:17%;top:44%;opacity:0;animation:revealpop 0.5s 3.9s forwards,bee 4s 4.4s infinite;"><svg style="width:24px;height:24px;"><use href="#f-bee"/></svg></span>` : ''}
+      ${traits.gli ? `<span style="position:absolute;left:30%;top:26%;font-size:18px;color:#fff;text-shadow:0 0 6px #f0b429;opacity:0;animation:revealpop 0.4s 4s forwards,glint 3s 4.4s infinite;">✦</span><span style="position:absolute;left:60%;top:34%;font-size:15px;color:#fffbe8;text-shadow:0 0 5px #f0b429;opacity:0;animation:revealpop 0.4s 4.2s forwards,glint 3s 4.6s infinite;">✦</span>` : ''}
+    </div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:#0468b8;margin-top:10px;animation:grow 1.8s infinite;">${esc(p.tag.toUpperCase())}'S SEED BLOOMED!</div>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:7px;align-items:center;">
+      <span class="chip-anim" style="animation-delay:3s;background:#fff;border:2px solid #c9def2;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;">${firstEver ? '<b style="background:#d97706;color:#fff;border-radius:8px;padding:2px 7px;font-size:9px;margin-right:6px;letter-spacing:0.05em;">NEW</b>' : ''}<svg style="width:15px;height:15px;vertical-align:-3px;margin-right:3px;"><use href="#${s.art}"/></svg>${esc(s.name.toUpperCase())} · ${shelfName(s.shelf).toUpperCase()}</span>
+      ${gotBed ? `<span class="chip-anim" style="animation-delay:${t + 0.8}s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">New Flower Bed unlocked!</span>` : ''}
+    </div>
+    <button class="bigbtn" onclick="closeOv('ov-bloom');renderGarden();maybeRankup();">Back to my garden</button>`;
+  openOv('ov-bloom');
+}
+
+/* ---------------- plaque / collection ---------------- */
+function showPlaque(spid, pid) {
+  const s = sp(spid); const c = S.coll[spid] || { sun: false, pol: false, gli: false };
+  const row = (icon, name, found) => `<div style="display:flex;align-items:center;gap:8px;background:${found ? '#fdf6e3' : '#f3f4f6'};border:2px solid ${found ? '#f0b429' : '#e5e7eb'};border-radius:12px;padding:8px 13px;margin-top:7px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:${found ? '#b45309' : '#9ca3af'};">${icon} ${name} · ${found ? 'Discovered' : 'Undiscovered'}</div>`;
+  $('plaque-sheet').innerHTML = `
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);">${esc(s.name)}</div>
+    <div style="width:120px;height:120px;margin:10px auto 0;background:radial-gradient(circle,#fff 30%,#fdf6e3 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg style="width:86px;height:86px;"><use href="#${s.art}"/></svg></div>
+    <div style="display:inline-block;margin-top:10px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:${shelfColor(s.shelf)};border:2px solid ${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">Unlocked!</div>
+    <div style="font-size:12px;color:#5b6470;margin-top:9px;">Commonly found: ${esc(s.loc)}</div>
+    ${row('✦', 'Glitter Petals', c.gli)}${row('☀', 'Sun Bloom', c.sun)}${row('🦋🐝', 'Pollinator', c.pol)}
+    <div style="margin-top:12px;font-size:12px;color:#9aa3ad;cursor:pointer;" onclick="closeOv('ov-plaque')">✕ close</div>`;
+  openOv('ov-plaque');
+}
+function renderCollection() {
+  $('almgrid').innerHTML = CONFIG.species.map((s) => {
+    const un = !!S.coll[s.id];
+    return `<div class="almcell ${un ? s.shelf : 'locked'}" onclick="${un ? `showPlaque('${s.id}')` : ''}"><svg style="width:70%;height:70%;"><use href="#${s.art}"/></svg></div>`;
+  }).join('');
+}
+
+/* ---------------- shed / ladder / rankup / champs ---------------- */
+function openShed() {
+  const sheet = $('shed-sheet');
+  if (!S.shed.length) { sheet.innerHTML = `<div style="text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">The Shed is empty.</div><div style="text-align:center;font-size:11.5px;color:#5b6470;margin-top:6px;">Every 3rd seed you plant earns a bed, and every bloom can drop one too.</div>`; }
+  else {
+    sheet.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;margin-bottom:10px;">The Shed</div>` + S.shed.map((it, i) =>
+      it.kind === 'bed'
+        ? `<div class="rankrow"><svg width="46" height="26" viewBox="0 0 80 40"><rect x="2" y="2" width="76" height="36" rx="18" fill="#c49766" stroke="#8a6238" stroke-width="2.5"/></svg><div class="rlab">${it.n}-spot flower bed</div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
+        : `<div class="rankrow"><svg width="26" height="26"><use href="#f-seed"/></svg><div class="rlab">🎁 Gift seed<small>Drop it on any open spot to see what blooms.</small></div><button class="collectbtn" onclick="plantGift(${i})">PLANT</button></div>`
+    ).join('');
+  }
+  openOv('ov-shed');
+}
+function placeBed(i) {
+  const it = S.shed.splice(i, 1)[0];
+  S.beds.push({ id: S.nextId++, n: it.n });
+  save(); closeOv('ov-shed'); renderGarden();
+}
+function plantGift(i) {
+  const spot = openSpot();
+  if (!spot) { alert('No open spot. Place a bed first!'); return; }
+  const it = S.shed.splice(i, 1)[0];
+  const id = 'p' + (S.nextId++);
+  const p = { id, tag: 'GIFT', bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true };
+  S.plants.push(p); save(); closeOv('ov-shed');
+  // instant roll, straight to the Bloom
+  const s = rollSpecies(it.shelf);
+  const traits = rollTraits('tap', false);
+  S.blooms++;
+  p.state = 'bloomed'; p.species = s.id; p.traits = traits;
+  const firstEver = !S.coll[s.id];
+  S.coll[s.id] = S.coll[s.id] || { sun: false, pol: false, gli: false };
+  for (const k of ['sun', 'pol', 'gli']) if (traits[k]) S.coll[s.id][k] = true;
+  save();
+  showBloomCinematic(p, s, traits, firstEver, false, 'tap');
+}
+function openLadder() {
+  const sheet = $('ladder-sheet');
+  sheet.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="gametitle">Leaderboard</div><div class="pill" style="cursor:pointer;" onclick="closeOv('ov-ladder')">✕</div></div>` +
+    CONFIG.ranks.map((r, i) => {
+      const cls = i === S.rank ? 'now' : (i > S.rank ? 'locked' : '');
+      return `<div class="rankrow ${cls}"><span style="width:28px;">${sealSvg(i, 26)}</span><div class="rlab">${r.name}${r.unlock ? `<small>unlocks ${r.unlock} · 🎁 mystery gift</small>` : '<small>🎁 mystery gift</small>'}</div><div class="rnum">${i === S.rank ? 'YOU · ' + fmt(S.lifetime) : (i < S.rank ? '✓' : fmt(r.at))}👏</div></div>`;
+    }).join('');
+  openOv('ov-ladder');
+}
+function maybeRankup() {
+  if (S.pendingRankup == null) return;
+  const r = CONFIG.ranks[S.pendingRankup];
+  const shelf = CONFIG.giftShelf[S.pendingRankup] || 'b';
+  S.shed.push({ kind: 'gift', shelf });
+  const offerContacts = S.pendingRankup % 2 === 0;
+  $('rankup-sheet').innerHTML = `
+    <span style="display:inline-block;filter:drop-shadow(0 0 8px #bcd9f2);animation:grow 1.8s infinite;">${sealSvg(S.pendingRankup, 56)}</span>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">You made<br>${r.name}!</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
+      <span class="chip-anim" style="animation-delay:0.7s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 Mystery gift: a seed, waiting in your Shed</span>
+      ${r.unlock ? `<span class="chip-anim" style="animation-delay:1.3s;background:#eef6fd;border:2.5px solid var(--blue);border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:var(--blue);">New feature: ${r.unlock}</span>` : ''}
+      ${r.teach ? `<span class="chip-anim" style="animation-delay:1.9s;font-size:11px;color:#5b6470;">${r.teach}</span>` : ''}
+      <span class="chip-anim" style="animation-delay:2.3s;font-size:11px;color:#5b6470;">Drop the gift seed on any open spot to see what blooms.</span>
+      ${offerContacts ? `<span class="chip-anim" style="animation-delay:2.8s;background:#f4f9ff;border:2px dashed var(--blue);border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:var(--blue);">🔎 Compare contacts again? New friends may match now.</span>` : ''}
+    </div>
+    <button class="bigbtn" onclick="S.pendingRankup=null;save();closeOv('ov-rankup');renderGarden();">Back to my garden</button>`;
+  openOv('ov-rankup');
+}
+function renderChampions() {
+  const rows = [...CONFIG.champs.map(([n, r, w]) => ({ n, r, w })), { n: S.garden + ' · YOU', r: S.rank, w: S.weekly, you: true }]
+    .sort((a, b) => b.w - a.w);
+  $('champlist').innerHTML = rows.map((row, i) =>
+    `<div class="rankrow ${row.you ? 'now' : ''}"><div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:14px;color:var(--purple);width:18px;text-align:center;">${i + 1}</div><span style="width:26px;">${sealSvg(Math.min(row.r, 6), 24)}</span><div class="rlab">${esc(row.n)}<small>${CONFIG.ranks[Math.min(row.r, 6)].name}</small></div><div class="rnum">${fmt(row.w)} 👏</div></div>`
+  ).join('');
+}
+
+/* ---------------- nav + decos ---------------- */
+function showTab(tab) {
+  if (tab === 'garden') { tickPraise(); renderGarden(); show('scr-garden'); }
+  if (tab === 'plant') { $('plant-result').innerHTML = ''; show('scr-plant'); }
+  if (tab === 'collection') { renderCollection(); show('scr-collection'); }
+  if (tab === 'champions') { renderChampions(); show('scr-champions'); }
+  document.querySelectorAll('.bottomnav').forEach((nav) => {
+    nav.querySelectorAll('.bn').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
+  });
+}
+function buildNavs() {
+  const html = `
+    <button class="bn" data-tab="garden" onclick="showTab('garden')"><svg class="navic"><use href="#n-farm"/></svg><small>GARDEN</small></button>
+    <button class="bn" data-tab="plant" onclick="showTab('plant')"><svg class="navic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#002d5b" stroke-width="2"/><path d="M12 8 v8 M8 12 h8" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/></svg><small>PLANT A SEED</small></button>
+    <button class="bn" data-tab="collection" onclick="showTab('collection')"><svg class="navic"><use href="#n-almanac"/></svg><small>COLLECTION</small></button>
+    <button class="bn" data-tab="champions" onclick="showTab('champions')"><svg class="navic"><use href="#n-club"/></svg><small>CHAMPIONS</small></button>`;
+  for (const id of ['nav-garden', 'nav-plant', 'nav-collection', 'nav-champions']) { $(id).innerHTML = html; }
+  showTabMark();
+  function showTabMark() {
+    $('nav-garden').querySelector('[data-tab="garden"]').classList.add('on');
+    $('nav-plant').querySelector('[data-tab="plant"]').classList.add('on');
+    $('nav-collection').querySelector('[data-tab="collection"]').classList.add('on');
+    $('nav-champions').querySelector('[data-tab="champions"]').classList.add('on');
+  }
+}
+function buildDecos() {
+  const deco = `
+    <svg style="position:absolute;left:12px;top:60px;width:34px;height:32px;opacity:0.5;" viewBox="0 0 24 22"><circle cx="12" cy="11" r="6.5" fill="#f7ce63"/><g stroke="#f7ce63" stroke-width="1.6" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="-0.5"/><line x1="20.5" y1="6" x2="22.5" y2="5"/><line x1="21" y1="15" x2="23" y2="16"/></g></svg>
+    <svg style="position:absolute;left:-14%;top:34%;width:130%;opacity:0.08;" viewBox="0 0 220 26"><path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/><path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/><path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/></svg>
+    <svg style="position:absolute;left:0;right:0;bottom:110px;width:100%;opacity:0.11;" viewBox="0 0 340 60" preserveAspectRatio="xMidYMax meet"><path d="M0 44 H340" stroke="#037ad8" stroke-width="3"/><path d="M40 44 Q95 6 150 44 M150 44 Q205 6 260 44" fill="none" stroke="#037ad8" stroke-width="3"/><g stroke="#037ad8" stroke-width="1.6"><line x1="65" y1="24" x2="65" y2="44"/><line x1="95" y1="15" x2="95" y2="44"/><line x1="125" y1="24" x2="125" y2="44"/><line x1="175" y1="24" x2="175" y2="44"/><line x1="205" y1="15" x2="205" y2="44"/><line x1="235" y1="24" x2="235" y2="44"/></g><path d="M0 52 q20 4 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#037ad8" stroke-width="2" opacity="0.7"/></svg>
+    <div style="position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:space-around;align-items:flex-end;opacity:0.16;padding:0 10px;">
+      <svg style="width:20px;height:20px;"><use href="#f-tulip"/></svg><svg style="width:24px;height:24px;"><use href="#f-daisy"/></svg><svg style="width:18px;height:18px;"><use href="#f-blazing"/></svg><svg style="width:24px;height:24px;"><use href="#f-camellia"/></svg><svg style="width:19px;height:19px;"><use href="#f-poppy"/></svg><svg style="width:23px;height:23px;"><use href="#f-marigold"/></svg><svg style="width:18px;height:18px;"><use href="#f-phlox"/></svg>
+    </div>
+    <span class="petal" style="left:14%;animation-duration:8s;color:#f2a9c4;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#f-petal"/></svg></span>
+    <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#f-petal"/></svg></span>`;
+  for (const id of ['deco-signup', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { $(id).innerHTML = deco; }
+}
+
+document.addEventListener('DOMContentLoaded', boot);
+
+
+</script>
+</body>
+</html>
