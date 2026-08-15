@@ -1448,7 +1448,7 @@ function buildDecos() {
     </div>
     <span class="petal" style="left:14%;animation-duration:8s;color:#f2a9c4;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#f-petal"/></svg></span>
     <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#f-petal"/></svg></span>`;
-  for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { $(id).innerHTML = deco; }
+  for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend', 'deco-friends-setup']) { $(id).innerHTML = deco; }
 }
 
 /* ---------------- back-button intercept ---------------- */
@@ -1488,18 +1488,21 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- ============ FRIENDS SETUP ============ -->
-<section id="scr-friends-setup" class="screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 24px;text-align:center;">
-  <div style="font-size:48px;margin-bottom:12px;">🌱</div>
-  <div class="qtitle">Find your registered friends</div>
-  <div style="font-size:13px;color:#5b6470;margin:10px 0 24px;line-height:1.65;">Bloomers matches your contacts against the FL-04 voter rolls so you always know exactly who to reach out to. This happens once, on your phone — nothing is ever uploaded.</div>
-  <button class="bigbtn" id="friends-setup-btn" onclick="runContactMatch()">Find My Friends</button>
-  <button id="friends-skip-btn" onclick="show('scr-garden')" style="margin-top:14px;background:none;border:none;font-size:12px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Skip for now</button>
-  <div id="friends-progress" style="display:none;width:100%;margin-top:20px;">
-    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#059669;letter-spacing:0.1em;margin-bottom:8px;" id="friends-status">Scanning voter rolls…</div>
-    <div style="background:#e5f3ff;border-radius:20px;height:10px;overflow:hidden;width:100%;">
-      <div id="friends-bar" style="height:100%;background:linear-gradient(90deg,#037ad8,#059669);border-radius:20px;width:0%;transition:width 0.25s ease;"></div>
+<section id="scr-friends-setup" class="screen">
+  <div class="bgdeco" id="deco-friends-setup"></div>
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:36px 24px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🌱</div>
+    <div class="qtitle">Find your registered friends</div>
+    <div style="font-size:13px;color:#5b6470;margin:10px 0 24px;line-height:1.65;">Bloomers matches your contacts against the FL-04 voter rolls so you always know exactly who to reach out to. This happens once, on your phone — nothing is ever uploaded.</div>
+    <button class="bigbtn" id="friends-setup-btn" onclick="runContactMatch()">Find My Friends</button>
+    <button id="friends-skip-btn" onclick="show('scr-garden')" style="margin-top:14px;background:none;border:none;font-size:12px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Skip for now</button>
+    <div id="friends-progress" style="display:none;width:100%;margin-top:20px;">
+      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#059669;letter-spacing:0.1em;margin-bottom:8px;" id="friends-status">Scanning voter rolls…</div>
+      <div style="background:#e5f3ff;border-radius:20px;height:10px;overflow:hidden;width:100%;">
+        <div id="friends-bar" style="height:100%;background:linear-gradient(90deg,#037ad8,#059669);border-radius:20px;width:0%;transition:width 0.25s ease;"></div>
+      </div>
+      <div style="font-size:10px;color:#9aa3ad;margin-top:6px;" id="friends-sub">Comparing your contacts with 570,000+ FL-04 voter records</div>
     </div>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:6px;" id="friends-sub">Comparing your contacts with 570,000+ FL-04 voter records</div>
   </div>
 </section>
 </body>
