@@ -20,7 +20,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fff;border:2px solid #c9def2;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #c9def2;}
 .rule{height:5px;display:flex;position:relative;z-index:5;}
 .rule i{flex:1;}.rule i:nth-child(1){background:var(--blue);}.rule i:nth-child(2){background:var(--purple);}.rule i:nth-child(3){background:var(--red);}
-.bottomnav{display:flex;justify-content:center;background:#fff;border-top:2px solid #c9def2;padding:10px 6px calc(12px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:100;}
+.bottomnav{display:flex;justify-content:space-evenly;background:#fff;border-top:2px solid #c9def2;padding:10px 0 calc(12px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;width:100%;z-index:100;}
 .bn{opacity:0.45;text-align:center;cursor:pointer;flex:1;border:none;background:none;padding:0;}
 .bn.on{opacity:1;transform:scale(1.12);}
 .bn small{display:block;font-size:9px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;margin-top:2px;}
@@ -343,9 +343,12 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   </div>
   <div class="toolbar">
     <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> SHED (<span id="hud-shed">0</span>)</div>
-    <div class="tchip" style="flex:1;justify-content:space-between;">
-      <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
-      <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT</button>
+    <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
+        <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT</button>
+      </div>
+      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Garden Score: +<span id="hud-percycle">0</span> 👏 every 30 min</div>
     </div>
   </div>
   <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
@@ -380,7 +383,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div class="bgdeco" id="deco-collection"></div>
   <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Collection</div></div>
   <div class="rule"><i></i><i></i><i></i></div>
-  <div class="almgrid" id="almgrid"></div>
+  <div id="coll-container"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-collection"></nav>
 </section>
@@ -458,9 +461,9 @@ const CONFIG = {
   msgFollow: (first, link) => `Hi NAME, it's ${first} again. My Bloomers flower is still waiting on you 🌱 One tap and it blooms: ${link}`,
   msgDeadline: (first) => `Hi NAME, it's ${first}. Florida's voter registration deadline comes up fast before the November election, and it takes about two minutes to check or register at registertovoteflorida.gov. Consider this your friendly reminder 🌱`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
-  waterGapH: 48, praiseCycleH: 4, maxTouches: 3, dailyTextCap: 5,
+  waterGapH: 48, praiseCycleH: 0.5, maxTouches: 3, dailyTextCap: 5,
   poolBaseCycles: 3, // + 1 per rank
-  yields: { g: 1, b: 2, p: 5, au: 10 },
+  yields: { g: 1, b: 2, p: 4, au: 5 },
   ranks: [
     { name: 'Good Neighbor',       at: 0 },
     { name: 'Block Captain',       at: 500,   unlock: 'Move flowers',  teach: 'Hold and drag any flower to move it between open spots.' },
@@ -803,7 +806,7 @@ function renderGarden() {
   $('hud-xp').style.width = Math.min(100, Math.round(((S.lifetime - base) / span) * 100)) + '%';
   $('hud-seal').innerHTML = sealSvg(S.rank, 40);
   $('hud-shed').textContent = S.shed.length;
-  $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap());
+  $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap()); const _pc = $('hud-percycle'); if (_pc) _pc.textContent = perCycle();
   $('btn-collect').disabled = S.pool <= 0;
   const ag = CONFIG.agenda[agendaIdx];
   $('agenda-topic').textContent = ag[0]; $('agenda-line').textContent = ag[1];
@@ -1022,7 +1025,7 @@ function doBloom(p, kind) {
 function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
   const el = $('bloom-sheet');
   const anns = [];
-  if (traits.sun) anns.push(['☀ A Sun Bloom!', '#d97706']);
+  if (traits.sun) anns.push(['☀ A Golden Hour Bloom!', '#d97706']);
   if (traits.pol) anns.push(['🦋🐝 Pollinators moved in!', '#8555ab']);
   if (traits.gli) anns.push(['✦ Glitter Petals!', '#b48908']);
   let t = 4.2;
@@ -1053,17 +1056,30 @@ function showPlaque(spid, pid) {
   $('plaque-sheet').innerHTML = `
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);">${esc(s.name)}</div>
     <div style="width:120px;height:120px;margin:10px auto 0;background:radial-gradient(circle,#fff 30%,#fdf6e3 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg style="width:86px;height:86px;"><use href="#${s.art}"/></svg></div>
-    <div style="display:inline-block;margin-top:10px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:${shelfColor(s.shelf)};border:2px solid ${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">Unlocked!</div>
+    <div style="display:flex;gap:7px;justify-content:center;margin-top:10px;"><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:${shelfColor(s.shelf)};border:2px solid ${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">Unlocked!</div><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">${shelfName(s.shelf)}</div></div>
     <div style="font-size:12px;color:#5b6470;margin-top:9px;">Commonly found: ${esc(s.loc)}</div>
-    ${row('✦', 'Glitter Petals', c.gli)}${row('☀', 'Sun Bloom', c.sun)}${row('🦋🐝', 'Pollinator', c.pol)}
+    ${row('✦', 'Glitter Petals', c.gli)}${row('☀', 'Golden Hour Bloom', c.sun)}${row('🦋🐝', 'Pollinator', c.pol)}
     <div style="margin-top:12px;font-size:12px;color:#9aa3ad;cursor:pointer;" onclick="closeOv('ov-plaque')">✕ close</div>`;
   openOv('ov-plaque');
 }
 function renderCollection() {
-  $('almgrid').innerHTML = CONFIG.species.map((s) => {
-    const un = !!S.coll[s.id];
-    return `<div class="almcell ${un ? s.shelf : 'locked'}" onclick="${un ? `showPlaque('${s.id}')` : ''}"><svg style="width:70%;height:70%;"><use href="#${s.art}"/></svg></div>`;
-  }).join('');
+  const shelves = [
+    { key: 'g', label: 'Garden', color: '#059669' },
+    { key: 'b', label: 'Wildflower', color: '#2563eb' },
+    { key: 'p', label: 'Exotic', color: '#7c3aed' },
+    { key: 'au', label: 'Gold', color: '#f59e0b' },
+  ];
+  let html = '';
+  for (const sh of shelves) {
+    const flowers = CONFIG.species.filter(s => s.shelf === sh.key);
+    const unlocked = flowers.filter(s => !!S.coll[s.id]).length;
+    const cells = flowers.map(s => {
+      const un = !!S.coll[s.id];
+      return `<div class="almcell ${un ? s.shelf : 'locked'}" onclick="${un ? `showPlaque('${s.id}')` : ''}"><svg style="width:70%;height:70%;"><use href="#${s.art}"/></svg></div>`;
+    }).join('');
+    html += `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:${sh.color};letter-spacing:0.12em;margin:14px 18px 4px;">${sh.label.toUpperCase()} · ${unlocked}/${flowers.length}</div><div class="almgrid" style="padding:0 16px 8px;">${cells}</div>`;
+  }
+  $('coll-container').innerHTML = html;
 }
 
 /* ---------------- shed / ladder / rankup / champs ---------------- */
