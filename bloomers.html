@@ -13,8 +13,8 @@
 html,body{margin:0;padding:0;background:#dfe8f2;height:100%;overflow:hidden;}
 body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 #shell{max-width:430px;margin:0 auto;height:100dvh;background:#fff;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(10,30,60,0.18);}
-.screen{display:none;flex-direction:column;flex:1;min-height:100dvh;position:relative;}
-.screen.on{display:flex;padding-bottom:90px;}
+.screen{display:none;flex-direction:column;flex:1;position:relative;}
+.screen.on{display:flex;overflow-y:auto;padding-bottom:90px;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 9px;position:relative;z-index:5;}
 .gametitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--ink);white-space:nowrap;}
 .pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fff;border:2px solid #c9def2;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #c9def2;}
@@ -35,6 +35,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:9px 14px 10px;margin:10px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
 .pindot{width:48px;height:58px;font-size:26px;text-align:center;border:2px solid #c9def2;border-radius:12px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#fff;}
 .pindot:focus{border-color:var(--blue);outline:none;}
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);max-width:390px;width:calc(100% - 28px);background:#1a2a4a;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:13px 18px;border-radius:14px;text-align:center;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;line-height:1.5;}
 .field label{display:block;font-size:9px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;letter-spacing:0.09em;}
 .field input{border:none;outline:none;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:var(--ink);margin-top:3px;background:transparent;}
 .field.focus{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(3,122,216,0.1);padding:8px 13px 9px;}
@@ -241,6 +242,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 
 <div id="shell">
 
+<div id="toast"></div>
 <!-- ============ SIGN UP ============ -->
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
@@ -315,7 +317,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 <!-- ============ GARDEN ============ -->
 <section id="scr-garden" class="screen">
   <div class="bgdeco" id="deco-garden"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#f-sproutling"/></svg> My Garden</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">👏 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;">⇥</button></div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#f-sproutling"/></svg> My Garden</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">👏 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;" onclick="openLadder()">
     <span id="hud-seal" style="width:40px;flex-shrink:0;"></span>
@@ -350,7 +352,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div id="agenda-line" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:13.5px;color:var(--ink);margin-top:4px;line-height:1.45;"></div>
     <div id="agenda-dots" style="display:flex;gap:4px;justify-content:center;margin-top:8px;"></div>
   </div>
-  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-garden"></nav>
 </section>
 
@@ -365,7 +367,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div style="text-align:center;"><button id="plant-go" class="bigbtn" style="margin-top:12px;padding:12px 26px;font-size:14px;" onclick="doSearch()">Search</button></div>
   </div>
   <div id="plant-result"></div>
-  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-plant"></nav>
 </section>
 
@@ -375,7 +377,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Collection</div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div class="almgrid" id="almgrid"></div>
-  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-collection"></nav>
 </section>
 
@@ -386,7 +388,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div class="rule"><i></i><i></i><i></i></div>
   <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">THIS WEEK · RESETS SUNDAY</div>
   <div id="champlist" style="padding:0 14px;"></div>
-  <div class="tinytxt" style="margin-top:auto;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-champions"></nav>
 </section>
 
@@ -394,22 +396,31 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 <section id="scr-friend" class="screen">
   <div class="bgdeco" id="deco-friend"></div>
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:20px 0;">
-    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:24px;color:var(--ink);text-align:center;line-height:1.35;">A friend planted a seed<br><span style="color:#d97706;">in your name</span> 🌱</div>
+    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;color:var(--ink);text-align:center;line-height:1.4;padding:0 16px;"><span id="friend-sender" style="color:var(--blue);">A friend</span> has planted a voter reminder seed<br><span style="color:#d97706;">in your name</span> 🌱</div>
     <div style="margin:16px 0 0;filter:drop-shadow(0 4px 10px rgba(3,122,216,0.35));animation:grow 1.8s infinite;"><svg style="width:66px;height:66px;display:block;"><use href="#f-seed"/></svg></div>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap makes it bloom.</div>
     <button class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I will be voting this November</button>
     <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🌸 It bloomed! Thank you.</div>
-    <div class="card" style="align-self:stretch;">
-      <div style="font-size:12px;">While you are here, get to know Mike:</div>
-      <a href="https://mikesell.org" target="_blank" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;color:var(--blue);text-decoration:none;">mikesell.org →</a>
+    <div class="card" style="align-self:stretch;background:linear-gradient(135deg,#002d5b,#037ad8);border:none;padding:18px 20px;margin-top:14px;">
+      <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:#fff;margin-bottom:6px;">Meet the candidate who created this game</div>
+      <div style="font-size:12px;color:#b8d8f5;margin-bottom:12px;line-height:1.5;">Mike Sell is running for U.S. Congress in FL-04 as a Forward Party candidate — putting people over party.</div>
+      <a href="https://mikesell.org" target="_blank" style="display:inline-block;background:#fff;color:var(--blue);font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:9px 18px;border-radius:20px;text-decoration:none;">Learn more at mikesell.org →</a>
     </div>
-    <button class="bigbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;" onclick="location.href=location.pathname">Start my own garden</button>
+    <button class="bigbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;margin-top:14px;" onclick="location.href=location.pathname">Click here to start your own garden</button>
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:16px;opacity:0.75;">NOT LEFT. NOT RIGHT. FORWARD.</div>
     <div class="tinytxt">This game was created and is sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>No personal data is saved. This game is for entertainment purposes only, and scoring runs on the honor system. We never learn who tapped.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
   </div>
 </section>
 
 <!-- ============ OVERLAYS ============ -->
+<div class="overlay" id="ov-confirm" style="z-index:300;"><div class="sheet" style="max-width:310px;text-align:center;padding:28px 24px 20px;">
+  <div id="confirm-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:18px;color:var(--ink);margin-bottom:10px;"></div>
+  <div id="confirm-msg" style="font-size:13px;color:#5b6470;line-height:1.55;margin-bottom:22px;"></div>
+  <div style="display:flex;gap:10px;">
+    <button class="bigbtn" style="flex:1;background:#e5e7eb;color:#374151;box-shadow:none;font-size:14px;" onclick="closeOv('ov-confirm')">Cancel</button>
+    <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
+  </div>
+</div></div>
 <div class="overlay" id="ov-bloom"><div class="sheet" id="bloom-sheet" style="text-align:center;"></div></div>
 <div class="overlay" id="ov-ladder" onclick="if(event.target===this)closeOv('ov-ladder')"><div class="sheet" id="ladder-sheet"></div></div>
 <div class="overlay" id="ov-plaque" onclick="if(event.target===this)closeOv('ov-plaque')"><div class="sheet" id="plaque-sheet" style="text-align:center;max-width:330px;background:#fffdf5;"></div></div>
@@ -439,7 +450,7 @@ const CONFIG = {
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
   // one ask, active voice, no partisan labels. Player can edit before sending.
-  msgFriend: (first, link) => `Hi NAME, it's ${first}. I'm playing Bloomers, a garden game backing Mike Sell for Congress here this November. Would you play along? One tap on my link and a flower blooms in my garden. ${link}`,
+  msgFriend: (first, link) => `Hi NAME, it's ${first}. I'm playing a game to help spread the word about Mike Sell for Congress here in our district this November! You can play along with one tap. Will you remember to vote? ${link}`,
   msgFollow: (first, link) => `Hi NAME, it's ${first} again. My Bloomers flower is still waiting on you 🌱 One tap and it blooms: ${link}`,
   msgDeadline: (first) => `Hi NAME, it's ${first}. Florida's voter registration deadline comes up fast before the November election, and it takes about two minutes to check or register at registertovoteflorida.gov. Consider this your friendly reminder 🌱`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
@@ -614,6 +625,12 @@ function show(id) {
 function closeOv(id) { $(id).classList.remove('on'); }
 function openOv(id) { $(id).classList.add('on'); }
 
+let _toastTimer = null;
+function showToast(msg) {
+  const t = $('toast'); t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
+}
 function pinAdv(fromId, toId) {
   const el = $(fromId);
   el.value = el.value.replace(/\D/g, '').slice(-1);
@@ -641,15 +658,23 @@ function doUnlock() {
     $('lock-pin0').focus();
   }
 }
+function gameConfirm(title, msg, okLabel, okCss, onOk) {
+  $('confirm-title').textContent = title;
+  $('confirm-msg').textContent = msg;
+  const btn = $('confirm-ok'); btn.textContent = okLabel;
+  btn.style.cssText = 'flex:1;font-size:14px;' + okCss;
+  btn.onclick = function() { closeOv('ov-confirm'); onOk(); };
+  openOv('ov-confirm');
+}
 function doLogout() {
-  if (!confirm('Log out? Your garden stays saved in this browser.')) return;
-  sessionStorage.removeItem('bl_auth');
-  showLock();
+  gameConfirm('Log out?', 'Your garden stays saved in this browser — just enter your PIN to get back in.', 'Log out', 'background:var(--blue);box-shadow:0 5px 0 #045ea6;', function() {
+    sessionStorage.removeItem('bl_auth'); showLock();
+  });
 }
 function confirmReset() {
-  if (confirm('This clears ALL your progress and cannot be undone. Are you sure?')) {
+  gameConfirm('Start fresh?', 'This clears your entire garden and all progress. This cannot be undone.', 'Clear everything', 'background:#dc2626;box-shadow:0 5px 0 #991b1b;', function() {
     localStorage.removeItem(KEY); sessionStorage.removeItem('bl_auth'); location.reload();
-  }
+  });
 }
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
@@ -833,12 +858,13 @@ function openSpot() {
   return null;
 }
 function plantNow(deadline) {
-  if (S.textsToday >= CONFIG.dailyTextCap) { alert('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
+  if (S.textsToday >= CONFIG.dailyTextCap) { showToast('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
   const spot = openSpot();
-  if (!spot) { alert('Your garden is full! Place a bed from your Shed, or wait for a bloom to earn one.'); return; }
+  if (!spot) { showToast('Your garden is full — place a bed from your Shed first, or wait for a bloom to earn one.'); return; }
   const tag = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first.toUpperCase();
   const id = 'p' + (S.nextId++);
-  S.plants.push({ id, tag, bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!deadline });
+  const _ph = (pendingPlant && pendingPlant.phone) ? String(pendingPlant.phone).replace(/\D/g,'') : '';
+  S.plants.push({ id, tag, bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!deadline, phone: _ph });
   S.seedsPlanted++; S.textsToday++;
   if (S.seedsPlanted % 3 === 0) S.shed.push({ kind: 'bed', n: 2 });
   save();
@@ -849,7 +875,7 @@ function plantNow(deadline) {
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
 }
-function friendLink(id) { return location.origin + location.pathname + '?b=' + id; }
+function friendLink(id) { return 'https://mikesell.org/bloomers?b=' + id + '&f=' + encodeURIComponent(S.first); }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
@@ -870,17 +896,22 @@ function seedTap(id) {
 function waterNow(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p || !waterReady(p)) return;
-  if (S.textsToday >= CONFIG.dailyTextCap) { alert('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
+  if (S.textsToday >= CONFIG.dailyTextCap) { showToast('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
   p.touches++; p.lastTouch = Date.now(); S.textsToday++;
   save(); closeOv('ov-plantpick');
   api('touch', { seedId: id, n: p.touches }); // [SERVER]
-  location.href = smsHref(CONFIG.msgFollow(S.first, friendLink(id)).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()));
+  location.href = smsHref(CONFIG.msgFollow(S.first, friendLink(id)).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || '');
   if (p.touches >= CONFIG.maxTouches) setTimeout(() => doBloom(p, 'earned'), 800);
   else renderGarden();
 }
 
 /* ---------------- friend view + bloom ---------------- */
-function initFriend(id) { $('scr-friend').dataset.pid = id; show('scr-friend'); }
+function initFriend(id) {
+  $('scr-friend').dataset.pid = id;
+  const f = (location.search.match(/[?&]f=([^&]+)/) || [])[1];
+  $('friend-sender').textContent = f ? decodeURIComponent(f) : 'A friend';
+  show('scr-friend');
+}
 function friendTap() {
   const id = $('scr-friend').dataset.pid;
   try {
@@ -985,7 +1016,7 @@ function placeBed(i) {
 }
 function plantGift(i) {
   const spot = openSpot();
-  if (!spot) { alert('No open spot. Place a bed first!'); return; }
+  if (!spot) { showToast('No open spot — place a bed from your Shed first.'); return; }
   const it = S.shed.splice(i, 1)[0];
   const id = 'p' + (S.nextId++);
   const p = { id, tag: 'GIFT', bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true };
@@ -1057,7 +1088,7 @@ async function tryLoadContacts() {
         .filter(c => c.name && c.name[0] && c.tel && c.tel.length)
         .map(c => ({ name: c.name[0], phone: c.tel[0] }));
     } catch(e) { _contactsCache = []; }
-  } else { _contactsCache = []; }
+  } else { _contactsCache = []; } // Contact Picker not available (cross-origin iframe blocks it)
 
   _renderContactList();
 }
@@ -1066,7 +1097,16 @@ function _renderContactList() {
   const searchEl = $('plant-searchwrap');
   if (!_contactsCache || !_contactsCache.length) {
     // No contacts loaded — fall back to search
-    listEl.style.display = 'none'; searchEl.style.display = 'block'; return;
+    listEl.style.display = 'none'; searchEl.style.display = 'block';
+    // In a cross-origin iframe the Contact Picker API is blocked — suggest opening directly
+    if (window.self !== window.top && !$('contact-hint')) {
+      const hint = document.createElement('div');
+      hint.id = 'contact-hint';
+      hint.style.cssText = 'font-size:11px;color:#9aa3ad;margin:10px 16px 0;text-align:center;line-height:1.6;';
+      hint.innerHTML = 'For contact matching, <a href="https://mikesell.org/bloomers" target="_blank" style="color:var(--blue);font-family:avenir-heavy,Arial,sans-serif;">open Bloomers directly</a> in your browser.';
+      searchEl.insertAdjacentElement('afterend', hint);
+    }
+    return;
   }
   searchEl.style.display = 'none';
   const items = _contactsCache.map((c, i) => {
