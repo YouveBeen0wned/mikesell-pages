@@ -32,8 +32,8 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 #shell .screen>*:not(.bgdeco){position:relative;z-index:1;}
 .screen>.petal{position:absolute;}
 .petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
-.field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:7px 14px 8px;margin:7px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
-.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:50px;font-size:25px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
+.field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:6px 14px 7px;margin:6px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
+.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:46px;font-size:23px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
 .field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
 .field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
 #drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
@@ -253,8 +253,8 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 <!-- ============ SIGN UP ============ -->
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
-  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:8px 0 6px;">
-    <div style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:40px;">
+  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:flex-start;padding:2px 0 4px;">
+    <div style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:34px;">
       <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#f-tulip"/></svg>
       <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#f-blazing"/></svg>
       <svg style="width:30px;height:30px;margin-bottom:12px;"><use href="#f-passion"/></svg>
@@ -263,14 +263,14 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
       <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#f-primrose"/></svg>
       <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#f-daisy"/></svg>
     </div>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:29px;color:var(--blue);margin-top:0;line-height:1.1;">Bloomers</div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:27px;color:var(--blue);margin-top:0;line-height:1.05;">Bloomers</div>
     <svg viewBox="0 0 220 26" style="width:190px;height:20px;margin-top:1px;">
       <path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/>
       <path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/>
       <path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/>
     </svg>
     <div style="font-size:11.5px;color:#5b6470;margin-top:3px;letter-spacing:0.02em;">Grow our community, one friend at a time</div>
-    <div style="display:flex;gap:10px;margin:11px 24px 0;align-self:stretch;">
+    <div style="display:flex;gap:10px;margin:9px 24px 0;align-self:stretch;">
       <div class="field" style="flex:1;margin:0;"><label>FIRST NAME</label><input id="f-first" autocomplete="given-name" placeholder="Alex"></div>
       <div class="field" style="flex:1;margin:0;"><label>LAST NAME</label><input id="f-last" autocomplete="family-name" placeholder="Rivera"></div>
     </div>
@@ -493,7 +493,12 @@ const CONFIG = {
   // seed events by LINK ID ONLY (never the friend's name, tag, or number),
   // waterings, blooms, and checks the account's active flag on every open.
   api: { base: '', key: '' },
-  voterBase: 'https://youvebeen0wned.github.io/mikesell-pages/voters/',
+  voterBase: 'https://vote.mikesell.org/voters/',
+  // Phone matching endpoint. The phone index is PRIVATE and never published;
+  // it is served only by an authenticated backend using k-anonymity prefix
+  // lookup (client sends 2 hex chars of a keyed hash, never the number).
+  // Leave blank to disable phone matching entirely.
+  phoneApi: '',
   agendaUrl: 'https://mikesell.org',
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
@@ -639,11 +644,9 @@ async function voterSearch(firstName, lastName) {
   const bucket = await fetchVoterBucket(prefix);
   // Exact last match + first starts with at least 3 chars (or full if short)
   const fl = Math.min(3, qfirst.length);
-  return bucket.filter(([f, l]) => {
-    const nl = l.replace(/[^A-Za-z]/g, '').toUpperCase();
-    const nf = f.replace(/[^A-Za-z]/g, '').toUpperCase();
-    return nl === qlast && nf.startsWith(qfirst.slice(0, fl));
-  }).slice(0, 8);
+  return bucket.filter(([f, l]) =>
+    l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast && firstNameMatches(f, qfirst)
+  ).slice(0, 8);
 }
 
 function availCardVoter(first, last, city, age) {
@@ -898,8 +901,8 @@ let MATCH_MODE = false;
 const IN_IFRAME = (function(){ try { return window.self !== window.top; } catch(e){ return true; } })();
 // Pop-out matching needs a TOP-LEVEL page, which means a visible URL.
 // Leave blank until a branded domain (e.g. https://vote.mikesell.org/bloomers.html)
-// points at the host - we never surface the raw github.io address to voters.
-const POPOUT_URL = '';
+// points at the host - we never surface the raw hosting address to voters.
+const POPOUT_URL = 'https://vote.mikesell.org/bloomers.html';
 
 // Contact Picker exists but is BLOCKED in cross-origin iframes (SecurityError).
 // Only Chrome-Android supports it at all. Detect honestly, never assume.
@@ -1118,7 +1121,7 @@ function plantNow(deadline) {
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
 }
-function friendLink(id) { return 'https://mikesell.org/bloomers?s=' + id; }
+function friendLink(id) { return 'https://vote.mikesell.org/bloomers.html?s=' + id; }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
@@ -1395,6 +1398,94 @@ function parseNameList(text) {
   }).filter(Boolean);
 }
 
+
+// Common nickname <-> legal-name pairs. Voter rolls carry legal names;
+// phones carry what people actually go by.
+const NICKS = {BOB:'ROBERT',BOBBY:'ROBERT',ROB:'ROBERT',BILL:'WILLIAM',BILLY:'WILLIAM',WILL:'WILLIAM',
+ JIM:'JAMES',JIMMY:'JAMES',JAMIE:'JAMES',MIKE:'MICHAEL',MICK:'MICHAEL',DAVE:'DAVID',
+ STEVE:'STEVEN',STEPHEN:'STEVEN',TOM:'THOMAS',TOMMY:'THOMAS',DICK:'RICHARD',RICK:'RICHARD',
+ RICH:'RICHARD',RICKY:'RICHARD',CHRIS:'CHRISTOPHER',TONY:'ANTHONY',JOE:'JOSEPH',JOEY:'JOSEPH',
+ DAN:'DANIEL',DANNY:'DANIEL',MATT:'MATTHEW',NICK:'NICHOLAS',ANDY:'ANDREW',DREW:'ANDREW',
+ TED:'EDWARD',TEDDY:'EDWARD',ED:'EDWARD',EDDIE:'EDWARD',FRANK:'FRANCIS',GREG:'GREGORY',
+ JEFF:'JEFFREY',KEN:'KENNETH',LARRY:'LAWRENCE',PAT:'PATRICK',PETE:'PETER',PHIL:'PHILIP',
+ RAY:'RAYMOND',RON:'RONALD',RONNIE:'RONALD',SAM:'SAMUEL',TIM:'TIMOTHY',WALT:'WALTER',
+ CHUCK:'CHARLES',CHARLIE:'CHARLES',HANK:'HENRY',JACK:'JOHN',JOHNNY:'JOHN',
+ BETH:'ELIZABETH',LIZ:'ELIZABETH',BETTY:'ELIZABETH',BECKY:'REBECCA',
+ CATHY:'CATHERINE',KATHY:'KATHERINE',KATE:'KATHERINE',KATIE:'KATHERINE',
+ SUE:'SUSAN',SUSIE:'SUSAN',DEB:'DEBORAH',DEBBIE:'DEBORAH',JEN:'JENNIFER',JENNY:'JENNIFER',
+ JESS:'JESSICA',MEG:'MARGARET',MAGGIE:'MARGARET',PEGGY:'MARGARET',PAM:'PAMELA',
+ PATTY:'PATRICIA',TRISH:'PATRICIA',SANDY:'SANDRA',BARB:'BARBARA',CINDY:'CYNTHIA',
+ CHRISTY:'CHRISTINE',TINA:'CHRISTINE',ANGIE:'ANGELA',NANCY:'ANN',NAN:'ANN',ANNIE:'ANN',
+ MANDY:'AMANDA',MOLLY:'MARY',POLLY:'MARY',TERRY:'TERESA',TERI:'TERESA',VICKY:'VICTORIA',
+ CARRIE:'CAROLINE',LORI:'LAURA',JUDY:'JUDITH',JOAN:'JOANNE',CONNIE:'CONSTANCE',
+ DOTTIE:'DOROTHY',DOT:'DOROTHY',GINNY:'VIRGINIA',MARTY:'MARTIN',ALEX:'ALEXANDER',
+ ZACK:'ZACHARY',JOSH:'JOSHUA',BEN:'BENJAMIN',SAL:'SALVATORE',VINNY:'VINCENT',
+ GABE:'GABRIEL',NATE:'NATHANIEL',ISSY:'ISABELLA',IZZY:'ISABELLA',ABBY:'ABIGAIL'};
+
+function firstNameKeys(f) {
+  const u = String(f).replace(/[^A-Za-z]/g, '').toUpperCase();
+  const keys = [u];
+  if (NICKS[u]) keys.push(NICKS[u]);
+  for (const k in NICKS) if (NICKS[k] === u && keys.indexOf(k) < 0) keys.push(k);
+  return keys;
+}
+function firstNameMatches(voterFirst, contactFirst) {
+  const v = String(voterFirst).replace(/[^A-Za-z]/g, '').toUpperCase();
+  for (const k of firstNameKeys(contactFirst)) {
+    if (v === k) return true;
+    const n = Math.min(3, k.length);
+    if (n >= 3 && v.startsWith(k.slice(0, n))) return true;
+  }
+  return false;
+}
+
+
+/* ---------------- phone matching (private backend, k-anonymity) ---------------- */
+const _phoneCache = new Map();
+
+async function hashPhone(digits) {
+  const d = String(digits).replace(/\D/g, '');
+  if (d.length < 10) return null;
+  const buf = new TextEncoder().encode('bloomers-fl04-v1|' + d.slice(-10));
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Sends only the first 2 hex chars of the hash. The server returns that whole
+// bucket; the exact match happens here, so the number never leaves the device.
+async function fetchPhoneBucket(prefix) {
+  if (_phoneCache.has(prefix)) return _phoneCache.get(prefix);
+  try {
+    const r = await fetch(CONFIG.phoneApi.replace(/\/$/, '') + '/' + prefix + '.json');
+    const data = r.ok ? await r.json() : [];
+    _phoneCache.set(prefix, data);
+    return data;
+  } catch (e) { _phoneCache.set(prefix, []); return []; }
+}
+
+async function phoneMatch(contacts) {
+  if (!CONFIG.phoneApi || !crypto.subtle) return {};
+  const byPrefix = {}, hashes = {};
+  for (const c of contacts) {
+    if (!c.phone) continue;
+    const hk = await hashPhone(c.phone);
+    if (!hk) continue;
+    hashes[c.name] = hk;
+    (byPrefix[hk.slice(0, 2)] = byPrefix[hk.slice(0, 2)] || []).push(c);
+  }
+  const out = {};
+  for (const [prefix, group] of Object.entries(byPrefix)) {
+    const bucket = await fetchPhoneBucket(prefix);
+    const map = {};
+    for (const [rest, f, l, city] of bucket) map[rest] = [f, l, city];
+    for (const c of group) {
+      const hit = map[hashes[c.name].slice(2, 14)];
+      if (hit) out[c.name] = { first: hit[0], last: hit[1], voterCity: hit[2], via: 'phone' };
+    }
+  }
+  return out;
+}
+
 // Shared matching core — every input method funnels through here.
 async function matchContactList(contacts, opts) {
   opts = opts || {};
@@ -1418,8 +1509,15 @@ async function matchContactList(contacts, opts) {
     const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
     (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
   }
+  // Phone match first — highest confidence, catches married and preferred names.
+  let phoneHits = {};
+  if (CONFIG.phoneApi) {
+    setP(16, 'Checking phone numbers…', '');
+    try { phoneHits = await phoneMatch(contacts); } catch (e) {}
+  }
+
   const entries = Object.entries(groups);
-  if (!entries.length) {
+  if (!entries.length && !Object.keys(phoneHits).length) {
     closeOv('ov-matching');
     showToast('Those need first and last names to match the voter rolls.');
     return 0;
@@ -1428,12 +1526,10 @@ async function matchContactList(contacts, opts) {
   for (const [prefix, group] of entries) {
     const bucket = await fetchVoterBucket(prefix);
     for (const contact of group) {
+      if (phoneHits[contact.name]) continue; // already matched by phone
       const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
-      const qf = contact._first.replace(/[^A-Za-z]/g, '').toUpperCase();
-      const fl = Math.min(3, qf.length);
       const m = bucket.find(([f, l]) =>
-        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql &&
-        f.replace(/[^A-Za-z]/g, '').toUpperCase().startsWith(qf.slice(0, fl)));
+        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql && firstNameMatches(f, contact._first));
       if (m) results.push({ ...contact, voterCity: m[2] });
     }
     done++;
@@ -1443,8 +1539,16 @@ async function matchContactList(contacts, opts) {
     await breathe();
   }
 
+  for (const c of contacts) {
+    const hit = phoneHits[c.name];
+    if (!hit) continue;
+    const parts = String(c.name).trim().split(/\s+/);
+    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1],
+                   voterCity: hit.voterCity, matchedBy: 'phone' });
+  }
   const found = results.map(c => ({
-    name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '', voterCity: c.voterCity || ''
+    name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '',
+    voterCity: c.voterCity || '', matchedBy: c.matchedBy || 'name'
   }));
   if (!opts.standalone) {
     const seen = {};
@@ -1660,7 +1764,7 @@ function buildNavs() {
 }
 function buildDecos() {
   const deco = `
-    <svg style="position:absolute;left:12px;top:60px;width:34px;height:32px;opacity:0.5;" viewBox="0 0 24 22"><circle cx="12" cy="11" r="6.5" fill="#f7ce63"/><g stroke="#f7ce63" stroke-width="1.6" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="-0.5"/><line x1="20.5" y1="6" x2="22.5" y2="5"/><line x1="21" y1="15" x2="23" y2="16"/></g></svg>
+    <svg style="position:absolute;left:12px;top:150px;width:34px;height:32px;opacity:0.5;" viewBox="0 0 24 22"><circle cx="12" cy="11" r="6.5" fill="#f7ce63"/><g stroke="#f7ce63" stroke-width="1.6" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="-0.5"/><line x1="20.5" y1="6" x2="22.5" y2="5"/><line x1="21" y1="15" x2="23" y2="16"/></g></svg>
     <svg style="position:absolute;left:-14%;top:34%;width:130%;opacity:0.08;" viewBox="0 0 220 26"><path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/><path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/><path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/></svg>
     <svg style="position:absolute;left:0;right:0;bottom:110px;width:100%;opacity:0.11;" viewBox="0 0 340 60" preserveAspectRatio="xMidYMax meet"><path d="M0 44 H340" stroke="#037ad8" stroke-width="3"/><path d="M40 44 Q95 6 150 44 M150 44 Q205 6 260 44" fill="none" stroke="#037ad8" stroke-width="3"/><g stroke="#037ad8" stroke-width="1.6"><line x1="65" y1="24" x2="65" y2="44"/><line x1="95" y1="15" x2="95" y2="44"/><line x1="125" y1="24" x2="125" y2="44"/><line x1="175" y1="24" x2="175" y2="44"/><line x1="205" y1="15" x2="205" y2="44"/><line x1="235" y1="24" x2="235" y2="44"/></g><path d="M0 52 q20 4 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#037ad8" stroke-width="2" opacity="0.7"/></svg>
     <div style="position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:space-around;align-items:flex-end;opacity:0.16;padding:0 10px;">
