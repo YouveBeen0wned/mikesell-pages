@@ -400,25 +400,6 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <nav class="bottomnav" id="nav-champions"></nav>
 </section>
 
-<!-- ============ FRIENDS SETUP ============ -->
-<section id="scr-friends-setup" class="screen">
-  <div class="bgdeco" id="deco-friends-setup"></div>
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:36px 24px;text-align:center;">
-    <div style="font-size:48px;margin-bottom:12px;">🌱</div>
-    <div class="qtitle">Find your registered friends</div>
-    <div style="font-size:13px;color:#5b6470;margin:10px 0 24px;line-height:1.65;">Bloomers matches your contacts against the FL-04 voter rolls so you always know exactly who to reach out to. This happens once, on your phone — nothing is ever uploaded.</div>
-    <button class="bigbtn" id="friends-setup-btn" onclick="runContactMatch()">Find My Friends</button>
-    <button id="friends-skip-btn" onclick="show('scr-garden')" style="margin-top:14px;background:none;border:none;font-size:12px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Skip for now</button>
-    <div id="friends-progress" style="display:none;width:100%;margin-top:20px;">
-      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#059669;letter-spacing:0.1em;margin-bottom:8px;" id="friends-status">Scanning voter rolls…</div>
-      <div style="background:#e5f3ff;border-radius:20px;height:10px;overflow:hidden;width:100%;">
-        <div id="friends-bar" style="height:100%;background:linear-gradient(90deg,#037ad8,#059669);border-radius:20px;width:0%;transition:width 0.25s ease;"></div>
-      </div>
-      <div style="font-size:10px;color:#9aa3ad;margin-top:6px;" id="friends-sub">Comparing your contacts with 570,000+ FL-04 voter records</div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ FRIEND VIEW (?b=) ============ -->
 <section id="scr-friend" class="screen">
   <div class="bgdeco" id="deco-friend"></div>
@@ -447,6 +428,16 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <button class="bigbtn" style="flex:1;background:#e5e7eb;color:#374151;box-shadow:none;font-size:14px;" onclick="closeOv('ov-confirm')">Cancel</button>
     <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
   </div>
+</div></div>
+<div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
+  <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🌱</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);line-height:1.35;">Finding your registered friends</div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10.5px;color:#059669;letter-spacing:0.1em;margin:16px 0 8px;" id="match-status">Starting…</div>
+  <div style="background:#e5f3ff;border-radius:20px;height:10px;overflow:hidden;width:100%;">
+    <div id="match-bar" style="height:100%;background:linear-gradient(90deg,#037ad8,#059669);border-radius:20px;width:0%;transition:width 0.3s ease;"></div>
+  </div>
+  <div style="font-size:10.5px;color:#9aa3ad;margin-top:9px;line-height:1.5;" id="match-sub">Comparing against 570,000+ FL-04 voter records</div>
+  <div style="font-size:9px;color:#c3ccd6;margin-top:12px;">This happens on your phone. Nothing is uploaded.</div>
 </div></div>
 <div class="overlay" id="ov-bloom"><div class="sheet" id="bloom-sheet" style="text-align:center;"></div></div>
 <div class="overlay" id="ov-ladder" onclick="if(event.target===this)closeOv('ov-ladder')"><div class="sheet" id="ladder-sheet"></div></div>
@@ -863,7 +854,8 @@ function doSignup() {
   save();
   api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
   renderGarden();
-  if (S.contacts && ('contacts' in navigator)) { show('scr-friends-setup'); } else { show('scr-garden'); }
+  show('scr-garden');
+  if (S.contacts && ('contacts' in navigator)) { runContactMatch(); }
 }
 
 /* ---------------- garden render ---------------- */
@@ -1289,50 +1281,41 @@ async function filterRegisteredContacts(contacts) {
 }
 
 async function runContactMatch() {
-  const btn = $('friends-setup-btn');
-  const skipBtn = $('friends-skip-btn');
-  const prog = $('friends-progress');
-  const bar = $('friends-bar');
-  const status = $('friends-status');
-  const sub = $('friends-sub');
-  if (btn) { btn.style.display = 'none'; }
-  if (skipBtn) { skipBtn.style.display = 'none'; }
-  if (prog) { prog.style.display = 'block'; }
-
-  function setProgress(pct, msg, detail) {
+  const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub'), emoji = $('match-emoji');
+  const setP = (pct, msg, detail) => {
     if (bar) bar.style.width = Math.min(100, pct) + '%';
-    if (status) status.textContent = msg;
-    if (detail && sub) sub.textContent = detail;
-  }
+    if (msg && status) status.textContent = msg;
+    if (detail !== undefined && sub) sub.textContent = detail;
+  };
+  const breathe = () => new Promise(r => setTimeout(r, 0));
+
+  openOv('ov-matching');
+  setP(4, 'Opening your contacts…', 'Choose which contacts to compare');
 
   try {
-    setProgress(5, 'Opening your contacts…', 'Select contacts to compare');
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
     const contacts = (raw || []).filter(c => c.name && c.name[0])
       .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
 
-    if (!contacts.length) { show('scr-garden'); return; }
+    if (!contacts.length) { closeOv('ov-matching'); return; }
 
-    setProgress(15, 'Grouping ' + contacts.length + ' contacts…', 'Organizing by last name prefix');
+    setP(14, 'Sorting ' + contacts.length + ' contacts…', 'Grouping by last name');
+    await breathe();
 
-    // Build prefix groups to know total work
     const groups = {};
     for (const c of contacts) {
       const parts = c.name.trim().split(/\s+/);
       if (parts.length < 2) continue;
       const last = parts[parts.length - 1];
       const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
-      if (!groups[prefix]) groups[prefix] = [];
-      groups[prefix].push({ ...c, _first: parts[0], _last: last });
+      (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
     }
 
-    const prefixes = Object.keys(groups);
+    const entries = Object.entries(groups);
     const results = [];
     let done = 0;
 
-    setProgress(20, 'Checking voter rolls…', prefixes.length + ' name groups to scan');
-
-    for (const [prefix, group] of Object.entries(groups)) {
+    for (const [prefix, group] of entries) {
       const bucket = await fetchVoterBucket(prefix);
       for (const contact of group) {
         const qlast = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
@@ -1342,25 +1325,26 @@ async function runContactMatch() {
           l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast &&
           f.replace(/[^A-Za-z]/g, '').toUpperCase().startsWith(qfirst.slice(0, fl))
         );
-        if (match) results.push({ ...contact, voterCity: match[2], _first: contact._first, _last: contact._last });
+        if (match) results.push({ ...contact, voterCity: match[2] });
       }
       done++;
-      const pct = 20 + Math.round((done / prefixes.length) * 72);
-      setProgress(pct, 'Scanning voter rolls… ' + done + ' of ' + prefixes.length, results.length + ' registered voters found so far');
-      await new Promise(r => setTimeout(r, 0)); // yield to repaint
+      setP(14 + Math.round((done / entries.length) * 78),
+           'Checking voter rolls… ' + done + ' of ' + entries.length,
+           results.length + (results.length === 1 ? ' friend found' : ' friends found'));
+      await breathe();
     }
 
-    setProgress(98, 'Wrapping up…', '');
     S.registeredFriends = results.map(c => ({
       name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '', voterCity: c.voterCity || ''
     }));
     save();
-    await new Promise(r => setTimeout(r, 350));
-    setProgress(100, 'Done!', '');
-    await new Promise(r => setTimeout(r, 400));
-    showToast('Found ' + S.registeredFriends.length + ' registered friends! 🌱');
+
+    if (emoji) emoji.textContent = '🌷';
+    setP(100, 'All done!', S.registeredFriends.length + (S.registeredFriends.length === 1 ? ' registered friend is ready to plant' : ' registered friends are ready to plant'));
+    await new Promise(r => setTimeout(r, 1300));
   } catch(e) {}
-  show('scr-garden');
+  closeOv('ov-matching');
+  renderGarden();
 }
 
 function renderRegisteredFriends() {
@@ -1468,7 +1452,7 @@ function buildDecos() {
     </div>
     <span class="petal" style="left:14%;animation-duration:8s;color:#f2a9c4;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#f-petal"/></svg></span>
     <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#f-petal"/></svg></span>`;
-  for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend', 'deco-friends-setup']) { $(id).innerHTML = deco; }
+  for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { const el = $(id); if (el) el.innerHTML = deco; }
 }
 
 /* ---------------- back-button intercept ---------------- */
