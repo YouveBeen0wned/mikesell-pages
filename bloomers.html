@@ -491,9 +491,22 @@ const CONFIG = {
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
   // one ask, active voice, no partisan labels. Player can edit before sending.
-  msgFriend: (first, link) => `Hi NAME, I'm playing a game that reminds you to vote, and to consider Mike Sell for Congress. You can help me with just one tap — will you remember to vote this November? ${link}`,
-  msgFollow: (first, link) => `Hi NAME, it's ${first} again. My Bloomers flower is still waiting on you 🌱 One tap and it blooms: ${link}`,
-  msgDeadline: (first) => `Hi NAME, it's ${first}. Florida's voter registration deadline comes up fast before the November election, and it takes about two minutes to check or register at registertovoteflorida.gov. Consider this your friendly reminder 🌱`,
+  // Carrier filters flag: political solicitation, tracking-style params, repeated
+  // identical text, and unusual characters. Variants keep sends from looking templated.
+  msgFriendVariants: [
+    (link) => `Hi NAME, I'm playing a garden game and just planted a flower in your name. One tap makes it bloom - are you planning to vote in November? ${link}`,
+    (link) => `Hey NAME! Planted a flower for you in a game I'm playing. It blooms when you say you're voting this November: ${link}`,
+    (link) => `NAME - I planted a flower in your name in a little garden game. Takes one tap to make it bloom if you're voting in November: ${link}`,
+    (link) => `Hi NAME, planted something for you today. One tap and it blooms - just need to know you're voting this November. ${link}`,
+  ],
+  msgFriend: (first, link) => `Hi NAME, I'm playing a garden game and just planted a flower in your name. One tap makes it bloom - are you planning to vote in November? ${link}`,
+  msgFollowVariants: [
+    (link) => `Hi NAME, that flower I planted is still waiting on you. One tap: ${link}`,
+    (link) => `NAME - my little flower still hasn't bloomed! One tap does it: ${link}`,
+    (link) => `Hey NAME, still hoping to see that flower bloom. Quick tap here: ${link}`,
+  ],
+  msgFollow: (first, link) => `Hi NAME, that flower I planted is still waiting on you. One tap: ${link}`,
+  msgDeadline: (first) => `Hi NAME, it's ${first}. Quick reminder that Florida's voter registration deadline comes up before the November election - takes about two minutes to check that you're still registered.`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
   waterGapH: 48, praiseCycleH: 0.5, maxTouches: 3, dailyTextCap: 5,
   poolBaseCycles: 3, // + 1 per rank
@@ -834,15 +847,15 @@ function confirmReset() {
 
 // Listen for b= param forwarded via postMessage from Wix parent frame
 window.addEventListener('message', function(e) {
-  if (e.data && e.data.type === 'bloom_friend' && e.data.b) {
-    initFriend(e.data.b, e.data.f || '');
+  if (e.data && e.data.type === 'bloom_friend' && (e.data.s || e.data.b)) {
+    initFriend(e.data.s || e.data.b, e.data.f || '');
   }
 });
 
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
-  const m = location.search.match(/[?&]b=([\w-]+)/);
+  const m = location.search.match(/[?&](?:s|b)=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
   load();
   if (/[?&]match=1/.test(location.search)) {
@@ -1077,12 +1090,13 @@ function plantNow(deadline) {
   const link = friendLink(id);
   const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
   const _nick = _rawNick.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-  const body = (deadline ? CONFIG.msgDeadline(S.first) : CONFIG.msgFriend(S.first, link)).replace('NAME', _nick);
+  const _v = CONFIG.msgFriendVariants;
+  const body = (deadline ? CONFIG.msgDeadline(S.first) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
   const _phone = (pendingPlant && pendingPlant.phone) || ($('dl-phone') ? $('dl-phone').value : '');
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
 }
-function friendLink(id) { return 'https://mikesell.org/bloomers?b=' + id + '&f=' + encodeURIComponent(S.first); }
+function friendLink(id) { return 'https://mikesell.org/bloomers?s=' + id; }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
@@ -1108,7 +1122,8 @@ function waterNow(id) {
   p.touches++; p.lastTouch = Date.now(); S.textsToday++;
   save(); closeOv('ov-plantpick');
   api('touch', { seedId: id, n: p.touches }); // [SERVER]
-  location.href = smsHref(CONFIG.msgFollow(S.first, friendLink(id)).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || '');
+  const _fv = CONFIG.msgFollowVariants;
+  location.href = smsHref(_fv[p.touches % _fv.length](friendLink(id)).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || '');
   if (p.touches >= CONFIG.maxTouches) setTimeout(() => doBloom(p, 'earned'), 800);
   else renderGarden();
 }
