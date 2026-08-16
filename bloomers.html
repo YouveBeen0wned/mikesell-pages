@@ -436,7 +436,8 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div id="import-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
   <div id="import-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
   <div id="import-steps" style="background:#f7fbff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 14px;margin-top:14px;text-align:left;"></div>
-  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>\n  <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Look in <b>Downloads</b> for a file ending in .vcf</div>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>
+  <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Look in <b>Downloads</b> for a file ending in .vcf</div>
   <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
   <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
 </div></div>
@@ -1131,9 +1132,13 @@ function plantNow(deadline) {
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
 }
-// Aged domain for outbound texts: carriers score URL reputation partly on domain
-// age, and vote.mikesell.org is brand new. mikesell.org redirects here, preserving ?s.
-function friendLink(id) { return 'https://mikesell.org/bloomers?s=' + id; }
+// SMS link domain. VERIFIED BY SEND TESTS: mikesell.org and its subdomains are on
+// a carrier blocklist (every message containing them was dropped); github.io
+// delivers fine. GitHub Pages 301s this to the branded domain with ?s= intact,
+// so recipients still land on vote.mikesell.org. Swap this one constant if a
+// neutral branded domain is registered later.
+const LINK_DOMAIN = 'https://youvebeen0wned.github.io/mikesell-pages/bloomers.html';
+function friendLink(id) { return LINK_DOMAIN + '?s=' + id; }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
