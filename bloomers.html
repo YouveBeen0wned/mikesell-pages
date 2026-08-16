@@ -542,8 +542,8 @@ const CONFIG = {
     (link) => `Hi NAME, still hoping to hear from you on the Bloomers game. One click confirms you're in this November. ${link}`,
   ],
   msgFollow: (first, link) => `Hi NAME, still hoping to hear from you on the Bloomers game. One click confirms you're in this November. ${link}`,
-  // Not-in-the-rolls message: registration first, candidate second.
-  msgDeadline: (first) => `Hi NAME, it's ${first}. I couldn't find you on the Florida voter roll - you may have moved or changed your name. It takes about two minutes to check or register at registertovoteflorida.gov, and the deadline comes up before November. If you do get registered, I'd love it if you took a look at Mike Sell while you're at it.`,
+  // Not-in-the-rolls message: casual, hedged, registration first.
+  msgDeadline: (first) => `Hi NAME, it's ${first}. Could be wrong, but it looks like you're not registered to vote... only takes about two minutes at registertovoteflorida.gov. If you get signed up, give Mike Sell a look while you're at it.`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
   waterGapH: 48, praiseCycleH: 0.5, maxTouches: 3, dailyTextCap: 5,
   poolBaseCycles: 3, // + 1 per rank
