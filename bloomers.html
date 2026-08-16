@@ -25,15 +25,15 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .bn.on{opacity:1;transform:scale(1.12);}
 .bn small{display:block;font-size:9px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;margin-top:2px;}
 .navic{width:26px;height:26px;}
-.bigbtn{display:block;margin:14px auto 0;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:#fff;background:var(--blue);border:none;border-radius:18px;padding:15px 30px;cursor:pointer;box-shadow:0 5px 0 #045ea6;}
+.bigbtn{display:block;margin:11px auto 0;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:#fff;background:var(--blue);border:none;border-radius:18px;padding:15px 30px;cursor:pointer;box-shadow:0 5px 0 #045ea6;}
 .bigbtn:active{transform:translateY(2px);box-shadow:0 3px 0 #045ea6;}
-.tinytxt{font-size:10px;line-height:1.55;text-align:center;color:#9aa3ad;padding:8px 16px 6px;position:relative;z-index:5;}
+.tinytxt{font-size:9px;line-height:1.45;text-align:center;color:#9aa3ad;padding:8px 16px 6px;position:relative;z-index:5;}
 .bgdeco{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
 #shell .screen>*:not(.bgdeco){position:relative;z-index:1;}
 .screen>.petal{position:absolute;}
 .petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
-.field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:9px 14px 10px;margin:10px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
-.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:60px;font-size:28px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
+.field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:7px 14px 8px;margin:7px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
+.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:50px;font-size:25px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
 .field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
 .field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
 #drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
@@ -41,10 +41,10 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);max-width:390px;width:calc(100% - 28px);background:#1a2a4a;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:13px 18px;border-radius:14px;text-align:center;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;line-height:1.5;}
 .field label{display:block;font-size:9px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;letter-spacing:0.09em;}
 .field input{border:none;outline:none;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:var(--ink);margin-top:3px;background:transparent;}
-.field.focus{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(3,122,216,0.1);padding:8px 13px 9px;}
+.field.focus{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(3,122,216,0.1);padding:6px 13px 7px;}
 .fieldnote{display:flex;justify-content:space-between;align-items:baseline;}
 .fieldnote em{font-style:normal;font-size:8.5px;color:#9aa3ad;}
-.pindot::placeholder{color:#c3d9ef;font-size:26px;}
+.pindot::placeholder{color:#c3d9ef;font-size:23px;}
 .card{background:#fff;border:2px solid #c9def2;border-radius:16px;padding:12px 15px;margin:12px 16px 0;box-shadow:0 2px 0 #dfeaf5;}
 .overlay{display:none;position:fixed;inset:0;background:rgba(6,20,35,0.55);z-index:40;align-items:center;justify-content:center;padding:20px;}
 .overlay.on{display:flex;}
@@ -253,8 +253,8 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 <!-- ============ SIGN UP ============ -->
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
-  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:26px 0 10px;">
-    <div style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:56px;">
+  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:8px 0 6px;">
+    <div style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:40px;">
       <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#f-tulip"/></svg>
       <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#f-blazing"/></svg>
       <svg style="width:30px;height:30px;margin-bottom:12px;"><use href="#f-passion"/></svg>
@@ -263,14 +263,14 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
       <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#f-primrose"/></svg>
       <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#f-daisy"/></svg>
     </div>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:32px;color:var(--blue);margin-top:2px;">Bloomers</div>
-    <svg viewBox="0 0 220 26" style="width:220px;height:26px;margin-top:2px;">
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:29px;color:var(--blue);margin-top:0;line-height:1.1;">Bloomers</div>
+    <svg viewBox="0 0 220 26" style="width:190px;height:20px;margin-top:1px;">
       <path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/>
       <path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/>
       <path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/>
     </svg>
-    <div style="font-size:12px;color:#5b6470;margin-top:4px;letter-spacing:0.03em;">Grow our community, one friend at a time</div>
-    <div style="display:flex;gap:10px;margin:18px 24px 0;align-self:stretch;">
+    <div style="font-size:11.5px;color:#5b6470;margin-top:3px;letter-spacing:0.02em;">Grow our community, one friend at a time</div>
+    <div style="display:flex;gap:10px;margin:11px 24px 0;align-self:stretch;">
       <div class="field" style="flex:1;margin:0;"><label>FIRST NAME</label><input id="f-first" autocomplete="given-name" placeholder="Alex"></div>
       <div class="field" style="flex:1;margin:0;"><label>LAST NAME</label><input id="f-last" autocomplete="family-name" placeholder="Rivera"></div>
     </div>
@@ -278,13 +278,13 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div class="field"><div class="fieldnote"><label>DATE OF BIRTH</label><em>Age Verification</em></div><input id="f-dob" inputmode="numeric" placeholder="MM / DD / YYYY" maxlength="14"></div>
     <div class="field" style="margin-left:16px;margin-right:16px;">
       <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your garden</em></div>
-      <div style="display:flex;gap:9px;margin-top:8px;">
+      <div style="display:flex;gap:9px;margin-top:6px;">
         <input class="pindot" placeholder="·" id="s-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin0','s-pin1')">
         <input class="pindot" placeholder="·" id="s-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin1','s-pin2')">
         <input class="pindot" placeholder="·" id="s-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin2','s-pin3')">
         <input class="pindot" placeholder="·" id="s-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin3',null)">
       </div>
-      <div style="font-size:9px;color:#9aa3ad;margin-top:5px;">Optional — 4 digits. Protects your garden on shared devices.</div>
+      <div style="font-size:8.5px;color:#9aa3ad;margin-top:3px;line-height:1.4;">Optional — 4 digits. Protects your garden on shared devices. Bloomers stores no data, so we cannot look this up for you. Write it down.</div>
     </div>
     <div class="field" style="display:flex;align-items:center;gap:10px;background:#f4f9ff;border:2px solid var(--blue);cursor:pointer;" onclick="toggleContacts()">
       <span style="font-size:16px;">🔎</span>
@@ -296,7 +296,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     </div>
     <div id="signup-err" style="display:none;font-size:11px;color:var(--red);margin-top:8px;"></div>
     <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;"><use href="#f-seed"/></svg>Start my garden</button>
-    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:16px;">NOT LEFT. NOT RIGHT. FORWARD.</div>
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:10px;">NOT LEFT. NOT RIGHT. FORWARD.</div>
     <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
   </div>
 </section>
@@ -431,26 +431,34 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
   </div>
 </div></div>
-<div class="overlay" id="ov-popout" style="z-index:400;"><div class="sheet" style="max-width:330px;text-align:center;padding:28px 24px 22px;">
-  <div style="font-size:42px;">🔎</div>
-  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:6px;line-height:1.35;">One quick step to match your contacts</div>
-  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Your phone only allows contact matching on a full-screen page, not inside an embedded one. Tap below — we'll match your friends and bring you right back.</div>
-  <button class="bigbtn" onclick="popOutToMatch()">Match My Contacts</button>
-  <button onclick="closeOv('ov-popout')" style="margin-top:12px;background:none;border:none;font-size:12px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Skip — I'll search by name instead</button>
+<div class="overlay" id="ov-connect" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
+  <div style="text-align:center;font-size:38px;">🌱</div>
+  <div id="connect-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
+  <div id="connect-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
+  <div id="connect-opts"></div>
+  <div style="text-align:center;margin-top:14px;"><span onclick="closeOv('ov-connect')" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
 </div></div>
-<div class="overlay" id="ov-nocontacts" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:28px 24px 22px;">
-  <div style="font-size:42px;">🔎</div>
-  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:6px;line-height:1.35;">Search by name instead</div>
-  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">This browser doesn't support contact matching. You can still look up any friend by name on the Plant a Seed page — it checks the same voter rolls.</div>
-  <button class="bigbtn" onclick="closeOv('ov-nocontacts');showTab('plant');">Got it</button>
+<div class="overlay" id="ov-paste" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
+  <div style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);">Paste your friends</div>
+  <div style="text-align:center;font-size:11.5px;color:#5b6470;margin-top:7px;line-height:1.55;">One full name per line. A phone number after the name is optional.</div>
+  <textarea id="paste-box" rows="7" placeholder="Rebecca Johnson&#10;Marcus Williams 904-555-2222" style="width:100%;margin-top:12px;border:2px solid #c9def2;border-radius:12px;padding:11px;font-family:Arial,sans-serif;font-size:14px;color:var(--ink);resize:vertical;box-sizing:border-box;outline:none;"></textarea>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="runPasteMatch()">Check the voter rolls</button>
+  <div style="text-align:center;margin-top:12px;"><span onclick="closeOv('ov-paste');openConnectSheet();" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Back</span></div>
+</div></div>
+<div class="overlay" id="ov-popstart" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
+  <div style="font-size:44px;">📇</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;line-height:1.35;">Ready when you are</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Tap below and pick the contacts you'd like to check. Your phone requires this tap — nothing is uploaded.</div>
+  <button class="bigbtn" onclick="closeOv('ov-popstart');runContactMatch(true);">Choose Contacts</button>
 </div></div>
 <div class="overlay" id="ov-matchdone" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
   <div style="font-size:46px;">🌷</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;" id="matchdone-title">All set!</div>
   <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
   <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Close this tab</button>
-  <div style="font-size:10.5px;color:#9aa3ad;margin-top:12px;line-height:1.5;">Return to the Bloomers tab — your friends are waiting on the Plant a Seed page.</div>
+  <div style="font-size:10.5px;color:#9aa3ad;margin-top:12px;line-height:1.5;">Return to the Bloomers tab — your friends are on the Plant a Seed page.</div>
 </div></div>
+<input type="file" id="vcf-input" accept=".vcf,.vcard,text/vcard,text/x-vcard" multiple style="position:absolute;left:-9999px;width:1px;height:1px;" onchange="onVcfChosen(event)">
 <div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
   <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🌱</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);line-height:1.35;">Finding your registered friends</div>
@@ -861,7 +869,7 @@ function boot() {
   if (/[?&]match=1/.test(location.search)) {
     if (!S) { document.body.innerHTML = '<div style="font-family:Arial;padding:40px;text-align:center;color:#1a2a4a;">Start your garden first, then try matching again.</div>'; return; }
     show('scr-garden'); renderGarden();
-    runContactMatch(true);
+    openOv('ov-popstart'); // picker requires a user gesture — cannot auto-fire on load
     return;
   }
   if (!S) { show('scr-signup'); return; }
@@ -910,10 +918,8 @@ function doSignup() {
   renderGarden();
   show('scr-garden');
   if (S.contacts) {
-    const st = contactPickerState();
-    if (st === 'ready') runContactMatch();
-    else if (st === 'blocked-iframe') openOv('ov-popout');
-    else openOv('ov-nocontacts');
+    if (contactPickerState() === 'ready') runContactMatch(); // gesture still live from the click
+    else openConnectSheet();
   }
 }
 
@@ -1348,7 +1354,34 @@ function popOutToMatch() {
   showToast('Finish matching in the new tab, then come back here 🌱');
 }
 
-async function runContactMatch(popoutMode) {
+function parseVCards(text) {
+  const unfolded = text.replace(/\r\n/g, '\n').replace(/\n[ \t]/g, '');
+  const out = [];
+  for (const card of unfolded.split(/BEGIN:VCARD/i).slice(1)) {
+    let fn = (card.match(/(?:^|\n)FN[^:\n]*:(.+)/i) || [])[1];
+    if (!fn) {
+      const n = (card.match(/(?:^|\n)N[^:\n]*:(.+)/i) || [])[1];
+      if (n) { const q = n.split(';'); fn = ((q[1] || '') + ' ' + (q[0] || '')).trim(); }
+    }
+    const tel = (card.match(/(?:^|\n)TEL[^:\n]*:(.+)/i) || [])[1] || '';
+    if (fn && fn.trim()) out.push({ name: fn.trim().replace(/\\,/g, ',').replace(/\\;/g, ';'), phone: tel.trim() });
+  }
+  return out;
+}
+
+function parseNameList(text) {
+  return text.split(/\n|,(?=\s*[A-Za-z])/).map(l => {
+    const raw = l.trim(); if (!raw) return null;
+    const pm = raw.match(/([+\d][\d\-\s().]{6,})$/);
+    const phone = pm ? pm[1].replace(/\D/g, '') : '';
+    const name = (pm ? raw.slice(0, pm.index) : raw).replace(/[,;|\t]+$/, '').trim();
+    return name.split(/\s+/).length >= 2 ? { name, phone } : null;
+  }).filter(Boolean);
+}
+
+// Shared matching core — every input method funnels through here.
+async function matchContactList(contacts, opts) {
+  opts = opts || {};
   const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub'), emoji = $('match-emoji');
   const setP = (pct, msg, detail) => {
     if (bar) bar.style.width = Math.min(100, pct) + '%';
@@ -1356,82 +1389,143 @@ async function runContactMatch(popoutMode) {
     if (detail !== undefined && sub) sub.textContent = detail;
   };
   const breathe = () => new Promise(r => setTimeout(r, 0));
-
+  if (emoji) emoji.textContent = '🌱';
   openOv('ov-matching');
-  setP(4, 'Opening your contacts…', 'Choose which contacts to compare');
+  setP(12, 'Sorting ' + contacts.length + ' contacts…', 'Grouping by last name');
+  await breathe();
 
+  const groups = {};
+  for (const c of contacts) {
+    const parts = String(c.name).trim().split(/\s+/);
+    if (parts.length < 2) continue;
+    const last = parts[parts.length - 1];
+    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
+    (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
+  }
+  const entries = Object.entries(groups);
+  if (!entries.length) {
+    closeOv('ov-matching');
+    showToast('Those need first and last names to match the voter rolls.');
+    return 0;
+  }
+  const results = []; let done = 0;
+  for (const [prefix, group] of entries) {
+    const bucket = await fetchVoterBucket(prefix);
+    for (const contact of group) {
+      const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const qf = contact._first.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const fl = Math.min(3, qf.length);
+      const m = bucket.find(([f, l]) =>
+        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql &&
+        f.replace(/[^A-Za-z]/g, '').toUpperCase().startsWith(qf.slice(0, fl)));
+      if (m) results.push({ ...contact, voterCity: m[2] });
+    }
+    done++;
+    setP(12 + Math.round((done / entries.length) * 80),
+         'Checking voter rolls… ' + done + ' of ' + entries.length,
+         results.length + (results.length === 1 ? ' friend found' : ' friends found'));
+    await breathe();
+  }
+
+  const seen = {};
+  const merged = (S.registeredFriends || []).concat(results.map(c => ({
+    name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '', voterCity: c.voterCity || ''
+  }))).filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
+  S.registeredFriends = merged; save();
+
+  if (emoji) emoji.textContent = '🌷';
+  const n = results.length;
+  setP(100, 'All done!', n + (n === 1 ? ' registered friend added' : ' registered friends added'));
+  await new Promise(r => setTimeout(r, 1200));
+  closeOv('ov-matching');
+
+  if (opts.popout) {
+    $('matchdone-title').textContent = n + (n === 1 ? ' friend found!' : ' friends found!');
+    $('matchdone-sub').textContent = n
+      ? 'Saved to your garden. Head back to the Bloomers tab.'
+      : 'No matches in the FL-04 voter rolls. You can still search any name by hand.';
+    openOv('ov-matchdone');
+    return n;
+  }
+  renderGarden();
+  if (n) showTab('plant'); else openConnectSheet(true);
+  return n;
+}
+
+// Tier 1: native phone picker. MUST be called from a user gesture.
+async function runContactMatch(popoutMode) {
   try {
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
     const contacts = (raw || []).filter(c => c.name && c.name[0])
       .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
-
-    if (!contacts.length) { closeOv('ov-matching'); showToast('No contacts selected — you can search by name anytime.'); return; }
-
-    setP(14, 'Sorting ' + contacts.length + ' contacts…', 'Grouping by last name');
-    await breathe();
-
-    const groups = {};
-    for (const c of contacts) {
-      const parts = c.name.trim().split(/\s+/);
-      if (parts.length < 2) continue;
-      const last = parts[parts.length - 1];
-      const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
-      (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
-    }
-
-    const entries = Object.entries(groups);
-    const results = [];
-    let done = 0;
-
-    for (const [prefix, group] of entries) {
-      const bucket = await fetchVoterBucket(prefix);
-      for (const contact of group) {
-        const qlast = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
-        const qfirst = contact._first.replace(/[^A-Za-z]/g, '').toUpperCase();
-        const fl = Math.min(3, qfirst.length);
-        const match = bucket.find(([f, l]) =>
-          l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast &&
-          f.replace(/[^A-Za-z]/g, '').toUpperCase().startsWith(qfirst.slice(0, fl))
-        );
-        if (match) results.push({ ...contact, voterCity: match[2] });
-      }
-      done++;
-      setP(14 + Math.round((done / entries.length) * 78),
-           'Checking voter rolls… ' + done + ' of ' + entries.length,
-           results.length + (results.length === 1 ? ' friend found' : ' friends found'));
-      await breathe();
-    }
-
-    S.registeredFriends = results.map(c => ({
-      name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '', voterCity: c.voterCity || ''
-    }));
-    save();
-
-    if (emoji) emoji.textContent = '🌷';
-    const n = S.registeredFriends.length;
-    setP(100, 'All done!', n + (n === 1 ? ' registered friend is ready to plant' : ' registered friends are ready to plant'));
-    await new Promise(r => setTimeout(r, 1200));
+    if (!contacts.length) { showToast('No contacts selected.'); return; }
+    await matchContactList(contacts, { popout: popoutMode });
+  } catch (err) {
     closeOv('ov-matching');
-    if (popoutMode) {
-      $('matchdone-title').textContent = n + (n === 1 ? ' friend found!' : ' friends found!');
-      $('matchdone-sub').textContent = n
-        ? 'We matched your contacts against the FL-04 voter rolls and saved them to your garden.'
-        : 'None of your contacts matched the FL-04 voter rolls. You can still search any name by hand.';
-      openOv('ov-matchdone');
-      return;
-    }
-    renderGarden();
-    if (n) showTab('plant');
-    return;
-  } catch(err) {
-    closeOv('ov-matching');
-    const blocked = err && (err.name === 'SecurityError' || /top-level/i.test(err.message || ''));
-    if (blocked && !popoutMode) { openOv('ov-popout'); return; }
-    if (err && err.name === 'AbortError') { renderGarden(); return; } // user cancelled picker
-    showToast('Contact matching is unavailable here — search by name on Plant a Seed 🌱');
-    renderGarden();
-    return;
+    if (err && err.name === 'AbortError') { renderGarden(); return; }
+    openConnectSheet();
   }
+}
+
+// Tier 2: pop out to a top-level tab (Contact Picker is blocked in iframes)
+function popOutToMatch() {
+  closeOv('ov-connect');
+  window.open(SELF_URL + '?match=1', '_blank');
+  showToast('Finish in the new tab, then come back here 🌱');
+}
+
+// Tier 3: vCard upload — works in iframes, on iOS, and on desktop
+function pickVcf() {
+  const inp = $('vcf-input');
+  inp.value = '';
+  inp.click();
+}
+async function onVcfChosen(ev) {
+  const files = Array.from(ev.target.files || []);
+  if (!files.length) return;
+  closeOv('ov-connect');
+  let all = [];
+  for (const f of files) { try { all = all.concat(parseVCards(await f.text())); } catch (e) {} }
+  if (!all.length) { showToast('No contacts found in that file — make sure it is a .vcf export.'); openConnectSheet(); return; }
+  await matchContactList(all, {});
+}
+
+// Tier 4: paste a list — works absolutely everywhere
+function openPasteSheet() { closeOv('ov-connect'); $('paste-box').value = ''; openOv('ov-paste'); }
+async function runPasteMatch() {
+  const txt = $('paste-box').value || '';
+  const list = parseNameList(txt);
+  if (!list.length) { showToast('Add one full name per line (first and last).'); return; }
+  closeOv('ov-paste');
+  await matchContactList(list, {});
+}
+
+// The chooser — only ever offers methods that actually work here.
+function openConnectSheet(afterEmpty) {
+  const st = contactPickerState();
+  const row = (icon, title, desc, fn, primary) =>
+    `<button onclick="${fn}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:${primary ? '#f4f9ff' : '#fff'};border:2px solid ${primary ? 'var(--blue)' : '#e3ecf5'};border-radius:14px;padding:13px 14px;margin-top:9px;cursor:pointer;">
+      <span style="font-size:22px;flex-shrink:0;">${icon}</span>
+      <span style="flex:1;">
+        <span style="display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">${title}</span>
+        <span style="display:block;font-size:10.5px;color:#7c8794;margin-top:2px;line-height:1.45;">${desc}</span>
+      </span>
+      <span style="color:#c3ccd6;font-size:16px;">›</span>
+    </button>`;
+
+  let opts = '';
+  if (st === 'ready') opts += row('📇', 'Use my phone contacts', 'One tap. Nothing leaves your phone.', 'closeOv(\'ov-connect\');runContactMatch()', true);
+  if (st === 'blocked-iframe') opts += row('📇', 'Use my phone contacts', 'Opens full screen for one moment, then returns.', 'popOutToMatch()', true);
+  opts += row('📄', 'Upload a contacts file', 'Export contacts as .vcf — works on any phone.', 'pickVcf()', st !== 'ready' && st !== 'blocked-iframe');
+  opts += row('📋', 'Paste a list of names', 'One full name per line. Works anywhere.', 'openPasteSheet()');
+  opts += row('🔎', 'Search one at a time', 'Look friends up by name as you go.', 'closeOv(\'ov-connect\');showTab(\'plant\')');
+
+  $('connect-title').textContent = afterEmpty ? 'No matches yet' : 'Find your registered friends';
+  $('connect-sub').textContent = afterEmpty
+    ? 'None of those matched the FL-04 rolls. Try another way:'
+    : 'Bloomers checks your friends against the FL-04 voter rolls, right here on your phone.';
+  $('connect-opts').innerHTML = opts;
+  openOv('ov-connect');
 }
 
 function renderRegisteredFriends() {
