@@ -436,7 +436,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div id="import-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
   <div id="import-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
   <div id="import-steps" style="background:#f7fbff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 14px;margin-top:14px;text-align:left;"></div>
-  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>\n  <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Look in <b>Downloads</b> for a file ending in .vcf</div>
   <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
   <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
 </div></div>
@@ -466,7 +466,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
   <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my garden</button>
 </div></div>
-<input type="file" id="vcf-input" accept=".vcf,.vcard,text/vcard,text/x-vcard" multiple style="position:absolute;left:-9999px;width:1px;height:1px;" onchange="onVcfChosen(event)">
+<input type="file" id="vcf-input" multiple style="position:absolute;left:-9999px;width:1px;height:1px;" onchange="onVcfChosen(event)">
 <div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
   <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🌱</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);line-height:1.35;">Finding your registered friends</div>
@@ -910,6 +910,7 @@ let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const IS_ANDROID = /Android/.test(navigator.userAgent);
+const IS_SAMSUNG = /SamsungBrowser|SM-[A-Z0-9]|Samsung/i.test(navigator.userAgent);
 const IN_IFRAME = (function(){ try { return window.self !== window.top; } catch(e){ return true; } })();
 // Pop-out matching needs a TOP-LEVEL page, which means a visible URL.
 // Leave blank until a branded domain (e.g. https://vote.mikesell.org/bloomers.html)
@@ -1130,7 +1131,9 @@ function plantNow(deadline) {
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
 }
-function friendLink(id) { return 'https://vote.mikesell.org/bloomers.html?s=' + id; }
+// Aged domain for outbound texts: carriers score URL reputation partly on domain
+// age, and vote.mikesell.org is brand new. mikesell.org redirects here, preserving ?s.
+function friendLink(id) { return 'https://mikesell.org/bloomers?s=' + id; }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
@@ -1383,16 +1386,56 @@ function popOutToMatch() {
 }
 
 function parseVCards(text) {
-  const unfolded = text.replace(/\r\n/g, '\n').replace(/\n[ \t]/g, '');
+  let t = String(text).replace(/\r\n/g, '\n');
+  t = t.replace(/=\n/g, '');        // vCard 2.1 quoted-printable soft breaks
+  t = t.replace(/\n[ \t]/g, '');    // RFC folded lines
+
+  // Decode quoted-printable (Samsung uses it for any non-ASCII name)
+  const qp = (v, params) => {
+    if (!/QUOTED-PRINTABLE/i.test(params || '')) return v;
+    try {
+      const bytes = [];
+      for (let i = 0; i < v.length; i++) {
+        if (v[i] === '=' && /[0-9A-F]{2}/i.test(v.substr(i + 1, 2))) {
+          bytes.push(parseInt(v.substr(i + 1, 2), 16)); i += 2;
+        } else bytes.push(v.charCodeAt(i));
+      }
+      return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
+    } catch (e) { return v; }
+  };
+
+  // Property name must be followed by ; or : — stops NOTE/NICKNAME matching N.
+  const grab = (card, prop) => {
+    const re = new RegExp('(?:^|\\n)' + prop + '((?:;[^:\\n]*)?):(.*)', 'i');
+    const m = card.match(re);
+    return m ? { params: m[1] || '', value: qp(m[2].trim(), m[1]) } : null;
+  };
+
   const out = [];
-  for (const card of unfolded.split(/BEGIN:VCARD/i).slice(1)) {
-    let fn = (card.match(/(?:^|\n)FN[^:\n]*:(.+)/i) || [])[1];
-    if (!fn) {
-      const n = (card.match(/(?:^|\n)N[^:\n]*:(.+)/i) || [])[1];
-      if (n) { const q = n.split(';'); fn = ((q[1] || '') + ' ' + (q[0] || '')).trim(); }
+  for (const card of t.split(/BEGIN:VCARD/i).slice(1)) {
+    let name = '';
+    const fn = grab(card, 'FN');
+    if (fn && fn.value) name = fn.value;
+    if (!name) {
+      const n = grab(card, 'N');
+      if (n && n.value) {
+        const q = n.value.split(';');
+        name = ((q[1] || '') + ' ' + (q[0] || '')).trim(); // given + family
+      }
     }
-    const tel = (card.match(/(?:^|\n)TEL[^:\n]*:(.+)/i) || [])[1] || '';
-    if (fn && fn.trim()) out.push({ name: fn.trim().replace(/\\,/g, ',').replace(/\\;/g, ';'), phone: tel.trim() });
+    if (!name) continue;
+    name = name.replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\s+/g, ' ').trim();
+
+    // Prefer a mobile number when the card lists several.
+    let phone = '';
+    const tels = [];
+    const telRe = /(?:^|\n)TEL((?:;[^:\n]*)?):(.*)/gi;
+    let m;
+    while ((m = telRe.exec(card)) !== null) tels.push({ params: m[1] || '', value: m[2].trim() });
+    const mobile = tels.find(x => /CELL|MOBILE|IPHONE/i.test(x.params));
+    phone = (mobile || tels[0] || { value: '' }).value.replace(/[^\d+]/g, '');
+
+    out.push({ name, phone });
   }
   return out;
 }
@@ -1621,10 +1664,11 @@ function popOutToMatch() {
 
 // Tier 3: vCard upload — works in iframes, on iOS, and on desktop
 function pickVcf() {
+  // No accept filter: Android greys out Google Drive files and iOS greys out
+  // .vcf entirely when one is set. The parser validates content instead.
   const inp = $('vcf-input');
   inp.value = '';
-  // iOS Files greys out .vcf when a strict accept list is present.
-  if (IS_IOS) inp.removeAttribute('accept');
+  inp.removeAttribute('accept');
   inp.click();
 }
 async function onVcfChosen(ev) {
@@ -1633,7 +1677,13 @@ async function onVcfChosen(ev) {
   closeOv('ov-connect'); closeOv('ov-import');
   let all = [];
   for (const f of files) { try { all = all.concat(parseVCards(await f.text())); } catch (e) {} }
-  if (!all.length) { showToast('No contacts found in that file — make sure it is a .vcf export.'); openImportSheet(); return; }
+  if (!all.length) {
+    const names = files.map(f => f.name).join(', ');
+    showToast(/\.vcf|\.vcard/i.test(names)
+      ? 'That .vcf had no readable contacts — try exporting again with All accounts selected.'
+      : 'That was not a contacts file. Look for one ending in .vcf, usually in Downloads.');
+    openImportSheet(); return;
+  }
   await matchContactList(all, {});
 }
 
@@ -1660,10 +1710,10 @@ function exportSteps() {
   };
   if (IS_ANDROID) return {
     label: 'On your phone',
-    steps: ['Open <b>Contacts</b> → menu <b>⋮</b> → <b>Import/Export contacts</b>',
-            'Tap <b>Export to .vcf file</b>, check <b>All</b>, then <b>Save</b>',
-            'It lands in your <b>Downloads</b> folder'],
-    note: 'Seeing only a few contacts? Set Contacts to display to <b>All accounts</b> first.'
+    steps: ['Open <b>Contacts</b> → <b>⋮</b> → <b>Settings</b>',
+            'Under Manage contacts, tap <b>Export</b>',
+            'Pick your account → <b>Export to .vcf file</b>'],
+    note: 'It saves to <b>Downloads</b> — pick it from there, not Drive.<br>Samsung Contacts app instead? <b>☰</b> → Manage contacts → Import or export contacts.'
   };
   return {
     label: 'On your device',
