@@ -33,8 +33,9 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .screen>.petal{position:absolute;}
 .petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
 .field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:9px 14px 10px;margin:10px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
-.pindot{width:48px;height:58px;font-size:26px;text-align:center;border:2px solid #c9def2;border-radius:12px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#fff;}
-.pindot:focus{border-color:var(--blue);outline:none;}
+.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:60px;font-size:28px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
+.field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
+.field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
 #drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
 #remove-hint{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#dc2626;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;padding:8px 18px;border-radius:20px;z-index:601;display:none;pointer-events:none;white-space:nowrap;}
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);max-width:390px;width:calc(100% - 28px);background:#1a2a4a;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:13px 18px;border-radius:14px;text-align:center;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;line-height:1.5;}
@@ -43,6 +44,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .field.focus{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(3,122,216,0.1);padding:8px 13px 9px;}
 .fieldnote{display:flex;justify-content:space-between;align-items:baseline;}
 .fieldnote em{font-style:normal;font-size:8.5px;color:#9aa3ad;}
+.pindot::placeholder{color:#c3d9ef;font-size:26px;}
 .card{background:#fff;border:2px solid #c9def2;border-radius:16px;padding:12px 15px;margin:12px 16px 0;box-shadow:0 2px 0 #dfeaf5;}
 .overlay{display:none;position:fixed;inset:0;background:rgba(6,20,35,0.55);z-index:40;align-items:center;justify-content:center;padding:20px;}
 .overlay.on{display:flex;}
@@ -276,11 +278,11 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div class="field"><div class="fieldnote"><label>DATE OF BIRTH</label><em>Age Verification</em></div><input id="f-dob" inputmode="numeric" placeholder="MM / DD / YYYY" maxlength="14"></div>
     <div class="field" style="margin-left:16px;margin-right:16px;">
       <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your garden</em></div>
-      <div style="display:flex;gap:10px;margin-top:6px;">
-        <input class="pindot" id="s-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin0','s-pin1')">
-        <input class="pindot" id="s-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin1','s-pin2')">
-        <input class="pindot" id="s-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin2','s-pin3')">
-        <input class="pindot" id="s-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin3',null)">
+      <div style="display:flex;gap:9px;margin-top:8px;">
+        <input class="pindot" placeholder="·" id="s-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin0','s-pin1')">
+        <input class="pindot" placeholder="·" id="s-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin1','s-pin2')">
+        <input class="pindot" placeholder="·" id="s-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin2','s-pin3')">
+        <input class="pindot" placeholder="·" id="s-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin3',null)">
       </div>
       <div style="font-size:9px;color:#9aa3ad;margin-top:5px;">Optional — 4 digits. Protects your garden on shared devices.</div>
     </div>
@@ -308,10 +310,10 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div id="lock-seal" style="margin:14px 0 10px;"></div>
     <div style="font-size:12px;color:#5b6470;margin-bottom:16px;">Enter your PIN to continue</div>
     <div style="display:flex;gap:12px;margin-bottom:6px;">
-      <input class="pindot" id="lock-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin0','lock-pin1')">
-      <input class="pindot" id="lock-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin1','lock-pin2')">
-      <input class="pindot" id="lock-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin2','lock-pin3')">
-      <input class="pindot" id="lock-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin3',null)" onkeydown="if(event.key==='Enter')doUnlock()">
+      <input class="pindot" placeholder="·" id="lock-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin0','lock-pin1')">
+      <input class="pindot" placeholder="·" id="lock-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin1','lock-pin2')">
+      <input class="pindot" placeholder="·" id="lock-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin2','lock-pin3')">
+      <input class="pindot" placeholder="·" id="lock-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin3',null)" onkeydown="if(event.key==='Enter')doUnlock()">
     </div>
     <div id="lock-err" style="display:none;font-size:11px;color:var(--red);margin:4px 0 8px;text-align:center;"></div>
     <button class="bigbtn" style="margin-top:10px;" onclick="doUnlock()">Unlock my garden</button>
