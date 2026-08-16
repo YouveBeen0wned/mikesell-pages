@@ -431,6 +431,15 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
   </div>
 </div></div>
+<div class="overlay" id="ov-import" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
+  <div style="text-align:center;font-size:38px;">📇</div>
+  <div id="import-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
+  <div id="import-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
+  <div id="import-steps" style="background:#f7fbff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 14px;margin-top:14px;text-align:left;"></div>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>
+  <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
+  <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
+</div></div>
 <div class="overlay" id="ov-connect" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
   <div style="text-align:center;font-size:38px;">🌱</div>
   <div id="connect-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
@@ -898,6 +907,9 @@ function boot() {
 
 /* ---------------- contact-match capability ---------------- */
 let MATCH_MODE = false;
+const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/.test(navigator.userAgent);
 const IN_IFRAME = (function(){ try { return window.self !== window.top; } catch(e){ return true; } })();
 // Pop-out matching needs a TOP-LEVEL page, which means a visible URL.
 // Leave blank until a branded domain (e.g. https://vote.mikesell.org/bloomers.html)
@@ -934,12 +946,9 @@ function doSignup() {
   api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
   renderGarden();
   show('scr-garden');
-  if (S.contacts) {
-    const st = contactPickerState();
-    if (st === 'ready') runContactMatch();          // gesture still live from the click
-    else if (st === 'blocked-iframe') popOutToMatch();
-    else openConnectSheet();  // picker unavailable here -> offer methods that work in place
-  }
+  // vCard first: no Select All exists in the picker, so importing the file is the
+  // only path that does not cost one tap per contact.
+  if (S.contacts) openImportSheet();
 }
 
 /* ---------------- garden render ---------------- */
@@ -1582,7 +1591,7 @@ async function matchContactList(contacts, opts) {
     return n;
   }
   renderGarden();
-  if (n) showTab('plant'); else openConnectSheet(true);
+  if (n) showTab('plant'); else openImportSheet(true);
   return n;
 }
 
@@ -1614,15 +1623,17 @@ function popOutToMatch() {
 function pickVcf() {
   const inp = $('vcf-input');
   inp.value = '';
+  // iOS Files greys out .vcf when a strict accept list is present.
+  if (IS_IOS) inp.removeAttribute('accept');
   inp.click();
 }
 async function onVcfChosen(ev) {
   const files = Array.from(ev.target.files || []);
   if (!files.length) return;
-  closeOv('ov-connect');
+  closeOv('ov-connect'); closeOv('ov-import');
   let all = [];
   for (const f of files) { try { all = all.concat(parseVCards(await f.text())); } catch (e) {} }
-  if (!all.length) { showToast('No contacts found in that file — make sure it is a .vcf export.'); openConnectSheet(); return; }
+  if (!all.length) { showToast('No contacts found in that file — make sure it is a .vcf export.'); openImportSheet(); return; }
   await matchContactList(all, {});
 }
 
@@ -1637,6 +1648,53 @@ async function runPasteMatch() {
 }
 
 // The chooser — only ever offers methods that actually work here.
+
+// Per-platform export steps. Everything happens on the phone; no computer needed.
+function exportSteps() {
+  if (IS_IOS) return {
+    label: 'On your iPhone',
+    steps: ['Open <b>Contacts</b>, tap <b>Lists</b> at the top left',
+            'Choose <b>All Contacts</b>, then tap and hold',
+            'Tap <b>Export</b> → <b>Save to Files</b>'],
+    note: 'Then come back and tap the button below.'
+  };
+  if (IS_ANDROID) return {
+    label: 'On your phone',
+    steps: ['Open <b>Contacts</b> → menu <b>⋮</b> → <b>Import/Export contacts</b>',
+            'Tap <b>Export to .vcf file</b>, check <b>All</b>, then <b>Save</b>',
+            'It lands in your <b>Downloads</b> folder'],
+    note: 'Seeing only a few contacts? Set Contacts to display to <b>All accounts</b> first.'
+  };
+  return {
+    label: 'On your device',
+    steps: ['Open your contacts app or contacts.google.com',
+            'Select all contacts',
+            'Export as <b>vCard (.vcf)</b>'],
+    note: 'Then come back and tap the button below.'
+  };
+}
+
+function openImportSheet(afterEmpty) {
+  const e = exportSteps();
+  const canPick = contactPickerState() === 'ready';
+  $('import-title').textContent = afterEmpty ? 'No matches yet' : 'Import your contacts';
+  $('import-sub').innerHTML = afterEmpty
+    ? 'Try importing your full contacts file instead — it checks everyone at once.'
+    : 'Save your contacts once, and every friend gets checked against the FL-04 voter rolls in one pass. Nothing is uploaded.';
+  $('import-steps').innerHTML =
+    `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.12em;color:#059669;margin-bottom:7px;">${e.label.toUpperCase()} · ONE TIME</div>` +
+    e.steps.map((s, i) =>
+      `<div style="display:flex;gap:9px;align-items:flex-start;margin-top:7px;">
+         <span style="flex-shrink:0;width:18px;height:18px;border-radius:50%;background:#dcfce7;color:#059669;font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;display:flex;align-items:center;justify-content:center;">${i + 1}</span>
+         <span style="flex:1;font-size:12px;color:#4b5563;line-height:1.5;">${s}</span>
+       </div>`).join('') +
+    `<div style="font-size:10px;color:#9aa3ad;margin-top:9px;line-height:1.5;">${e.note}</div>`;
+  $('import-alt').innerHTML = canPick
+    ? `<span onclick="closeOv('ov-import');runContactMatch();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">Or pick a few contacts by hand</span>`
+    : `<span onclick="closeOv('ov-import');openPasteSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">Or paste a list of names</span>`;
+  openOv('ov-import');
+}
+
 function openConnectSheet(afterEmpty) {
   const st = contactPickerState();
   const row = (icon, title, desc, fn, primary) =>
