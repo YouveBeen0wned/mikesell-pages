@@ -513,21 +513,16 @@ const CONFIG = {
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
   // one ask, active voice, no partisan labels. Player can edit before sending.
-  // Carrier filters flag: political solicitation, tracking-style params, repeated
-  // identical text, and unusual characters. Variants keep sends from looking templated.
+  // Mike's approved wording (2026-08-16). NAME is replaced with the recipient's
+  // first name or the nickname the volunteer typed on the seed.
   msgFriendVariants: [
-    (link) => `Hi NAME, I'm playing a garden game and just planted a flower in your name. One tap makes it bloom - are you planning to vote in November? ${link}`,
-    (link) => `Hey NAME! Planted a flower for you in a game I'm playing. It blooms when you say you're voting this November: ${link}`,
-    (link) => `NAME - I planted a flower in your name in a little garden game. Takes one tap to make it bloom if you're voting in November: ${link}`,
-    (link) => `Hi NAME, planted something for you today. One tap and it blooms - just need to know you're voting this November. ${link}`,
+    (link) => `Hi NAME, Bloomers is hosting a game to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
   ],
-  msgFriend: (first, link) => `Hi NAME, I'm playing a garden game and just planted a flower in your name. One tap makes it bloom - are you planning to vote in November? ${link}`,
+  msgFriend: (first, link) => `Hi NAME, Bloomers is hosting a game to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
   msgFollowVariants: [
-    (link) => `Hi NAME, that flower I planted is still waiting on you. One tap: ${link}`,
-    (link) => `NAME - my little flower still hasn't bloomed! One tap does it: ${link}`,
-    (link) => `Hey NAME, still hoping to see that flower bloom. Quick tap here: ${link}`,
+    (link) => `Hi NAME, still hoping to hear from you on the Bloomers game. One click confirms you're in this November. ${link}`,
   ],
-  msgFollow: (first, link) => `Hi NAME, that flower I planted is still waiting on you. One tap: ${link}`,
+  msgFollow: (first, link) => `Hi NAME, still hoping to hear from you on the Bloomers game. One click confirms you're in this November. ${link}`,
   msgDeadline: (first) => `Hi NAME, it's ${first}. Quick reminder that Florida's voter registration deadline comes up before the November election - takes about two minutes to check that you're still registered.`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
   waterGapH: 48, praiseCycleH: 0.5, maxTouches: 3, dailyTextCap: 5,
