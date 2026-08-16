@@ -431,6 +431,26 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
   </div>
 </div></div>
+<div class="overlay" id="ov-popout" style="z-index:400;"><div class="sheet" style="max-width:330px;text-align:center;padding:28px 24px 22px;">
+  <div style="font-size:42px;">🔎</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:6px;line-height:1.35;">One quick step to match your contacts</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Your phone only allows contact matching on a full-screen page, not inside an embedded one. Tap below — we'll match your friends and bring you right back.</div>
+  <button class="bigbtn" onclick="popOutToMatch()">Match My Contacts</button>
+  <button onclick="closeOv('ov-popout')" style="margin-top:12px;background:none;border:none;font-size:12px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Skip — I'll search by name instead</button>
+</div></div>
+<div class="overlay" id="ov-nocontacts" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:28px 24px 22px;">
+  <div style="font-size:42px;">🔎</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:6px;line-height:1.35;">Search by name instead</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">This browser doesn't support contact matching. You can still look up any friend by name on the Plant a Seed page — it checks the same voter rolls.</div>
+  <button class="bigbtn" onclick="closeOv('ov-nocontacts');showTab('plant');">Got it</button>
+</div></div>
+<div class="overlay" id="ov-matchdone" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
+  <div style="font-size:46px;">🌷</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;" id="matchdone-title">All set!</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
+  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Close this tab</button>
+  <div style="font-size:10.5px;color:#9aa3ad;margin-top:12px;line-height:1.5;">Return to the Bloomers tab — your friends are waiting on the Plant a Seed page.</div>
+</div></div>
 <div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
   <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🌱</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);line-height:1.35;">Finding your registered friends</div>
@@ -825,6 +845,12 @@ function boot() {
   const m = location.search.match(/[?&]b=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
   load();
+  if (/[?&]match=1/.test(location.search)) {
+    if (!S) { document.body.innerHTML = '<div style="font-family:Arial;padding:40px;text-align:center;color:#1a2a4a;">Start your garden first, then try matching again.</div>'; return; }
+    show('scr-garden'); renderGarden();
+    runContactMatch(true);
+    return;
+  }
   if (!S) { show('scr-signup'); return; }
   if (S.pin && sessionStorage.getItem('bl_auth') !== '1') { showLock(); return; }
   S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
@@ -833,6 +859,19 @@ function boot() {
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
   setInterval(() => { if ($('scr-garden').classList.contains('on')) { const hadNew = consumeBloomQueue(); tickPraise(); renderGarden(); if (hadNew) showToast('A friend said yes! Tap their glowing seed to see it bloom 🌱'); } }, 30 * 1000);
+}
+
+
+/* ---------------- contact-match capability ---------------- */
+const IN_IFRAME = (function(){ try { return window.self !== window.top; } catch(e){ return true; } })();
+const SELF_URL  = 'https://youvebeen0wned.github.io/mikesell-pages/bloomers.html';
+
+// Contact Picker exists but is BLOCKED in cross-origin iframes (SecurityError).
+// Only Chrome-Android supports it at all. Detect honestly, never assume.
+function contactPickerState() {
+  if (!navigator.contacts || typeof navigator.contacts.select !== 'function') return 'unsupported';
+  if (IN_IFRAME) return 'blocked-iframe';
+  return 'ready';
 }
 
 /* ---------------- signup ---------------- */
@@ -857,7 +896,12 @@ function doSignup() {
   api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
   renderGarden();
   show('scr-garden');
-  if (S.contacts && ('contacts' in navigator)) { runContactMatch(); }
+  if (S.contacts) {
+    const st = contactPickerState();
+    if (st === 'ready') runContactMatch();
+    else if (st === 'blocked-iframe') openOv('ov-popout');
+    else openOv('ov-nocontacts');
+  }
 }
 
 /* ---------------- garden render ---------------- */
@@ -1282,7 +1326,14 @@ async function filterRegisteredContacts(contacts) {
   return results;
 }
 
-async function runContactMatch() {
+
+function popOutToMatch() {
+  closeOv('ov-popout');
+  window.open(SELF_URL + '?match=1', '_blank');
+  showToast('Finish matching in the new tab, then come back here 🌱');
+}
+
+async function runContactMatch(popoutMode) {
   const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub'), emoji = $('match-emoji');
   const setP = (pct, msg, detail) => {
     if (bar) bar.style.width = Math.min(100, pct) + '%';
@@ -1299,7 +1350,7 @@ async function runContactMatch() {
     const contacts = (raw || []).filter(c => c.name && c.name[0])
       .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
 
-    if (!contacts.length) { closeOv('ov-matching'); return; }
+    if (!contacts.length) { closeOv('ov-matching'); showToast('No contacts selected — you can search by name anytime.'); return; }
 
     setP(14, 'Sorting ' + contacts.length + ' contacts…', 'Grouping by last name');
     await breathe();
@@ -1342,11 +1393,30 @@ async function runContactMatch() {
     save();
 
     if (emoji) emoji.textContent = '🌷';
-    setP(100, 'All done!', S.registeredFriends.length + (S.registeredFriends.length === 1 ? ' registered friend is ready to plant' : ' registered friends are ready to plant'));
-    await new Promise(r => setTimeout(r, 1300));
-  } catch(e) {}
-  closeOv('ov-matching');
-  renderGarden();
+    const n = S.registeredFriends.length;
+    setP(100, 'All done!', n + (n === 1 ? ' registered friend is ready to plant' : ' registered friends are ready to plant'));
+    await new Promise(r => setTimeout(r, 1200));
+    closeOv('ov-matching');
+    if (popoutMode) {
+      $('matchdone-title').textContent = n + (n === 1 ? ' friend found!' : ' friends found!');
+      $('matchdone-sub').textContent = n
+        ? 'We matched your contacts against the FL-04 voter rolls and saved them to your garden.'
+        : 'None of your contacts matched the FL-04 voter rolls. You can still search any name by hand.';
+      openOv('ov-matchdone');
+      return;
+    }
+    renderGarden();
+    if (n) showTab('plant');
+    return;
+  } catch(err) {
+    closeOv('ov-matching');
+    const blocked = err && (err.name === 'SecurityError' || /top-level/i.test(err.message || ''));
+    if (blocked && !popoutMode) { openOv('ov-popout'); return; }
+    if (err && err.name === 'AbortError') { renderGarden(); return; } // user cancelled picker
+    showToast('Contact matching is unavailable here — search by name on Plant a Seed 🌱');
+    renderGarden();
+    return;
+  }
 }
 
 function renderRegisteredFriends() {
