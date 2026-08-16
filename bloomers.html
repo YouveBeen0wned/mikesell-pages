@@ -284,7 +284,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
         <input class="pindot" placeholder="·" id="s-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin2','s-pin3')">
         <input class="pindot" placeholder="·" id="s-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin3',null)">
       </div>
-      <div style="font-size:8.5px;color:#9aa3ad;margin-top:3px;line-height:1.4;">Optional — 4 digits. Protects your garden on shared devices. Bloomers stores no data, so we cannot look this up for you. Write it down.</div>
+      <div style="font-size:8.5px;color:#9aa3ad;margin-top:3px;line-height:1.4;">We store no data, so we cannot look this up for you. Write it down.</div>
     </div>
     <div class="field" style="display:flex;align-items:center;gap:10px;background:#f4f9ff;border:2px solid var(--blue);cursor:pointer;" onclick="toggleContacts()">
       <span style="font-size:16px;">🔎</span>
@@ -448,15 +448,14 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 <div class="overlay" id="ov-popstart" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
   <div style="font-size:44px;">📇</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;line-height:1.35;">Ready when you are</div>
-  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Tap below and pick the contacts you'd like to check. Your phone requires this tap — nothing is uploaded.</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Pick the contacts you'd like to check. Your phone requires this tap. Nothing is uploaded, and results go straight back to your garden.</div>
   <button class="bigbtn" onclick="closeOv('ov-popstart');runContactMatch(true);">Choose Contacts</button>
 </div></div>
 <div class="overlay" id="ov-matchdone" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
   <div style="font-size:46px;">🌷</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;" id="matchdone-title">All set!</div>
   <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
-  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Close this tab</button>
-  <div style="font-size:10.5px;color:#9aa3ad;margin-top:12px;line-height:1.5;">Return to the Bloomers tab — your friends are on the Plant a Seed page.</div>
+  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my garden</button>
 </div></div>
 <input type="file" id="vcf-input" accept=".vcf,.vcard,text/vcard,text/x-vcard" multiple style="position:absolute;left:-9999px;width:1px;height:1px;" onchange="onVcfChosen(event)">
 <div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
@@ -858,6 +857,16 @@ window.addEventListener('message', function(e) {
   if (e.data && e.data.type === 'bloom_friend' && (e.data.s || e.data.b)) {
     initFriend(e.data.s || e.data.b, e.data.f || '');
   }
+  if (e.data && e.data.type === 'bloom_contacts' && Array.isArray(e.data.friends)) {
+    if (!S) return;
+    const seen = {};
+    S.registeredFriends = (S.registeredFriends || []).concat(e.data.friends)
+      .filter(x => { const k = ((x.first || '') + (x.last || '')).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
+    save();
+    const n = e.data.friends.length;
+    showToast(n ? ('Added ' + n + (n === 1 ? ' registered friend' : ' registered friends') + ' 🌱') : 'No matches found — try another way.');
+    if (n) showTab('plant'); else openConnectSheet(true);
+  }
 });
 
 function boot() {
@@ -867,9 +876,10 @@ function boot() {
   if (m) { initFriend(m[1]); return; }
   load();
   if (/[?&]match=1/.test(location.search)) {
-    if (!S) { document.body.innerHTML = '<div style="font-family:Arial;padding:40px;text-align:center;color:#1a2a4a;">Start your garden first, then try matching again.</div>'; return; }
-    show('scr-garden'); renderGarden();
-    openOv('ov-popstart'); // picker requires a user gesture — cannot auto-fire on load
+    // Standalone matcher. Storage here is partitioned away from the embedded
+    // game, so we never read S — results go back via window.opener.
+    MATCH_MODE = true;
+    openOv('ov-popstart'); // picker needs a user gesture; cannot auto-fire on load
     return;
   }
   if (!S) { show('scr-signup'); return; }
@@ -884,14 +894,18 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
+let MATCH_MODE = false;
 const IN_IFRAME = (function(){ try { return window.self !== window.top; } catch(e){ return true; } })();
-const SELF_URL  = 'https://youvebeen0wned.github.io/mikesell-pages/bloomers.html';
+// Pop-out matching needs a TOP-LEVEL page, which means a visible URL.
+// Leave blank until a branded domain (e.g. https://vote.mikesell.org/bloomers.html)
+// points at the host - we never surface the raw github.io address to voters.
+const POPOUT_URL = '';
 
 // Contact Picker exists but is BLOCKED in cross-origin iframes (SecurityError).
 // Only Chrome-Android supports it at all. Detect honestly, never assume.
 function contactPickerState() {
   if (!navigator.contacts || typeof navigator.contacts.select !== 'function') return 'unsupported';
-  if (IN_IFRAME) return 'blocked-iframe';
+  if (IN_IFRAME) return POPOUT_URL ? 'blocked-iframe' : 'unsupported';
   return 'ready';
 }
 
@@ -918,8 +932,10 @@ function doSignup() {
   renderGarden();
   show('scr-garden');
   if (S.contacts) {
-    if (contactPickerState() === 'ready') runContactMatch(); // gesture still live from the click
-    else openConnectSheet();
+    const st = contactPickerState();
+    if (st === 'ready') runContactMatch();          // gesture still live from the click
+    else if (st === 'blocked-iframe') popOutToMatch();
+    else openConnectSheet();  // picker unavailable here -> offer methods that work in place
   }
 }
 
@@ -1427,11 +1443,15 @@ async function matchContactList(contacts, opts) {
     await breathe();
   }
 
-  const seen = {};
-  const merged = (S.registeredFriends || []).concat(results.map(c => ({
+  const found = results.map(c => ({
     name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '', voterCity: c.voterCity || ''
-  }))).filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
-  S.registeredFriends = merged; save();
+  }));
+  if (!opts.standalone) {
+    const seen = {};
+    S.registeredFriends = (S.registeredFriends || []).concat(found)
+      .filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
+    save();
+  }
 
   if (emoji) emoji.textContent = '🌷';
   const n = results.length;
@@ -1439,11 +1459,21 @@ async function matchContactList(contacts, opts) {
   await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
-  if (opts.popout) {
+  if (opts.standalone) {
+    // Storage is partitioned between this tab and the embedded game,
+    // so hand the results back through the opener instead of localStorage.
+    let delivered = false;
+    try {
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage({ type: 'bloom_contacts', friends: found }, '*');
+        delivered = true;
+      }
+    } catch (e) {}
     $('matchdone-title').textContent = n + (n === 1 ? ' friend found!' : ' friends found!');
-    $('matchdone-sub').textContent = n
-      ? 'Saved to your garden. Head back to the Bloomers tab.'
-      : 'No matches in the FL-04 voter rolls. You can still search any name by hand.';
+    $('matchdone-sub').textContent = !n
+      ? 'None of those matched the FL-04 voter rolls. You can still search any name by hand.'
+      : (delivered ? 'Sent back to your garden. You can close this tab.'
+                   : 'Keep this tab open and return to Bloomers, then tap Find Friends again.');
     openOv('ov-matchdone');
     return n;
   }
@@ -1459,9 +1489,10 @@ async function runContactMatch(popoutMode) {
     const contacts = (raw || []).filter(c => c.name && c.name[0])
       .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
     if (!contacts.length) { showToast('No contacts selected.'); return; }
-    await matchContactList(contacts, { popout: popoutMode });
+    await matchContactList(contacts, { standalone: !!popoutMode });
   } catch (err) {
     closeOv('ov-matching');
+    if (popoutMode) { showToast('Could not open contacts here.'); return; }
     if (err && err.name === 'AbortError') { renderGarden(); return; }
     openConnectSheet();
   }
@@ -1469,8 +1500,9 @@ async function runContactMatch(popoutMode) {
 
 // Tier 2: pop out to a top-level tab (Contact Picker is blocked in iframes)
 function popOutToMatch() {
+  if (!POPOUT_URL) { openConnectSheet(); return; }
   closeOv('ov-connect');
-  window.open(SELF_URL + '?match=1', '_blank');
+  window.open(POPOUT_URL + '?match=1', '_blank');
   showToast('Finish in the new tab, then come back here 🌱');
 }
 
@@ -1513,17 +1545,20 @@ function openConnectSheet(afterEmpty) {
       <span style="color:#c3ccd6;font-size:16px;">›</span>
     </button>`;
 
+  const primary = (st !== 'ready' && st !== 'blocked-iframe');
   let opts = '';
   if (st === 'ready') opts += row('📇', 'Use my phone contacts', 'One tap. Nothing leaves your phone.', 'closeOv(\'ov-connect\');runContactMatch()', true);
-  if (st === 'blocked-iframe') opts += row('📇', 'Use my phone contacts', 'Opens full screen for one moment, then returns.', 'popOutToMatch()', true);
-  opts += row('📄', 'Upload a contacts file', 'Export contacts as .vcf — works on any phone.', 'pickVcf()', st !== 'ready' && st !== 'blocked-iframe');
-  opts += row('📋', 'Paste a list of names', 'One full name per line. Works anywhere.', 'openPasteSheet()');
+  if (st === 'blocked-iframe') opts += row('📇', 'Use my phone contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
+  opts += row('📄', 'Upload my contacts file', 'Export contacts from your phone as .vcf, then pick it here.', 'pickVcf()', primary);
+  opts += row('📋', 'Paste a list of names', 'One full name per line. Works on any phone.', 'openPasteSheet()');
   opts += row('🔎', 'Search one at a time', 'Look friends up by name as you go.', 'closeOv(\'ov-connect\');showTab(\'plant\')');
 
   $('connect-title').textContent = afterEmpty ? 'No matches yet' : 'Find your registered friends';
   $('connect-sub').textContent = afterEmpty
     ? 'None of those matched the FL-04 rolls. Try another way:'
-    : 'Bloomers checks your friends against the FL-04 voter rolls, right here on your phone.';
+    : (st === 'ready' || st === 'blocked-iframe')
+      ? 'We check your friends against the FL-04 voter rolls, right here on your phone.'
+      : 'Your browser will not share contacts with a web page, so pick one of these instead. Everything stays on your phone.';
   $('connect-opts').innerHTML = opts;
   openOv('ov-connect');
 }
