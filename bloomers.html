@@ -364,13 +364,13 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
   </div>
   <div class="toolbar">
-    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> SHED (<span id="hud-shed">0</span>)</div>
+    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> SHED&nbsp;(<span id="hud-shed">0</span>)</div>
     <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
         <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT</button>
       </div>
-      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Garden Score: +<span id="hud-percycle">0</span> 👏 every 30 min</div>
+      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Garden Praise: +<span id="hud-percycle">0</span> 👏 every 30 min</div>
     </div>
   </div>
   <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
@@ -456,7 +456,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div id="import-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
   <div id="import-steps" style="background:#f7fbff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 14px;margin-top:14px;text-align:left;"></div>
   <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>
-  <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Look in <b>Downloads</b> for a file ending in .vcf</div>
+  <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Then pick the .vcf file — <b>Downloads</b> on Android, <b>Files</b> on iPhone</div>
   <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
   <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
 </div></div>
@@ -543,7 +543,7 @@ const CONFIG = {
   ],
   msgFollow: (first, link) => `Hi NAME, still hoping to hear from you on the Bloomers game. One click confirms you're in this November. ${link}`,
   // Not-in-the-rolls message: casual, hedged, registration first.
-  msgDeadline: (first) => `Hi NAME, it's ${first}. Could be wrong, but it looks like you're not registered to vote... only takes about two minutes at registertovoteflorida.gov. If you get signed up, give Mike Sell a look while you're at it.`,
+  msgDeadline: (first, link) => `Hi NAME, it's ${first}. Could be wrong, but it looks like you're not registered to vote... only takes about two minutes at registertovoteflorida.gov. If you get signed up, give Mike Sell a look while you're at it. Then tap here to tell me you're in: ${link}`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
   waterGapH: 48, praiseCycleH: 0.5, maxTouches: 3, dailyTextCap: 5,
   poolBaseCycles: 3, // + 1 per rank
@@ -630,6 +630,8 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;'
 function sp(id) { return CONFIG.species.find((s) => s.id === id); }
 function shelfColor(sh) { return { g: '#059669', b: '#2563eb', p: '#7c3aed', au: '#f59e0b' }[sh]; }
 function shelfName(sh) { return { g: 'Garden', b: 'Wildflower', p: 'Exotic', au: 'Gold' }[sh]; }
+// Rarity tier (how hard it is to get) as distinct from the shelf it lives on.
+function rarityName(sh) { return { g: 'Common', b: 'Uncommon', p: 'Rare', au: 'Legendary' }[sh]; }
 function smsHref(body, phone) {
   const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
   const num = phone ? String(phone).replace(/\D/g, '') : '';
@@ -893,7 +895,7 @@ window.addEventListener('message', function(e) {
     save();
     const n = e.data.friends.length;
     showToast(n ? ('Added ' + n + (n === 1 ? ' registered friend' : ' registered friends') + ' 🌱') : 'No matches found — try another way.');
-    if (n) showTab('plant'); else openConnectSheet(true);
+    if (n) showTab('garden'); else openConnectSheet(true);
   }
 });
 
@@ -994,7 +996,10 @@ function renderGarden() {
   const base = CONFIG.ranks[S.rank].at, span = nxt ? nxt.at - base : 1;
   $('hud-xp').style.width = Math.min(100, Math.round(((S.lifetime - base) / span) * 100)) + '%';
   $('hud-seal').innerHTML = sealSvg(S.rank, 40);
-  $('hud-shed').textContent = S.shed.length;
+  const _sh = $('hud-shed');
+  _sh.textContent = S.shed.length;
+  _sh.style.fontWeight = S.shed.length > 0 ? '700' : '400';
+  _sh.style.color = S.shed.length > 0 ? 'var(--blue)' : '';
   $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap()); const _pc = $('hud-percycle'); if (_pc) _pc.textContent = perCycle();
   $('btn-collect').disabled = S.pool <= 0;
   const ag = CONFIG.agenda[agendaIdx];
@@ -1138,7 +1143,7 @@ function plantNow(deadline) {
   const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
   const _nick = _rawNick.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
   const _v = CONFIG.msgFriendVariants;
-  const body = (deadline ? CONFIG.msgDeadline(S.first) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
+  const body = (deadline ? CONFIG.msgDeadline(S.first, link) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
   const _phone = (pendingPlant && pendingPlant.phone) || '';
   location.href = smsHref(body, _phone);
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
@@ -1262,7 +1267,7 @@ function showPlaque(spid, pid) {
   const row = (icon, name, found) => `<div style="display:flex;align-items:center;gap:8px;background:${found ? '#fdf6e3' : '#f3f4f6'};border:2px solid ${found ? '#f0b429' : '#e5e7eb'};border-radius:12px;padding:8px 13px;margin-top:7px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:${found ? '#b45309' : '#9ca3af'};">${icon} ${name} · ${found ? 'Discovered' : 'Undiscovered'}</div>`;
   $('plaque-sheet').innerHTML = `
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);">${esc(s.name)}</div>
-    <div style="font-size:9.5px;letter-spacing:0.14em;color:${shelfColor(s.shelf)};margin-top:3px;font-family:'avenir-heavy',Arial,sans-serif;">${shelfName(s.shelf).toUpperCase()} RARITY</div>
+    <div style="font-size:9.5px;letter-spacing:0.14em;color:${shelfColor(s.shelf)};margin-top:3px;font-family:'avenir-heavy',Arial,sans-serif;">${rarityName(s.shelf).toUpperCase()}</div>
     <div style="width:120px;height:120px;margin:10px auto 0;background:radial-gradient(circle,#fff 30%,#fdf6e3 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg style="width:86px;height:86px;"><use href="#${s.art}"/></svg></div>
     <div style="display:flex;gap:7px;justify-content:center;margin-top:10px;"><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:${shelfColor(s.shelf)};border:2px solid ${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">Unlocked!</div><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">${shelfName(s.shelf)}</div></div>
     <div style="font-size:12px;color:#5b6470;margin-top:9px;">Commonly found: ${esc(s.loc)}</div>
@@ -1650,7 +1655,7 @@ async function matchContactList(contacts, opts) {
     return n;
   }
   renderGarden();
-  if (n) showTab('plant'); else openConnectSheet(true);
+  if (n) showTab('garden'); else openConnectSheet(true);
   return n;
 }
 
@@ -1717,44 +1722,33 @@ async function runPasteMatch() {
 
 // Per-platform export steps. Everything happens on the phone; no computer needed.
 function exportSteps() {
-  if (IS_IOS) return {
-    label: 'On your iPhone',
-    steps: ['Open <b>Contacts</b>, tap <b>Lists</b> at the top left',
-            'Choose <b>All Contacts</b>, then tap and hold',
-            'Tap <b>Export</b> → <b>Save to Files</b>'],
-    note: 'Then come back and tap the button below.'
-  };
-  if (IS_ANDROID) return {
-    label: 'On your phone',
-    steps: ['Open <b>Contacts</b> → <b>⋮</b> → <b>Settings</b>',
-            'Under Manage contacts, tap <b>Export</b>',
-            'Pick your account → <b>Export to .vcf file</b>'],
-    note: 'It saves to <b>Downloads</b> — pick it from there, not Drive.<br>Samsung Contacts app instead? <b>☰</b> → Manage contacts → Import or export contacts.'
-  };
-  return {
-    label: 'On your device',
-    steps: ['Open your contacts app or contacts.google.com',
-            'Select all contacts',
-            'Export as <b>vCard (.vcf)</b>'],
-    note: 'Then come back and tap the button below.'
-  };
+  return [
+    { label: 'iPhone', icon: '', steps: [
+        'Open <b>Contacts</b>, tap <b>Lists</b> at the top left',
+        'Choose <b>All Contacts</b>, then tap and hold',
+        'Tap <b>Export</b> → <b>Save to Files</b>'] },
+    { label: 'Android', icon: '', steps: [
+        'Open <b>Contacts</b> → <b>⋮</b> → <b>Settings</b>',
+        'Under Manage contacts, tap <b>Export</b>',
+        'Pick your account → <b>Export to .vcf file</b>'] },
+  ];
 }
 
 function openImportSheet(afterEmpty) {
-  const e = exportSteps();
   const canPick = contactPickerState() === 'ready';
-  $('import-title').textContent = afterEmpty ? 'No matches yet' : 'Import your contacts';
+  $('import-title').textContent = afterEmpty ? 'No matches yet' : 'How to import your contacts';
   $('import-sub').innerHTML = afterEmpty
     ? 'Try importing your full contacts file instead — it checks everyone at once.'
-    : 'Save your contacts once, and every friend gets checked against the FL-04 voter rolls in one pass. Nothing is uploaded.';
-  $('import-steps').innerHTML =
-    `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.12em;color:#059669;margin-bottom:7px;">${e.label.toUpperCase()} · ONE TIME</div>` +
-    e.steps.map((s, i) =>
-      `<div style="display:flex;gap:9px;align-items:flex-start;margin-top:7px;">
-         <span style="flex-shrink:0;width:18px;height:18px;border-radius:50%;background:#dcfce7;color:#059669;font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;display:flex;align-items:center;justify-content:center;">${i + 1}</span>
-         <span style="flex:1;font-size:12px;color:#4b5563;line-height:1.5;">${s}</span>
-       </div>`).join('') +
-    `<div style="font-size:10px;color:#9aa3ad;margin-top:9px;line-height:1.5;">${e.note}</div>`;
+    : 'Save your contacts once, then every friend gets checked against the FL-04 voter rolls in one pass. Nothing is uploaded.';
+  $('import-steps').innerHTML = exportSteps().map(pf =>
+    `<div style="margin-top:10px;">
+       <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.12em;color:#059669;">${pf.label.toUpperCase()}</div>
+       ${pf.steps.map((s, i) =>
+         `<div style="display:flex;gap:8px;align-items:flex-start;margin-top:5px;">
+            <span style="flex-shrink:0;width:16px;height:16px;border-radius:50%;background:#dcfce7;color:#059669;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;display:flex;align-items:center;justify-content:center;">${i + 1}</span>
+            <span style="flex:1;font-size:11.5px;color:#4b5563;line-height:1.45;">${s}</span>
+          </div>`).join('')}
+     </div>`).join('<div style="height:1px;background:#e3ecf5;margin-top:11px;"></div>');
   $('import-alt').innerHTML = canPick
     ? `<span onclick="closeOv('ov-import');openConnectSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">← Back to the other options</span>`
     : `<span onclick="closeOv('ov-import');openPasteSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">Or paste a list of names</span>`;
@@ -1779,13 +1773,13 @@ function openConnectSheet(afterEmpty) {
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
   // 2 — upload an exported contacts file
   opts += row('📄', 'Upload a contacts file', 'Check everyone at once. We\'ll show you how to export it.', 'closeOv(\'ov-connect\');openImportSheet()', st !== 'ready' && st !== 'blocked-iframe');
-  // 3 — look someone up by name
-  opts += row('🔎', 'Search for someone by name', 'Look up one friend at a time in the voter rolls.', 'closeOv(\'ov-connect\');showTab(\'plant\')');
 
   $('connect-title').textContent = afterEmpty ? 'No matches yet' : 'Find your registered friends';
   $('connect-sub').textContent = afterEmpty
     ? 'None of those matched the FL-04 rolls. Try another way:'
     : 'We check your friends against the FL-04 voter rolls, right here on your phone. Pick whichever is easiest.';
+  // Only one method available? Don't make them pick from a list of one.
+  if (st !== 'ready' && st !== 'blocked-iframe' && !afterEmpty) { openImportSheet(); return; }
   $('connect-opts').innerHTML = opts;
   openOv('ov-connect');
 }
