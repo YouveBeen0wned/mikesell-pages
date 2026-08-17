@@ -876,6 +876,7 @@ function doUnlock() {
     S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
     tickPraise(); save();
     renderGarden(); show('scr-garden'); maybeRankup();
+    startPolling();
   } else {
     $('lock-err').textContent = 'Wrong PIN — try again.';
     $('lock-err').style.display = 'block';
@@ -919,6 +920,32 @@ window.addEventListener('message', function(e) {
   }
 });
 
+
+// Polling must start from EVERY entry point into the garden. It used to live at
+// the end of boot(), which returns early for the PIN lock and for fresh signups —
+// so those users never checked the server at all.
+let _pollStarted = false;
+function startPolling() {
+  if (_pollStarted) return;
+  _pollStarted = true;
+  const pollNow = () => checkRemoteBlooms().then(ok => {
+    if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing seed 🌱'); }
+  });
+  setInterval(async () => {
+    if (!S) return;
+    const local = consumeBloomQueue();
+    const remote = await checkRemoteBlooms();
+    if (!$('scr-garden').classList.contains('on')) return;
+    tickPraise(); renderGarden();
+    if (local || remote) showToast('A friend said yes! Tap their glowing seed to see it bloom 🌱');
+  }, 30 * 1000);
+  pollNow();
+  // Volunteers leave the app to send the text and come back — check on return.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) pollNow(); });
+  window.addEventListener('focus', pollNow);
+  window.addEventListener('pageshow', pollNow);
+}
+
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
@@ -940,22 +967,7 @@ function boot() {
   consumeBloomQueue();
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
-  setInterval(async () => {
-    if (!S) return;
-    const local = consumeBloomQueue();
-    const remote = await checkRemoteBlooms();
-    if (!$('scr-garden').classList.contains('on')) return;
-    tickPraise(); renderGarden();
-    if (local || remote) showToast('A friend said yes! Tap their glowing seed to see it bloom 🌱');
-  }, 30 * 1000);
-  const pollNow = () => checkRemoteBlooms().then(ok => {
-    if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing seed 🌱'); }
-  });
-  pollNow();
-  // Volunteers leave the app to send the text and come back — check on return.
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) pollNow(); });
-  window.addEventListener('focus', pollNow);
-  window.addEventListener('pageshow', pollNow);
+  startPolling();
 }
 
 
@@ -1002,6 +1014,7 @@ function doSignup() {
   api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
   renderGarden();
   show('scr-garden');
+  startPolling();
   if (S.contacts) openConnectSheet();
 }
 
