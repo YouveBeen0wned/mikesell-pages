@@ -529,9 +529,9 @@ const CONFIG = {
   // lookup (client sends 2 hex chars of a keyed hash, never the number).
   // Leave blank to disable phone matching entirely.
   phoneApi: '',
-  // Bloom confirmations. Same Worker as phoneApi. Blank = honor system only:
-  // the friend's tap cannot reach the volunteer's device without a server.
-  bloomApi: '',
+  // Bloom confirmations. Blank = honor system only (a friend's tap cannot reach
+  // the volunteer's device without a server). Stores opaque tokens, nothing else.
+  bloomApi: 'https://bloomers-phone.ccm-inspired.workers.dev',
   agendaUrl: 'https://mikesell.org',
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
