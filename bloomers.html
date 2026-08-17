@@ -465,6 +465,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:17px;color:var(--blue);text-align:center;">Connection check</div>
   <div id="diag-body" style="margin-top:12px;"></div>
   <button class="bigbtn" style="width:100%;box-sizing:border-box;font-size:14px;padding:12px;" onclick="runDiag()">Run test</button>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;font-size:14px;padding:12px;background:#059669;box-shadow:0 5px 0 #04794f;" onclick="checkMySeeds()">Check my seeds now</button>
   <div id="diag-result" style="margin-top:12px;"></div>
   <div style="text-align:center;margin-top:12px;"><span onclick="closeOv('ov-diag')" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Close</span></div>
 </div></div>
@@ -925,6 +926,24 @@ window.addEventListener('message', function(e) {
 // the end of boot(), which returns early for the PIN lock and for fresh signups —
 // so those users never checked the server at all.
 let _pollStarted = false;
+
+// GitHub Pages caches HTML for ~10 minutes and mobile browsers hold it longer,
+// so volunteers can sit on a stale build for hours with no way to tell. Compare
+// against the live file on load and reload once if we are behind.
+async function checkForUpdate() {
+  if (/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname) || location.protocol === 'file:') return;
+  try {
+    const r = await fetch(location.pathname + '?cb=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const m = (await r.text()).match(/const BUILD = '([^']+)'/);
+    if (!m) return;
+    if (m[1] === BUILD) { sessionStorage.removeItem('bl_upd'); return; }
+    if (sessionStorage.getItem('bl_upd') === m[1]) return; // already tried; don't loop
+    sessionStorage.setItem('bl_upd', m[1]);
+    location.reload();
+  } catch (e) {}
+}
+
 function startPolling() {
   if (_pollStarted) return;
   _pollStarted = true;
@@ -949,6 +968,7 @@ function startPolling() {
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
+  checkForUpdate();
   const _bs = $('build-stamp'); if (_bs) _bs.textContent = 'build ' + BUILD;
   const m = location.search.match(/[?&](?:s|b)=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
@@ -972,7 +992,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260817-0230';
+const BUILD = '20260817-0258';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1845,6 +1865,7 @@ function openDiag() {
   let html = diagLine('build', BUILD)
     + diagLine('bloomApi', CONFIG.bloomApi || '(not set)', !!CONFIG.bloomApi)
     + diagLine('page origin', location.origin)
+    + diagLine('polling active', _pollStarted ? 'yes' : 'NO', _pollStarted)
     + diagLine('pending seeds', seeds.length)
     + diagLine('seeds with token', seeds.filter(p => p.token).length, seeds.length === 0 || seeds.every(p => p.token));
   for (const p of seeds.slice(0, 6)) html += diagLine(p.tag, p.token || 'NO TOKEN (old seed)', !!p.token);
@@ -1852,6 +1873,37 @@ function openDiag() {
   $('diag-result').innerHTML = '';
   openOv('ov-diag');
 }
+// Runs the exact code path the game uses, against the volunteer's real seeds.
+async function checkMySeeds() {
+  const out = $('diag-result');
+  out.innerHTML = '<div style="font-size:11px;color:#5b6470;">Checking…</div>';
+  const lines = [];
+  try {
+    const pending = S.plants.filter(p => p.state === 'seed');
+    const ids = pending.map(tokenOf).filter(Boolean);
+    lines.push(diagLine('seeds queried', ids.length || 'none', ids.length > 0));
+    if (!ids.length) { out.innerHTML = lines.join('') + '<div style="font-size:11px;color:#b45309;margin-top:9px;">No pending seeds to check.</div>'; return; }
+    const url = CONFIG.bloomApi.replace(/\/$/, '') + '/blooms?ids=' + encodeURIComponent(ids.join(','));
+    const r = await fetch(url);
+    const raw = await r.text();
+    lines.push(diagLine('status', r.status, r.ok));
+    lines.push(diagLine('server said', raw.slice(0, 120)));
+    const before = pending.map(p => p.tag + '=' + p.state).join(' ');
+    const changed = await checkRemoteBlooms();
+    const after = S.plants.filter(p => ['seed', 'ready'].includes(p.state)).map(p => p.tag + '=' + p.state).join(' ');
+    lines.push(diagLine('before', before));
+    lines.push(diagLine('after', after));
+    lines.push(diagLine('changed', changed ? 'YES' : 'no', changed));
+    renderGarden();
+    lines.push(`<div style="font-size:11px;margin-top:9px;line-height:1.5;color:${changed ? '#059669' : '#b45309'};">${changed
+      ? 'Seed updated — close this and look for the green pulse.'
+      : 'Server has no confirmation for these seeds yet. If your friend already tapped, they used a link from an older seed.'}</div>`);
+  } catch (e) {
+    lines.push(diagLine('error', e.message, false));
+  }
+  out.innerHTML = lines.join('');
+}
+
 async function runDiag() {
   const out = $('diag-result');
   const tok = 'dg' + seedToken();
