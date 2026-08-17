@@ -430,6 +430,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap makes it bloom.</div>
     <button class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I will be voting this November</button>
     <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🌸 It bloomed! Thank you.</div>
+    <div id="friend-tellback" style="display:none;margin-top:12px;text-align:center;"></div>
     <div class="card" style="align-self:stretch;background:linear-gradient(135deg,#002d5b,#037ad8);border:none;padding:18px 20px;margin-top:14px;">
       <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:#fff;margin-bottom:6px;">Meet the candidate who created this game</div>
       <div style="font-size:12px;color:#b8d8f5;margin-bottom:12px;line-height:1.5;">Mike Sell is running for U.S. Congress in FL-04 as a Forward Party candidate — putting people over party.</div>
@@ -528,6 +529,9 @@ const CONFIG = {
   // lookup (client sends 2 hex chars of a keyed hash, never the number).
   // Leave blank to disable phone matching entirely.
   phoneApi: '',
+  // Bloom confirmations. Same Worker as phoneApi. Blank = honor system only:
+  // the friend's tap cannot reach the volunteer's device without a server.
+  bloomApi: '',
   agendaUrl: 'https://mikesell.org',
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
@@ -622,6 +626,15 @@ function freshState(first, last, garden, contacts) {
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 function load() { try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; } }
+// Seed ids (p1, p2...) are per-garden and collide between volunteers, so each
+// seed also gets an opaque random token. Only this token ever leaves the device.
+function seedToken() {
+  try {
+    const a = new Uint8Array(6); crypto.getRandomValues(a);
+    return Array.from(a).map(b => b.toString(36).padStart(2, '0')).join('').slice(0, 10);
+  } catch (e) { return Math.random().toString(36).slice(2, 12); }
+}
+function tokenOf(p) { return (p && p.token) ? p.token : (p ? p.id : ''); }
 function dayKey() { const d = new Date(); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); }
 
 /* ---------------- helpers ---------------- */
@@ -640,7 +653,7 @@ function smsHref(body, phone) {
 function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
 function rollShelf(kind) {
   const r = Math.random(); let acc = 0;
-  for (const [sh, p] of CONFIG.shelfOdds[kind]) { acc += p; if (r < acc) return sh; }
+  for (const [sh, p] of (CONFIG.shelfOdds[kind] || CONFIG.shelfOdds.tap)) { acc += p; if (r < acc) return sh; }
   return 'g';
 }
 function rollSpecies(shelf) { return pick(CONFIG.species.filter((s) => s.shelf === shelf)); }
@@ -919,7 +932,14 @@ function boot() {
   consumeBloomQueue();
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
-  setInterval(() => { if ($('scr-garden').classList.contains('on')) { const hadNew = consumeBloomQueue(); tickPraise(); renderGarden(); if (hadNew) showToast('A friend said yes! Tap their glowing seed to see it bloom 🌱'); } }, 30 * 1000);
+  setInterval(async () => {
+    if (!$('scr-garden').classList.contains('on')) return;
+    const local = consumeBloomQueue();
+    const remote = await checkRemoteBlooms();
+    tickPraise(); renderGarden();
+    if (local || remote) showToast('A friend said yes! Tap their glowing seed to see it bloom 🌱');
+  }, 30 * 1000);
+  checkRemoteBlooms().then(ok => { if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing seed 🌱'); } });
 }
 
 
@@ -1134,12 +1154,13 @@ function plantNow(deadline) {
   const tag = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first.toUpperCase();
   const id = 'p' + (S.nextId++);
   const _ph = (pendingPlant && pendingPlant.phone) ? String(pendingPlant.phone).replace(/\D/g,'') : '';
-  S.plants.push({ id, tag, bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!deadline, phone: _ph });
+  const token = seedToken();
+  S.plants.push({ id, token, tag, bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!deadline, phone: _ph });
   S.seedsPlanted++; S.textsToday++;
   if (S.seedsPlanted % 3 === 0) S.shed.push({ kind: 'bed', n: 2 });
   save();
   api('seed', { seedId: id, kind: deadline ? 'deadline' : 'friend' }); // [SERVER] link ID only; no name, tag, or number
-  const link = friendLink(id);
+  const link = friendLink(token);
   const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
   const _nick = _rawNick.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
   const _v = CONFIG.msgFriendVariants;
@@ -1169,9 +1190,21 @@ function seedTap(id) {
   } else {
     inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Watering again in ${hoursLeft(p)}${DEMO ? ' minutes' : ' hours'}. Seeds need a little patience 🌱</div>`;
   }
-  inner += `<div style="font-size:9.5px;color:#9aa3ad;text-align:center;margin-top:8px;">Their page blooms this flower when they tap "I will be voting."</div>`;
+  // Without a server, a tap on their phone cannot reach this device. If they
+  // confirmed by text, in person, or on their own screen, bloom it here.
+  inner += `<button class="bigbtn" style="background:#059669;box-shadow:0 5px 0 #04794f;font-size:14px;padding:12px 22px;" onclick="confirmBloom('${id}')">
+      ${esc(p.tag)} told me they're voting 🌱</button>
+    <div style="font-size:9.5px;color:#9aa3ad;text-align:center;margin-top:8px;line-height:1.5;">Tap this once they've confirmed. Honor system, like the rest of the game.</div>`;
   sheet.innerHTML = inner;
   openOv('ov-plantpick');
+}
+function confirmBloom(id) {
+  const p = S.plants.find((q) => q.id === id);
+  if (!p || p.state !== 'seed') return;
+  closeOv('ov-plantpick');
+  gameConfirm('Did ' + p.tag + ' confirm?', 'Only bloom seeds for friends who actually told you they\'re voting. The leaderboard runs on trust.', 'Yes, they confirmed', 'background:#059669;box-shadow:0 5px 0 #04794f;', function() {
+    doBloom(p, 'tap');
+  });
 }
 function waterNow(id) {
   const p = S.plants.find((q) => q.id === id);
@@ -1181,7 +1214,7 @@ function waterNow(id) {
   save(); closeOv('ov-plantpick');
   api('touch', { seedId: id, n: p.touches }); // [SERVER]
   const _fv = CONFIG.msgFollowVariants;
-  location.href = smsHref(_fv[p.touches % _fv.length](friendLink(id)).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || '');
+  location.href = smsHref(_fv[p.touches % _fv.length](friendLink(tokenOf(p))).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || '');
   if (p.touches >= CONFIG.maxTouches) setTimeout(() => doBloom(p, 'earned'), 800);
   else renderGarden();
 }
@@ -1196,11 +1229,42 @@ function initFriend(id, fname) {
 }
 function friendTap() {
   const id = $('scr-friend').dataset.pid;
+  // Same-device fallback (demo/testing).
   try {
     const q = JSON.parse(localStorage.getItem(KEY + '_taps') || '[]');
     if (!q.includes(id)) { q.push(id); localStorage.setItem(KEY + '_taps', JSON.stringify(q)); }
   } catch (e) {}
+  // Real cross-device path: tell the server this seed was confirmed.
+  if (CONFIG.bloomApi && id) {
+    try { fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/bloom/' + encodeURIComponent(id), { method: 'POST', keepalive: true }); } catch (e) {}
+  }
   $('friend-done').style.display = 'block';
+  // Their tap only reaches their own device, so offer a reply that closes the loop.
+  const back = $('friend-tellback');
+  if (back) {
+    const who = ($('friend-sender').textContent || 'your friend').trim();
+    back.innerHTML = `<a href="${smsHref("I'm in - I'll be voting this November. You can bloom my flower!", '')}" style="display:inline-block;background:#fff;color:var(--blue);font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:10px 18px;border-radius:20px;text-decoration:none;border:2px solid var(--blue);">Tell ${esc(who)} you're in →</a>
+      <div style="font-size:10px;color:#9aa3ad;margin-top:7px;line-height:1.5;">This opens a text so ${esc(who)} knows to bloom your flower.</div>`;
+    back.style.display = 'block';
+  }
+}
+// Ask the server which of our outstanding seeds have been confirmed.
+async function checkRemoteBlooms() {
+  if (!CONFIG.bloomApi || !S) return false;
+  const pending = S.plants.filter(p => p.state === 'seed');
+  if (!pending.length) return false;
+  try {
+    const ids = pending.map(tokenOf).filter(Boolean).slice(0, 100).join(',');
+    const r = await fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/blooms?ids=' + encodeURIComponent(ids));
+    if (!r.ok) return false;
+    const data = await r.json();
+    const hit = {};
+    for (const t of (data.confirmed || [])) hit[t] = 1;
+    let changed = false;
+    for (const p of pending) if (hit[tokenOf(p)]) { p.state = 'ready'; changed = true; }
+    if (changed) save();
+    return changed;
+  } catch (e) { return false; }
 }
 function consumeBloomQueue() {
   let q = [];
