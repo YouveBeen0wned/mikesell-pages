@@ -381,7 +381,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div id="agenda-line" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:13.5px;color:var(--ink);margin-top:4px;line-height:1.45;"></div>
     <div id="agenda-dots" style="display:flex;gap:4px;justify-content:center;margin-top:8px;"></div>
   </div>
-  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system<br><span id="build-stamp" style="opacity:0.45;"></span></div>
+  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system<br><span id="build-stamp" style="opacity:0.45;cursor:pointer;" onclick="openDiag()"></span></div>
   <nav class="bottomnav" id="nav-garden"></nav>
 </section>
 
@@ -459,6 +459,13 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Then pick the .vcf file — <b>Downloads</b> on Android, <b>Files</b> on iPhone</div>
   <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
   <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
+</div></div>
+<div class="overlay" id="ov-diag" onclick="if(event.target===this)closeOv('ov-diag')"><div class="sheet" style="max-width:340px;padding:22px 18px 18px;">
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:17px;color:var(--blue);text-align:center;">Connection check</div>
+  <div id="diag-body" style="margin-top:12px;"></div>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;font-size:14px;padding:12px;" onclick="runDiag()">Run test</button>
+  <div id="diag-result" style="margin-top:12px;"></div>
+  <div style="text-align:center;margin-top:12px;"><span onclick="closeOv('ov-diag')" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Close</span></div>
 </div></div>
 <div class="overlay" id="ov-connect" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
   <div style="text-align:center;font-size:38px;">🌱</div>
@@ -1199,26 +1206,12 @@ function seedTap(id) {
   } else {
     inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Watering again in ${hoursLeft(p)}${DEMO ? ' minutes' : ' hours'}. Seeds need a little patience 🌱</div>`;
   }
-  // Seeds planted before opaque tokens existed cannot auto-sync (their short ids
-  // collide between gardens, so the server rejects them). Say so plainly.
   const canSync = !!(CONFIG.bloomApi && p.token);
   inner += canSync
-    ? `<div style="font-size:10.5px;color:#059669;text-align:center;margin-top:9px;line-height:1.5;">✓ Watching for their confirmation — this blooms on its own within a minute of them tapping.</div>`
-    : `<div style="font-size:10.5px;color:#b45309;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:8px 10px;text-align:center;margin-top:9px;line-height:1.5;">This seed was planted before automatic confirmation. Plant a new seed for hands-free blooming, or use the button below.</div>`;
-  // If they confirmed by text, in person, or on their own screen, bloom it here.
-  inner += `<button class="bigbtn" style="background:#059669;box-shadow:0 5px 0 #04794f;font-size:14px;padding:12px 22px;" onclick="confirmBloom('${id}')">
-      ${esc(p.tag)} told me they're voting 🌱</button>
-    <div style="font-size:9.5px;color:#9aa3ad;text-align:center;margin-top:8px;line-height:1.5;">Tap this once they've confirmed. Honor system, like the rest of the game.</div>`;
+    ? `<div style="font-size:10.5px;color:#059669;text-align:center;margin-top:9px;line-height:1.5;">✓ Watching for their confirmation — this blooms on its own once they tap.</div>`
+    : `<div style="font-size:10.5px;color:#b45309;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:8px 10px;text-align:center;margin-top:9px;line-height:1.5;">This seed predates automatic confirmation. Plant a new one — this one can't bloom on its own.</div>`;
   sheet.innerHTML = inner;
   openOv('ov-plantpick');
-}
-function confirmBloom(id) {
-  const p = S.plants.find((q) => q.id === id);
-  if (!p || p.state !== 'seed') return;
-  closeOv('ov-plantpick');
-  gameConfirm('Did ' + p.tag + ' confirm?', 'Only bloom seeds for friends who actually told you they\'re voting. The leaderboard runs on trust.', 'Yes, they confirmed', 'background:#059669;box-shadow:0 5px 0 #04794f;', function() {
-    doBloom(p, 'tap');
-  });
 }
 function waterNow(id) {
   const p = S.plants.find((q) => q.id === id);
@@ -1823,6 +1816,51 @@ function openImportSheet(afterEmpty) {
     ? `<span onclick="closeOv('ov-import');openConnectSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">← Back to the other options</span>`
     : `<span onclick="closeOv('ov-import');openPasteSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">Or paste a list of names</span>`;
   openOv('ov-import');
+}
+
+
+/* ---------------- diagnostics ---------------- */
+function diagLine(label, value, good) {
+  const c = good === undefined ? '#5b6470' : (good ? '#059669' : '#dc2626');
+  return `<div style="display:flex;gap:8px;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #eef3f8;">
+    <span style="font-size:10.5px;color:#7c8794;flex-shrink:0;">${label}</span>
+    <span style="font-size:10.5px;color:${c};text-align:right;word-break:break-all;font-family:monospace;">${esc(String(value))}</span></div>`;
+}
+function openDiag() {
+  const seeds = S ? S.plants.filter(p => p.state === 'seed') : [];
+  let html = diagLine('build', BUILD)
+    + diagLine('bloomApi', CONFIG.bloomApi || '(not set)', !!CONFIG.bloomApi)
+    + diagLine('page origin', location.origin)
+    + diagLine('pending seeds', seeds.length)
+    + diagLine('seeds with token', seeds.filter(p => p.token).length, seeds.length === 0 || seeds.every(p => p.token));
+  for (const p of seeds.slice(0, 6)) html += diagLine(p.tag, p.token || 'NO TOKEN (old seed)', !!p.token);
+  $('diag-body').innerHTML = html;
+  $('diag-result').innerHTML = '';
+  openOv('ov-diag');
+}
+async function runDiag() {
+  const out = $('diag-result');
+  const tok = 'dg' + seedToken();
+  out.innerHTML = '<div style="font-size:11px;color:#5b6470;">Testing…</div>';
+  const lines = [];
+  if (!CONFIG.bloomApi) { out.innerHTML = '<div style="color:#dc2626;font-size:11.5px;">bloomApi is not set in this build. Your page is out of date — reload.</div>'; return; }
+  try {
+    const base = CONFIG.bloomApi.replace(/\/$/, '');
+    const pr = await fetch(base + '/bloom/' + tok, { method: 'POST' });
+    lines.push(diagLine('POST /bloom', pr.status, pr.ok));
+    const gr = await fetch(base + '/blooms?ids=' + tok);
+    const data = await gr.json();
+    const found = (data.confirmed || []).includes(tok);
+    lines.push(diagLine('GET /blooms', gr.status, gr.ok));
+    lines.push(diagLine('round trip', found ? 'CONFIRMED' : 'not found', found));
+    lines.push(`<div style="font-size:11px;margin-top:9px;line-height:1.5;color:${found ? '#059669' : '#dc2626'};">${found
+      ? 'This phone can reach the server both ways. If a seed still is not blooming, the friend opened an old link — plant a new seed.'
+      : 'This phone cannot complete the round trip. Screenshot this and send it over.'}</div>`);
+  } catch (e) {
+    lines.push(diagLine('error', e.message, false));
+    lines.push('<div style="font-size:11px;color:#dc2626;margin-top:9px;line-height:1.5;">Blocked before reaching the server — usually CORS or no connection. Screenshot this.</div>');
+  }
+  out.innerHTML = lines.join('');
 }
 
 function openConnectSheet(afterEmpty) {
