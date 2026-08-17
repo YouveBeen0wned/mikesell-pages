@@ -381,7 +381,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div id="agenda-line" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:13.5px;color:var(--ink);margin-top:4px;line-height:1.45;"></div>
     <div id="agenda-dots" style="display:flex;gap:4px;justify-content:center;margin-top:8px;"></div>
   </div>
-  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system<br><span id="build-stamp" style="opacity:0.45;"></span></div>
   <nav class="bottomnav" id="nav-garden"></nav>
 </section>
 
@@ -914,6 +914,7 @@ window.addEventListener('message', function(e) {
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
+  const _bs = $('build-stamp'); if (_bs) _bs.textContent = 'build ' + BUILD;
   const m = location.search.match(/[?&](?:s|b)=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
   load();
@@ -932,17 +933,26 @@ function boot() {
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
   setInterval(async () => {
-    if (!$('scr-garden').classList.contains('on')) return;
+    if (!S) return;
     const local = consumeBloomQueue();
     const remote = await checkRemoteBlooms();
+    if (!$('scr-garden').classList.contains('on')) return;
     tickPraise(); renderGarden();
     if (local || remote) showToast('A friend said yes! Tap their glowing seed to see it bloom 🌱');
   }, 30 * 1000);
-  checkRemoteBlooms().then(ok => { if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing seed 🌱'); } });
+  const pollNow = () => checkRemoteBlooms().then(ok => {
+    if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing seed 🌱'); }
+  });
+  pollNow();
+  // Volunteers leave the app to send the text and come back — check on return.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) pollNow(); });
+  window.addEventListener('focus', pollNow);
+  window.addEventListener('pageshow', pollNow);
 }
 
 
 /* ---------------- contact-match capability ---------------- */
+const BUILD = '20260817-0230';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
