@@ -416,7 +416,10 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div class="qtitle">Find a friend in the <b>voter registration</b> file 🌱</div>
   <div id="plant-searchwrap">
     <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="First and last name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch();}"></div>
-    <div style="text-align:center;"><button id="plant-go" class="bigbtn" style="margin-top:12px;padding:12px 26px;font-size:14px;" onclick="doSearch()">Check Voter Rolls</button></div>
+    <div style="display:flex;gap:9px;justify-content:center;margin:12px 16px 0;">
+      <button id="plant-go" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;" onclick="doSearch()">Check Voter Rolls</button>
+      <button id="plant-contacts" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;background:#fff;color:var(--blue);border:2px solid var(--blue);box-shadow:0 5px 0 #cfe3f7;" onclick="openConnectSheet()">Search by Contacts</button>
+    </div>
   </div>
   <div id="plant-result"></div>
   <div id="plant-contactlist" style="display:none;"></div>
@@ -642,7 +645,7 @@ function freshState(first, last, garden, contacts) {
     first, last, garden, contacts,
     created: Date.now(), lifetime: 0, weekly: 0, pool: 0, poolTick: Date.now(),
     rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, textsDay: dayKey(),
-    visits: 0, plants: [], beds: [ { id: 1, cells: [[0,0],[1,0]] }, { id: 2, cells: [[2,0],[3,0]] }, { id: 3, cells: [[0,1],[1,1],[2,1]] } ],
+    visits: 0, plants: [], beds: [ { id: 1, cells: [[0,0],[1,0]] }, { id: 2, cells: [[3,1],[4,1],[5,1]] }, { id: 3, cells: [[6,2],[7,2]] } ],
     shed: [{ kind: 'gift', shelf: 'b' }], // welcome gift — {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
@@ -1011,7 +1014,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260818-1644';
+const BUILD = '20260818-1647';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1155,13 +1158,16 @@ function renderGarden() {
     const runs = bedRuns(b);
     const soil = b.id % 2 ? '#b98d5f' : '#c49766', edge = gold ? '#f59e0b' : '#8a6238';
     // Outline pass then fill pass, so an L merges into one shape with no seam.
+    // Inset from the cell bounds so two beds in neighbouring columns keep a gutter.
+    const GUT = 4;
     for (const rn of runs) {
       const o = cellXY(rn.c0, rn.r), w = (rn.c1 - rn.c0 + 1) * GRID.cw;
-      out += `<rect x="${o.x - 2.5}" y="${o.y + 0.5}" width="${w + 5}" height="${GRID.ch - 1}" rx="${GRID.ch / 2}" fill="${edge}"/>`;
+      out += `<rect x="${o.x + GUT}" y="${o.y + GUT}" width="${w - GUT * 2}" height="${GRID.ch - GUT * 2}" rx="${(GRID.ch - GUT * 2) / 2}" fill="${edge}"/>`;
     }
     for (const rn of runs) {
       const o = cellXY(rn.c0, rn.r), w = (rn.c1 - rn.c0 + 1) * GRID.cw;
-      out += `<rect x="${o.x}" y="${o.y + 3}" width="${w}" height="${GRID.ch - 6}" rx="${(GRID.ch - 6) / 2}" fill="${soil}"/>`;
+      const i = GUT + 2.5;
+      out += `<rect x="${o.x + i}" y="${o.y + i}" width="${w - i * 2}" height="${GRID.ch - i * 2}" rx="${(GRID.ch - i * 2) / 2}" fill="${soil}"/>`;
     }
     const inbed = plantsInBed(b.id);
     const cells = b.cells || [];
