@@ -112,7 +112,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 @keyframes flutter{0%,100%{transform:translate(0,0) rotate(-4deg);}30%{transform:translate(6px,-6px) rotate(7deg);}60%{transform:translate(-4px,-2px) rotate(-6deg);}}
 @keyframes goldshine{0%,100%{filter:drop-shadow(0 0 3px #fde68a);}50%{filter:drop-shadow(0 0 9px #f59e0b);}}
 @keyframes dropbob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-@keyframes ringpulse{0%{transform:scale(0.9);opacity:0.8;}100%{transform:scale(1.35);opacity:0;}}
+@keyframes ringpulse{0%{transform:scale(0.55);opacity:0.9;}70%{opacity:0.35;}100%{transform:scale(1.6);opacity:0;}}
 @keyframes glint{0%,100%{opacity:1;}45%{opacity:0.15;}}
 @keyframes pulsehint{0%,100%{transform:scale(1);opacity:0.85;}50%{transform:scale(1.12);opacity:1;}}
 @keyframes cinebean{0%{transform:translateX(-50%) scale(1);}70%{transform:translateX(-50%) scale(1.15);}100%{transform:translateX(-50%) scale(0);opacity:0;}}
@@ -308,7 +308,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div class="field" style="display:flex;align-items:center;gap:10px;background:#f4f9ff;border:2px solid var(--blue);cursor:pointer;" onclick="toggleContacts()">
       <span style="font-size:16px;">🔎</span>
       <div style="flex:1;">
-        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">Find friends from my contacts</div>
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">Find District 4 voters from my contacts</div>
         <div style="font-size:9px;color:#9aa3ad;margin-top:1px;">Compared once on your phone. Never saved.</div>
       </div>
       <span id="f-contacts" data-on="0" style="width:36px;height:20px;background:#c9d4de;border-radius:10px;position:relative;flex-shrink:0;transition:background 0.2s;"><i style="position:absolute;left:3px;top:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left 0.2s;"></i></span>
@@ -364,8 +364,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
   </div>
   <div class="toolbar">
-    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> SHED&nbsp;(<span id="hud-shed">0</span>)</div>
-    <div class="tchip" onclick="openDiag()" title="Connection check" style="flex:0 0 auto;padding-left:11px;padding-right:11px;">⚙</div>
+    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>SHED (<span id="hud-shed">0</span>)</span></div>
     <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
@@ -382,7 +381,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div id="agenda-line" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:13.5px;color:var(--ink);margin-top:4px;line-height:1.45;"></div>
     <div id="agenda-dots" style="display:flex;gap:4px;justify-content:center;margin-top:8px;"></div>
   </div>
-  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system<br><span id="build-stamp" style="opacity:0.45;cursor:pointer;" onclick="openDiag()"></span></div>
+  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system<br><span id="build-stamp" style="opacity:0.4;"></span></div>
   <nav class="bottomnav" id="nav-garden"></nav>
 </section>
 
@@ -460,14 +459,6 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Then pick the .vcf file — <b>Downloads</b> on Android, <b>Files</b> on iPhone</div>
   <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
   <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
-</div></div>
-<div class="overlay" id="ov-diag" onclick="if(event.target===this)closeOv('ov-diag')"><div class="sheet" style="max-width:340px;padding:22px 18px 18px;">
-  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:17px;color:var(--blue);text-align:center;">Connection check</div>
-  <div id="diag-body" style="margin-top:12px;"></div>
-  <button class="bigbtn" style="width:100%;box-sizing:border-box;font-size:14px;padding:12px;" onclick="runDiag()">Run test</button>
-  <button class="bigbtn" style="width:100%;box-sizing:border-box;font-size:14px;padding:12px;background:#059669;box-shadow:0 5px 0 #04794f;" onclick="checkMySeeds()">Check my seeds now</button>
-  <div id="diag-result" style="margin-top:12px;"></div>
-  <div style="text-align:center;margin-top:12px;"><span onclick="closeOv('ov-diag')" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Close</span></div>
 </div></div>
 <div class="overlay" id="ov-connect" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
   <div style="text-align:center;font-size:38px;">🌱</div>
@@ -992,7 +983,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260817-0258';
+const BUILD = '20260818-1355';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1103,13 +1094,13 @@ function renderGarden() {
         out += lbl;
       } else if (p.state === 'ready') {
         out += `<circle cx="${cx}" cy="${b.y + 16}" r="10" fill="#dcfce7" opacity="0.7"/>`;
-        out += `<circle cx="${cx}" cy="${b.y + 16}" r="13.5" fill="none" stroke="#059669" stroke-width="2" style="animation:ringpulse 1.3s ease-out infinite;transform-origin:${cx}px ${b.y + 16}px;"/>`;
-        out += `<use href="#f-seed" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;filter:drop-shadow(0 0 4px #059669);" onclick="seedTap('${p.id}')"/>`;
+        out += `<circle cx="${cx}" cy="${b.y + 16}" r="12" fill="none" stroke="#059669" stroke-width="2"/>`;
+        out += `<use href="#f-seed" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
         out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#059669" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">✓ TAP</text>`;
         out += lbl;
       } else {
         out += `<use href="#f-seed" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>` + lbl;
-        if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#4a9fe0" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;transform-origin:${cx}px ${b.y + 16}px;"/><use href="#f-drop" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
+        if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#4a9fe0" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-drop" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
         else if (p.touches < CONFIG.maxTouches) out += `<g opacity="0.92"><rect x="${cx - 11}" y="${b.y - 9}" width="26" height="12" rx="6" fill="#fff" stroke="#ddd5c2"/><text x="${cx + 2}" y="${b.y}" font-size="7.5" text-anchor="middle" fill="#8a8272" font-family="Arial">${hoursLeft(p)}${DEMO ? 'm' : 'h'}</text></g>`;
       }
     }
@@ -1854,80 +1845,8 @@ function openImportSheet(afterEmpty) {
 
 
 /* ---------------- diagnostics ---------------- */
-function diagLine(label, value, good) {
-  const c = good === undefined ? '#5b6470' : (good ? '#059669' : '#dc2626');
-  return `<div style="display:flex;gap:8px;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #eef3f8;">
-    <span style="font-size:10.5px;color:#7c8794;flex-shrink:0;">${label}</span>
-    <span style="font-size:10.5px;color:${c};text-align:right;word-break:break-all;font-family:monospace;">${esc(String(value))}</span></div>`;
-}
-function openDiag() {
-  const seeds = S ? S.plants.filter(p => p.state === 'seed') : [];
-  let html = diagLine('build', BUILD)
-    + diagLine('bloomApi', CONFIG.bloomApi || '(not set)', !!CONFIG.bloomApi)
-    + diagLine('page origin', location.origin)
-    + diagLine('polling active', _pollStarted ? 'yes' : 'NO', _pollStarted)
-    + diagLine('pending seeds', seeds.length)
-    + diagLine('seeds with token', seeds.filter(p => p.token).length, seeds.length === 0 || seeds.every(p => p.token));
-  for (const p of seeds.slice(0, 6)) html += diagLine(p.tag, p.token || 'NO TOKEN (old seed)', !!p.token);
-  $('diag-body').innerHTML = html;
-  $('diag-result').innerHTML = '';
-  openOv('ov-diag');
-}
 // Runs the exact code path the game uses, against the volunteer's real seeds.
-async function checkMySeeds() {
-  const out = $('diag-result');
-  out.innerHTML = '<div style="font-size:11px;color:#5b6470;">Checking…</div>';
-  const lines = [];
-  try {
-    const pending = S.plants.filter(p => p.state === 'seed');
-    const ids = pending.map(tokenOf).filter(Boolean);
-    lines.push(diagLine('seeds queried', ids.length || 'none', ids.length > 0));
-    if (!ids.length) { out.innerHTML = lines.join('') + '<div style="font-size:11px;color:#b45309;margin-top:9px;">No pending seeds to check.</div>'; return; }
-    const url = CONFIG.bloomApi.replace(/\/$/, '') + '/blooms?ids=' + encodeURIComponent(ids.join(','));
-    const r = await fetch(url);
-    const raw = await r.text();
-    lines.push(diagLine('status', r.status, r.ok));
-    lines.push(diagLine('server said', raw.slice(0, 120)));
-    const before = pending.map(p => p.tag + '=' + p.state).join(' ');
-    const changed = await checkRemoteBlooms();
-    const after = S.plants.filter(p => ['seed', 'ready'].includes(p.state)).map(p => p.tag + '=' + p.state).join(' ');
-    lines.push(diagLine('before', before));
-    lines.push(diagLine('after', after));
-    lines.push(diagLine('changed', changed ? 'YES' : 'no', changed));
-    renderGarden();
-    lines.push(`<div style="font-size:11px;margin-top:9px;line-height:1.5;color:${changed ? '#059669' : '#b45309'};">${changed
-      ? 'Seed updated — close this and look for the green pulse.'
-      : 'Server has no confirmation for these seeds yet. If your friend already tapped, they used a link from an older seed.'}</div>`);
-  } catch (e) {
-    lines.push(diagLine('error', e.message, false));
-  }
-  out.innerHTML = lines.join('');
-}
 
-async function runDiag() {
-  const out = $('diag-result');
-  const tok = 'dg' + seedToken();
-  out.innerHTML = '<div style="font-size:11px;color:#5b6470;">Testing…</div>';
-  const lines = [];
-  if (!CONFIG.bloomApi) { out.innerHTML = '<div style="color:#dc2626;font-size:11.5px;">bloomApi is not set in this build. Your page is out of date — reload.</div>'; return; }
-  try {
-    const base = CONFIG.bloomApi.replace(/\/$/, '');
-    const pr = await fetch(base + '/bloom/' + tok, { method: 'POST' });
-    lines.push(diagLine('POST /bloom', pr.status, pr.ok));
-    const gr = await fetch(base + '/blooms?ids=' + tok);
-    const data = await gr.json();
-    const found = (data.confirmed || []).includes(tok);
-    lines.push(diagLine('GET /blooms', gr.status, gr.ok));
-    lines.push(diagLine('round trip', found ? 'CONFIRMED' : 'not found', found));
-    lines.push(`<div style="font-size:11px;margin-top:9px;line-height:1.5;color:${found ? '#059669' : '#dc2626'};">${found
-      ? 'This phone can reach the server both ways. If a seed still is not blooming, the friend opened an old link — plant a new seed.'
-      : 'This phone cannot complete the round trip. Screenshot this and send it over.'}</div>`);
-  } catch (e) {
-    lines.push(diagLine('error', e.message, false));
-    lines.push('<div style="font-size:11px;color:#dc2626;margin-top:9px;line-height:1.5;">Blocked before reaching the server — usually CORS or no connection. Screenshot this.</div>');
-  }
-  out.innerHTML = lines.join('');
-}
 
 function openConnectSheet(afterEmpty) {
   const st = contactPickerState();
