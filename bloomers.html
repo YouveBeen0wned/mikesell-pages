@@ -1011,7 +1011,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260818-1557';
+const BUILD = '20260818-1558';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1074,7 +1074,7 @@ function cellXY(c, r) { return { x: GRID.ox + c * GRID.cw, y: GRID.oy + r * GRID
 function cellCenter(c, r) { const o = cellXY(c, r); return { cx: o.x + GRID.cw / 2, cy: o.y + GRID.ch / 2 }; }
 function occupied() {
   const set = {};
-  for (const b of S.beds) for (const [c, r] of (b.cells || [])) set[c + ',' + r] = b.id;
+  for (const b of S.beds) for (const [c, r] of (b.cells || [])) set[c + ',' + r] = true;
   return set;
 }
 // First grid position where every cell of a shape is free.
