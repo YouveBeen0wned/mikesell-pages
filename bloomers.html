@@ -192,6 +192,30 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <circle cx="20" cy="20" r="3.6" fill="#e8a53c"/><circle cx="20" cy="20" r="1.5" fill="#fbf3d8"/>
 </symbol>
 
+<symbol id="f-coreopsis" viewBox="0 0 40 40">
+  <g fill="#f7c948" stroke="#dda92e" stroke-width="0.7">
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(45 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(90 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(135 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(180 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(225 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(270 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(315 20 20)"/>
+  </g>
+  <circle cx="20" cy="20" r="4.4" fill="#7a4a1e"/><circle cx="20" cy="20" r="2.1" fill="#b0762f"/>
+</symbol>
+
+<symbol id="f-pitcher" viewBox="0 0 40 40">
+  <path d="M14 8 C11 16 12 28 16 37 L24 37 C28 28 29 16 26 8 Z" fill="#a9cf72" stroke="#6d8f45" stroke-width="0.9"/>
+  <g stroke="#7fa353" stroke-width="0.7" fill="none" opacity="0.85">
+    <path d="M17 11 C15.5 19 16 28 18 35"/><path d="M23 11 C24.5 19 24 28 22 35"/><path d="M20 10 C20 19 20 28 20 36"/>
+  </g>
+  <path d="M13.5 9.5 C13 3.5 27 3.5 26.5 9.5 C26.5 12 13.5 12 13.5 9.5 Z" fill="#b98fd0" stroke="#7d55a0" stroke-width="0.9"/>
+  <g stroke="#7d55a0" stroke-width="0.6" opacity="0.7"><path d="M16 9 C16.5 6.5 18 5 20 4.8"/><path d="M24 9 C23.5 6.5 22 5 20 4.8"/></g>
+  <ellipse cx="20" cy="10.6" rx="6" ry="1.7" fill="#5f3f80" opacity="0.55"/>
+</symbol>
+
 <symbol id="f-blazing" viewBox="0 0 40 40">
   <g fill="#9d6fe8"><circle cx="20" cy="6" r="3"/><circle cx="17" cy="10" r="3.4"/><circle cx="23" cy="10.5" r="3.2"/><circle cx="19" cy="15" r="3.8"/><circle cx="24" cy="16" r="3.2"/><circle cx="16" cy="20" r="3.6"/><circle cx="22" cy="21" r="3.8"/><circle cx="18" cy="26" r="3.6"/><circle cx="23" cy="27" r="3.2"/><circle cx="20" cy="31" r="3.4"/><circle cx="20" cy="35.5" r="2.6"/></g>
   <g fill="#c5a6f5"><circle cx="20.5" cy="8" r="1.2"/><circle cx="21" cy="13" r="1.3"/><circle cx="18" cy="18" r="1.3"/><circle cx="21.5" cy="23.5" r="1.3"/><circle cx="19" cy="29" r="1.2"/><circle cx="20.5" cy="33.5" r="1.1"/></g>
@@ -580,9 +604,11 @@ const CONFIG = {
     { id: 'phlox',    art: 'f-phlox',    name: 'Ancient City Phlox',  shelf: 'g', loc: 'the coquina walls of St. Augustine' },
     { id: 'zinnia',   art: 'f-zinnia',   name: 'River City Zinnia',   shelf: 'g', loc: 'community beds across Jacksonville' },
     { id: 'aster',    art: 'f-aster',    name: 'Black Creek Aster',   shelf: 'g', loc: 'the banks of Black Creek in Clay County' },
-    { id: 'iris',     art: 'f-iris',     name: 'River City Iris',     shelf: 'b', loc: 'the wet banks of the St. Johns River' },
+    { id: 'iris',     art: 'f-iris',     name: 'River City Iris',     shelf: 'p', loc: 'the wet banks of the St. Johns River' },
     { id: 'primrose', art: 'f-primrose', name: 'Dune Primrose',       shelf: 'b', loc: 'the dunes of Little Talbot Island' },
+    { id: 'coreopsis',art: 'f-coreopsis',name: 'Timucuan Coreopsis',  shelf: 'b', loc: 'the marsh edges of the Timucuan Preserve' },
     { id: 'blazing',  art: 'f-blazing',  name: 'Blazing Star',        shelf: 'b', loc: 'pine flatwoods across the First Coast' },
+    { id: 'pitcher',  art: 'f-pitcher',  name: 'Trail Ridge Pitcher Plant', shelf: 'b', loc: 'the wet bogs along Trail Ridge' },
     { id: 'passion',  art: 'f-passion',  name: 'Passion Vine',        shelf: 'p', loc: 'sunny fence lines across northeast Florida' },
     { id: 'ghost',    art: 'f-ghost',    name: 'Ghost Orchid',        shelf: 'au', loc: 'deep southern swamps, almost never seen' },
   ],
@@ -983,7 +1009,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260818-1355';
+const BUILD = '20260818-1537';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
