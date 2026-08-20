@@ -318,7 +318,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
       <div class="field" style="flex:1;margin:0;"><label>LAST NAME</label><input id="f-last" autocomplete="family-name" placeholder="Voter"></div>
     </div>
     <div class="field focus"><div class="fieldnote"><label style="color:var(--blue);">GARDENER NAME</label><em>what other gardeners see</em></div><input id="f-garden" placeholder="Rockstar904" maxlength="20"></div>
-    <div class="field"><div class="fieldnote"><label>DATE OF BIRTH</label><em>Age Verification</em></div><input id="f-dob" inputmode="numeric" placeholder="MM / DD / YYYY" maxlength="14"></div>
+    <div class="field"><div class="fieldnote"><label>ZIP CODE</label><em>keeps your garden local</em></div><input id="f-zip" inputmode="numeric" autocomplete="postal-code" placeholder="32234" maxlength="5"></div>
     <div class="field" style="margin-left:16px;margin-right:16px;">
       <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your garden</em></div>
       <div style="display:flex;gap:9px;margin-top:6px;">
@@ -1014,7 +1014,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260818-1647';
+const BUILD = '20260820-2036';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1043,17 +1043,17 @@ function toggleContacts() {
 }
 function doSignup() {
   const first = $('f-first').value.trim(), last = $('f-last').value.trim();
-  const garden = $('f-garden').value.trim(), dob = $('f-dob').value.trim();
+  const garden = $('f-garden').value.trim(), zip = $('f-zip').value.replace(/\D/g, '');
   const pin = ['s-pin0','s-pin1','s-pin2','s-pin3'].map(id => $(id).value.replace(/\D/g,'')).join('');
   const err = $('signup-err');
-  if (!first || !last || !garden || !dob) { err.textContent = 'All four fields make the account. Nothing else, ever.'; err.style.display = 'block'; return; }
+  if (!first || !last || !garden || !zip) { err.textContent = 'All four fields make the account. Nothing else, ever.'; err.style.display = 'block'; return; }
   if (pin && pin.length !== 4) { err.textContent = 'PIN needs all 4 digits, or leave it blank.'; err.style.display = 'block'; return; }
-  const yr = parseInt((dob.match(/(\d{4})/) || [])[1] || '0', 10);
-  if (!yr || new Date().getFullYear() - yr < 18) { err.textContent = 'Bloomers is for gardeners 18 and up.'; err.style.display = 'block'; return; }
+  if (zip.length !== 5) { err.textContent = 'ZIP code needs all 5 digits.'; err.style.display = 'block'; return; }
   S = freshState(first, last, garden, $('f-contacts').dataset.on === '1');
+  S.zip = zip;
   if (pin) { S.pin = pin; sessionStorage.setItem('bl_auth', '1'); }
   save();
-  api('signup', { first, last, ageOk: true, contactsOptIn: S.contacts }); // [SERVER] account record; DOB itself is never sent
+  api('signup', { first, last, zip, contactsOptIn: S.contacts }); // [SERVER] account record
   renderGarden();
   show('scr-garden');
   startPolling();
