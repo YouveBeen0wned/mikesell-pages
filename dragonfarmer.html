@@ -1,0 +1,2357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dragon Farmer · Raise our community, one friend at a time</title>
+<meta name="description" content="Dragon Farmer is a dragon game where a text to a friend nests an egg, and their promise to vote makes it hatch. Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.">
+<style>
+@font-face{font-family:'clarendon-w01-medium';src:url('https://static.parastorage.com/services/santa-resources/resources/viewer/user-site-fonts/fonts/e2ffff81-a48c-42fc-9b03-6a4a5d0d052e.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';src:url('https://static.parastorage.com/services/santa-resources/resources/viewer/user-site-fonts/fonts/da923d0d-1e6b-4a02-8ba6-3bfb21f0a889.woff2') format('woff2');font-display:swap;}
+:root{--blue:#037ad8;--purple:#8555ab;--red:#ea504e;--ink:#1a2a4a;--gold:#f59e0b;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:#e9dfc6;height:100%;overflow:hidden;}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
+#shell{max-width:430px;margin:0 auto;height:100dvh;background:#fdfaf2;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(10,30,60,0.18);}
+.screen{display:none;flex-direction:column;flex:1;position:relative;}
+.screen.on{display:flex;overflow-y:auto;padding-bottom:104px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 9px;position:relative;z-index:5;}
+.gametitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--ink);white-space:nowrap;}
+.pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #e0d2b0;}
+.rule{height:5px;display:flex;position:relative;z-index:5;}
+.rule i{flex:1;}.rule i:nth-child(1){background:var(--blue);}.rule i:nth-child(2){background:var(--purple);}.rule i:nth-child(3){background:var(--red);}
+.bottomnav{display:flex;justify-content:space-evenly;background:#fdfaf2;border-top:2px solid #e0d2b0;padding:10px 0 calc(12px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;width:100%;z-index:100;}
+.bn{opacity:0.45;text-align:center;cursor:pointer;flex:1;border:none;background:none;padding:0;}
+.bn.on{opacity:1;transform:scale(1.12);}
+.bn small{display:block;font-size:9px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;margin-top:2px;}
+.navic{width:26px;height:26px;}
+.bigbtn{display:block;margin:14px auto 0;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:#fff;background:var(--blue);border:none;border-radius:18px;padding:15px 30px;cursor:pointer;box-shadow:0 5px 0 #045ea6;}
+.bigbtn:active{transform:translateY(2px);box-shadow:0 3px 0 #045ea6;}
+.tinytxt{font-size:9px;line-height:1.45;text-align:center;color:#9aa3ad;padding:8px 16px 6px;position:relative;z-index:5;}
+.bgdeco{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+#shell .screen>*:not(.bgdeco){position:relative;z-index:1;}
+.screen>.petal{position:absolute;}
+.petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
+.field{background:#fffdf6;border:1.5px solid #ded0ac;border-radius:12px;padding:8px 14px 9px;margin:9px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(138,95,54,0.06);align-self:stretch;}
+.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:52px;font-size:26px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
+.field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
+.field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
+#drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
+#remove-hint{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#dc2626;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;padding:8px 18px;border-radius:20px;z-index:601;display:none;pointer-events:none;white-space:nowrap;}
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);max-width:390px;width:calc(100% - 28px);background:#1a2a4a;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:13px 18px;border-radius:14px;text-align:center;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;line-height:1.5;}
+.field label{display:block;font-size:9px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;letter-spacing:0.09em;}
+.field input{border:none;outline:none;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:var(--ink);margin-top:3px;background:transparent;}
+.field.focus{border:2px solid var(--blue);box-shadow:0 0 0 3px rgba(3,122,216,0.1);padding:6px 13px 7px;}
+.fieldnote{display:flex;justify-content:space-between;align-items:baseline;}
+.fieldnote em{font-style:normal;font-size:8.5px;color:#9aa3ad;}
+.pindot::placeholder{color:#c3d9ef;font-size:23px;}
+
+/* Short screens (iPhone SE and similar): tighten just enough to avoid scrolling,
+   while taller phones keep the roomier default spacing. */
+@media (max-height: 765px){
+  #scr-signup .field{padding:5px 14px 6px;margin:5px 24px 0;}
+  #scr-signup .field.focus{padding:4px 13px 5px;}
+  #scr-signup .field input.pindot,#scr-signup .pindot{height:42px;font-size:21px;}
+  #scr-signup .pindot::placeholder{font-size:19px;}
+  #scr-signup .bigbtn{margin-top:9px;padding:12px 26px;font-size:15px;}
+  #scr-signup .tinytxt{font-size:7.5px;line-height:1.3;padding:5px 14px 4px;}
+  #sg-wrap{padding:2px 0 2px !important;}
+  #sg-flowers{height:30px !important;}
+  #sg-title{font-size:24px !important;}
+  #sg-swoosh{width:170px !important;height:17px !important;}
+  #sg-tag{font-size:10.5px !important;margin-top:2px !important;}
+  #sg-names{margin-top:7px !important;}
+  #scr-signup .fieldnote em{display:none;}
+}
+
+.card{background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:12px 15px;margin:12px 16px 0;box-shadow:0 2px 0 #ece0c4;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(6,20,35,0.55);z-index:40;align-items:center;justify-content:center;padding:20px;}
+.overlay.on{display:flex;}
+.sheet{background:#fffdf7;border-radius:22px;max-width:390px;width:100%;max-height:88dvh;overflow-y:auto;padding:18px;position:relative;}
+.rankrow{display:flex;align-items:center;gap:10px;background:#fffdf6;border:2px solid #e0d2b0;border-radius:14px;padding:8px 12px;margin:0 0 7px;}
+.rankrow.now{border-color:var(--blue);background:#eef6fd;}
+.rankrow.locked{opacity:0.65;}
+.rlab{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:var(--ink);flex:1;}
+.rlab small{display:block;font-family:Georgia,serif;font-size:9.5px;color:#8a94a3;font-weight:400;margin-top:1px;}
+.rnum{font-family:'clarendon-w01-medium',Georgia,serif;font-size:12px;color:var(--blue);white-space:nowrap;}
+.toolbar{display:flex;gap:8px;margin:10px 14px 0;}
+.tchip{display:flex;align-items:center;gap:8px;background:#fffdf6;border:2px solid #d9c69c;border-radius:14px;padding:8px 12px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;color:var(--ink);cursor:pointer;}
+.collectbtn{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;letter-spacing:0.05em;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:7px 14px;box-shadow:0 3px 0 #a05a04;cursor:pointer;}
+.collectbtn:disabled{background:#d3ddea;box-shadow:none;}
+#gardensvg{touch-action:none;-webkit-touch-callout:none;user-select:none;}
+#gardensvg *{transform-box:fill-box;}
+#gardensvg circle[style*="pulsehint"],#gardensvg circle[style*="ringpulse"]{transform-origin:center;}
+svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a4326;paint-order:stroke;stroke:#fdfaf2;stroke-width:1.5px;}
+.almgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:12px 16px;}
+.almcell{aspect-ratio:1;border:2.5px solid #e0d2b0;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#fffdf6;cursor:pointer;}
+.almcell.g{border-color:#059669;}.almcell.b{border-color:#2563eb;}.almcell.p{border-color:#7c3aed;}.almcell.au{border-color:var(--gold);box-shadow:0 0 10px rgba(245,158,11,0.35);}
+.almcell.locked svg{filter:grayscale(1);opacity:0.3;}
+.qtitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin:10px 18px 2px;line-height:1.4;text-align:center;text-shadow:0 2px 0 #fdfaf2;}
+.qtitle b{color:var(--purple);font-weight:400;}
+.searchbox{display:flex;align-items:center;gap:8px;background:#fffdf6;border:2px solid var(--blue);border-radius:16px;padding:11px 14px;margin:12px 16px 0;box-shadow:0 2px 0 #d9c69c;}
+.searchbox input{border:none;outline:none;flex:1;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:var(--ink);background:transparent;}
+.statecard{position:relative;border-radius:20px;padding:16px;margin:14px 16px 0;text-align:center;overflow:hidden;}
+.statecard.avail{background:#f4f9ff;border:2.5px solid var(--blue);box-shadow:0 6px 16px rgba(3,122,216,0.16);}
+.statecard.nomatch{background:#faf7fd;border:2.5px solid var(--purple);box-shadow:0 6px 16px rgba(133,85,171,0.16);}
+.plantbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:#fff;border:none;border-radius:18px;padding:13px 16px;cursor:pointer;margin-top:12px;}
+.namechip{display:inline-flex;align-items:center;gap:5px;background:#fff;border-radius:10px;padding:3px 9px;}
+.namechip input{border:none;outline:none;width:90px;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:transparent;}
+.pickrow{display:flex;gap:7px;justify-content:center;margin:6px 12px 0;flex-wrap:wrap;}
+.pick{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;background:#fffdf6;border:2px solid #e0d2b0;border-radius:12px;padding:7px 12px;color:#9aa3ad;cursor:pointer;}
+.pick.on{background:#eef6fd;border-color:var(--blue);color:var(--blue);}
+.agenda{background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:11px 15px;margin:14px 16px 0;text-align:left;box-shadow:0 2px 0 #ece0c4;}
+.chip-anim{opacity:0;animation:revealpop 0.5s forwards;}
+@media (min-width:500px){ body{padding:0;} }
+</style>
+<style id="anim">
+@keyframes petals{0%{transform:translateY(-20px) rotate(0);opacity:0;}10%{opacity:0.8;}90%{opacity:0.7;}100%{transform:translateY(105vh) rotate(300deg);opacity:0;}}
+@keyframes sparkle{0%,100%{opacity:1;}50%{opacity:0;}}
+@keyframes grow{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+@keyframes popglow{0%,100%{box-shadow:0 5px 0 #045ea6;}50%{box-shadow:0 5px 0 #045ea6,0 0 18px rgba(3,122,216,0.5);}}
+@keyframes bee{0%,100%{transform:translate(0,0) rotate(-6deg);}25%{transform:translate(5px,-4px) rotate(6deg);}50%{transform:translate(9px,2px) rotate(-4deg);}75%{transform:translate(4px,5px) rotate(5deg);}}
+@keyframes flutter{0%,100%{transform:translate(0,0) rotate(-4deg);}30%{transform:translate(6px,-6px) rotate(7deg);}60%{transform:translate(-4px,-2px) rotate(-6deg);}}
+@keyframes goldshine{0%,100%{filter:drop-shadow(0 0 3px #fde68a);}50%{filter:drop-shadow(0 0 9px #f59e0b);}}
+@keyframes dropbob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+@keyframes ringpulse{0%{transform:scale(0.55);opacity:0.9;}70%{opacity:0.35;}100%{transform:scale(1.6);opacity:0;}}
+@keyframes glint{0%,100%{opacity:1;}45%{opacity:0.15;}}
+@keyframes pulsehint{0%,100%{transform:scale(1);opacity:0.85;}50%{transform:scale(1.12);opacity:1;}}
+@keyframes cinebean{0%{transform:translateX(-50%) scale(1);}70%{transform:translateX(-50%) scale(1.15);}100%{transform:translateX(-50%) scale(0);opacity:0;}}
+@keyframes cinesprout{0%{opacity:0;transform:scale(0.3);}100%{opacity:1;transform:scale(1);}}
+@keyframes cinesproutout{to{opacity:0;}}
+@keyframes cineflower{0%{opacity:0;transform:translateX(-50%) scale(0.15);}70%{opacity:1;transform:translateX(-50%) scale(1.12);}100%{opacity:1;transform:translateX(-50%) scale(1);}}
+@keyframes revealpop{0%{opacity:0;transform:scale(0.6) translateY(8px);}70%{opacity:1;transform:scale(1.06);}100%{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes popring{0%{transform:scale(0.4);opacity:0.9;}100%{transform:scale(1.5);opacity:0;}}
+.popring{position:absolute;border-radius:50%;border:3px solid #fcd34d;opacity:0;pointer-events:none;}
+</style>
+</head>
+
+<body>
+<svg width="0" height="0" style="position:absolute">
+<defs>
+
+<radialGradient id="gh-glow"><stop offset="0%" stop-color="#fde047" stop-opacity="0.85"/><stop offset="45%" stop-color="#fde68a" stop-opacity="0.5"/><stop offset="100%" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
+
+<symbol id="d-ember" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#a8352a" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#a8352a"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#b23528"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#a8352a" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#d84b3c"/>
+  <circle cx="26" cy="28" r="4.3" fill="#a8352a" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#a8352a" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#f7c58c"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#d84b3c" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#d84b3c"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#d84b3c"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#a8352a"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#f0b429"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#f0b429" opacity="0.85"/>
+  <g fill="#f0b429"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <circle cx="37.2" cy="14.2" r="1.5" fill="#f59e0b"/><circle cx="37.2" cy="14.2" r="0.7" fill="#fde68a"/>
+</symbol>
+
+<symbol id="d-jade" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#1f7a4f" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#1f7a4f"/>
+  <path d="M18 21 Q20 9 30 9.5 Q26 14 26.5 18 Q22 16.5 18.5 22.5 Z" fill="#1f7a4f"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#2e9e6b"/>
+  <circle cx="26" cy="28" r="4.3" fill="#1f7a4f" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#1f7a4f" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#c8ecd8"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#2e9e6b" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#2e9e6b"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#2e9e6b"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#1f7a4f"/>
+  <path d="M12 6.8 L13.4 3 L14.8 6.2 L16.2 3.2 L17.4 6.8 L14.8 8.8 Z" fill="#16604a"/>
+  <g fill="#16604a"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <path d="M14 25.5 q3.5 1.6 7 0" stroke="#8fd8b4" stroke-width="1" fill="none" opacity="0.8"/>
+</symbol>
+
+<symbol id="d-copper" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#9a5a26" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#9a5a26"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#9a5a26"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#9a5a26" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#c47a3a"/>
+  <circle cx="26" cy="28" r="4.3" fill="#9a5a26" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#9a5a26" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#f2d3ae"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#c47a3a" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#c47a3a"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#c47a3a"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#9a5a26"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#3f9e8a"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#3f9e8a" opacity="0.85"/>
+  <g fill="#3f9e8a"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <g fill="#3f9e8a" opacity="0.75"><circle cx="23" cy="24" r="1"/><circle cx="26" cy="27" r="0.8"/><circle cx="20" cy="22.5" r="0.7"/></g>
+</symbol>
+
+<symbol id="d-cobalt" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#1c418f" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#1c418f"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#1c418f"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#1c418f" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#2b5fc7"/>
+  <circle cx="26" cy="28" r="4.3" fill="#1c418f" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#1c418f" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#c9d9f7"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#2b5fc7" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#2b5fc7"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#2b5fc7"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#1c418f"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#f0b429"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#f0b429" opacity="0.85"/>
+  <g fill="#f0b429"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+</symbol>
+
+<symbol id="d-clay" viewBox="0 0 40 40">
+  <ellipse cx="21" cy="34.8" rx="12.5" ry="2.4" fill="#7a3f22" opacity="0.3"/>
+  <path d="M33 17.5 L38 12.5 L36.5 19.5 Z" fill="#8a4a28"/>
+  <path d="M12 14 Q9.5 22 16 26.5 Q22.5 30.5 28.5 27.5 Q35 24 35 16" fill="none" stroke="#b0663d" stroke-width="7" stroke-linecap="round"/>
+  <path d="M13.5 18 Q12.5 22.5 17 25.2" fill="none" stroke="#cf8a5c" stroke-width="2" stroke-linecap="round"/>
+  <g fill="#8a4a28"><path d="M17.5 22.4 L18.6 19.8 L20 22.2 Z"/><path d="M22 23.6 L23.2 21 L24.6 23.4 Z"/><path d="M26.5 22.8 L27.6 20.2 L29 22.6 Z"/></g>
+  <circle cx="11" cy="11" r="4.8" fill="#b0663d"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#b0663d"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#8a4a28"/>
+  <path d="M13 7.5 L12 3.5 L15 5.8 Z" fill="#8a4a28"/><path d="M15.5 8.5 L16 4.8 L18.4 7.4 Z" fill="#8a4a28"/>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+</symbol>
+
+<symbol id="d-coral" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#cf5a6b" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#cf5a6b"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#cf5a6b"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#cf5a6b" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#ee7d8b"/>
+  <circle cx="26" cy="28" r="4.3" fill="#cf5a6b" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#cf5a6b" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#fcdce0"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#ee7d8b" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#ee7d8b"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#ee7d8b"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#cf5a6b"/>
+  <path d="M13 8 L11.8 3.5 L13.6 5.6 L13.4 2 L15.6 5 L16.8 3.2 L16.6 6.6 Q15.2 8.2 14.2 9.6 Z" fill="#e86a50"/>
+  <g fill="#e86a50"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <path d="M14 26 q3 1.8 6 0" stroke="#f8b8c0" stroke-width="1" fill="none" opacity="0.85"/>
+</symbol>
+
+<symbol id="d-amber" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#c1832a" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="35.5" cy="14.5" r="3.2" fill="#fde68a" stroke="#f0b429" stroke-width="1.1"/><circle cx="35.5" cy="14.5" r="1.2" fill="#f59e0b"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#c1832a"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#c1832a" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#e8a83b"/>
+  <circle cx="26" cy="28" r="4.3" fill="#c1832a" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#c1832a" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#fde68a"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#e8a83b" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#e8a83b"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#e8a83b"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#c1832a"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#8a5212"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#8a5212" opacity="0.85"/>
+  <g fill="#8a5212"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <circle cx="17" cy="29.5" r="2.2" fill="#f59e0b" opacity="0.55"/>
+</symbol>
+
+<symbol id="d-slate" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#4f5d6e" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#4f5d6e"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#4f5d6e"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#4f5d6e" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#6b7a8c"/>
+  <circle cx="26" cy="28" r="4.3" fill="#4f5d6e" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#4f5d6e" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#cdd6de"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#6b7a8c" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#6b7a8c"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#6b7a8c"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#4f5d6e"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#3e4a58"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#3e4a58" opacity="0.85"/>
+  <g fill="#3e4a58"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <g fill="#4f5d6e" opacity="0.75"><rect x="21" y="23" width="3.4" height="2.4" rx="0.7"/><rect x="24.8" y="26" width="3" height="2.2" rx="0.7"/><rect x="18" y="21.5" width="2.8" height="2" rx="0.7"/></g>
+</symbol>
+
+<!-- ============ WILDLIFE DRAGONS (blue shelf) ============ -->
+
+<symbol id="d-silver" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#97a1b0" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#97a1b0"/>
+  <path d="M17.5 21 Q19 7 34 8 Q31 12 27 13 Q28.5 15.2 25 16.5 Q26.5 18.5 22 19 Q22.8 21 18 22.5 Z" fill="#97a1b0" stroke="#a8b2bf" stroke-width="0.8"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#c6cdd8" stroke="#a8b2bf" stroke-width="0.8"/>
+  <circle cx="26" cy="28" r="4.3" fill="#97a1b0" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#97a1b0" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#eef1f5"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#c6cdd8" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#c6cdd8" stroke="#a8b2bf" stroke-width="0.8"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#c6cdd8" stroke="#a8b2bf" stroke-width="0.8"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#97a1b0"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#7d8794"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#7d8794" opacity="0.85"/>
+  <g fill="#7d8794"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <path d="M15 24.5 q4 -1.6 8 0" stroke="#fff" stroke-width="1" fill="none" opacity="0.9"/>
+</symbol>
+
+<symbol id="d-frost" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#5fa3c2" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#5fa3c2"/>
+  <ellipse cx="24" cy="15.5" rx="7" ry="4" fill="#5fa3c2" stroke="#7db8d2" stroke-width="0.8" transform="rotate(-32 24 15.5)"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#9fd4e8" stroke="#7db8d2" stroke-width="0.8"/>
+  <circle cx="26" cy="28" r="4.3" fill="#5fa3c2" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#5fa3c2" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#eaf7fc"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#9fd4e8" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#9fd4e8" stroke="#7db8d2" stroke-width="0.8"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#9fd4e8" stroke="#7db8d2" stroke-width="0.8"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#5fa3c2"/>
+  <path d="M13 7.5 L13.8 2.5 L15.5 7 Z" fill="#ffffff"/><path d="M15.8 8.5 L17.5 4.5 L18.5 8.8 Z" fill="#ffffff" opacity="0.9"/>
+  <g fill="#ffffff"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <g fill="#fff" opacity="0.9"><circle cx="22" cy="23.5" r="0.9"/><circle cx="25.5" cy="26.5" r="0.7"/><circle cx="18.5" cy="22" r="0.7"/></g>
+</symbol>
+
+<symbol id="d-obsidian" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#262130" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#262130"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#262130"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#262130" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#3a3444"/>
+  <circle cx="26" cy="28" r="4.3" fill="#262130" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#262130" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#6b6378"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#3a3444" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#3a3444"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#3a3444"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#262130"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#8a7fa0"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#8a7fa0" opacity="0.85"/>
+  <g fill="#8a7fa0"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#fde68a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <path d="M15 22.5 q5 -2.4 10 0" stroke="#8f7bb8" stroke-width="0.9" fill="none" opacity="0.9"/><circle cx="24" cy="25" r="0.8" fill="#8f7bb8"/>
+</symbol>
+
+<!-- ============ EXOTIC (purple shelf) ============ -->
+
+<symbol id="d-storm" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#3f3390" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#3f3390"/>
+  <path d="M17.5 21 L19.5 7 L23 12 L26.5 6 L28.5 12.5 L33.5 8.5 L29.5 16 Q24 14.5 24.5 18.5 Q20.5 17.5 18 22.5 Z" fill="#3f3390"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#5b4ab8"/>
+  <circle cx="26" cy="28" r="4.3" fill="#3f3390" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#3f3390" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#8b7fd6"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#5b4ab8" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#5b4ab8"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#5b4ab8"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#3f3390"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#f0b429"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#f0b429" opacity="0.85"/>
+  <g fill="#f0b429"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#fde68a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <path d="M20.5 23.5 L18.9 26.6 L20.4 26.6 L19 29.9 L22.3 25.9 L20.7 25.9 L22.1 23.5 Z" fill="#f0b429"/>
+</symbol>
+
+<!-- ============ GOLD SHELF ============ -->
+
+<symbol id="d-opal" viewBox="0 0 40 40">
+  <path d="M28 26.5 Q37 25.5 36 16" fill="none" stroke="#e4e0ea" stroke-width="3" stroke-linecap="round"/>
+  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#efedf4" stroke="#d9d4e0" stroke-width="0.8"/>
+  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#e4e0ea" stroke-width="0.7" fill="none" opacity="0.5"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#ffffff" stroke="#d9d4e0" stroke-width="0.8"/>
+  <circle cx="26" cy="28" r="4.3" fill="#e4e0ea" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#e4e0ea" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#f6f4f9"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#ffffff" stroke="#d9d4e0" stroke-width="0.8"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#ffffff" stroke="#d9d4e0" stroke-width="0.8"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#e4e0ea"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#e8e2f0"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#e8e2f0" opacity="0.85"/>
+  <g fill="#e8e2f0"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#5fb8b0"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <g opacity="0.95"><circle cx="22.5" cy="23.5" r="1.1" fill="#8fd8e8"/><circle cx="18" cy="25.5" r="0.9" fill="#f5a8c8"/><circle cx="25.5" cy="27" r="0.9" fill="#fde68a"/><circle cx="15.5" cy="22.5" r="0.7" fill="#c9b8f0"/></g>
+</symbol>
+
+<!-- ============ OBJECTS ============ -->
+
+<symbol id="d-egg" viewBox="0 0 40 40">
+  <path d="M20 3.5 C27.5 3.5 32.5 11.5 32.5 21 C32.5 30.5 27 37 20 37 C13 37 7.5 30.5 7.5 21 C7.5 11.5 12.5 3.5 20 3.5 Z" fill="#0b4176"/>
+  <path d="M20 3.5 C27.5 3.5 32.5 11.5 32.5 21 C32.5 29.5 28.2 35.5 22.5 36.7 C26.5 31.5 27.8 23 26.2 15.5 C25 10.2 23 6.2 20 3.5 Z" fill="#002d5b"/>
+  <ellipse cx="14.8" cy="12.5" rx="3.2" ry="5" fill="#f59e0b" transform="rotate(20 14.8 12.5)" opacity="0.95"/>
+  <ellipse cx="14" cy="11" rx="1.3" ry="2" fill="#fbd27e" transform="rotate(20 14 11)"/>
+  <g fill="#f0b429" opacity="0.85"><circle cx="24" cy="24.5" r="1.3"/><circle cx="17.5" cy="29" r="1.1"/><circle cx="26" cy="17" r="1"/><circle cx="12.5" cy="21.5" r="0.9"/></g>
+</symbol>
+
+<symbol id="d-flame" viewBox="0 0 20 20">
+  <circle cx="10" cy="10" r="9" fill="#fff" stroke="#f2c063" stroke-width="1.2"/>
+  <path d="M10 3.6 C12.9 7 14 9.2 13.6 11.6 C14.4 11 14.8 10 15 9.2 C16 13 14 16.4 10 16.4 C6.6 16.4 4.6 14 5.2 11 C5.6 9 7.4 6.4 10 3.6 Z" fill="#f59e0b"/>
+  <path d="M10 9 C11.4 11 11.2 13.2 10 14.4 C8.8 13.2 8.6 11 10 9 Z" fill="#fde68a"/>
+</symbol>
+
+<symbol id="d-fire" viewBox="0 0 20 20">
+  <path d="M10 1.6 C13.4 5.4 14.7 8 14.2 10.8 C15.2 10.1 15.7 8.9 15.9 7.9 C17.2 12.6 14.8 16.8 10 16.8 C5.8 16.8 3.4 13.8 4.2 10.2 C4.7 7.8 7 4.8 10 1.6 Z" fill="#f59e0b"/>
+  <path d="M10 7.5 C11.8 9.9 11.6 12.6 10 14 C8.4 12.6 8.2 9.9 10 7.5 Z" fill="#fde68a"/>
+</symbol>
+
+<symbol id="d-hatchling" viewBox="0 0 40 40">
+  <circle cx="20" cy="15.5" r="8" fill="#67a85b"/>
+  <path d="M16 9 L15 5.5 L18.2 7.6 Z" fill="#f0b429"/><path d="M24 9 L25 5.5 L21.8 7.6 Z" fill="#f0b429"/>
+  <circle cx="17.3" cy="15" r="1.7" fill="#1a2a4a"/><circle cx="22.7" cy="15" r="1.7" fill="#1a2a4a"/><circle cx="17.9" cy="14.4" r="0.6" fill="#fff"/><circle cx="23.3" cy="14.4" r="0.6" fill="#fff"/>
+  <path d="M11 22.5 L14 25.5 L17 22.5 L20 25.5 L23 22.5 L26 25.5 L29 22.5 L29 27 C29 33 25 36.5 20 36.5 C15 36.5 11 33 11 27 Z" fill="#0b4176"/>
+  <ellipse cx="16" cy="29.5" rx="1.6" ry="2.6" fill="#f59e0b" transform="rotate(15 16 29.5)"/>
+</symbol>
+
+<symbol id="d-bird" viewBox="0 0 40 40">
+  <path d="M13 22 Q6 17 3.5 19.5 Q6.5 26 13.5 26.5 Z" fill="#2c7cc0"/>
+  <ellipse cx="19" cy="24" rx="9.5" ry="7.8" fill="#4a9fe0"/>
+  <ellipse cx="18" cy="25.5" rx="5" ry="3.8" fill="#cfe7f8"/>
+  <circle cx="26.5" cy="16" r="5.8" fill="#5fb0ea"/>
+  <path d="M31.8 14.6 L37.5 16.2 L31.8 18.4 Z" fill="#f0b429"/>
+  <circle cx="28" cy="14.6" r="1.3" fill="#1a2a4a"/><circle cx="28.5" cy="14.2" r="0.45" fill="#fff"/>
+  <path d="M15 31.5 v3 M22 31.5 v3" stroke="#f0b429" stroke-width="1.4" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="d-anole" viewBox="0 0 40 40">
+  <path d="M7 25 Q13 20 20 21.5 Q29 23.5 32 16 Q33.5 12 31 9.5" fill="none" stroke="#5aa04f" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="7.5" cy="24" r="4.6" fill="#5aa04f"/>
+  <circle cx="6" cy="22.8" r="1.2" fill="#1a2a4a"/><circle cx="6.4" cy="22.4" r="0.4" fill="#fff"/>
+  <ellipse cx="8.5" cy="28.5" rx="1.7" ry="2.3" fill="#e05252"/>
+  <g stroke="#4e8a45" stroke-width="1.8" stroke-linecap="round"><line x1="13" y1="26" x2="12" y2="30"/><line x1="21" y1="24.5" x2="21.5" y2="28.5"/></g>
+</symbol>
+
+<symbol id="d-spark" viewBox="0 0 12 16"><path d="M6 0 L7.5 6 L12 8 L7.5 10 L6 16 L4.5 10 L0 8 L4.5 6 Z" fill="currentColor"/></symbol>
+
+<symbol id="d-bronze" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#7e5228" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#7e5228"/>
+  <path d="M12.5 24.5 Q13 12 21.5 12 Q30 12 30.5 24.5 Z" fill="#8a5c30" stroke="#7e5228" stroke-width="1"/>
+  <path d="M21.5 12 V24.5 M15.5 15.5 Q21.5 19.5 27.5 15.5" stroke="#7e5228" stroke-width="0.8" fill="none" opacity="0.8"/>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#a97142"/>
+  <circle cx="26" cy="28" r="4.3" fill="#7e5228" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#7e5228" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#e3c8a4"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#a97142" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#a97142"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#a97142"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#7e5228"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#5f3d1c"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#5f3d1c" opacity="0.85"/>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <g fill="#5f3d1c" opacity="0.8"><circle cx="16.5" cy="16.5" r="0.7"/><circle cx="21.5" cy="14.8" r="0.7"/><circle cx="26.5" cy="16.5" r="0.7"/></g>
+</symbol>
+
+<symbol id="d-amethyst" viewBox="0 0 40 40">
+  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#6a3fa8" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#6a3fa8"/>
+  <g fill="#b48ae8"><path d="M18 21 L20 9.5 L23 20 Z"/><path d="M23 20.5 L26.5 11.5 L28.5 20.5 Z"/><path d="M15.5 21.5 L16.5 14.5 L19 21 Z"/></g>
+  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#8e5bd0"/>
+  <circle cx="26" cy="28" r="4.3" fill="#6a3fa8" opacity="0.85"/>
+  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#6a3fa8" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#ddc9f5"/>
+  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#8e5bd0" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="11" cy="11" r="4.8" fill="#8e5bd0"/>
+  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#8e5bd0"/>
+  <circle cx="5.7" cy="11.8" r="0.55" fill="#6a3fa8"/>
+  <path d="M13 7.5 Q16 3.5 19.5 3.8 Q16.5 6.8 14.8 9.3 Z" fill="#c9a8f0"/>
+  <path d="M14.8 10.2 Q17.5 8 19.8 8.4 Q17.5 10.2 16 11.8 Z" fill="#c9a8f0" opacity="0.85"/>
+  <g fill="#c9a8f0"><path d="M23.5 20.6 L25 17.8 L26.5 20.2 Z"/><path d="M27 21.4 L28.3 19 L29.6 21.6 Z"/><path d="M13.8 21.8 L14.6 19.2 L16.2 21.2 Z"/></g>
+  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+  <g fill="#c9a8f0" opacity="0.9"><path d="M22.5 24 L23.5 21.5 L24.5 24 Z"/><path d="M25.5 26 L26.3 24 L27.1 26 Z"/></g>
+</symbol>
+
+<symbol id="d-haybale" viewBox="0 0 40 40">
+  <rect x="4" y="12" width="32" height="22" rx="6" fill="#e6c168" stroke="#b98f34" stroke-width="1.6"/>
+  <line x1="14" y1="12" x2="14" y2="34" stroke="#b98f34" stroke-width="1.4"/>
+  <line x1="26" y1="12" x2="26" y2="34" stroke="#b98f34" stroke-width="1.4"/>
+  <circle cx="20" cy="23" r="5.5" fill="none" stroke="#c9a04a" stroke-width="1.4"/>
+  <circle cx="20" cy="23" r="2.2" fill="none" stroke="#c9a04a" stroke-width="1.2"/>
+</symbol>
+
+<symbol id="n-shed" viewBox="0 0 24 24"><path d="M2.5 10.5 L12 3.5 L21.5 10.5" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 9.5 V20 H19.5 V9.5" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round"/><path d="M9.5 20 V12.5 H14.5 V20" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linejoin="round"/><path d="M12 12.5 V20" stroke="#3d4d3d" stroke-width="1.4"/></symbol>
+<symbol id="n-trowel" viewBox="0 0 24 24"><path d="M14.5 9.5 L19.5 4.5" stroke="#3d4d3d" stroke-width="2.6" stroke-linecap="round"/><path d="M13 8 C10 5.5 6.5 6.5 4.5 9 C7 9.5 8.5 10.5 9.5 12 C10.5 13.5 11.5 15 14 15.5 C16.5 13.5 17.5 10 15 7.5 Z" fill="#3d4d3d" transform="rotate(8 12 11)"/><path d="M4.5 19.5 h6" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round" opacity="0.5"/></symbol>
+<symbol id="n-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.5 V12 L15.2 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="n-farm" viewBox="0 0 24 24"><path d="M3.5 11 L12 3.5 L20.5 11" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.8 10 V19.5 H18.2 V10" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/><path d="M9.5 19.5 V14.5 H14.5 V19.5" fill="none" stroke="#002d5b" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="n-ladder" viewBox="0 0 24 24"><circle cx="12" cy="9.5" r="6" fill="none" stroke="#002d5b" stroke-width="2"/><path d="M12 6.5 l0.95 1.95 2.1 0.3 -1.5 1.5 0.35 2.1 -1.9 -1 -1.9 1 0.35 -2.1 -1.5 -1.5 2.1 -0.3 Z" fill="#002d5b"/><path d="M9 14.8 L7.5 20.5 L12 18 L16.5 20.5 L15 14.8" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="n-almanac" viewBox="0 0 24 24"><path d="M12 5.5 Q8.5 3.5 3.5 4 V19 Q8.5 18.5 12 20.5 Q15.5 18.5 20.5 19 V4 Q15.5 3.5 12 5.5 Z" fill="none" stroke="#002d5b" stroke-width="2" stroke-linejoin="round"/><path d="M12 5.5 V20.5" stroke="#002d5b" stroke-width="2"/></symbol>
+<symbol id="n-club" viewBox="0 0 24 24"><circle cx="8.5" cy="8.5" r="3.4" fill="none" stroke="#002d5b" stroke-width="2"/><circle cx="16.5" cy="9.8" r="2.7" fill="none" stroke="#002d5b" stroke-width="2"/><path d="M3 19.5 Q3.5 13.8 8.5 13.8 Q13.5 13.8 14 19.5" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/><path d="M15.2 15.5 Q20.5 14.6 21 19.5" fill="none" stroke="#002d5b" stroke-width="2" stroke-linecap="round"/></symbol>
+
+</defs>
+</svg>
+
+<div id="shell">
+
+<div id="toast"></div>
+<div id="drag-ghost"></div>
+<div id="remove-hint">🗑 Release to remove</div>
+<!-- ============ SIGN UP ============ -->
+<section id="scr-signup" class="screen">
+  <div class="bgdeco" id="deco-signup"></div>
+  <div id="sg-wrap" style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:14px 0 8px;">
+    <div id="sg-flowers" style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:44px;">
+      <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#d-jade"/></svg>
+      <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#d-obsidian"/></svg>
+      <svg style="width:30px;height:30px;margin-bottom:12px;"><use href="#d-storm"/></svg>
+      <svg style="width:40px;height:40px;margin-bottom:14px;filter:drop-shadow(0 0 7px #fde68a);"><use href="#d-opal"/></svg>
+      <svg style="width:30px;height:30px;margin-bottom:12px;"><use href="#d-ember"/></svg>
+      <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#d-frost"/></svg>
+      <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#d-copper"/></svg>
+    </div>
+    <div id="sg-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:29px;color:var(--blue);margin-top:2px;line-height:1.1;">Dragon Farmer</div>
+    <svg id="sg-swoosh" viewBox="0 0 220 26" style="width:205px;height:23px;margin-top:2px;">
+      <path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/>
+      <path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/>
+      <path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/>
+    </svg>
+    <div id="sg-tag" style="font-size:11.5px;color:#5b6470;margin-top:3px;letter-spacing:0.02em;">Raise our community, one friend at a time</div>
+    <div id="sg-names" style="display:flex;gap:10px;margin:14px 24px 0;align-self:stretch;">
+      <div class="field" style="flex:1;margin:0;"><label>FIRST NAME</label><input id="f-first" autocomplete="given-name" placeholder="Engaged"></div>
+      <div class="field" style="flex:1;margin:0;"><label>LAST NAME</label><input id="f-last" autocomplete="family-name" placeholder="Voter"></div>
+    </div>
+    <div class="field focus"><div class="fieldnote"><label style="color:var(--blue);">KEEPER NAME</label><em>what other keepers see</em></div><input id="f-garden" placeholder="DragonTamer904" maxlength="20"></div>
+    <div class="field"><div class="fieldnote"><label>ZIP CODE</label><em>keeps your roost local</em></div><input id="f-zip" inputmode="numeric" autocomplete="postal-code" placeholder="32234" maxlength="5"></div>
+    <div class="field" style="margin-left:16px;margin-right:16px;">
+      <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your roost</em></div>
+      <div style="display:flex;gap:9px;margin-top:6px;">
+        <input class="pindot" placeholder="·" id="s-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin0','s-pin1')">
+        <input class="pindot" placeholder="·" id="s-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin1','s-pin2')">
+        <input class="pindot" placeholder="·" id="s-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin2','s-pin3')">
+        <input class="pindot" placeholder="·" id="s-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin3',null)">
+      </div>
+      <div style="font-size:8.5px;color:#9aa3ad;margin-top:3px;line-height:1.4;">We store no data, so we cannot look this up for you. Write it down.</div>
+    </div>
+    <div class="field" style="display:flex;align-items:center;gap:10px;background:#f4f9ff;border:2px solid var(--blue);cursor:pointer;" onclick="toggleContacts()">
+      <span style="font-size:16px;">🔎</span>
+      <div style="flex:1;">
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">Find District 4 voters from my contacts</div>
+        <div style="font-size:9px;color:#9aa3ad;margin-top:1px;">Compared once on your phone. Never saved.</div>
+      </div>
+      <span id="f-contacts" data-on="0" style="width:36px;height:20px;background:#c9d4de;border-radius:10px;position:relative;flex-shrink:0;transition:background 0.2s;"><i style="position:absolute;left:3px;top:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left 0.2s;"></i></span>
+    </div>
+    <div id="signup-err" style="display:none;font-size:11px;color:var(--red);margin-top:8px;"></div>
+    <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;"><use href="#d-egg"/></svg>Start my roost</button>
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:10px;">NOT LEFT. NOT RIGHT. FORWARD.</div>
+    <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+  </div>
+</section>
+
+<!-- ============ LOCK ============ -->
+<section id="scr-lock" class="screen">
+  <div class="bgdeco" id="deco-lock"></div>
+  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:26px 24px 10px;">
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:28px;color:var(--blue);">Welcome back</div>
+    <div id="lock-gname" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:18px;color:var(--ink);margin-top:4px;"></div>
+    <div id="lock-seal" style="margin:14px 0 10px;"></div>
+    <div style="font-size:12px;color:#5b6470;margin-bottom:16px;">Enter your PIN to continue</div>
+    <div style="display:flex;gap:12px;margin-bottom:6px;">
+      <input class="pindot" placeholder="·" id="lock-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin0','lock-pin1')">
+      <input class="pindot" placeholder="·" id="lock-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin1','lock-pin2')">
+      <input class="pindot" placeholder="·" id="lock-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin2','lock-pin3')">
+      <input class="pindot" placeholder="·" id="lock-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin3',null)" onkeydown="if(event.key==='Enter')doUnlock()">
+    </div>
+    <div id="lock-err" style="display:none;font-size:11px;color:var(--red);margin:4px 0 8px;text-align:center;"></div>
+    <button class="bigbtn" style="margin-top:10px;" onclick="doUnlock()">Unlock my roost</button>
+    <div style="margin-top:22px;"><span onclick="confirmReset()" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Forgot PIN · start fresh</span></div>
+  </div>
+</section>
+
+<!-- ============ GARDEN ============ -->
+<section id="scr-garden" class="screen">
+  <div class="bgdeco" id="deco-garden"></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#d-hatchling"/></svg> My Roost</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">🔥 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+  <div class="rule"><i></i><i></i><i></i></div>
+  <div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;" onclick="openLadder()">
+    <span id="hud-seal" style="width:40px;flex-shrink:0;"></span>
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13.5px;"><span id="hud-gname">...</span> · <span id="hud-rank" style="color:var(--blue);">Egg Tender</span></div>
+      <div style="height:7px;background:#e8dcbb;border-radius:5px;margin-top:6px;overflow:hidden;"><i id="hud-xp" style="display:block;height:100%;width:0;background:var(--blue);border-radius:5px;"></i></div>
+    </div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:11.5px;color:var(--blue);white-space:nowrap;text-align:right;"><span id="hud-plots">0</span> hollows<br><small style="font-family:Arial;font-size:8.5px;color:#6b7280;">next: <span id="hud-next">100</span>🔥</small></div>
+  </div>
+  <div style="margin:8px 30px -4px;"><svg viewBox="0 0 300 44" style="width:100%;display:block;">
+    <rect x="16" y="12" width="9" height="32" rx="2" fill="#6e4a28"/>
+    <rect x="275" y="12" width="9" height="32" rx="2" fill="#6e4a28"/>
+    <rect x="8" y="6" width="284" height="27" rx="6" fill="#8a5f36" stroke="#6e4a28" stroke-width="2"/>
+    <path d="M22 12.5 H278 M22 27 H278" stroke="#7a5230" stroke-width="1" opacity="0.6"/>
+    <path d="M150 1 l1.7 3.6 3.9 0.5 -2.8 2.7 0.7 3.9 -3.5 -1.9 -3.5 1.9 0.7 -3.9 -2.8 -2.7 3.9 -0.5 Z" fill="#f0b429" stroke="#b98f34" stroke-width="0.7"/>
+    <text id="arch-name" x="150" y="24" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#f7e8c8">MY ROOST</text>
+  </svg></div>
+  <div id="gardenwrap" style="background:linear-gradient(180deg,#eeda9e,#dfc27b);border:3px solid #8a5f36;border-radius:22px;margin:0 12px;padding:6px;">
+    <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
+  </div>
+  <div class="toolbar">
+    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>BARN (<span id="hud-shed">0</span>)</span></div>
+    <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span>🔥 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
+        <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT</button>
+      </div>
+      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Roost Embers: +<span id="hud-percycle">0</span> 🔥 every 12 min</div>
+    </div>
+  </div>
+  <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <span style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.1em;color:var(--purple);">MIKE'S AGENDA · <span id="agenda-topic"></span></span>
+      <span style="font-size:8.5px;color:#9aa3ad;">mikesell.org</span>
+    </div>
+    <div id="agenda-line" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:13.5px;color:var(--ink);margin-top:4px;line-height:1.45;"></div>
+    <div id="agenda-dots" style="display:flex;gap:4px;justify-content:center;margin-top:8px;"></div>
+  </div>
+  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system<br><span id="build-stamp" style="opacity:0.4;"></span></div>
+  <nav class="bottomnav" id="nav-garden"></nav>
+</section>
+
+<!-- ============ PLANT ============ -->
+<section id="scr-plant" class="screen">
+  <div class="bgdeco" id="deco-plant"></div>
+  <div style="padding-top:18px;"></div>
+  <div class="qtitle">Find a friend in the <b>voter registration</b> file 🥚</div>
+  <div id="plant-searchwrap">
+    <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="First and last name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch();}"></div>
+    <div style="display:flex;gap:9px;justify-content:center;margin:12px 16px 0;">
+      <button id="plant-go" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;" onclick="doSearch()">Check Voter Rolls</button>
+      <button id="plant-contacts" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;background:#fff;color:var(--blue);border:2px solid var(--blue);box-shadow:0 5px 0 #cfe3f7;" onclick="openConnectSheet()">Search by Contacts</button>
+    </div>
+  </div>
+  <div id="plant-result"></div>
+  <div id="plant-contactlist" style="display:none;"></div>
+  <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <nav class="bottomnav" id="nav-plant"></nav>
+</section>
+
+<!-- ============ COLLECTION ============ -->
+<section id="scr-collection" class="screen">
+  <div class="bgdeco" id="deco-collection"></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Dragon Registry</div></div>
+  <div class="rule"><i></i><i></i><i></i></div>
+  <div id="coll-container"></div>
+  <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <nav class="bottomnav" id="nav-collection"></nav>
+</section>
+
+<!-- ============ CHAMPIONS ============ -->
+<section id="scr-champions" class="screen">
+  <div class="bgdeco" id="deco-champions"></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Roost Champions</div></div>
+  <div class="rule"><i></i><i></i><i></i></div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">THIS WEEK · RESETS SUNDAY</div>
+  <div id="champlist" style="padding:0 14px;"></div>
+  <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
+  <nav class="bottomnav" id="nav-champions"></nav>
+</section>
+
+<!-- ============ FRIEND VIEW (?b=) ============ -->
+<section id="scr-friend" class="screen">
+  <div class="bgdeco" id="deco-friend"></div>
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:20px 0;">
+    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;color:var(--ink);text-align:center;line-height:1.4;padding:0 16px;"><span id="friend-sender" style="color:var(--blue);">A friend</span> has left a voter reminder egg<br><span style="color:#d97706;">in your name</span> 🥚</div>
+    <div style="margin:16px 0 0;filter:drop-shadow(0 4px 10px rgba(3,122,216,0.35));animation:grow 1.8s infinite;"><svg style="width:66px;height:66px;display:block;"><use href="#d-egg"/></svg></div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap makes it hatch.</div>
+    <button class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I will be voting this November</button>
+    <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🐉 Your friend's dragon hatched! See you at the polls!</div>
+    <button class="bigbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;margin-top:16px;font-size:17px;font-weight:700;animation:popglow 2.6s infinite;" onclick="location.href=location.pathname">Start your own roost!</button>
+    <div class="card" style="align-self:stretch;background:linear-gradient(135deg,#002d5b,#037ad8);border:none;padding:18px 20px;margin-top:14px;">
+      <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:#fff;margin-bottom:6px;">Meet the candidate who created this game</div>
+      <div style="font-size:12px;color:#b8d8f5;margin-bottom:12px;line-height:1.5;">Mike Sell is running for U.S. Congress in FL-04 as a Forward Party candidate — putting people over party.</div>
+      <a href="https://mikesell.org" target="_blank" style="display:inline-block;background:#fff;color:var(--blue);font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:9px 18px;border-radius:20px;text-decoration:none;">Learn more at mikesell.org →</a>
+    </div>
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:16px;opacity:0.75;">NOT LEFT. NOT RIGHT. FORWARD.</div>
+    <div class="tinytxt">This game was created and is sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>No personal data is saved. This game is for entertainment purposes only, and scoring runs on the honor system. We never learn who tapped.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+  </div>
+</section>
+
+<!-- ============ OVERLAYS ============ -->
+<div class="overlay" id="ov-confirm" style="z-index:300;"><div class="sheet" style="max-width:310px;text-align:center;padding:28px 24px 20px;">
+  <div id="confirm-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:18px;color:var(--ink);margin-bottom:10px;"></div>
+  <div id="confirm-msg" style="font-size:13px;color:#5b6470;line-height:1.55;margin-bottom:22px;"></div>
+  <div style="display:flex;gap:10px;">
+    <button class="bigbtn" style="flex:1;background:#e5e7eb;color:#374151;box-shadow:none;font-size:14px;" onclick="closeOv('ov-confirm')">Cancel</button>
+    <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
+  </div>
+</div></div>
+<div class="overlay" id="ov-import" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
+  <div style="text-align:center;font-size:38px;">📇</div>
+  <div id="import-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
+  <div id="import-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
+  <div id="import-steps" style="background:#f7fbff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 14px;margin-top:14px;text-align:left;"></div>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>
+  <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Then pick the .vcf file — <b>Downloads</b> on Android, <b>Files</b> on iPhone</div>
+  <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
+  <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
+</div></div>
+<div class="overlay" id="ov-connect" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
+  <div style="text-align:center;font-size:38px;">🥚</div>
+  <div id="connect-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
+  <div id="connect-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
+  <div id="connect-opts"></div>
+  <div style="text-align:center;margin-top:14px;"><span onclick="closeOv('ov-connect')" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
+</div></div>
+<div class="overlay" id="ov-paste" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
+  <div style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);">Paste your friends</div>
+  <div style="text-align:center;font-size:11.5px;color:#5b6470;margin-top:7px;line-height:1.55;">One full name per line. A phone number after the name is optional.</div>
+  <textarea id="paste-box" rows="7" placeholder="Rebecca Johnson&#10;Marcus Williams 904-555-2222" style="width:100%;margin-top:12px;border:2px solid #c9def2;border-radius:12px;padding:11px;font-family:Arial,sans-serif;font-size:14px;color:var(--ink);resize:vertical;box-sizing:border-box;outline:none;"></textarea>
+  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="runPasteMatch()">Check the voter rolls</button>
+  <div style="text-align:center;margin-top:12px;"><span onclick="closeOv('ov-paste');openConnectSheet();" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Back</span></div>
+</div></div>
+<div class="overlay" id="ov-popstart" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
+  <div style="font-size:44px;">📇</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;line-height:1.35;">Ready when you are</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Pick the contacts you'd like to check. Your phone requires this tap. Nothing is uploaded, and results go straight back to your roost.</div>
+  <button class="bigbtn" onclick="closeOv('ov-popstart');runContactMatch(true);">Choose Contacts</button>
+</div></div>
+<div class="overlay" id="ov-matchdone" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
+  <div style="font-size:46px;">🐉</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;" id="matchdone-title">All set!</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
+  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my roost</button>
+</div></div>
+<input type="file" id="vcf-input" multiple style="position:absolute;left:-9999px;width:1px;height:1px;" onchange="onVcfChosen(event)">
+<div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
+  <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🥚</div>
+  <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);line-height:1.35;">Finding your registered friends</div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10.5px;color:#059669;letter-spacing:0.1em;margin:16px 0 8px;" id="match-status">Starting…</div>
+  <div style="background:#e5f3ff;border-radius:20px;height:10px;overflow:hidden;width:100%;">
+    <div id="match-bar" style="height:100%;background:linear-gradient(90deg,#037ad8,#059669);border-radius:20px;width:0%;transition:width 0.3s ease;"></div>
+  </div>
+  <div style="font-size:10.5px;color:#9aa3ad;margin-top:9px;line-height:1.5;" id="match-sub">Comparing against 570,000+ FL-04 voter records</div>
+  <div style="font-size:9px;color:#c3ccd6;margin-top:12px;">This happens on your phone. Nothing is uploaded.</div>
+</div></div>
+<div class="overlay" id="ov-bloom"><div class="sheet" id="bloom-sheet" style="text-align:center;"></div></div>
+<div class="overlay" id="ov-ladder" onclick="if(event.target===this)closeOv('ov-ladder')"><div class="sheet" id="ladder-sheet"></div></div>
+<div class="overlay" id="ov-plaque" onclick="if(event.target===this)closeOv('ov-plaque')"><div class="sheet" id="plaque-sheet" style="text-align:center;max-width:330px;background:#fffdf5;"></div></div>
+<div class="overlay" id="ov-rankup"><div class="sheet" id="rankup-sheet" style="text-align:center;max-width:340px;"></div></div>
+<div class="overlay" id="ov-shed" onclick="if(event.target===this)closeOv('ov-shed')"><div class="sheet" id="shed-sheet"></div></div>
+<div class="overlay" id="ov-plantpick" onclick="if(event.target===this)closeOv('ov-plantpick')"><div class="sheet" id="plantpick-sheet" style="max-width:340px;"></div></div>
+
+</div>
+
+<script>
+
+'use strict';
+/* ============================================================
+   DRAGON FARMER · mikesell.org/dragons · v2.0
+   Parallel build of Bloomers (base: build 20260820-2057): identical
+   rules engine, backend contract, and CONFIG structure; dragon ranch
+   interface.
+   Single-file client build. Everything in CONFIG is meant to be
+   edited by the campaign; everything marked [SERVER] is a demo
+   stand-in awaiting the production backend.
+   ============================================================ */
+
+const CONFIG = {
+  // [SERVER] Backend wiring. Leave base empty until the API exists; the game
+  // runs fully offline without it. When set, the app reports: account sign-ups,
+  // seed events by LINK ID ONLY (never the friend's name, tag, or number),
+  // waterings, blooms, and checks the account's active flag on every open.
+  api: { base: '', key: '' },
+  voterBase: 'https://vote.mikesell.org/voters/',
+  // Phone matching endpoint. The phone index is PRIVATE and never published;
+  // it is served only by an authenticated backend using k-anonymity prefix
+  // lookup (client sends 2 hex chars of a keyed hash, never the number).
+  // Leave blank to disable phone matching entirely.
+  phoneApi: '',
+  // Bloom confirmations. Blank = honor system only (a friend's tap cannot reach
+  // the volunteer's device without a server). Stores opaque tokens, nothing else.
+  bloomApi: 'https://bloomers-phone.ccm-inspired.workers.dev',
+  agendaUrl: 'https://mikesell.org',
+  registerUrl: 'https://registertovoteflorida.gov',
+  // Messages follow the campaign outreach voice manual: neighbor voice,
+  // one ask, active voice, no partisan labels. Player can edit before sending.
+  // Mike's approved wording (2026-08-16). NAME is replaced with the recipient's
+  // first name or the nickname the volunteer typed on the seed.
+  msgFriendVariants: [
+    (link) => `Hi NAME, Mike is hosting a game called Dragon Farmer to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
+  ],
+  msgFriend: (first, link) => `Hi NAME, Mike is hosting a game called Dragon Farmer to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
+  msgFollowVariants: [
+    (link) => `Hi NAME, still hoping to hear from you on the Dragon Farmer game. One click confirms you're in this November. ${link}`,
+  ],
+  msgFollow: (first, link) => `Hi NAME, still hoping to hear from you on the Dragon Farmer game. One click confirms you're in this November. ${link}`,
+  // Not-in-the-rolls message: casual, hedged, registration first.
+  msgDeadline: (first, link) => `Hi NAME, it's ${first}. Could be wrong, but it looks like you're not registered to vote... only takes about two minutes at registertovoteflorida.gov. If you get signed up, give Mike Sell a look while you're at it. Then tap here to tell me you're in: ${link}`,
+  // Timing (hours). ?demo=1 turns hours into minutes for testing.
+  waterGapH: 48, praiseCycleH: 0.2, maxTouches: 3, dailyTextCap: 5,
+  poolBaseCycles: 3, // + 1 per rank
+  yields: { g: 1, b: 2, p: 4, au: 5 },
+  ranks: [
+    { name: 'Egg Tender',       at: 0 },
+    { name: 'Hatchling Keeper',       at: 100,  unlock: 'Move dragons',  teach: 'Hold and drag any dragon to move it between open hollows.' },
+    { name: 'Dragon Wrangler', at: 250,  unlock: 'Nest editing',   teach: 'Hold and drag any nest to rearrange your roost.' },
+    { name: 'Beast Master',        at: 600 },
+    { name: 'Dragon Rider',      at: 1400 },
+    { name: 'Elder Keeper',               at: 3000 },
+    { name: 'Dragonlord',            at: 6500 },
+  ],
+  // [SERVER] internal gift schedule: shelf of the gift seed per rank reached (index 1..6)
+  giftShelf: { 1: 'b', 2: 'b', 3: 'p', 4: 'p', 5: 'au', 6: 'au' },
+  // Trait odds: tap blooms roll luckier than earned blooms. Pity: every 10th bloom ≥1 trait.
+  odds: {
+    tap:    { sun: 0.18, pol: 0.15, gli: 0.22 },
+    earned: { sun: 0.08, pol: 0.06, gli: 0.10 },
+  },
+  shelfOdds: {
+    tap:    [['g', 0.60], ['b', 0.24], ['p', 0.12], ['au', 0.04]],
+    earned: [['g', 0.78], ['b', 0.15], ['p', 0.06], ['au', 0.01]],
+  },
+  species: [
+    { id: 'ember',    art: 'd-ember',    name: 'Ember',    shelf: 'g', loc: 'dock fires and warm chimneys along the St. Johns' },
+    { id: 'jade',     art: 'd-jade',     name: 'Jade',     shelf: 'g', loc: 'the deep greens of the Timucuan marshes' },
+    { id: 'copper',   art: 'd-copper',   name: 'Copper',   shelf: 'g', loc: 'sunset light on the Main Street Bridge' },
+    { id: 'cobalt',   art: 'd-cobalt',   name: 'Cobalt',   shelf: 'g', loc: 'the blue water off the Mayport jetties' },
+    { id: 'amethyst', art: 'd-amethyst', name: 'Amethyst', shelf: 'g', loc: 'riverbank geodes, if you believe the old keepers' },
+    { id: 'amber',    art: 'd-amber',    name: 'Amber',    shelf: 'g', loc: 'the lamplit lanes of St. Augustine' },
+    { id: 'slate',    art: 'd-slate',    name: 'Slate',    shelf: 'g', loc: 'the old stone walls of the Ancient City' },
+    { id: 'coral',    art: 'd-coral',    name: 'Coral',    shelf: 'g', loc: 'the reefs and sandbars off the First Coast' },
+    { id: 'silver',   art: 'd-silver',   name: 'Silver',   shelf: 'b', loc: 'moonlight on the Intracoastal' },
+    { id: 'bronze',   art: 'd-bronze',   name: 'Bronze',   shelf: 'b', loc: 'the old bronze markers of downtown Jacksonville' },
+    { id: 'frost',    art: 'd-frost',    name: 'Frost',    shelf: 'b', loc: 'the rare frost mornings of North Florida' },
+    { id: 'storm',    art: 'd-storm',    name: 'Storm',    shelf: 'b', loc: 'summer thunderheads over the First Coast' },
+    { id: 'clay',     art: 'd-clay',     name: 'Clay',     shelf: 'p', loc: 'the red clay banks of Black Creek' },
+    { id: 'obsidian', art: 'd-obsidian', name: 'Obsidian', shelf: 'p', loc: 'the darkest new-moon nights over the river' },
+    { id: 'opal',     art: 'd-opal',     name: 'Opal',     shelf: 'au', loc: 'almost never seen; keepers argue over whether it exists' },
+  ],
+  agenda: [
+    ['EDUCATION', 'Fully fund public education, and pay teachers like the professionals they are.'],
+    ['AFFORDABILITY', 'End price gouging in rent, groceries, healthcare, and prescriptions.'],
+    ['GUN SAFETY', 'Universal background checks, with due process for everyone.'],
+    ['VETERANS', 'Cut VA wait times for the military families of northeast Florida.'],
+    ['SMALL BUSINESS', 'Make small business loans simpler for local owners, not just big firms.'],
+    ['DEMOCRACY', 'Get money out of politics. Term limits for Congress.'],
+    ['HOUSING', 'More homes people can actually afford to own, not just rent.'],
+    ['HEALTHCARE', 'Lower drug costs and protect care people already count on.'],
+    ['CLIMATE', 'Protect our coast and fix flooding before it reaches the front door.'],
+  ],
+  sides: ['Westside', 'Arlington', 'Mandarin', 'Northside', 'the Beaches', 'Orange Park'],
+  champs: [ // [SERVER] weekly board comes from the backend later
+    ['MandarinMary', 5, 940], ['DuvalDrake', 3, 610], ['AmeliaWyng', 2, 350], ['CoveKeeper', 1, 210], ['PalmValleyPete', 1, 180],
+  ],
+};
+
+/* ---------------- state ---------------- */
+const DEMO = /[?&]demo=1/.test(location.search);
+const HOUR = DEMO ? 60 * 1000 : 3600 * 1000;
+const KEY = 'dragonfarmer_v3';
+let S = null;
+let agendaIdx = 0;
+let _contactsCache = null; // loaded once per session; never saved
+
+function freshState(first, last, garden, contacts) {
+  return {
+    first, last, garden, contacts,
+    created: Date.now(), lifetime: 0, weekly: 0, pool: 0, poolTick: Date.now(),
+    rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, textsDay: dayKey(),
+    visits: 0,
+    // The welcome thank-you egg nests itself in the first hollow — new keepers
+    // have no placing or moving powers yet, so nothing should sit in the Barn.
+    plants: [ { id: 'pgift1', tag: 'GIFT', bedId: 1, slot: 0, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true, giftShelf: 'b' } ],
+    beds: [ { id: 1, cells: [[0,0],[1,0]] }, { id: 2, cells: [[3,1],[4,1],[5,1]] }, { id: 3, cells: [[6,2],[7,2]] } ],
+    shed: [], // {kind:'bed',shape} | {kind:'gift',shelf}
+    coll: {}, // speciesId -> {sun,pol,gli}
+    nextId: 4, pendingRankup: null,
+    registeredFriends: [], // [{name,first,last,phone,voterCity}] — filled at signup
+  };
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function load() { try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; } }
+// Seed ids (p1, p2...) are per-garden and collide between volunteers, so each
+// seed also gets an opaque random token. Only this token ever leaves the device.
+function seedToken() {
+  try {
+    const a = new Uint8Array(6); crypto.getRandomValues(a);
+    return Array.from(a).map(b => b.toString(36).padStart(2, '0')).join('').slice(0, 10);
+  } catch (e) { return Math.random().toString(36).slice(2, 12); }
+}
+function tokenOf(p) { return (p && p.token) ? p.token : (p ? p.id : ''); }
+function dayKey() { const d = new Date(); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); }
+
+/* ---------------- helpers ---------------- */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function sp(id) { return CONFIG.species.find((s) => s.id === id); }
+function shelfColor(sh) { return { g: '#059669', b: '#2563eb', p: '#7c3aed', au: '#f59e0b' }[sh]; }
+function shelfName(sh) { return { g: 'Common', b: 'Rare', p: 'Exotic', au: 'Legendary' }[sh]; }
+// Rarity tier (how hard it is to get) as distinct from the shelf it lives on.
+function rarityName(sh) { return { g: 'Common', b: 'Rare', p: 'Exotic', au: 'Legendary' }[sh]; }
+function smsHref(body, phone) {
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const num = phone ? String(phone).replace(/\D/g, '') : '';
+  return 'sms:' + num + (ios ? '&' : '?') + 'body=' + encodeURIComponent(body);
+}
+function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
+function rollShelf(kind) {
+  const r = Math.random(); let acc = 0;
+  for (const [sh, p] of (CONFIG.shelfOdds[kind] || CONFIG.shelfOdds.tap)) { acc += p; if (r < acc) return sh; }
+  return 'g';
+}
+function rollSpecies(shelf) { return pick(CONFIG.species.filter((s) => s.shelf === shelf)); }
+function rollTraits(kind, pity) {
+  const o = CONFIG.odds[kind];
+  const t = { sun: Math.random() < o.sun, pol: Math.random() < o.pol, gli: Math.random() < o.gli };
+  if (pity && !t.sun && !t.pol && !t.gli) t[pick(['sun', 'pol', 'gli'])] = true;
+  return t;
+}
+/* ---------------- voter registration lookup -------------------------------- */
+const _voterCache = new Map(); // prefix → array of [first, last, city, age]
+let _pendingMatches = [];      // for multi-match picker
+
+async function fetchVoterBucket(prefix) {
+  if (_voterCache.has(prefix)) return _voterCache.get(prefix);
+  try {
+    const r = await fetch(CONFIG.voterBase + prefix + '.json');
+    const data = r.ok ? await r.json() : [];
+    _voterCache.set(prefix, data);
+    return data;
+  } catch(e) { _voterCache.set(prefix, []); return []; }
+}
+
+async function voterSearch(firstName, lastName) {
+  const qlast = lastName.replace(/[^A-Za-z]/g, '').toUpperCase();
+  const qfirst = firstName.replace(/[^A-Za-z]/g, '').toUpperCase();
+  const prefix = (qlast + 'XX').slice(0, 2);
+  const bucket = await fetchVoterBucket(prefix);
+  // Exact last match + first starts with at least 3 chars (or full if short)
+  const fl = Math.min(3, qfirst.length);
+  return bucket.filter(([f, l]) =>
+    l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast && firstNameMatches(f, qfirst)
+  ).slice(0, 8);
+}
+
+function availCardVoter(first, last, city, age) {
+  const loc = city || '';
+  return `<div class="statecard avail">
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#059669;letter-spacing:0.06em;margin-bottom:6px;">✓ REGISTERED VOTER · ${esc(loc.toUpperCase())}</div>
+    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#d-egg"/></svg>
+    <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Nest an egg for
+      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
+    </button>
+    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">You click the button, we populate the message. You can edit or just hit send.</div>
+  </div>`;
+}
+
+function multiMatchCard(matches, first, last) {
+  _pendingMatches = matches;
+  const items = matches.map(([mf, ml, mc, ma], i) =>
+    `<button class="pick" onclick="selectVoterMatch(${i})">${esc(mf)} ${esc(ml)} · ${esc(mc)}${ma ? ' · age ' + ma : ''}</button>`
+  ).join('');
+  return `<div class="statecard avail" style="text-align:left;">
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:var(--ink);margin-bottom:8px;">Found ${matches.length} registered voters. Which one do you know?</div>
+    <div class="pickrow">${items}</div>
+    <div id="voter-match-result"></div>
+  </div>`;
+}
+
+function selectVoterMatch(i) {
+  const m = _pendingMatches[i];
+  if (!m) return;
+  const [mf, ml, mc, ma] = m;
+  pendingPlant = Object.assign(pendingPlant || {}, { first: mf, name: mf + ' ' + ml });
+  document.querySelectorAll('.pick').forEach((b, j) => { b.classList.toggle('on', j === i); });
+  $('voter-match-result').innerHTML = availCardVoter(mf, ml, mc, ma);
+  $('voter-match-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ---------------- praise engine ---------------- */
+function flowerYield(p) { return CONFIG.yields[sp(p.species).shelf] || 1; }
+function perCycle() { return S.plants.filter((p) => p.state === 'bloomed').reduce((a, p) => a + flowerYield(p), 0); }
+function poolCap() { return (CONFIG.poolBaseCycles + S.rank) * Math.max(perCycle(), 10); }
+function tickPraise() {
+  const cyc = CONFIG.praiseCycleH * HOUR;
+  const n = Math.floor((Date.now() - S.poolTick) / cyc);
+  if (n > 0) {
+    S.pool = Math.min(poolCap(), S.pool + n * perCycle());
+    S.poolTick += n * cyc;
+    save();
+  }
+}
+function addPraise(n) {
+  S.lifetime += n; S.weekly += n;
+  const prev = S.rank;
+  while (S.rank + 1 < CONFIG.ranks.length && S.lifetime >= CONFIG.ranks[S.rank + 1].at) S.rank++;
+  if (S.rank > prev) S.pendingRankup = S.rank;
+  save();
+}
+function collectPraise() {
+  tickPraise();
+  if (S.pool <= 0) return;
+  addPraise(S.pool); S.pool = 0; S.poolTick = Date.now(); save();
+  renderGarden(); maybeRankup();
+}
+
+/* ---------------- backend adapter [SERVER] ---------------- */
+async function api(path, data) {
+  if (!CONFIG.api.base) return null; // offline mode: game is fully playable
+  try {
+    const r = await fetch(CONFIG.api.base.replace(/\/$/, '') + '/' + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Bloomers-Key': CONFIG.api.key },
+      body: JSON.stringify(Object.assign({ garden: S ? S.garden : null }, data)),
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+async function checkActive() {
+  const st = await api('status', {});
+  if (st && st.active === false) {
+    document.body.innerHTML = '<div style="max-width:430px;margin:0 auto;min-height:100dvh;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:Arial,sans-serif;color:#1a2a4a;">' +
+      '<div style="font-family:Georgia,serif;font-size:24px;color:#037ad8;">This roost is paused.</div>' +
+      '<div style="font-size:13px;color:#5b6470;margin-top:10px;line-height:1.6;">If you think this is a mistake, reach the campaign through mikesell.org and we will take a look together.</div>' +
+      '<div style="font-size:10px;color:#9aa3ad;margin-top:20px;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04</div></div>';
+    return false;
+  }
+  return true;
+}
+
+/* ---------------- router ---------------- */
+function show(id) {
+  document.querySelectorAll('.screen').forEach((s) => s.classList.remove('on'));
+  $(id).classList.add('on');
+  $(id).scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+function closeOv(id) { $(id).classList.remove('on'); const vis = document.querySelector('.screen.on'); if (vis) { vis.scrollTop = 0; } window.scrollTo(0, 0); }
+function openOv(id) { $(id).classList.add('on'); }
+
+let _toastTimer = null;
+let _pressTimer = null, _pressPid = null, _isDragging = false, _pressPointerId = null, _startX = 0, _startY = 0;
+function findSeedPid(el) {
+  while (el && el !== document.body) {
+    const oc = el.getAttribute && el.getAttribute('onclick');
+    if (oc) { const m = oc.match(/seedTap\('(\w+)'\)/); if (m) return m[1]; }
+    el = el.parentElement;
+  }
+  return null;
+}
+function attachGardenDrag() {
+  const svg = $('gardensvg');
+  if (!svg) return;
+  svg.addEventListener('pointerdown', function(e) {
+    const pid = findSeedPid(e.target);
+    if (!pid) return;
+    e.preventDefault(); // stop iOS context menu / scroll from stealing the touch
+    _pressPid = pid; _isDragging = false; _pressPointerId = e.pointerId;
+    _startX = e.clientX; _startY = e.clientY;
+    _pressTimer = setTimeout(function() {
+      _isDragging = true;
+      try { svg.setPointerCapture(_pressPointerId); } catch(_) {}
+      $('remove-hint').style.display = 'block';
+      const g = $('drag-ghost'); g.style.display = 'block';
+      g.style.left = _startX + 'px'; g.style.top = _startY + 'px';
+    }, 600);
+  });
+  svg.addEventListener('pointermove', function(e) {
+    if (!_pressPid) return;
+    if (!_isDragging) {
+      // Use absolute delta from start — movementX/Y is unreliable on mobile
+      if (Math.hypot(e.clientX - _startX, e.clientY - _startY) > 10) { clearTimeout(_pressTimer); _pressPid = null; }
+      return;
+    }
+    const g = $('drag-ghost');
+    g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+    const garden = $('gardenwrap').getBoundingClientRect();
+    const out = e.clientX < garden.left - 10 || e.clientX > garden.right + 10 || e.clientY < garden.top - 10 || e.clientY > garden.bottom + 10;
+    g.style.background = out ? '#dc2626' : '#fee2e2';
+    g.style.borderColor = out ? '#991b1b' : '#dc2626';
+  });
+  svg.addEventListener('pointerup', function(e) {
+    clearTimeout(_pressTimer);
+    $('drag-ghost').style.display = 'none'; $('remove-hint').style.display = 'none';
+    if (!_pressPid || !_isDragging) { _pressPid = null; return; }
+    const garden = $('gardenwrap').getBoundingClientRect();
+    const out = e.clientX < garden.left - 10 || e.clientX > garden.right + 10 || e.clientY < garden.top - 10 || e.clientY > garden.bottom + 10;
+    if (out) {
+      S.plants = S.plants.filter(function(p) { return p.id !== _pressPid; });
+      save(); showToast('Egg removed.'); renderGarden();
+    }
+    _pressPid = null; _isDragging = false;
+  });
+  svg.addEventListener('pointercancel', function() {
+    clearTimeout(_pressTimer);
+    $('drag-ghost').style.display = 'none'; $('remove-hint').style.display = 'none';
+    _pressPid = null; _isDragging = false;
+  });
+}
+function showToast(msg) {
+  const t = $('toast'); t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
+}
+function pinAdv(fromId, toId) {
+  const el = $(fromId);
+  el.value = el.value.replace(/\D/g, '').slice(-1);
+  if (el.value && toId) $(toId).focus();
+}
+function showLock() {
+  $('lock-gname').textContent = S.garden;
+  $('lock-seal').innerHTML = sealSvg(Math.min(S.rank || 0, 6), 52);
+  ['lock-pin0','lock-pin1','lock-pin2','lock-pin3'].forEach(id => $(id).value = '');
+  $('lock-err').style.display = 'none';
+  show('scr-lock');
+  setTimeout(() => $('lock-pin0').focus(), 300);
+}
+function doUnlock() {
+  const pin = ['lock-pin0','lock-pin1','lock-pin2','lock-pin3'].map(id => $(id).value.replace(/\D/g,'')).join('');
+  if (pin === S.pin) {
+    sessionStorage.setItem('df_auth', '1');
+    S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
+    migrateBeds();
+    tickPraise(); save();
+    renderGarden(); show('scr-garden'); maybeRankup();
+    startPolling();
+  } else {
+    $('lock-err').textContent = 'Wrong PIN — try again.';
+    $('lock-err').style.display = 'block';
+    ['lock-pin0','lock-pin1','lock-pin2','lock-pin3'].forEach(id => $(id).value = '');
+    $('lock-pin0').focus();
+  }
+}
+function gameConfirm(title, msg, okLabel, okCss, onOk) {
+  $('confirm-title').textContent = title;
+  $('confirm-msg').textContent = msg;
+  const btn = $('confirm-ok'); btn.textContent = okLabel;
+  btn.style.cssText = 'flex:1;font-size:14px;' + okCss;
+  btn.onclick = function() { closeOv('ov-confirm'); onOk(); };
+  openOv('ov-confirm');
+}
+function doLogout() {
+  gameConfirm('Log out?', 'Your roost stays saved in this browser — just enter your PIN to get back in.', 'Log out', 'background:var(--blue);box-shadow:0 5px 0 #045ea6;', function() {
+    sessionStorage.removeItem('df_auth'); showLock();
+  });
+}
+function confirmReset() {
+  gameConfirm('Start fresh?', 'This clears your entire roost and all progress. This cannot be undone.', 'Clear everything', 'background:#dc2626;box-shadow:0 5px 0 #991b1b;', function() {
+    localStorage.removeItem(KEY); sessionStorage.removeItem('df_auth'); location.reload();
+  });
+}
+
+// Listen for b= param forwarded via postMessage from Wix parent frame
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'bloom_friend' && (e.data.s || e.data.b)) {
+    initFriend(e.data.s || e.data.b, e.data.f || '');
+  }
+  if (e.data && e.data.type === 'bloom_contacts' && Array.isArray(e.data.friends)) {
+    if (!S) return;
+    const seen = {};
+    S.registeredFriends = (S.registeredFriends || []).concat(e.data.friends)
+      .filter(x => { const k = ((x.first || '') + (x.last || '')).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
+    save();
+    const n = e.data.friends.length;
+    showToast(n ? ('Added ' + n + (n === 1 ? ' registered friend' : ' registered friends') + ' 🥚') : 'No matches found — try another way.');
+    if (n) showTab('garden'); else openConnectSheet(true);
+  }
+});
+
+
+// Polling must start from EVERY entry point into the garden. It used to live at
+// the end of boot(), which returns early for the PIN lock and for fresh signups —
+// so those users never checked the server at all.
+let _pollStarted = false;
+
+// GitHub Pages caches HTML for ~10 minutes and mobile browsers hold it longer,
+// so volunteers can sit on a stale build for hours with no way to tell. Compare
+// against the live file on load and reload once if we are behind.
+async function checkForUpdate() {
+  if (/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname) || location.protocol === 'file:') return;
+  try {
+    const r = await fetch(location.pathname + '?cb=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const m = (await r.text()).match(/const BUILD = '([^']+)'/);
+    if (!m) return;
+    if (m[1] === BUILD) { sessionStorage.removeItem('df_upd'); return; }
+    if (sessionStorage.getItem('df_upd') === m[1]) return; // already tried; don't loop
+    sessionStorage.setItem('df_upd', m[1]);
+    location.reload();
+  } catch (e) {}
+}
+
+function startPolling() {
+  if (_pollStarted) return;
+  _pollStarted = true;
+  const pollNow = () => checkRemoteBlooms().then(ok => {
+    if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing egg 🥚'); }
+  });
+  setInterval(async () => {
+    if (!S) return;
+    const local = consumeBloomQueue();
+    const remote = await checkRemoteBlooms();
+    if (!$('scr-garden').classList.contains('on')) return;
+    tickPraise(); renderGarden();
+    if (local || remote) showToast('A friend said yes! Tap their glowing egg to see it hatch 🥚');
+  }, 30 * 1000);
+  pollNow();
+  // Volunteers leave the app to send the text and come back — check on return.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) pollNow(); });
+  window.addEventListener('focus', pollNow);
+  window.addEventListener('pageshow', pollNow);
+}
+
+function boot() {
+  if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
+  buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
+  checkForUpdate();
+  const _bs = $('build-stamp'); if (_bs) _bs.textContent = 'build ' + BUILD;
+  const m = location.search.match(/[?&](?:s|b)=([\w-]+)/);
+  if (m) { initFriend(m[1]); return; }
+  load();
+  if (/[?&]match=1/.test(location.search)) {
+    // Standalone matcher. Storage here is partitioned away from the embedded
+    // game, so we never read S — results go back via window.opener.
+    MATCH_MODE = true;
+    openOv('ov-popstart'); // picker needs a user gesture; cannot auto-fire on load
+    return;
+  }
+  if (!S) { show('scr-signup'); return; }
+  if (S.pin && sessionStorage.getItem('df_auth') !== '1') { showLock(); return; }
+  S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
+  checkActive().then((ok) => { if (!ok) return; }); // [SERVER] deactivation gate
+  migrateBeds();
+  consumeBloomQueue();
+  tickPraise(); save();
+  renderGarden(); show('scr-garden'); maybeRankup();
+  startPolling();
+}
+
+
+/* ---------------- contact-match capability ---------------- */
+const BUILD = '20260823-0009';
+let MATCH_MODE = false;
+const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/.test(navigator.userAgent);
+const IS_SAMSUNG = /SamsungBrowser|SM-[A-Z0-9]|Samsung/i.test(navigator.userAgent);
+const IN_IFRAME = (function(){ try { return window.self !== window.top; } catch(e){ return true; } })();
+// Pop-out matching needs a TOP-LEVEL page, which means a visible URL.
+// Leave blank until a branded domain (e.g. https://vote.mikesell.org/bloomers.html)
+// points at the host - we never surface the raw hosting address to voters.
+const POPOUT_URL = 'https://vote.mikesell.org/dragonfarmer.html'; // [DEPLOY] dragon page on the branded domain
+
+// Contact Picker exists but is BLOCKED in cross-origin iframes (SecurityError).
+// Only Chrome-Android supports it at all. Detect honestly, never assume.
+function contactPickerState() {
+  if (!navigator.contacts || typeof navigator.contacts.select !== 'function') return 'unsupported';
+  if (IN_IFRAME) return POPOUT_URL ? 'blocked-iframe' : 'unsupported';
+  return 'ready';
+}
+
+/* ---------------- signup ---------------- */
+function toggleContacts() {
+  const el = $('f-contacts'); const on = el.dataset.on !== '1';
+  el.dataset.on = on ? '1' : '0';
+  el.style.background = on ? 'var(--blue)' : '#c9d4de';
+  el.firstElementChild.style.left = on ? '19px' : '3px';
+}
+function doSignup() {
+  const first = $('f-first').value.trim(), last = $('f-last').value.trim();
+  const garden = $('f-garden').value.trim(), zip = $('f-zip').value.replace(/\D/g, '');
+  const pin = ['s-pin0','s-pin1','s-pin2','s-pin3'].map(id => $(id).value.replace(/\D/g,'')).join('');
+  const err = $('signup-err');
+  if (!first || !last || !garden || !zip) { err.textContent = 'All four fields make the account. Nothing else, ever.'; err.style.display = 'block'; return; }
+  if (pin && pin.length !== 4) { err.textContent = 'PIN needs all 4 digits, or leave it blank.'; err.style.display = 'block'; return; }
+  if (zip.length !== 5) { err.textContent = 'ZIP code needs all 5 digits.'; err.style.display = 'block'; return; }
+  S = freshState(first, last, garden, $('f-contacts').dataset.on === '1');
+  S.zip = zip;
+  if (pin) { S.pin = pin; sessionStorage.setItem('df_auth', '1'); }
+  save();
+  api('signup', { first, last, zip, contactsOptIn: S.contacts }); // [SERVER] account record
+  renderGarden();
+  show('scr-garden');
+  startPolling();
+  showWelcomeGift();
+}
+function showWelcomeGift() {
+  $('rankup-sheet').innerHTML = `
+    <span style="display:inline-block;filter:drop-shadow(0 0 10px #fde68a);animation:grow 1.8s infinite;"><svg style="width:54px;height:54px;"><use href="#d-egg"/></svg></span>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">Welcome to the Roost!</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
+      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 Our thank-you gift: a mystery egg, nested and ready in your roost</span>
+      <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing egg to see what hatches.</span>
+    </div>
+    <button class="bigbtn" onclick="closeOv('ov-rankup');if(S.contacts)openConnectSheet();">See my roost</button>`;
+  openOv('ov-rankup');
+}
+
+/* ---------------- garden render ---------------- */
+
+/* ---------------- garden grid ----------------
+   Every planting spot sits on a fixed 8x3 grid so slots line up in columns
+   and rows. A bed is just a set of grid cells, which is what makes
+   right-angle (L) beds possible. */
+const GRID = { cols: 8, rows: 3, cw: 42, ch: 44, ox: 14, oy: 10 };
+const BED_SHAPES = {
+  r2: [[0, 0], [1, 0]],
+  r3: [[0, 0], [1, 0], [2, 0]],
+  L4: [[0, 0], [1, 0], [2, 0], [2, 1]],   // right angle
+};
+function shapeLabel(k) { return { r2: '2-hollow nest', r3: '3-hollow nest', L4: 'Corner nest (4 hollows)' }[k] || 'Straw nest'; }
+function cellXY(c, r) { return { x: GRID.ox + c * GRID.cw, y: GRID.oy + r * GRID.ch }; }
+function cellCenter(c, r) { const o = cellXY(c, r); return { cx: o.x + GRID.cw / 2, cy: o.y + GRID.ch / 2 }; }
+function occupied() {
+  const set = {};
+  for (const b of S.beds) for (const [c, r] of (b.cells || [])) set[c + ',' + r] = true;
+  return set;
+}
+// First grid position where every cell of a shape is free.
+function findFit(shape) {
+  const taken = occupied();
+  for (let r = 0; r < GRID.rows; r++) for (let c = 0; c < GRID.cols; c++) {
+    const cells = shape.map(([dc, dr]) => [c + dc, r + dr]);
+    if (cells.every(([cc, rr]) => cc < GRID.cols && rr < GRID.rows && !taken[cc + ',' + rr])) return cells;
+  }
+  return null;
+}
+// Contiguous horizontal runs, so an L draws as two overlapping rounded bars.
+function bedRuns(b) {
+  const byRow = {};
+  for (const [c, r] of (b.cells || [])) (byRow[r] = byRow[r] || []).push(c);
+  const runs = [];
+  for (const r of Object.keys(byRow)) {
+    const cols = byRow[r].sort((a, x) => a - x);
+    let start = cols[0], prev = cols[0];
+    for (let i = 1; i <= cols.length; i++) {
+      if (cols[i] === prev + 1) { prev = cols[i]; continue; }
+      runs.push({ r: +r, c0: start, c1: prev });
+      start = cols[i]; prev = cols[i];
+    }
+  }
+  return runs;
+}
+// Older saves stored beds as {id, n}. Lay them onto the grid once.
+function migrateBeds() {
+  if (!S || !S.beds) return;
+  let changed = false;
+  for (const b of S.beds) {
+    if (b.cells && b.cells.length) continue;
+    const n = b.n || 2;
+    const shape = Array.from({ length: n }, (_, i) => [i, 0]);
+    b.cells = findFit(shape) || shape.map(([c, r]) => [c, r]);
+    changed = true;
+  }
+  if (changed) save();
+}
+
+function layoutBeds() {
+  return { placed: S.beds, h: GRID.oy * 2 + GRID.rows * GRID.ch };
+}
+function plantsInBed(id) { return S.plants.filter((p) => p.bedId === id); }
+function waterReady(p) { return p.state === 'seed' && p.touches < CONFIG.maxTouches && Date.now() - p.lastTouch >= CONFIG.waterGapH * HOUR; }
+function hoursLeft(p) { return Math.max(0, Math.ceil((CONFIG.waterGapH * HOUR - (Date.now() - p.lastTouch)) / HOUR)); }
+
+function renderGarden() {
+  tickPraise();
+  $('hud-gname').textContent = S.garden; $('arch-name').textContent = (S.garden + "'S ROOST").toUpperCase();
+  $('hud-lifetime').textContent = fmt(S.lifetime);
+  $('hud-rank').textContent = CONFIG.ranks[S.rank].name;
+  const spots = S.beds.reduce((a, b) => a + ((b.cells || []).length || b.n || 0), 0);
+  $('hud-plots').textContent = spots;
+  const nxt = CONFIG.ranks[S.rank + 1];
+  $('hud-next').textContent = nxt ? fmt(nxt.at) : 'MAX';
+  const base = CONFIG.ranks[S.rank].at, span = nxt ? nxt.at - base : 1;
+  $('hud-xp').style.width = Math.min(100, Math.round(((S.lifetime - base) / span) * 100)) + '%';
+  $('hud-seal').innerHTML = sealSvg(S.rank, 40);
+  const _sh = $('hud-shed');
+  _sh.textContent = S.shed.length;
+  _sh.style.fontWeight = S.shed.length > 0 ? '700' : '400';
+  _sh.style.color = S.shed.length > 0 ? 'var(--blue)' : '';
+  $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap()); const _pc = $('hud-percycle'); if (_pc) _pc.textContent = perCycle();
+  $('btn-collect').disabled = S.pool <= 0;
+  const ag = CONFIG.agenda[agendaIdx];
+  $('agenda-topic').textContent = ag[0]; $('agenda-line').textContent = ag[1];
+  $('agenda-dots').innerHTML = CONFIG.agenda.map((_, i) => `<span onclick="event.stopPropagation();setAgenda(${i})" style="width:8px;height:8px;border-radius:50%;background:${i === agendaIdx ? 'var(--blue)' : '#d4e2ef'};cursor:pointer;display:inline-block;padding:2px;"></span>`).join('');
+
+  const { placed, h } = layoutBeds();
+  const el = $('gardensvg');
+  el.setAttribute('viewBox', `0 0 364 ${h}`);
+  let out = '';
+  for (let gx = 10; gx < 364; gx += 44) for (let gy = 8; gy < h; gy += 44) out += `<circle cx="${gx}" cy="${gy}" r="1.1" fill="#a3854f" opacity="0.28"/>`;
+  for (const b of placed) {
+    const gold = plantsInBed(b.id).some((p) => p.state === 'bloomed' && sp(p.species).shelf === 'au');
+    const runs = bedRuns(b);
+    const soil = b.id % 2 ? '#e9d18b' : '#e3c675', edge = gold ? '#f59e0b' : '#a17a35';
+    // Outline pass then fill pass, so an L merges into one shape with no seam.
+    // Inset from the cell bounds so two beds in neighbouring columns keep a gutter.
+    const GUT = 4;
+    for (const rn of runs) {
+      const o = cellXY(rn.c0, rn.r), w = (rn.c1 - rn.c0 + 1) * GRID.cw;
+      out += `<rect x="${o.x + GUT}" y="${o.y + GUT}" width="${w - GUT * 2}" height="${GRID.ch - GUT * 2}" rx="${(GRID.ch - GUT * 2) / 2}" fill="${edge}"/>`;
+    }
+    for (const rn of runs) {
+      const o = cellXY(rn.c0, rn.r), w = (rn.c1 - rn.c0 + 1) * GRID.cw;
+      const i = GUT + 2.5;
+      out += `<rect x="${o.x + i}" y="${o.y + i}" width="${w - i * 2}" height="${GRID.ch - i * 2}" rx="${(GRID.ch - i * 2) / 2}" fill="${soil}"/>`;
+    }
+    const inbed = plantsInBed(b.id);
+    const cells = b.cells || [];
+    for (let i = 0; i < cells.length; i++) {
+      const ctr = cellCenter(cells[i][0], cells[i][1]);
+      const cx = ctr.cx, p = inbed.find((q) => q.slot === i);
+      const b = { y: ctr.cy - 20, id: 0 };
+      if (!p) {
+        out += `<g style="cursor:pointer;" onclick="goPlant()"><circle cx="${cx}" cy="${b.y + 20}" r="8" fill="#4d9fe6" opacity="0.5" style="animation:pulsehint 2.2s infinite;"/><path d="M${cx} ${b.y + 15} v10 M${cx - 5} ${b.y + 20} h10" stroke="#1a2a4a" stroke-width="2.2" stroke-linecap="round"/></g>`;
+        continue;
+      }
+      const lbl = `<text x="${cx}" y="${b.y + 36}" text-anchor="middle" class="lbl">${esc(p.tag.toUpperCase())}</text>`;
+      if (p.state === 'bloomed') {
+        const s = sp(p.species);
+        let deco = '';
+        if (s.shelf === 'au') deco += `<circle cx="${cx}" cy="${b.y + 16}" r="15" fill="url(#gh-glow)" opacity="0.9"/>`;
+        if (p.traits.sun) deco += `<circle cx="${cx}" cy="${b.y + 16}" r="16.5" fill="url(#gh-glow)" style="animation:pulsehint 2.6s infinite;"/>`;
+        out += deco + `<use href="#${s.art}" x="${cx - 12}" y="${b.y + 4}" width="24" height="24" style="cursor:pointer;${s.shelf === 'au' ? 'animation:goldshine 2.6s infinite;' : ''}" onclick="showPlaque('${p.species}','${p.id}')"/>`;
+        if (p.traits.gli) out += `<circle cx="${cx - 5}" cy="${b.y + 10.3}" r="2" fill="#60a5fa" opacity="0.45" style="animation:pulsehint 2.6s infinite;"/><circle cx="${cx - 5}" cy="${b.y + 10.3}" r="1.1" fill="#2563eb"/><circle cx="${cx - 4.6}" cy="${b.y + 9.9}" r="0.4" fill="#fff"/>`;
+        if (p.traits.pol) out += `<use href="#d-fire" x="${cx - 20}" y="${b.y + 6}" width="9" height="9" style="animation:glint 2.1s infinite;"/>`;
+        out += lbl;
+      } else if (p.state === 'ready') {
+        out += `<circle cx="${cx}" cy="${b.y + 16}" r="10" fill="#dcfce7" opacity="0.7"/>`;
+        out += `<circle cx="${cx}" cy="${b.y + 16}" r="12" fill="none" stroke="#059669" stroke-width="2"/>`;
+        out += `<use href="#d-egg" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
+        out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#059669" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">✓ TAP</text>`;
+        out += lbl;
+      } else {
+        if (p.gift) out += `<circle cx="${cx}" cy="${b.y + 16}" r="11" fill="#fde68a" opacity="0.4"/><circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#f0b429" stroke-width="1.6" style="animation:ringpulse 1.8s ease-out infinite;"/>`;
+        out += `<use href="#d-egg" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>` + lbl;
+        if (p.gift) out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#b45309" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">🎁 TAP</text>`;
+        else if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#f59e0b" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#d-flame" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
+        else if (p.touches < CONFIG.maxTouches) out += `<g opacity="0.92"><rect x="${cx - 11}" y="${b.y - 9}" width="26" height="12" rx="6" fill="#fff" stroke="#ddd5c2"/><text x="${cx + 2}" y="${b.y}" font-size="7.5" text-anchor="middle" fill="#8a8272" font-family="Arial">${hoursLeft(p)}${DEMO ? 'm' : 'h'}</text></g>`;
+      }
+    }
+  }
+  el.innerHTML = out;
+}
+function fmt(n) { return n >= 1000 ? (n / 1000).toFixed(n % 1000 ? 1 : 0) + 'K' : String(n); }
+function setAgenda(i) {
+  agendaIdx = i;
+  const ag = CONFIG.agenda[agendaIdx];
+  $('agenda-topic').textContent = ag[0];
+  $('agenda-line').textContent = ag[1];
+  $('agenda-dots').querySelectorAll('span').forEach((s, j) => s.style.background = j === agendaIdx ? 'var(--blue)' : '#d4e2ef');
+}
+function sealSvg(rank, size) {
+  const stars = { 0: [], 1: [[17, 20]], 2: [[12.8, 18.5], [21.2, 18.5]], 3: [[10.5, 19.5], [17, 16.5], [23.5, 19.5]], 4: [[9.8, 18.5], [14.4, 15.5], [19.6, 15.5], [24.2, 18.5]], 5: [[9.8, 18.5], [14.4, 15.5], [19.6, 15.5], [24.2, 18.5]], 6: [[8.8, 20], [12.8, 16.8], [17, 15.6], [21.2, 16.8], [25.2, 20]] }[rank] || [];
+  const fills = ['#f2f8e8', '#e9cba6', '#eef1f5', '#fde68a', '#fde68a', '#f3f6fa', '#fde68a'];
+  const strokes = ['#8fae62', '#8a6238', '#9ca3af', '#d97706', '#d97706', '#64748b', '#b45309'];
+  const starfill = ['#8fae62', '#8a6238', '#6b7280', '#b45309', '#b45309', '#475569', '#b45309'];
+  let g = `<svg width="${size}" height="${size * 1.1}" viewBox="0 0 34 40"><circle cx="17" cy="16" r="12" fill="${fills[rank]}" stroke="${strokes[rank]}" stroke-width="2.5"/>`;
+  if (rank === 0) g += `<use href="#d-egg" x="11" y="10" width="12" height="12"/>`;
+  g += stars.map(([x, y]) => `<text x="${x}" y="${y}" font-size="${rank >= 4 ? 5 : 6.5}" text-anchor="middle" fill="${starfill[rank]}">★</text>`).join('');
+  if (rank >= 1) g += `<path d="M12 27 l-3 9 l5 -3 Z" fill="#037ad8"/><path d="M22 27 l3 9 l-5 -3 Z" fill="#037ad8"/>`;
+  return g + '</svg>';
+}
+
+/* ---------------- plant flow ---------------- */
+function goPlant() { showTab('plant'); }
+let pendingPlant = null;
+async function doSearch() {
+  const q = $('plant-q').value.trim();
+  if (!q) return;
+  const box = $('plant-result');
+  const nameParts = q.split(/\s+/).filter(w => /^[a-zA-Z'\u2019-]{2,}$/.test(w));
+  if (nameParts.length < 2) {
+    box.innerHTML = `<div class="statecard" style="text-align:center;padding:16px;">
+      <div style="font-size:14px;color:#5b6470;font-family:'avenir-heavy',Arial,sans-serif;">Enter a first and last name.</div>
+      <div style="font-size:11px;color:#9aa3ad;margin-top:6px;">Example: Sarah Johnson</div>
+    </div>`;
+    return;
+  }
+  const first = nameParts[0];
+  const last = nameParts[nameParts.length - 1];
+  pendingPlant = { name: q, first };
+  box.innerHTML = `<div class="statecard" style="text-align:center;padding:20px;">
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#5b6470;">Checking voter rolls for ${esc(first)}…</div>
+    <div style="font-size:10px;color:#9aa3ad;margin-top:5px;">Searching 570,000+ FL-CD4 registrations</div>
+  </div>`;
+  const matches = await voterSearch(first, last);
+  if (matches.length === 0) {
+    pendingPlant.deadline = true;
+    box.innerHTML = nomatchCard(first);
+  } else if (matches.length === 1) {
+    const [mf, ml, mc, ma] = matches[0];
+    pendingPlant.first = mf;
+    box.innerHTML = availCardVoter(mf, ml, mc, ma);
+  } else {
+    box.innerHTML = multiMatchCard(matches, first, last);
+  }
+}
+function availCard(first) {
+  return `<div class="statecard avail">
+    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#d-egg"/></svg>
+    <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Let's nest an egg with
+      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
+    </button>
+    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">You click the button, we populate the message. You can edit or just hit send.</div>
+  </div>`;
+}
+function nomatchCard(first) {
+  return `<div class="statecard nomatch">
+    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #c9b3dd);"><use href="#d-egg"/></svg>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">We couldn't confirm ${esc(first)} in the voter rolls — a registration reminder is always welcome.</div>
+    <div style="font-size:11.5px;color:#5b6470;margin:7px 8px 0;line-height:1.5;">They may have moved, married, or not registered yet. A nudge to check still counts.</div>
+    <button class="plantbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;" onclick="plantNow(true)">Let's nest an egg with
+      <span class="namechip" style="border:2px dashed #cdb3e0;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#8555ab" stroke-width="2" stroke-linejoin="round"/></svg></span>
+    </button>
+    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">A deadline reminder opens in Messages. You can edit or just hit send.</div>
+  </div>`;
+}
+function openSpot() {
+  for (const b of S.beds) {
+    const used = plantsInBed(b.id).map((p) => p.slot);
+    const cells = b.cells || [];
+    for (let i = 0; i < cells.length; i++) if (!used.includes(i)) return { bedId: b.id, slot: i };
+  }
+  return null;
+}
+function plantNow(deadline) {
+  if (S.textsToday >= CONFIG.dailyTextCap) { showToast('Five texts a day keeps it human. Come back tomorrow 🥚'); return; }
+  const spot = openSpot();
+  if (!spot) { showToast('Your roost is full — place a nest from your Barn first, or wait for a hatch to earn one.'); return; }
+  const tag = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first.toUpperCase();
+  const id = 'p' + (S.nextId++);
+  const _ph = (pendingPlant && pendingPlant.phone) ? String(pendingPlant.phone).replace(/\D/g,'') : '';
+  const token = seedToken();
+  S.plants.push({ id, token, tag, bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!deadline, phone: _ph });
+  S.seedsPlanted++; S.textsToday++;
+  if (S.seedsPlanted % 3 === 0) {
+    S.bedsEarned = (S.bedsEarned || 0) + 1;
+    // Third bed unlocked is the right-angle corner piece.
+    S.shed.push({ kind: 'bed', shape: S.bedsEarned === 3 ? 'L4' : (S.bedsEarned % 2 ? 'r2' : 'r3') });
+  }
+  save();
+  api('seed', { seedId: id, kind: deadline ? 'deadline' : 'friend' }); // [SERVER] link ID only; no name, tag, or number
+  const link = friendLink(token);
+  const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
+  const _nick = _rawNick.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  const _v = CONFIG.msgFriendVariants;
+  const body = (deadline ? CONFIG.msgDeadline(S.first, link) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
+  const _phone = (pendingPlant && pendingPlant.phone) || '';
+  location.href = smsHref(body, _phone);
+  setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
+}
+// SMS link domain. VERIFIED BY SEND TESTS: mikesell.org and its subdomains are on
+// a carrier blocklist (every message containing them was dropped); github.io
+// delivers fine. GitHub Pages 301s this to the branded domain with ?s= intact,
+// so recipients still land on vote.mikesell.org. Swap this one constant if a
+// neutral branded domain is registered later.
+const LINK_DOMAIN = 'https://youvebeen0wned.github.io/mikesell-pages/dragonfarmer.html'; // [DEPLOY] dragon page on the same host
+function friendLink(id) { return LINK_DOMAIN + '?s=' + id; }
+function seedTap(id) {
+  const p = S.plants.find((q) => q.id === id);
+  if (!p) return;
+  if (p.gift && p.state === 'seed') { hatchGift(p); return; }
+  if (p.state === 'ready') { doBloom(p, 'tap'); return; }
+  const sheet = $('plantpick-sheet');
+  let inner = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;">${esc(p.tag)}'s Reminder Egg</div>`;
+  if (waterReady(p)) {
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Ready for a friendly follow-up (${p.touches} of ${CONFIG.maxTouches} touches used).</div>
+      <button class="bigbtn" onclick="waterNow('${id}')"><svg style="width:16px;height:16px;vertical-align:-3px;"><use href="#d-flame"/></svg> Warm it (send a follow-up)</button>`;
+  } else if (p.touches >= CONFIG.maxTouches) {
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">All ${CONFIG.maxTouches} touches used. It can still hatch the moment they tap.</div>`;
+  } else {
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Warming again in ${hoursLeft(p)}${DEMO ? ' minutes' : ' hours'}. Eggs need a little patience 🥚</div>`;
+  }
+  const canSync = !!(CONFIG.bloomApi && p.token);
+  inner += canSync
+    ? `<div style="font-size:10.5px;color:#059669;text-align:center;margin-top:9px;line-height:1.5;">✓ Watching for their confirmation — this hatches on its own once they tap.</div>`
+    : `<div style="font-size:10.5px;color:#b45309;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:8px 10px;text-align:center;margin-top:9px;line-height:1.5;">This egg predates automatic confirmation. Nest a new one — this one can't hatch on its own.</div>`;
+  sheet.innerHTML = inner;
+  openOv('ov-plantpick');
+}
+function waterNow(id) {
+  const p = S.plants.find((q) => q.id === id);
+  if (!p || !waterReady(p)) return;
+  if (S.textsToday >= CONFIG.dailyTextCap) { showToast('Five texts a day keeps it human. Come back tomorrow 🥚'); return; }
+  p.touches++; p.lastTouch = Date.now(); S.textsToday++;
+  save(); closeOv('ov-plantpick');
+  api('touch', { seedId: id, n: p.touches }); // [SERVER]
+  const _fv = CONFIG.msgFollowVariants;
+  location.href = smsHref(_fv[p.touches % _fv.length](friendLink(tokenOf(p))).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || '');
+  if (p.touches >= CONFIG.maxTouches) setTimeout(() => doBloom(p, 'earned'), 800);
+  else renderGarden();
+}
+
+/* ---------------- friend view + bloom ---------------- */
+function initFriend(id, fname) {
+  $('scr-friend').dataset.pid = id;
+  let f = fname || (location.search.match(/[?&]f=([^&]+)/) || [])[1] || '';
+  try { f = decodeURIComponent(f); } catch(_) {}
+  $('friend-sender').textContent = f || 'A friend';
+  show('scr-friend');
+}
+function friendTap() {
+  const id = $('scr-friend').dataset.pid;
+  // Same-device fallback (demo/testing).
+  try {
+    const q = JSON.parse(localStorage.getItem(KEY + '_taps') || '[]');
+    if (!q.includes(id)) { q.push(id); localStorage.setItem(KEY + '_taps', JSON.stringify(q)); }
+  } catch (e) {}
+  // Real cross-device path: tell the server this seed was confirmed.
+  if (CONFIG.bloomApi && id) {
+    try { fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/bloom/' + encodeURIComponent(id), { method: 'POST', keepalive: true }); } catch (e) {}
+  }
+  $('friend-done').style.display = 'block';
+}
+// Ask the server which of our outstanding seeds have been confirmed.
+async function checkRemoteBlooms() {
+  if (!CONFIG.bloomApi || !S) return false;
+  const pending = S.plants.filter(p => p.state === 'seed' && !p.gift);
+  if (!pending.length) return false;
+  try {
+    const ids = pending.map(tokenOf).filter(Boolean).slice(0, 100).join(',');
+    const r = await fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/blooms?ids=' + encodeURIComponent(ids));
+    if (!r.ok) return false;
+    const data = await r.json();
+    const hit = {};
+    for (const t of (data.confirmed || [])) hit[t] = 1;
+    let changed = false;
+    for (const p of pending) if (hit[tokenOf(p)]) { p.state = 'ready'; changed = true; }
+    if (changed) save();
+    return changed;
+  } catch (e) { return false; }
+}
+function consumeBloomQueue() {
+  let q = [];
+  try { q = JSON.parse(localStorage.getItem(KEY + '_taps') || '[]'); } catch (e) {}
+  if (!q.length) return;
+  localStorage.setItem(KEY + '_taps', '[]');
+  let changed = false;
+  for (const id of q) {
+    const p = S.plants.find((x) => x.id === id && x.state === 'seed');
+    if (p) { p.state = 'ready'; changed = true; }
+  }
+  if (changed) { save(); return true; }
+  return false;
+}
+function doBloom(p, kind) {
+  S.blooms++;
+  const pity = S.blooms % 10 === 0;
+  const shelf = p.deadline ? 'b' : rollShelf(kind);
+  const s = rollSpecies(shelf);
+  const traits = rollTraits(kind, pity);
+  p.state = 'bloomed'; p.species = s.id; p.traits = traits;
+  const firstEver = !S.coll[s.id];
+  S.coll[s.id] = S.coll[s.id] || { sun: false, pol: false, gli: false };
+  for (const k of ['sun', 'pol', 'gli']) if (traits[k]) S.coll[s.id][k] = true;
+  let bed = null;
+  if (kind === 'tap') bed = { kind: 'bed', n: 3 };
+  else if (kind === 'earned') bed = { kind: 'bed', n: 2 };
+  if (bed) S.shed.push(bed);
+  addPraise(kind === 'tap' ? 50 : 25);
+  save();
+  api('bloom', { seedId: p.id, kind, species: s.id }); // [SERVER] species code + kind, per the one-record rule
+  showBloomCinematic(p, s, traits, firstEver, !!bed, kind);
+}
+function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
+  const el = $('bloom-sheet');
+  const anns = [];
+  if (traits.sun) anns.push(['☀ A Golden Hour Hatch!', '#d97706']);
+  if (traits.pol) anns.push(['🔥 A Firebreather!', '#c2410c']);
+  if (traits.gli) anns.push(['👁 Blue Eyes!', '#2563eb']);
+  let t = 4.2;
+  const annHtml = anns.map(([txt, col]) => { t += 0.6; return `<div class="chip-anim" style="animation-delay:${t}s;font-family:'clarendon-w01-medium',Georgia,serif;font-size:16px;color:${col};text-shadow:0 1px 0 #fff,0 0 12px #fde68a;">${txt}</div>`; }).join('');
+  el.innerHTML = `
+    <div style="height:${anns.length ? 70 : 12}px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;">${annHtml}</div>
+    <div style="position:relative;width:250px;height:250px;margin:6px auto 0;border-radius:22px;overflow:hidden;border:3px solid #8a5f36;background:linear-gradient(180deg,#cfe9f4 0%,#f2e5b6 78%,#e3c877 100%);">
+      <span style="position:absolute;left:50%;top:74%;transform:translateX(-50%);animation:cinebean 1.4s ease forwards;"><svg style="width:26px;height:26px;display:block;"><use href="#d-egg"/></svg></span>
+      <span style="position:absolute;left:50%;top:50%;opacity:0;transform:translateX(-50%);animation:cinesprout 0.8s 1.1s ease forwards,cinesproutout 0.4s 2s forwards;"><svg style="width:38px;height:38px;"><use href="#d-hatchling"/></svg></span>
+      ${traits.sun ? `<span style="position:absolute;left:calc(50% - 87px);top:38px;width:174px;height:174px;border-radius:50%;background:radial-gradient(circle,rgba(253,224,71,0.85) 0%,rgba(253,230,138,0.5) 45%,rgba(253,230,138,0) 72%);opacity:0;animation:revealpop 0.6s 3.4s forwards,pulsehint 2.6s 4s infinite;"></span>` : ''}
+      <span style="position:absolute;left:50%;top:60px;opacity:0;animation:cineflower 1s 2s ease forwards;"><svg style="width:130px;height:130px;display:block;"><use href="#${s.art}"/></svg></span>
+      ${traits.pol ? `<span style="position:absolute;left:8%;top:44%;opacity:0;animation:revealpop 0.5s 3.6s forwards,glint 2.2s 4.2s infinite;"><svg style="width:34px;height:34px;"><use href="#d-fire"/></svg></span><span style="position:absolute;left:20%;top:34%;opacity:0;animation:revealpop 0.5s 3.9s forwards,glint 2.6s 4.5s infinite;"><svg style="width:20px;height:20px;"><use href="#d-fire"/></svg></span>` : ''}
+      ${traits.gli ? `<span style="position:absolute;left:89px;top:84.5px;width:17px;height:17px;border-radius:50%;background:#2563eb;box-shadow:0 0 20px 8px rgba(59,130,246,0.85);opacity:0;animation:revealpop 0.5s 4s forwards,pulsehint 2.4s 4.6s infinite;"></span><span style="position:absolute;left:94.5px;top:88.5px;width:5.5px;height:5.5px;border-radius:50%;background:#fff;opacity:0;animation:revealpop 0.5s 4.1s forwards;"></span><span style="position:absolute;left:66px;top:70px;font-size:15px;color:#93c5fd;text-shadow:0 0 7px #60a5fa;opacity:0;animation:revealpop 0.4s 4.3s forwards,glint 2.8s 4.8s infinite;">✦</span>` : ''}
+    </div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:#0468b8;margin-top:10px;animation:grow 1.8s infinite;">${esc(p.tag.toUpperCase())}'S EGG HATCHED!</div>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:7px;align-items:center;">
+      <span class="chip-anim" style="animation-delay:3s;background:#fff;border:2px solid #c9def2;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;">${firstEver ? '<b style="background:#d97706;color:#fff;border-radius:8px;padding:2px 7px;font-size:9px;margin-right:6px;letter-spacing:0.05em;">NEW</b>' : ''}<svg style="width:15px;height:15px;vertical-align:-3px;margin-right:3px;"><use href="#${s.art}"/></svg>${esc(s.name.toUpperCase())} · ${shelfName(s.shelf).toUpperCase()}</span>
+      ${gotBed ? `<span class="chip-anim" style="animation-delay:${t + 0.8}s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">New Straw Nest unlocked!</span>` : ''}
+    </div>
+    <button class="bigbtn" onclick="closeOv('ov-bloom');renderGarden();maybeRankup();">Back to my roost</button>`;
+  openOv('ov-bloom');
+}
+
+/* ---------------- plaque / collection ---------------- */
+function showPlaque(spid, pid) {
+  const s = sp(spid); const c = S.coll[spid] || { sun: false, pol: false, gli: false };
+  const row = (icon, name, found) => `<div style="display:flex;align-items:center;gap:8px;background:${found ? '#fdf6e3' : '#f3f4f6'};border:2px solid ${found ? '#f0b429' : '#e5e7eb'};border-radius:12px;padding:8px 13px;margin-top:7px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:${found ? '#b45309' : '#9ca3af'};">${icon} ${name} · ${found ? 'Discovered' : 'Undiscovered'}</div>`;
+  $('plaque-sheet').innerHTML = `
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);">${esc(s.name)}</div>
+    <div style="width:120px;height:120px;margin:10px auto 0;background:radial-gradient(circle,#fff 30%,#fdf6e3 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg style="width:86px;height:86px;"><use href="#${s.art}"/></svg></div>
+    <div style="display:flex;gap:7px;justify-content:center;margin-top:10px;"><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:${shelfColor(s.shelf)};border:2px solid ${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">Unlocked!</div><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">${shelfName(s.shelf)}</div></div>
+    ${row('👁', 'Blue Eyes', c.gli)}${row('☀', 'Golden Hour Hatch', c.sun)}${row('🔥', 'Firebreathing', c.pol)}
+    <div style="margin-top:12px;font-size:12px;color:#9aa3ad;cursor:pointer;" onclick="closeOv('ov-plaque')">✕ close</div>`;
+  openOv('ov-plaque');
+}
+function renderCollection() {
+  const shelves = [
+    { key: 'g', label: 'Common', color: '#059669' },
+    { key: 'b', label: 'Rare', color: '#2563eb' },
+    { key: 'p', label: 'Exotic', color: '#7c3aed' },
+    { key: 'au', label: 'Legendary', color: '#f59e0b' },
+  ];
+  let html = '';
+  for (const sh of shelves) {
+    const flowers = CONFIG.species.filter(s => s.shelf === sh.key);
+    const unlocked = flowers.filter(s => !!S.coll[s.id]).length;
+    const cells = flowers.map(s => {
+      const un = !!S.coll[s.id];
+      return `<div class="almcell ${un ? s.shelf : 'locked'}" onclick="${un ? `showPlaque('${s.id}')` : ''}"><svg style="width:70%;height:70%;"><use href="#${s.art}"/></svg></div>`;
+    }).join('');
+    html += `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:${sh.color};letter-spacing:0.12em;margin:14px 18px 4px;">${sh.label.toUpperCase()} · ${unlocked}/${flowers.length}</div><div class="almgrid" style="padding:0 16px 8px;">${cells}</div>`;
+  }
+  $('coll-container').innerHTML = html;
+}
+
+/* ---------------- shed / ladder / rankup / champs ---------------- */
+function bedIcon(key) {
+  const cells = BED_SHAPES[key] || BED_SHAPES.r2;
+  const w = Math.max(...cells.map(c => c[0])) + 1, hh = Math.max(...cells.map(c => c[1])) + 1;
+  const rects = cells.map(([c, r]) =>
+    `<rect x="${c * 20 + 2}" y="${r * 20 + 2}" width="16" height="16" rx="6" fill="#e3c675" stroke="#a17a35" stroke-width="2"/>`).join('');
+  return `<svg width="46" height="26" viewBox="0 0 ${w * 20} ${hh * 20}" style="flex-shrink:0;">${rects}</svg>`;
+}
+function openShed() {
+  const sheet = $('shed-sheet');
+  if (!S.shed.length) { sheet.innerHTML = `<div style="text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">The Barn is empty.</div><div style="text-align:center;font-size:11.5px;color:#5b6470;margin-top:6px;">Every 3rd egg you nest earns a nest, and every hatch can drop one too.</div>`; }
+  else {
+    sheet.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;margin-bottom:10px;">The Barn</div>` + S.shed.map((it, i) =>
+      it.kind === 'bed'
+        ? `<div class="rankrow">${bedIcon(it.shape || (it.n === 3 ? 'r3' : 'r2'))}<div class="rlab"><strong>${shapeLabel(it.shape || (it.n === 3 ? 'r3' : 'r2'))}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLACE to add to your roost</small></div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
+        : `<div class="rankrow"><svg width="26" height="26"><use href="#d-egg"/></svg><div class="rlab"><strong>🎁 Mystery Gift Egg</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap NEST to reveal what hatches.</small></div><button class="collectbtn" onclick="plantGift(${i})">NEST</button></div>`
+    ).join('');
+  }
+  openOv('ov-shed');
+}
+function placeBed(i) {
+  const key = S.shed[i].shape || (S.shed[i].n === 3 ? 'r3' : 'r2');
+  const cells = findFit(BED_SHAPES[key] || BED_SHAPES.r2);
+  if (!cells) { showToast('No room left in the roost for that nest.'); return; }
+  S.shed.splice(i, 1);
+  S.beds.push({ id: S.nextId++, cells });
+  save(); closeOv('ov-shed'); renderGarden();
+}
+function plantGift(i) {
+  const spot = openSpot();
+  if (!spot) { showToast('No open hollow — place a nest from your Barn first.'); return; }
+  const it = S.shed.splice(i, 1)[0];
+  const id = 'p' + (S.nextId++);
+  const p = { id, tag: 'GIFT', bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true, giftShelf: it.shelf };
+  S.plants.push(p); save(); closeOv('ov-shed');
+  hatchGift(p);
+}
+function hatchGift(p) {
+  const s = rollSpecies(p.giftShelf || 'b');
+  const traits = rollTraits('tap', false);
+  S.blooms++;
+  p.state = 'bloomed'; p.species = s.id; p.traits = traits;
+  const firstEver = !S.coll[s.id];
+  S.coll[s.id] = S.coll[s.id] || { sun: false, pol: false, gli: false };
+  for (const k of ['sun', 'pol', 'gli']) if (traits[k]) S.coll[s.id][k] = true;
+  save();
+  showBloomCinematic(p, s, traits, firstEver, false, 'tap');
+}
+function openLadder() {
+  const sheet = $('ladder-sheet');
+  sheet.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="gametitle">Keeper's Guild</div><div class="pill" style="cursor:pointer;" onclick="closeOv('ov-ladder')">✕</div></div>` +
+    CONFIG.ranks.map((r, i) => {
+      const cls = i === S.rank ? 'now' : (i > S.rank ? 'locked' : '');
+      return `<div class="rankrow ${cls}"><span style="width:28px;">${sealSvg(i, 26)}</span><div class="rlab">${r.name}${r.unlock ? `<small>unlocks ${r.unlock} · 🎁 mystery gift</small>` : '<small>🎁 mystery gift</small>'}</div><div class="rnum">${i === S.rank ? 'YOU · ' + fmt(S.lifetime) : (i < S.rank ? '✓' : fmt(r.at))}🔥</div></div>`;
+    }).join('');
+  openOv('ov-ladder');
+}
+function maybeRankup() {
+  if (S.pendingRankup == null) return;
+  const r = CONFIG.ranks[S.pendingRankup];
+  const shelf = CONFIG.giftShelf[S.pendingRankup] || 'b';
+  S.shed.push({ kind: 'gift', shelf });
+  const offerContacts = S.pendingRankup % 2 === 0;
+  $('rankup-sheet').innerHTML = `
+    <span style="display:inline-block;filter:drop-shadow(0 0 8px #bcd9f2);animation:grow 1.8s infinite;">${sealSvg(S.pendingRankup, 56)}</span>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">You made<br>${r.name}!</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
+      <span class="chip-anim" style="animation-delay:0.7s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 Mystery gift: an egg, waiting in your Barn</span>
+      ${r.unlock ? `<span class="chip-anim" style="animation-delay:1.3s;background:#eef6fd;border:2.5px solid var(--blue);border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:var(--blue);">New feature: ${r.unlock}</span>` : ''}
+      ${r.teach ? `<span class="chip-anim" style="animation-delay:1.9s;font-size:11px;color:#5b6470;">${r.teach}</span>` : ''}
+      <span class="chip-anim" style="animation-delay:2.3s;font-size:11px;color:#5b6470;">Drop the gift egg on any open hollow to see what hatches.</span>
+      ${offerContacts ? `<span class="chip-anim" style="animation-delay:2.8s;background:#f4f9ff;border:2px dashed var(--blue);border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:var(--blue);">🔎 Compare contacts again? New friends may match now.</span>` : ''}
+    </div>
+    <button class="bigbtn" onclick="S.pendingRankup=null;save();closeOv('ov-rankup');renderGarden();">Back to my roost</button>`;
+  openOv('ov-rankup');
+}
+function renderChampions() {
+  const rows = [...CONFIG.champs.map(([n, r, w]) => ({ n, r, w })), { n: S.garden + ' · YOU', r: S.rank, w: S.weekly, you: true }]
+    .sort((a, b) => b.w - a.w);
+  $('champlist').innerHTML = rows.map((row, i) =>
+    `<div class="rankrow ${row.you ? 'now' : ''}"><div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:14px;color:var(--purple);width:18px;text-align:center;">${i + 1}</div><span style="width:26px;">${sealSvg(Math.min(row.r, 6), 24)}</span><div class="rlab">${esc(row.n)}<small>${CONFIG.ranks[Math.min(row.r, 6)].name}</small></div><div class="rnum">${fmt(row.w)} 🔥</div></div>`
+  ).join('');
+}
+
+/* ---------------- contact picker ---------------- */
+let _registeredCache = []; // contacts filtered to registered voters
+
+async function filterRegisteredContacts(contacts) {
+  const results = [];
+  // Group contacts by last-name prefix to batch fetches
+  const groups = {};
+  for (const c of contacts) {
+    const parts = c.name.trim().split(/\s+/);
+    if (parts.length < 2) continue;
+    const first = parts[0], last = parts[parts.length - 1];
+    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
+    if (!groups[prefix]) groups[prefix] = [];
+    groups[prefix].push({ ...c, _first: first, _last: last });
+  }
+  // Fetch each unique prefix bucket, then match
+  for (const [prefix, group] of Object.entries(groups)) {
+    const bucket = await fetchVoterBucket(prefix);
+    for (const contact of group) {
+      const qlast = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const qfirst = contact._first.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const fl = Math.min(3, qfirst.length);
+      const match = bucket.find(([f, l]) => {
+        return l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast &&
+               f.replace(/[^A-Za-z]/g, '').toUpperCase().startsWith(qfirst.slice(0, fl));
+      });
+      if (match) results.push({ ...contact, voterCity: match[2] });
+    }
+  }
+  return results;
+}
+
+
+function popOutToMatch() {
+  closeOv('ov-popout');
+  window.open(SELF_URL + '?match=1', '_blank');
+  showToast('Finish matching in the new tab, then come back here 🥚');
+}
+
+function parseVCards(text) {
+  let t = String(text).replace(/\r\n/g, '\n');
+  t = t.replace(/=\n/g, '');        // vCard 2.1 quoted-printable soft breaks
+  t = t.replace(/\n[ \t]/g, '');    // RFC folded lines
+
+  // Decode quoted-printable (Samsung uses it for any non-ASCII name)
+  const qp = (v, params) => {
+    if (!/QUOTED-PRINTABLE/i.test(params || '')) return v;
+    try {
+      const bytes = [];
+      for (let i = 0; i < v.length; i++) {
+        if (v[i] === '=' && /[0-9A-F]{2}/i.test(v.substr(i + 1, 2))) {
+          bytes.push(parseInt(v.substr(i + 1, 2), 16)); i += 2;
+        } else bytes.push(v.charCodeAt(i));
+      }
+      return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
+    } catch (e) { return v; }
+  };
+
+  // Property name must be followed by ; or : — stops NOTE/NICKNAME matching N.
+  const grab = (card, prop) => {
+    const re = new RegExp('(?:^|\\n)' + prop + '((?:;[^:\\n]*)?):(.*)', 'i');
+    const m = card.match(re);
+    return m ? { params: m[1] || '', value: qp(m[2].trim(), m[1]) } : null;
+  };
+
+  const out = [];
+  for (const card of t.split(/BEGIN:VCARD/i).slice(1)) {
+    let name = '';
+    const fn = grab(card, 'FN');
+    if (fn && fn.value) name = fn.value;
+    if (!name) {
+      const n = grab(card, 'N');
+      if (n && n.value) {
+        const q = n.value.split(';');
+        name = ((q[1] || '') + ' ' + (q[0] || '')).trim(); // given + family
+      }
+    }
+    if (!name) continue;
+    name = name.replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\s+/g, ' ').trim();
+
+    // Prefer a mobile number when the card lists several.
+    let phone = '';
+    const tels = [];
+    const telRe = /(?:^|\n)TEL((?:;[^:\n]*)?):(.*)/gi;
+    let m;
+    while ((m = telRe.exec(card)) !== null) tels.push({ params: m[1] || '', value: m[2].trim() });
+    const mobile = tels.find(x => /CELL|MOBILE|IPHONE/i.test(x.params));
+    phone = (mobile || tels[0] || { value: '' }).value.replace(/[^\d+]/g, '');
+
+    out.push({ name, phone });
+  }
+  return out;
+}
+
+function parseNameList(text) {
+  return text.split(/\n|,(?=\s*[A-Za-z])/).map(l => {
+    const raw = l.trim(); if (!raw) return null;
+    const pm = raw.match(/([+\d][\d\-\s().]{6,})$/);
+    const phone = pm ? pm[1].replace(/\D/g, '') : '';
+    const name = (pm ? raw.slice(0, pm.index) : raw).replace(/[,;|\t]+$/, '').trim();
+    return name.split(/\s+/).length >= 2 ? { name, phone } : null;
+  }).filter(Boolean);
+}
+
+
+// Common nickname <-> legal-name pairs. Voter rolls carry legal names;
+// phones carry what people actually go by.
+const NICKS = {BOB:'ROBERT',BOBBY:'ROBERT',ROB:'ROBERT',BILL:'WILLIAM',BILLY:'WILLIAM',WILL:'WILLIAM',
+ JIM:'JAMES',JIMMY:'JAMES',JAMIE:'JAMES',MIKE:'MICHAEL',MICK:'MICHAEL',DAVE:'DAVID',
+ STEVE:'STEVEN',STEPHEN:'STEVEN',TOM:'THOMAS',TOMMY:'THOMAS',DICK:'RICHARD',RICK:'RICHARD',
+ RICH:'RICHARD',RICKY:'RICHARD',CHRIS:'CHRISTOPHER',TONY:'ANTHONY',JOE:'JOSEPH',JOEY:'JOSEPH',
+ DAN:'DANIEL',DANNY:'DANIEL',MATT:'MATTHEW',NICK:'NICHOLAS',ANDY:'ANDREW',DREW:'ANDREW',
+ TED:'EDWARD',TEDDY:'EDWARD',ED:'EDWARD',EDDIE:'EDWARD',FRANK:'FRANCIS',GREG:'GREGORY',
+ JEFF:'JEFFREY',KEN:'KENNETH',LARRY:'LAWRENCE',PAT:'PATRICK',PETE:'PETER',PHIL:'PHILIP',
+ RAY:'RAYMOND',RON:'RONALD',RONNIE:'RONALD',SAM:'SAMUEL',TIM:'TIMOTHY',WALT:'WALTER',
+ CHUCK:'CHARLES',CHARLIE:'CHARLES',HANK:'HENRY',JACK:'JOHN',JOHNNY:'JOHN',
+ BETH:'ELIZABETH',LIZ:'ELIZABETH',BETTY:'ELIZABETH',BECKY:'REBECCA',
+ CATHY:'CATHERINE',KATHY:'KATHERINE',KATE:'KATHERINE',KATIE:'KATHERINE',
+ SUE:'SUSAN',SUSIE:'SUSAN',DEB:'DEBORAH',DEBBIE:'DEBORAH',JEN:'JENNIFER',JENNY:'JENNIFER',
+ JESS:'JESSICA',MEG:'MARGARET',MAGGIE:'MARGARET',PEGGY:'MARGARET',PAM:'PAMELA',
+ PATTY:'PATRICIA',TRISH:'PATRICIA',SANDY:'SANDRA',BARB:'BARBARA',CINDY:'CYNTHIA',
+ CHRISTY:'CHRISTINE',TINA:'CHRISTINE',ANGIE:'ANGELA',NANCY:'ANN',NAN:'ANN',ANNIE:'ANN',
+ MANDY:'AMANDA',MOLLY:'MARY',POLLY:'MARY',TERRY:'TERESA',TERI:'TERESA',VICKY:'VICTORIA',
+ CARRIE:'CAROLINE',LORI:'LAURA',JUDY:'JUDITH',JOAN:'JOANNE',CONNIE:'CONSTANCE',
+ DOTTIE:'DOROTHY',DOT:'DOROTHY',GINNY:'VIRGINIA',MARTY:'MARTIN',ALEX:'ALEXANDER',
+ ZACK:'ZACHARY',JOSH:'JOSHUA',BEN:'BENJAMIN',SAL:'SALVATORE',VINNY:'VINCENT',
+ GABE:'GABRIEL',NATE:'NATHANIEL',ISSY:'ISABELLA',IZZY:'ISABELLA',ABBY:'ABIGAIL'};
+
+function firstNameKeys(f) {
+  const u = String(f).replace(/[^A-Za-z]/g, '').toUpperCase();
+  const keys = [u];
+  if (NICKS[u]) keys.push(NICKS[u]);
+  for (const k in NICKS) if (NICKS[k] === u && keys.indexOf(k) < 0) keys.push(k);
+  return keys;
+}
+function firstNameMatches(voterFirst, contactFirst) {
+  const v = String(voterFirst).replace(/[^A-Za-z]/g, '').toUpperCase();
+  for (const k of firstNameKeys(contactFirst)) {
+    if (v === k) return true;
+    const n = Math.min(3, k.length);
+    if (n >= 3 && v.startsWith(k.slice(0, n))) return true;
+  }
+  return false;
+}
+
+
+/* ---------------- phone matching (private backend, k-anonymity) ---------------- */
+const _phoneCache = new Map();
+
+async function hashPhone(digits) {
+  const d = String(digits).replace(/\D/g, '');
+  if (d.length < 10) return null;
+  const buf = new TextEncoder().encode('bloomers-fl04-v1|' + d.slice(-10));
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Sends only the first 2 hex chars of the hash. The server returns that whole
+// bucket; the exact match happens here, so the number never leaves the device.
+async function fetchPhoneBucket(prefix) {
+  if (_phoneCache.has(prefix)) return _phoneCache.get(prefix);
+  try {
+    const r = await fetch(CONFIG.phoneApi.replace(/\/$/, '') + '/' + prefix + '.json');
+    const data = r.ok ? await r.json() : [];
+    _phoneCache.set(prefix, data);
+    return data;
+  } catch (e) { _phoneCache.set(prefix, []); return []; }
+}
+
+async function phoneMatch(contacts) {
+  if (!CONFIG.phoneApi || !crypto.subtle) return {};
+  const byPrefix = {}, hashes = {};
+  for (const c of contacts) {
+    if (!c.phone) continue;
+    const hk = await hashPhone(c.phone);
+    if (!hk) continue;
+    hashes[c.name] = hk;
+    (byPrefix[hk.slice(0, 2)] = byPrefix[hk.slice(0, 2)] || []).push(c);
+  }
+  const out = {};
+  for (const [prefix, group] of Object.entries(byPrefix)) {
+    const bucket = await fetchPhoneBucket(prefix);
+    const map = {};
+    for (const [rest, f, l, city] of bucket) map[rest] = [f, l, city];
+    for (const c of group) {
+      const hit = map[hashes[c.name].slice(2, 14)];
+      if (hit) out[c.name] = { first: hit[0], last: hit[1], voterCity: hit[2], via: 'phone' };
+    }
+  }
+  return out;
+}
+
+// Shared matching core — every input method funnels through here.
+async function matchContactList(contacts, opts) {
+  opts = opts || {};
+  const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub'), emoji = $('match-emoji');
+  const setP = (pct, msg, detail) => {
+    if (bar) bar.style.width = Math.min(100, pct) + '%';
+    if (msg && status) status.textContent = msg;
+    if (detail !== undefined && sub) sub.textContent = detail;
+  };
+  const breathe = () => new Promise(r => setTimeout(r, 0));
+  if (emoji) emoji.textContent = '🥚';
+  openOv('ov-matching');
+  setP(12, 'Sorting ' + contacts.length + ' contacts…', 'Grouping by last name');
+  await breathe();
+
+  const groups = {};
+  for (const c of contacts) {
+    const parts = String(c.name).trim().split(/\s+/);
+    if (parts.length < 2) continue;
+    const last = parts[parts.length - 1];
+    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
+    (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
+  }
+  // Phone match first — highest confidence, catches married and preferred names.
+  let phoneHits = {};
+  if (CONFIG.phoneApi) {
+    setP(16, 'Checking phone numbers…', '');
+    try { phoneHits = await phoneMatch(contacts); } catch (e) {}
+  }
+
+  const entries = Object.entries(groups);
+  if (!entries.length && !Object.keys(phoneHits).length) {
+    closeOv('ov-matching');
+    showToast('Those need first and last names to match the voter rolls.');
+    return 0;
+  }
+  const results = []; let done = 0;
+  for (const [prefix, group] of entries) {
+    const bucket = await fetchVoterBucket(prefix);
+    for (const contact of group) {
+      if (phoneHits[contact.name]) continue; // already matched by phone
+      const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const m = bucket.find(([f, l]) =>
+        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql && firstNameMatches(f, contact._first));
+      if (m) results.push({ ...contact, voterCity: m[2] });
+    }
+    done++;
+    setP(12 + Math.round((done / entries.length) * 80),
+         'Checking voter rolls… ' + done + ' of ' + entries.length,
+         results.length + (results.length === 1 ? ' friend found' : ' friends found'));
+    await breathe();
+  }
+
+  for (const c of contacts) {
+    const hit = phoneHits[c.name];
+    if (!hit) continue;
+    const parts = String(c.name).trim().split(/\s+/);
+    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1],
+                   voterCity: hit.voterCity, matchedBy: 'phone' });
+  }
+  const found = results.map(c => ({
+    name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '',
+    voterCity: c.voterCity || '', matchedBy: c.matchedBy || 'name'
+  }));
+  if (!opts.standalone) {
+    const seen = {};
+    S.registeredFriends = (S.registeredFriends || []).concat(found)
+      .filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
+    save();
+  }
+
+  if (emoji) emoji.textContent = '🐉';
+  const n = results.length;
+  setP(100, 'All done!', n + (n === 1 ? ' registered friend added' : ' registered friends added'));
+  await new Promise(r => setTimeout(r, 1200));
+  closeOv('ov-matching');
+
+  if (opts.standalone) {
+    // Storage is partitioned between this tab and the embedded game,
+    // so hand the results back through the opener instead of localStorage.
+    let delivered = false;
+    try {
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage({ type: 'bloom_contacts', friends: found }, '*');
+        delivered = true;
+      }
+    } catch (e) {}
+    $('matchdone-title').textContent = n + (n === 1 ? ' friend found!' : ' friends found!');
+    $('matchdone-sub').textContent = !n
+      ? 'None of those matched the FL-04 voter rolls. You can still search any name by hand.'
+      : (delivered ? 'Sent back to your roost. You can close this tab.'
+                   : 'Keep this tab open and return to Dragon Farmer, then tap Find Friends again.');
+    openOv('ov-matchdone');
+    return n;
+  }
+  renderGarden();
+  if (n) showTab('garden'); else openConnectSheet(true);
+  return n;
+}
+
+// Tier 1: native phone picker. MUST be called from a user gesture.
+async function runContactMatch(popoutMode) {
+  try {
+    const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+    const contacts = (raw || []).filter(c => c.name && c.name[0])
+      .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
+    if (!contacts.length) { showToast('No contacts selected.'); return; }
+    await matchContactList(contacts, { standalone: !!popoutMode });
+  } catch (err) {
+    closeOv('ov-matching');
+    if (popoutMode) { showToast('Could not open contacts here.'); return; }
+    if (err && err.name === 'AbortError') { renderGarden(); return; }
+    openConnectSheet();
+  }
+}
+
+// Tier 2: pop out to a top-level tab (Contact Picker is blocked in iframes)
+function popOutToMatch() {
+  if (!POPOUT_URL) { openConnectSheet(); return; }
+  closeOv('ov-connect');
+  window.open(POPOUT_URL + '?match=1', '_blank');
+  showToast('Finish in the new tab, then come back here 🥚');
+}
+
+// Tier 3: vCard upload — works in iframes, on iOS, and on desktop
+function pickVcf() {
+  // No accept filter: Android greys out Google Drive files and iOS greys out
+  // .vcf entirely when one is set. The parser validates content instead.
+  const inp = $('vcf-input');
+  inp.value = '';
+  inp.removeAttribute('accept');
+  inp.click();
+}
+async function onVcfChosen(ev) {
+  const files = Array.from(ev.target.files || []);
+  if (!files.length) return;
+  closeOv('ov-connect'); closeOv('ov-import');
+  let all = [];
+  for (const f of files) { try { all = all.concat(parseVCards(await f.text())); } catch (e) {} }
+  if (!all.length) {
+    const names = files.map(f => f.name).join(', ');
+    showToast(/\.vcf|\.vcard/i.test(names)
+      ? 'That .vcf had no readable contacts — try exporting again with All accounts selected.'
+      : 'That was not a contacts file. Look for one ending in .vcf, usually in Downloads.');
+    openImportSheet(); return;
+  }
+  await matchContactList(all, {});
+}
+
+// Tier 4: paste a list — works absolutely everywhere
+function openPasteSheet() { closeOv('ov-connect'); $('paste-box').value = ''; openOv('ov-paste'); }
+async function runPasteMatch() {
+  const txt = $('paste-box').value || '';
+  const list = parseNameList(txt);
+  if (!list.length) { showToast('Add one full name per line (first and last).'); return; }
+  closeOv('ov-paste');
+  await matchContactList(list, {});
+}
+
+// The chooser — only ever offers methods that actually work here.
+
+// Per-platform export steps. Everything happens on the phone; no computer needed.
+function exportSteps() {
+  return [
+    { label: 'iPhone', icon: '', steps: [
+        'Open <b>Contacts</b>, tap <b>Lists</b> at the top left',
+        'Choose <b>All Contacts</b>, then tap and hold',
+        'Tap <b>Export</b> → <b>Save to Files</b>'] },
+    { label: 'Android', icon: '', steps: [
+        'Open <b>Contacts</b> → <b>⋮</b> → <b>Settings</b>',
+        'Under Manage contacts, tap <b>Export</b>',
+        'Pick your account → <b>Export to .vcf file</b>'] },
+  ];
+}
+
+function openImportSheet(afterEmpty) {
+  const canPick = contactPickerState() === 'ready';
+  $('import-title').textContent = afterEmpty ? 'No matches yet' : 'How to import your contacts';
+  $('import-sub').innerHTML = afterEmpty
+    ? 'Try importing your full contacts file instead — it checks everyone at once.'
+    : 'Save your contacts once, then every friend gets checked against the FL-04 voter rolls in one pass. Nothing is uploaded.';
+  $('import-steps').innerHTML = exportSteps().map(pf =>
+    `<div style="margin-top:10px;">
+       <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.12em;color:#059669;">${pf.label.toUpperCase()}</div>
+       ${pf.steps.map((s, i) =>
+         `<div style="display:flex;gap:8px;align-items:flex-start;margin-top:5px;">
+            <span style="flex-shrink:0;width:16px;height:16px;border-radius:50%;background:#dcfce7;color:#059669;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;display:flex;align-items:center;justify-content:center;">${i + 1}</span>
+            <span style="flex:1;font-size:11.5px;color:#4b5563;line-height:1.45;">${s}</span>
+          </div>`).join('')}
+     </div>`).join('<div style="height:1px;background:#e3ecf5;margin-top:11px;"></div>');
+  $('import-alt').innerHTML = canPick
+    ? `<span onclick="closeOv('ov-import');openConnectSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">← Back to the other options</span>`
+    : `<span onclick="closeOv('ov-import');openPasteSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">Or paste a list of names</span>`;
+  openOv('ov-import');
+}
+
+
+/* ---------------- diagnostics ---------------- */
+// Runs the exact code path the game uses, against the volunteer's real seeds.
+
+
+function openConnectSheet(afterEmpty) {
+  const st = contactPickerState();
+  const row = (icon, title, desc, fn, primary) =>
+    `<button onclick="${fn}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:${primary ? '#f4f9ff' : '#fff'};border:2px solid ${primary ? 'var(--blue)' : '#e3ecf5'};border-radius:14px;padding:13px 14px;margin-top:9px;cursor:pointer;">
+      <span style="font-size:22px;flex-shrink:0;">${icon}</span>
+      <span style="flex:1;">
+        <span style="display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">${title}</span>
+        <span style="display:block;font-size:10.5px;color:#7c8794;margin-top:2px;line-height:1.45;">${desc}</span>
+      </span>
+      <span style="color:#c3ccd6;font-size:16px;">›</span>
+    </button>`;
+
+  let opts = '';
+  // 1 — pick contacts by hand (only where the phone allows it)
+  if (st === 'ready') opts += row('📇', 'Select my contacts', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', true);
+  else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
+  // 2 — upload an exported contacts file
+  opts += row('📄', 'Upload a contacts file', 'Check everyone at once. We\'ll show you how to export it.', 'closeOv(\'ov-connect\');openImportSheet()', st !== 'ready' && st !== 'blocked-iframe');
+
+  $('connect-title').textContent = afterEmpty ? 'No matches yet' : 'Find your registered friends';
+  $('connect-sub').textContent = afterEmpty
+    ? 'None of those matched the FL-04 rolls. Try another way:'
+    : 'We check your friends against the FL-04 voter rolls, right here on your phone. Pick whichever is easiest.';
+  // Only one method available? Don't make them pick from a list of one.
+  if (st !== 'ready' && st !== 'blocked-iframe' && !afterEmpty) { openImportSheet(); return; }
+  $('connect-opts').innerHTML = opts;
+  openOv('ov-connect');
+}
+
+function renderRegisteredFriends() {
+  const listEl = $('plant-contactlist');
+  if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
+  const items = S.registeredFriends.map((c, i) => {
+    const initials = (c.first || c.name || '?')[0].toUpperCase();
+    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
+      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${initials}</div>
+      <div style="flex:1;">
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
+        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} FOUND</div>` + items;
+  listEl.style.display = 'block';
+}
+
+function selectRegisteredFriend(idx) {
+  const c = (S.registeredFriends || [])[idx];
+  if (!c) return;
+  pendingPlant = { name: c.name, first: c.first || c.name.split(/\s+/)[0], phone: c.phone || '' };
+  $('plant-contactlist').style.display = 'none';
+  $('plant-result').innerHTML = availCardVoter(c.first || c.name.split(/\s+/)[0], c.last || '', c.voterCity, null);
+  $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function tryLoadContacts() {
+  if (!S || !S.contacts) return;
+  if (_contactsCache !== null) { await _renderContactList(); return; }
+  if (!('contacts' in navigator)) { _contactsCache = []; return; }
+  const listEl = $('plant-contactlist');
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING CONTACTS WITH VOTER ROLLS…</div>`;
+  listEl.style.display = 'block';
+  try {
+    const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+    _contactsCache = (raw || []).filter(c => c.name && c.name[0])
+      .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
+  } catch(e) { _contactsCache = []; }
+  await _renderContactList();
+}
+async function _renderContactList() {
+  const listEl = $('plant-contactlist');
+  if (!_contactsCache || !_contactsCache.length) { listEl.style.display = 'none'; return; }
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">MATCHING WITH VOTER ROLLS…</div>`;
+  listEl.style.display = 'block';
+  _registeredCache = await filterRegisteredContacts(_contactsCache);
+  if (!_registeredCache.length) {
+    listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No contacts matched the voter rolls — use the search above.</div>';
+    return;
+  }
+  const items = _registeredCache.map((c, i) => {
+    const first = c._first || c.name.split(/\s+/)[0];
+    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectContact(${i})">
+      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
+      <div style="flex:1;">
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
+        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity || '')}</div>
+      </div>
+    </div>`;
+  }).join('');
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${_registeredCache.length} FOUND</div>` + items;
+  listEl.style.display = 'block';
+}
+function selectContact(idx) {
+  const c = _registeredCache[idx];
+  if (!c) return;
+  pendingPlant = { name: c.name, first: c._first, phone: c.phone || '' };
+  $('plant-contactlist').style.display = 'none';
+  $('plant-result').innerHTML = availCardVoter(c._first, c._last, c.voterCity, null);
+  $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ---------------- nav + decos ---------------- */
+function showTab(tab) {
+  if (tab === 'garden') { tickPraise(); renderGarden(); show('scr-garden'); }
+  if (tab === 'plant') { $('plant-result').innerHTML = ''; show('scr-plant'); renderRegisteredFriends(); }
+  if (tab === 'collection') { renderCollection(); show('scr-collection'); }
+  if (tab === 'champions') { renderChampions(); show('scr-champions'); }
+  document.querySelectorAll('.bottomnav').forEach((nav) => {
+    nav.querySelectorAll('.bn').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
+  });
+}
+function buildNavs() {
+  const html = `
+    <button class="bn" data-tab="garden" onclick="showTab('garden')"><svg class="navic"><use href="#n-farm"/></svg><small>ROOST</small></button>
+    <button class="bn" data-tab="collection" onclick="showTab('collection')"><svg class="navic"><use href="#n-almanac"/></svg><small>REGISTRY</small></button>
+    <button class="bn" data-tab="champions" onclick="showTab('champions')"><svg class="navic"><use href="#n-club"/></svg><small>CHAMPIONS</small></button>`;
+  for (const id of ['nav-garden', 'nav-plant', 'nav-collection', 'nav-champions']) { $(id).innerHTML = html; }
+  showTabMark();
+  function showTabMark() {
+    $('nav-garden').querySelector('[data-tab="garden"]').classList.add('on');
+    $('nav-collection').querySelector('[data-tab="collection"]').classList.add('on');
+    $('nav-champions').querySelector('[data-tab="champions"]').classList.add('on');
+  }
+}
+function buildDecos() {
+  const deco = `
+    <svg style="position:absolute;left:-14%;top:34%;width:130%;opacity:0.08;" viewBox="0 0 220 26"><path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/><path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/><path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/></svg>
+    <svg style="position:absolute;left:0;right:0;bottom:110px;width:100%;opacity:0.14;" viewBox="0 0 340 60" preserveAspectRatio="xMidYMax meet"><path d="M0 46 H340" stroke="#8a5f36" stroke-width="3"/><path d="M38 46 V24 L62 8 L86 24 V46 Z" fill="#b5502e"/><path d="M33 27 L62 6 L91 27" stroke="#8a5f36" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="54" y="30" width="16" height="16" rx="2" fill="#8a5f36"/><path d="M54 30 L70 46 M70 30 L54 46" stroke="#e9dfc6" stroke-width="1.4"/><rect x="100" y="16" width="15" height="30" fill="#9a8a6a"/><path d="M99 16 A8.5 8.5 0 0 1 116 16 Z" fill="#8a5f36"/><g stroke="#8a5f36" stroke-width="2.4"><line x1="146" y1="30" x2="146" y2="46"/><line x1="186" y1="30" x2="186" y2="46"/><line x1="226" y1="30" x2="226" y2="46"/><line x1="266" y1="30" x2="266" y2="46"/><line x1="306" y1="30" x2="306" y2="46"/><line x1="134" y1="35" x2="318" y2="35"/><line x1="134" y1="42" x2="318" y2="42"/></g><ellipse cx="325" cy="42" rx="11" ry="7" fill="#c9a04a"/></svg>
+    <div style="position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:space-around;align-items:flex-end;opacity:0.16;padding:0 10px;">
+      <svg style="width:18px;height:18px;"><use href="#d-haybale"/></svg><svg style="width:20px;height:20px;"><use href="#d-jade"/></svg><svg style="width:24px;height:24px;"><use href="#d-copper"/></svg><svg style="width:18px;height:18px;"><use href="#d-obsidian"/></svg><svg style="width:24px;height:24px;"><use href="#d-ember"/></svg><svg style="width:19px;height:19px;"><use href="#d-clay"/></svg><svg style="width:23px;height:23px;"><use href="#d-amber"/></svg><svg style="width:18px;height:18px;"><use href="#d-slate"/></svg><svg style="width:18px;height:18px;"><use href="#d-haybale"/></svg>
+    </div>
+    <span class="petal" style="left:14%;animation-duration:8s;color:#f0b429;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#d-spark"/></svg></span>
+    <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#d-spark"/></svg></span>`;
+  for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { const el = $(id); if (el) el.innerHTML = deco; }
+}
+
+/* ---------------- back-button intercept ---------------- */
+function setupBackButton() {
+  if (!window.history || !window.history.pushState) return;
+  history.pushState({ bl: 1 }, '');
+  window.addEventListener('popstate', function() {
+    // Always re-push so we keep intercepting
+    history.pushState({ bl: 1 }, '');
+    // Close any open overlay first
+    const openOv = document.querySelector('.overlay.on');
+    if (openOv) { openOv.classList.remove('on'); return; }
+    // Navigate back to garden from any other tab
+    if (!$('scr-garden') || !$('scr-garden').classList.contains('on')) {
+      showTab('garden');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  boot();
+  // Agenda swipe
+  let _agX = null;
+  const agEl = document.querySelector('.agenda');
+  if (agEl) {
+    agEl.addEventListener('touchstart', function(e) { _agX = e.touches[0].clientX; }, {passive:true});
+    agEl.addEventListener('touchend', function(e) {
+      if (_agX === null) return;
+      const dx = e.changedTouches[0].clientX - _agX; _agX = null;
+      if (Math.abs(dx) < 30) return;
+      setAgenda((agendaIdx + (dx < 0 ? 1 : -1) + CONFIG.agenda.length) % CONFIG.agenda.length);
+    });
+  }
+});
+
+
+</script>
+
+</body>
+</html>
