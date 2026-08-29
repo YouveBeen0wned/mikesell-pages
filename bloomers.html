@@ -550,7 +550,7 @@ const CONFIG = {
   // it is served only by an authenticated backend using k-anonymity prefix
   // lookup (client sends 2 hex chars of a keyed hash, never the number).
   // Leave blank to disable phone matching entirely.
-  phoneApi: '',
+  phoneApi: 'https://bloomers-phone.ccm-inspired.workers.dev',
   // Bloom confirmations. Blank = honor system only (a friend's tap cannot reach
   // the volunteer's device without a server). Stores opaque tokens, nothing else.
   bloomApi: 'https://bloomers-phone.ccm-inspired.workers.dev',
@@ -641,8 +641,12 @@ function freshState(first, last, garden, contacts) {
     first, last, garden, contacts,
     created: Date.now(), lifetime: 0, weekly: 0, pool: 0, poolTick: Date.now(),
     rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, textsDay: dayKey(),
-    visits: 0, plants: [], beds: [ { id: 1, cells: [[0,0],[1,0]] }, { id: 2, cells: [[3,1],[4,1],[5,1]] }, { id: 3, cells: [[6,2],[7,2]] } ],
-    shed: [{ kind: 'gift', shelf: 'b' }], // welcome gift — {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
+    visits: 0,
+    // The welcome thank-you seed plants itself in the first spot — new gardeners
+    // have no placing or moving powers yet, so nothing should sit in the Shed.
+    plants: [ { id: 'pgift1', tag: 'GIFT', bedId: 1, slot: 0, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true, giftShelf: 'b' } ],
+    beds: [ { id: 1, cells: [[0,0],[1,0]] }, { id: 2, cells: [[3,1],[4,1],[5,1]] }, { id: 3, cells: [[6,2],[7,2]] } ],
+    shed: [], // {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
     registeredFriends: [], // [{name,first,last,phone,voterCity}] — filled at signup
@@ -1028,7 +1032,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-1848';
+const BUILD = '20260829-1902';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1071,7 +1075,20 @@ function doSignup() {
   renderGarden();
   show('scr-garden');
   startPolling();
-  if (S.contacts) openConnectSheet();
+  showWelcomeGift();
+}
+
+function showWelcomeGift() {
+  $('rankup-sheet').innerHTML = `
+    <span style="display:inline-block;filter:drop-shadow(0 0 10px #fde68a);animation:grow 1.8s infinite;"><svg style="width:54px;height:54px;"><use href="#f-seed"/></svg></span>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">Welcome to the Garden!</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
+      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 Our thank-you gift: a mystery seed, planted and ready in your garden</span>
+      <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing seed to see what blooms.</span>
+      <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#eafaf1;border:2.5px solid #059669;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#047857;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;"><circle cx="17" cy="17" r="12" fill="#dcfce7"/><circle cx="17" cy="17" r="14" fill="none" stroke="#059669" stroke-width="2.4" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-seed" x="6" y="6" width="22" height="22"/></svg><span>Watch for this green ring. It means a friend answered &mdash; tap to bloom it.</span></span>
+    </div>
+    <button class="bigbtn" onclick="closeOv('ov-rankup');if(S.contacts)openConnectSheet();">See my garden</button>`;
+  openOv('ov-rankup');
 }
 
 /* ---------------- garden render ---------------- */
@@ -1210,9 +1227,11 @@ function renderGarden() {
         out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#059669" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">✓ TAP</text>`;
         out += lbl;
       } else {
+        if (p.gift) out += `<circle cx="${cx}" cy="${b.y + 16}" r="11" fill="#fde68a" opacity="0.4"/><circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#f0b429" stroke-width="1.6" style="animation:ringpulse 1.8s ease-out infinite;"/>`;
         out += `<use href="#f-seed" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>` + lbl;
-        if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#4a9fe0" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-drop" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
-        else if (p.touches < CONFIG.maxTouches) out += `<g opacity="0.92"><rect x="${cx - 11}" y="${b.y - 9}" width="26" height="12" rx="6" fill="#fff" stroke="#ddd5c2"/><text x="${cx + 2}" y="${b.y}" font-size="7.5" text-anchor="middle" fill="#8a8272" font-family="Arial">${hoursLeft(p)}${DEMO ? 'm' : 'h'}</text></g>`;
+        if (p.gift) out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#b45309" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">🎁 TAP</text>`;
+        else if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#4a9fe0" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-drop" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
+        else if (!p.gift && p.touches < CONFIG.maxTouches) out += `<g opacity="0.92"><rect x="${cx - 11}" y="${b.y - 9}" width="26" height="12" rx="6" fill="#fff" stroke="#ddd5c2"/><text x="${cx + 2}" y="${b.y}" font-size="7.5" text-anchor="middle" fill="#8a8272" font-family="Arial">${hoursLeft(p)}${DEMO ? 'm' : 'h'}</text></g>`;
       }
     }
   }
@@ -1362,6 +1381,7 @@ function friendLink(id) { return LINK_DOMAIN + '?s=' + id; }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
+  if (p.gift && p.state === 'seed') { hatchGift(p); return; }
   if (p.state === 'ready') { doBloom(p, 'tap'); return; }
   const sheet = $('plantpick-sheet');
   let inner = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;">${esc(p.tag)}'s Reminder Seed</div>`;
@@ -1444,6 +1464,17 @@ function consumeBloomQueue() {
   }
   if (changed) { save(); return true; }
   return false;
+}
+function hatchGift(p) {
+  const s = rollSpecies(p.giftShelf || 'b');
+  const traits = rollTraits('tap', false);
+  S.blooms++;
+  p.state = 'bloomed'; p.species = s.id; p.traits = traits;
+  const firstEver = !S.coll[s.id];
+  S.coll[s.id] = S.coll[s.id] || { sun: false, pol: false, gli: false };
+  for (const k of ['sun', 'pol', 'gli']) if (traits[k]) S.coll[s.id][k] = true;
+  save();
+  showBloomCinematic(p, s, traits, firstEver, false, 'tap');
 }
 function doBloom(p, kind) {
   S.blooms++;
@@ -1573,7 +1604,7 @@ function plantGift(i) {
   if (!spot) { showToast('No open spot — place a bed from your Shed first.'); return; }
   const it = S.shed.splice(i, 1)[0];
   const id = 'p' + (S.nextId++);
-  const p = { id, tag: 'GIFT', bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true };
+  const p = { id, tag: 'GIFT', bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true, giftShelf: it.shelf };
   S.plants.push(p); save(); closeOv('ov-shed');
   // instant roll, straight to the Bloom
   const s = rollSpecies(it.shelf);
@@ -1886,7 +1917,7 @@ async function matchContactList(contacts, opts) {
   const entries = Object.entries(groups);
   if (!entries.length && !Object.keys(phoneHits).length) {
     closeOv('ov-matching');
-    showToast('Those need first and last names to match the voter rolls.');
+    showToast('No matches yet — add last names or phone numbers to those contacts and try again.');
     return 0;
   }
   const results = []; let done = 0;
