@@ -677,6 +677,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
   <div style="text-align:center;font-size:38px;">📇</div>
   <div id="import-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
   <div id="import-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
+  <div id="import-google"></div>
   <div id="import-steps" style="background:#f7fbff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 14px;margin-top:14px;text-align:left;"></div>
   <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>
   <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Then pick the .vcf file — <b>Downloads</b> on Android, <b>Files</b> on iPhone</div>
@@ -757,6 +758,10 @@ const CONFIG = {
   // Bloom confirmations. Blank = honor system only (a friend's tap cannot reach
   // the volunteer's device without a server). Stores opaque tokens, nothing else.
   bloomApi: 'https://bloomers-phone.ccm-inspired.workers.dev',
+  // Google Contacts one-tap import. Paste the OAuth Web client ID from
+  // console.cloud.google.com (see GOOGLE_IMPORT_SETUP.md). Blank = the
+  // Google option is hidden and the picker/file ladder carries everything.
+  googleClientId: '',
   agendaUrl: 'https://mikesell.org',
   registerUrl: 'https://registertovoteflorida.gov',
   // Messages follow the campaign outreach voice manual: neighbor voice,
@@ -1292,7 +1297,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-1912';
+const BUILD = '20260829-2123';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1942,6 +1947,89 @@ function renderChampions() {
   fetchBoard().then(rows => { if (rows) { _boardRows = rows; paint(rows); } });
 }
 
+
+/* ---------------- Google Contacts import ----------------
+   The on-device Contact Picker deliberately has no select-all (W3C decision),
+   so the one-tap "everything" path is OAuth into the volunteer's Google
+   address book. Entirely client-side: the token and the contact list live and
+   die in this page — nothing ever touches our server, same rule as the
+   k-anonymity phone match. */
+let _gisReady = null;
+function loadGIS() {
+  if (_gisReady) return _gisReady;
+  _gisReady = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.onload = resolve;
+    s.onerror = () => { _gisReady = null; reject(new Error('gis-load')); };
+    document.head.appendChild(s);
+  });
+  return _gisReady;
+}
+function googleAvailable() { return !!CONFIG.googleClientId && !IN_IFRAME; }
+async function importFromGoogle() {
+  if (!googleAvailable()) return;
+  closeOv('ov-connect'); closeOv('ov-import');
+  try { await loadGIS(); } catch (e) {
+    showToast('Could not reach Google right now — pick another way below.');
+    openConnectSheet(); return;
+  }
+  let token;
+  try {
+    token = await new Promise((resolve, reject) => {
+      const tc = google.accounts.oauth2.initTokenClient({
+        client_id: CONFIG.googleClientId,
+        scope: 'https://www.googleapis.com/auth/contacts.readonly',
+        callback: (r) => (r && r.access_token) ? resolve(r.access_token) : reject(new Error((r && r.error) || 'denied')),
+        error_callback: (e) => reject(new Error((e && e.type) || 'popup')),
+      });
+      tc.requestAccessToken();
+    });
+  } catch (e) {
+    // Closed the popup or said no — that is a real answer, not an error.
+    showToast('No problem — nothing was shared. Any other option works too.');
+    openConnectSheet(); return;
+  }
+  const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub');
+  openOv('ov-matching');
+  if (status) status.textContent = 'Fetching your Google contacts…';
+  if (sub) sub.textContent = 'They stay on your phone — never uploaded.';
+  if (bar) bar.style.width = '6%';
+  const contacts = []; const seen = {};
+  try {
+    let pageToken = '';
+    do {
+      const u = 'https://people.googleapis.com/v1/people/me/connections' +
+        '?personFields=names,phoneNumbers&pageSize=1000' +
+        (pageToken ? '&pageToken=' + encodeURIComponent(pageToken) : '');
+      const r = await fetch(u, { headers: { Authorization: 'Bearer ' + token } });
+      if (!r.ok) throw new Error('people-' + r.status);
+      const d = await r.json();
+      for (const p of (d.connections || [])) {
+        const nm = p.names && p.names[0] && p.names[0].displayName;
+        if (!nm) continue;
+        const ph = (p.phoneNumbers && p.phoneNumbers[0] &&
+                    (p.phoneNumbers[0].canonicalForm || p.phoneNumbers[0].value)) || '';
+        const key = (nm + '|' + ph).toUpperCase();
+        if (seen[key]) continue; seen[key] = 1;
+        contacts.push({ name: nm, phone: ph });
+      }
+      if (status) status.textContent = 'Fetched ' + contacts.length + ' contacts…';
+      pageToken = d.nextPageToken || '';
+    } while (pageToken && contacts.length < 25000);
+  } catch (e) {
+    closeOv('ov-matching');
+    showToast('Google signed you in but the list would not load — pick another way below.');
+    openConnectSheet(); return;
+  }
+  if (!contacts.length) {
+    closeOv('ov-matching');
+    showToast('No contacts are saved to that Google account — pick another way below.');
+    openConnectSheet(); return;
+  }
+  await matchContactList(contacts, {});
+}
+
 /* ---------------- contact picker ---------------- */
 let _registeredCache = []; // contacts filtered to registered voters
 
@@ -2315,6 +2403,17 @@ function openImportSheet(afterEmpty) {
   $('import-sub').innerHTML = afterEmpty
     ? 'Try importing your full contacts file instead — it checks everyone at once.'
     : 'Save your contacts once, then every friend gets checked against the FL-04 voter rolls in one pass. Nothing is uploaded.';
+  $('import-google').innerHTML = googleAvailable()
+    ? `<button onclick="importFromGoogle()" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#f4f9ff;border:2px solid var(--blue);border-radius:14px;padding:13px 14px;margin-top:10px;cursor:pointer;">
+         <span style="font-size:22px;flex-shrink:0;">⚡</span>
+         <span style="flex:1;">
+           <span style="display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">Skip all this — import from Google</span>
+           <span style="display:block;font-size:10.5px;color:#7c8794;margin-top:2px;line-height:1.45;">One tap checks every contact saved to your Google account.</span>
+         </span>
+         <span style="color:#c3ccd6;font-size:16px;">›</span>
+       </button>
+       <div style="display:flex;align-items:center;gap:10px;margin-top:12px;"><span style="flex:1;height:1px;background:#e3ecf5;"></span><span style="font-size:10px;color:#9aa3ad;">or export a file</span><span style="flex:1;height:1px;background:#e3ecf5;"></span></div>`
+    : '';
   $('import-steps').innerHTML = exportSteps().map(pf =>
     `<div style="margin-top:10px;">
        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.12em;color:#059669;">${pf.label.toUpperCase()}</div>
@@ -2348,8 +2447,11 @@ function openConnectSheet(afterEmpty) {
     </button>`;
 
   let opts = '';
+  const hasGoogle = googleAvailable();
+  // 0 — the one-tap everything path
+  if (hasGoogle) opts += row('⚡', 'Import all from Google', 'One tap checks every contact saved to your Google account. Nothing to pick, nothing to export.', 'importFromGoogle()', true);
   // 1 — pick contacts by hand (only where the phone allows it)
-  if (st === 'ready') opts += row('📇', 'Select my contacts', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', true);
+  if (st === 'ready') opts += row('📇', 'Select a few by hand', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', !hasGoogle);
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
   // 2 — upload an exported contacts file
   opts += row('📄', 'Upload a contacts file', 'Check everyone at once. We\'ll show you how to export it.', 'closeOv(\'ov-connect\');openImportSheet()', st !== 'ready' && st !== 'blocked-iframe');
@@ -2359,7 +2461,7 @@ function openConnectSheet(afterEmpty) {
     ? 'None of those matched the FL-04 rolls. Try another way:'
     : 'We check your friends against the FL-04 voter rolls, right here on your phone. Pick whichever is easiest.';
   // Only one method available? Don't make them pick from a list of one.
-  if (st !== 'ready' && st !== 'blocked-iframe' && !afterEmpty) { openImportSheet(); return; }
+  if (!hasGoogle && st !== 'ready' && st !== 'blocked-iframe' && !afterEmpty) { openImportSheet(); return; }
   $('connect-opts').innerHTML = opts;
   openOv('ov-connect');
 }
