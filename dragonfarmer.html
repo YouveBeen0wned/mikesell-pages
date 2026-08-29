@@ -580,9 +580,9 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
     <text id="arch-name" x="150" y="24" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#f7e8c8">MY ROOST</text>
   </svg></div>
   <div id="gardenwrap" style="background:linear-gradient(180deg,#eeda9e,#dfc27b);border:3px solid #8a5f36;border-radius:22px;margin:0 12px;padding:6px;">
+    <div style="font-size:9px;color:#5c6b4f;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;opacity:0.75;">Hold to move &middot; drag out to the Barn</div>
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
   </div>
-  <div style="font-size:9.5px;color:#7c8794;text-align:center;margin:6px 16px 0;line-height:1.45;">Press and hold an egg or dragon to move it — or drag it outside the roost to put it back in the Barn.</div>
   <div class="toolbar">
     <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>BARN (<span id="hud-shed">0</span>)</span></div>
     <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
@@ -1022,14 +1022,55 @@ function closeOv(id) { $(id).classList.remove('on'); const vis = document.queryS
 function openOv(id) { $(id).classList.add('on'); }
 
 let _toastTimer = null;
+let _dragEndAt = 0;
 let _pressTimer = null, _pressPid = null, _isDragging = false, _pressPointerId = null, _startX = 0, _startY = 0;
 function findSeedPid(el) {
   while (el && el !== document.body) {
     const oc = el.getAttribute && el.getAttribute('onclick');
-    if (oc) { const m = oc.match(/seedTap\('(\w+)'\)/); if (m) return m[1]; }
+    if (oc) {
+      const m = oc.match(/seedTap\('(\w+)'\)/); if (m) return m[1];
+      const g = oc.match(/showPlaque\('\w+','(\w+)'\)/); if (g) return g[1]; // grown ones
+    }
     el = el.parentElement;
   }
   return null;
+}
+// Screen point -> the bed/slot under it. getScreenCTM handles the viewBox
+// scaling, so this stays correct at any phone width.
+function cellAtPoint(clientX, clientY) {
+  const svg = $('gardensvg');
+  const ctm = svg.getScreenCTM ? svg.getScreenCTM() : null;
+  if (!ctm) return null;
+  const pt = svg.createSVGPoint();
+  pt.x = clientX; pt.y = clientY;
+  const u = pt.matrixTransform(ctm.inverse());
+  for (const b of S.beds) {
+    const cells = b.cells || [];
+    for (let i = 0; i < cells.length; i++) {
+      const o = cellXY(cells[i][0], cells[i][1]);
+      if (u.x >= o.x && u.x <= o.x + GRID.cw && u.y >= o.y && u.y <= o.y + GRID.ch) return { bedId: b.id, slot: i };
+    }
+  }
+  return null;
+}
+// Drawn straight onto the live SVG so dragging never triggers a full re-render.
+function showDropHi(cell) {
+  const svg = $('gardensvg');
+  let hi = document.getElementById('drop-hi');
+  if (!cell) { if (hi) hi.parentNode.removeChild(hi); return; }
+  const bed = S.beds.find(function(x) { return x.id === cell.bedId; });
+  const c = bed && (bed.cells || [])[cell.slot];
+  if (!c) { if (hi) hi.parentNode.removeChild(hi); return; }
+  const o = cellXY(c[0], c[1]);
+  if (!hi) {
+    hi = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    hi.setAttribute('id', 'drop-hi'); hi.setAttribute('fill', 'none');
+    hi.setAttribute('stroke', '#ffffff'); hi.setAttribute('stroke-width', '2.5');
+    hi.setAttribute('rx', '12'); hi.setAttribute('pointer-events', 'none');
+    svg.appendChild(hi);
+  }
+  hi.setAttribute('x', o.x + 5); hi.setAttribute('y', o.y + 5);
+  hi.setAttribute('width', GRID.cw - 10); hi.setAttribute('height', GRID.ch - 10);
 }
 function attachGardenDrag() {
   const svg = $('gardensvg');
@@ -1061,6 +1102,7 @@ function attachGardenDrag() {
     const out = e.clientX < garden.left - 10 || e.clientX > garden.right + 10 || e.clientY < garden.top - 10 || e.clientY > garden.bottom + 10;
     g.style.background = out ? '#dc2626' : '#fee2e2';
     g.style.borderColor = out ? '#991b1b' : '#dc2626';
+    showDropHi(out ? null : cellAtPoint(e.clientX, e.clientY));
   });
   svg.addEventListener('pointerup', function(e) {
     clearTimeout(_pressTimer);
@@ -1079,11 +1121,26 @@ function attachGardenDrag() {
         showToast('Egg removed.');
       }
       save(); renderGarden();
+    } else {
+      // Dropped inside: move into the slot, or trade places with whatever is there.
+      const t = cellAtPoint(e.clientX, e.clientY);
+      const me = S.plants.find(function(p) { return p.id === _pressPid; });
+      if (t && me && !(me.bedId === t.bedId && me.slot === t.slot)) {
+        const other = S.plants.find(function(p) { return p.bedId === t.bedId && p.slot === t.slot; });
+        const fb = me.bedId, fs = me.slot;
+        me.bedId = t.bedId; me.slot = t.slot;
+        if (other) { other.bedId = fb; other.slot = fs; showToast('Swapped places.'); }
+        else showToast('Moved.');
+        save(); renderGarden();
+      }
     }
+    showDropHi(null);
+    _dragEndAt = Date.now();
     _pressPid = null; _isDragging = false;
   });
   svg.addEventListener('pointercancel', function() {
     clearTimeout(_pressTimer);
+    showDropHi(null);
     $('drag-ghost').style.display = 'none'; $('remove-hint').style.display = 'none';
     _pressPid = null; _isDragging = false;
   });
@@ -1235,7 +1292,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-1904';
+const BUILD = '20260829-1912';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1581,6 +1638,7 @@ function commitPendingSeed() {
 const LINK_DOMAIN = 'https://mike4us.org/dragonfarmer'; // mike4us.org redirects here; mikesell.org links are carrier-blocked
 function friendLink(id) { return LINK_DOMAIN + '?s=' + id; }
 function seedTap(id) {
+  if (Date.now() - _dragEndAt < 350) return; // that was the end of a drag
   const p = S.plants.find((q) => q.id === id);
   if (!p) return;
   if (p.gift && p.state === 'seed') { hatchGift(p); return; }
@@ -1715,6 +1773,7 @@ function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
 
 /* ---------------- plaque / collection ---------------- */
 function showPlaque(spid, pid) {
+  if (Date.now() - _dragEndAt < 350) return; // that was the end of a drag
   const s = sp(spid); const c = S.coll[spid] || { sun: false, pol: false, gli: false };
   const row = (icon, name, found) => `<div style="display:flex;align-items:center;gap:8px;background:${found ? '#fdf6e3' : '#f3f4f6'};border:2px solid ${found ? '#f0b429' : '#e5e7eb'};border-radius:12px;padding:8px 13px;margin-top:7px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:${found ? '#b45309' : '#9ca3af'};">${icon} ${name} · ${found ? 'Discovered' : 'Undiscovered'}</div>`;
   $('plaque-sheet').innerHTML = `
