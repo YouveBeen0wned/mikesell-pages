@@ -45,6 +45,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .fieldnote{display:flex;justify-content:space-between;align-items:baseline;}
 .fieldnote em{font-style:normal;font-size:8.5px;color:#9aa3ad;}
 .pindot::placeholder{color:#c3d9ef;font-size:23px;}
+.smsnote{font-size:9px;line-height:1.45;color:#6b7280;background:#f7fbff;border:1.5px solid #dbeafe;border-radius:10px;padding:7px 11px;margin:9px 24px 0;align-self:stretch;text-align:left;}
 
 /* Short screens (iPhone SE and similar): tighten just enough to avoid scrolling,
    while taller phones keep the roomier default spacing. */
@@ -62,6 +63,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
   #sg-tag{font-size:10.5px !important;margin-top:2px !important;}
   #sg-names{margin-top:7px !important;}
   #scr-signup .fieldnote em{display:none;}
+  #scr-signup .smsnote{font-size:7.5px;line-height:1.35;padding:5px 9px;margin-top:6px;}
 }
 
 .card{background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:12px 15px;margin:12px 16px 0;box-shadow:0 2px 0 #ece0c4;}
@@ -537,9 +539,10 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
       <span id="f-contacts" data-on="0" style="width:36px;height:20px;background:#c9d4de;border-radius:10px;position:relative;flex-shrink:0;transition:background 0.2s;"><i style="position:absolute;left:3px;top:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left 0.2s;"></i></span>
     </div>
     <div id="signup-err" style="display:none;font-size:11px;color:var(--red);margin-top:8px;"></div>
+    <div class="smsnote">This game works by texting people you know. Messages open in your phone's own messaging app and are sent by you — your carrier's terms apply and standard message and data rates may apply.</div>
     <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;"><use href="#d-egg"/></svg>Start my roost</button>
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:10px;">NOT LEFT. NOT RIGHT. FORWARD.</div>
-    <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+    <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Texts are sent from your own phone and are subject to your carrier's terms and rates.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
   </div>
 </section>
 
@@ -1221,7 +1224,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260823-2057';
+const BUILD = '20260829-1523';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
