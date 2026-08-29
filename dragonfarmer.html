@@ -57,7 +57,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
   #scr-signup .bigbtn{margin-top:9px;padding:12px 26px;font-size:15px;}
   #scr-signup .tinytxt{font-size:7.5px;line-height:1.3;padding:5px 14px 4px;}
   #sg-wrap{padding:2px 0 2px !important;}
-  #sg-flowers{height:30px !important;}
+  #sg-flowers{height:56px !important;transform:scale(0.72);transform-origin:center bottom;margin-bottom:-15px !important;}
   #sg-title{font-size:24px !important;}
   #sg-swoosh{width:170px !important;height:17px !important;}
   #sg-tag{font-size:10.5px !important;margin-top:2px !important;}
@@ -498,7 +498,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
   <div id="sg-wrap" style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:14px 0 8px;">
-    <div id="sg-flowers" style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:44px;">
+    <div id="sg-flowers" style="display:flex;align-items:flex-end;justify-content:center;gap:7px;height:56px;">
       <svg style="width:22px;height:22px;margin-bottom:2px;"><use href="#d-jade"/></svg>
       <svg style="width:26px;height:26px;margin-bottom:7px;"><use href="#d-obsidian"/></svg>
       <svg style="width:30px;height:30px;margin-bottom:12px;"><use href="#d-storm"/></svg>
@@ -1224,7 +1224,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-1523';
+const BUILD = '20260829-1543';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
