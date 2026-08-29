@@ -437,7 +437,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div class="bgdeco" id="deco-champions"></div>
   <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Community Champions</div></div>
   <div class="rule"><i></i><i></i><i></i></div>
-  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">THIS WEEK · BOTH GAMES · RESETS SUNDAY</div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BOTH GAMES</div>
   <div id="champlist" style="padding:0 14px;"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-champions"></nav>
@@ -1014,7 +1014,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-1759';
+const BUILD = '20260829-1820';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1571,7 +1571,7 @@ async function pushScore() {
   try {
     await fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/score', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: boardId(), name: S.garden, rank: S.rank, weekly: S.weekly, game: GAME_ID }),
+      body: JSON.stringify({ id: boardId(), name: S.garden, rank: S.rank, lifetime: S.lifetime, game: GAME_ID }),
     });
   } catch (e) {}
 }
@@ -1586,11 +1586,11 @@ async function fetchBoard() {
 
 function renderChampions() {
   const mine = boardId();
-  const local = [{ n: S.garden, r: S.rank, w: S.weekly, g: GAME_ID, me: true }];
+  const local = [{ n: S.garden, r: S.rank, l: S.lifetime, g: GAME_ID, me: true }];
   const paint = (rows) => {
     if (!rows || !rows.length) rows = local;
     else if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
-    rows = rows.slice().sort((a, b) => b.w - a.w).slice(0, 25);
+    rows = rows.slice().sort((a, b) => b.l - a.l).slice(0, 25);
     $('champlist').innerHTML = rows.map((row, i) => {
       const me = row.n === S.garden;
       const badge = row.g === 'd' ? '🐉' : '🌱';
@@ -1598,7 +1598,7 @@ function renderChampions() {
         <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:14px;color:var(--purple);width:18px;text-align:center;">${i + 1}</div>
         <span style="width:26px;">${sealSvg(Math.min(row.r, 6), 24)}</span>
         <div class="rlab">${esc(row.n)}${me ? ' · YOU' : ''}<small>${badge} ${CONFIG.ranks[Math.min(row.r, 6)].name}</small></div>
-        <div class="rnum">${fmt(row.w)} 👏</div></div>`;
+        <div class="rnum">${fmt(row.l)} 👏</div></div>`;
     }).join('');
   };
   paint(_boardRows);
