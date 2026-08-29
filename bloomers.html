@@ -1014,7 +1014,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-1754';
+const BUILD = '20260829-1759';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1317,7 +1317,7 @@ function plantNow(deadline) {
 // delivers fine. GitHub Pages 301s this to the branded domain with ?s= intact,
 // so recipients still land on vote.mikesell.org. Swap this one constant if a
 // neutral branded domain is registered later.
-const LINK_DOMAIN = 'https://mike4us.org/b'; // mike4us.org redirects here; mikesell.org links are carrier-blocked
+const LINK_DOMAIN = 'https://mike4us.org/bloomers'; // mike4us.org redirects here; mikesell.org links are carrier-blocked
 function friendLink(id) { return LINK_DOMAIN + '?s=' + id; }
 function seedTap(id) {
   const p = S.plants.find((q) => q.id === id);
