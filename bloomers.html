@@ -37,7 +37,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
 .field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
 #drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
-#remove-hint{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#dc2626;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;padding:8px 18px;border-radius:20px;z-index:601;display:none;pointer-events:none;white-space:nowrap;}
+#remove-hint{position:fixed;top:96px;right:10px;left:auto;transform:none;max-width:60vw;background:#dc2626;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;padding:8px 18px;border-radius:20px;z-index:601;display:none;pointer-events:none;white-space:nowrap;}
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);max-width:390px;width:calc(100% - 28px);background:#1a2a4a;color:#fff;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:13px 18px;border-radius:14px;text-align:center;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;line-height:1.5;}
 .field label{display:block;font-size:9px;color:#6b7280;font-family:'avenir-heavy',Arial,sans-serif;letter-spacing:0.09em;}
 .field input{border:none;outline:none;width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:16px;color:var(--ink);margin-top:3px;background:transparent;}
@@ -294,7 +294,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 
 <div id="toast"></div>
 <div id="drag-ghost"></div>
-<div id="remove-hint">🗑 Release to remove</div>
+<div id="remove-hint">🗑 Drag outside the garden to remove</div>
 <!-- ============ SIGN UP ============ -->
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
@@ -335,7 +335,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div class="smsnote">This game works by texting people you know. Messages open in your phone's own messaging app and are sent by you — your carrier's terms apply and standard message and data rates may apply.</div>
     <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;"><use href="#f-seed"/></svg>Start my garden</button>
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:10px;">NOT LEFT. NOT RIGHT. FORWARD.</div>
-    <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Texts are sent from your own phone and are subject to your carrier's terms and rates.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+    <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Texts are sent from your own phone and are subject to your carrier's terms and rates.<br>Paid for by Friends of Mike · 119 Center St S #143, Jacksonville, FL 32234</div>
   </div>
 </section>
 
@@ -382,6 +382,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div id="gardenwrap" style="background:linear-gradient(180deg,#cfe6a8,#b9d68a);border:3px solid #8fae62;border-radius:22px;margin:0 12px;padding:6px;">
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
   </div>
+  <div style="font-size:9.5px;color:#7c8794;text-align:center;margin:6px 16px 0;line-height:1.45;">Press and hold a seed or flower to move it — or drag it outside the garden to put it back in the Shed.</div>
   <div class="toolbar">
     <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>SHED (<span id="hud-shed">0</span>)</span></div>
     <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
@@ -459,7 +460,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
       <a href="https://mikesell.org" target="_blank" style="display:inline-block;background:#fff;color:var(--blue);font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;padding:9px 18px;border-radius:20px;text-decoration:none;">Learn more at mikesell.org →</a>
     </div>
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:16px;opacity:0.75;">NOT LEFT. NOT RIGHT. FORWARD.</div>
-    <div class="tinytxt">This game was created and is sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>No personal data is saved. This game is for entertainment purposes only, and scoring runs on the honor system. We never learn who tapped.<br>Paid for by Mike Sell for Congress · 119 Center St S #143, Jacksonville, FL 32234</div>
+    <div class="tinytxt">This game was created and is sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>No personal data is saved. This game is for entertainment purposes only, and scoring runs on the honor system. We never learn who tapped.<br>Paid for by Friends of Mike · 119 Center St S #143, Jacksonville, FL 32234</div>
   </div>
 </section>
 
@@ -468,7 +469,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div id="confirm-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:18px;color:var(--ink);margin-bottom:10px;"></div>
   <div id="confirm-msg" style="font-size:13px;color:#5b6470;line-height:1.55;margin-bottom:22px;"></div>
   <div style="display:flex;gap:10px;">
-    <button class="bigbtn" style="flex:1;background:#e5e7eb;color:#374151;box-shadow:none;font-size:14px;" onclick="closeOv('ov-confirm')">Cancel</button>
+    <button id="confirm-cancel" class="bigbtn" style="flex:1;background:#e5e7eb;color:#374151;box-shadow:none;font-size:14px;">Cancel</button>
     <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
   </div>
 </div></div>
@@ -575,7 +576,7 @@ const CONFIG = {
   yields: { g: 1, b: 2, p: 4, au: 5 },
   ranks: [
     { name: 'Good Neighbor',       at: 0 },
-    { name: 'Block Captain',       at: 100,  unlock: 'Move flowers',  teach: 'Hold and drag any flower to move it between open spots.' },
+    { name: 'Block Captain',       at: 100, },
     { name: 'Community Organizer', at: 250,  unlock: 'Bed editing',   teach: 'Hold and drag any bed to rearrange your garden.' },
     { name: 'Civic Leader',        at: 600 },
     { name: 'Council Member',      at: 1400 },
@@ -861,8 +862,16 @@ function attachGardenDrag() {
     const garden = $('gardenwrap').getBoundingClientRect();
     const out = e.clientX < garden.left - 10 || e.clientX > garden.right + 10 || e.clientY < garden.top - 10 || e.clientY > garden.bottom + 10;
     if (out) {
+      const gone = S.plants.find(function(p) { return p.id === _pressPid; });
       S.plants = S.plants.filter(function(p) { return p.id !== _pressPid; });
-      save(); showToast('Seed removed.'); renderGarden();
+      if (gone && gone.state === 'bloomed') {
+        // A grown flower isn't destroyed — it goes back to the Shed to replant.
+        S.shed.push({ kind: 'grown', species: gone.species, traits: gone.traits, tag: gone.tag });
+        showToast('Flower moved to your Shed.');
+      } else {
+        showToast('Seed removed.');
+      }
+      save(); renderGarden();
     }
     _pressPid = null; _isDragging = false;
   });
@@ -906,12 +915,14 @@ function doUnlock() {
     $('lock-pin0').focus();
   }
 }
-function gameConfirm(title, msg, okLabel, okCss, onOk) {
+function gameConfirm(title, msg, okLabel, okCss, onOk, onCancel) {
   $('confirm-title').textContent = title;
   $('confirm-msg').textContent = msg;
   const btn = $('confirm-ok'); btn.textContent = okLabel;
   btn.style.cssText = 'flex:1;font-size:14px;' + okCss;
   btn.onclick = function() { closeOv('ov-confirm'); onOk(); };
+  const cancel = $('confirm-cancel');
+  if (cancel) cancel.onclick = function() { closeOv('ov-confirm'); if (onCancel) onCancel(); };
   openOv('ov-confirm');
 }
 function doLogout() {
@@ -968,9 +979,12 @@ async function checkForUpdate() {
 function startPolling() {
   if (_pollStarted) return;
   _pollStarted = true;
-  const pollNow = () => checkRemoteBlooms().then(ok => {
-    if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing seed 🌱'); }
-  });
+  const pollNow = () => {
+    checkPendingSeed();
+    return checkRemoteBlooms().then(ok => {
+      if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing seed 🌱'); }
+    });
+  };
   setInterval(async () => {
     if (!S) return;
     const local = consumeBloomQueue();
@@ -1014,7 +1028,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-1820';
+const BUILD = '20260829-1848';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1291,26 +1305,52 @@ function plantNow(deadline) {
   const spot = openSpot();
   if (!spot) { showToast('Your garden is full — place a bed from your Shed first, or wait for a bloom to earn one.'); return; }
   const tag = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first.toUpperCase();
-  const id = 'p' + (S.nextId++);
-  const _ph = (pendingPlant && pendingPlant.phone) ? String(pendingPlant.phone).replace(/\D/g,'') : '';
+  const _ph = (pendingPlant && pendingPlant.phone) ? String(pendingPlant.phone).replace(/\D/g, '') : '';
   const token = seedToken();
-  S.plants.push({ id, token, tag, bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!deadline, phone: _ph });
+
+  // Hold the seed aside instead of planted it now. It only goes in the garden
+  // once the volunteer confirms they actually sent the message, so backing out
+  // of Messages leaves nothing behind.
+  S.pendingSeed = { token, tag, phone: _ph, deadline: !!deadline, at: Date.now() };
+  save();
+
+  const link = friendLink(token);
+  const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
+  const _nick = _rawNick.split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
+  const _v = CONFIG.msgFriendVariants;
+  const body = (deadline ? CONFIG.msgDeadline(S.first, link) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
+  location.href = smsHref(body, _ph);
+  setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; showTab('garden'); }, 600);
+}
+
+// Asked when the volunteer comes back from Messages.
+let _askingPending = false;
+function checkPendingSeed() {
+  if (_askingPending || !S || !S.pendingSeed) return;
+  if (Date.now() - (S.pendingSeed.at || 0) < 1200) return; // still mid-handoff
+  _askingPending = true;
+  const p = S.pendingSeed;
+  gameConfirm('Did you send the text?', 'Only planted a seed for ' + p.tag + ' if the message actually went out.',
+    'Yes, I sent it', 'background:var(--blue);box-shadow:0 5px 0 #045ea6;',
+    function() { commitPendingSeed(); _askingPending = false; },
+    function() { S.pendingSeed = null; save(); _askingPending = false; showToast('No seed planted.'); });
+}
+function commitPendingSeed() {
+  const p = S.pendingSeed;
+  if (!p) return;
+  S.pendingSeed = null;
+  const spot = openSpot();
+  if (!spot) { save(); showToast('Your garden is full — place a bed from your Shed first, or wait for a bloom to earn one.'); return; }
+  S.plants.push({ id: 'p' + (S.nextId++), token: p.token, tag: p.tag, bedId: spot.bedId, slot: spot.slot,
+    state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!p.deadline, phone: p.phone || '' });
   S.seedsPlanted++; S.textsToday++;
   if (S.seedsPlanted % 3 === 0) {
     S.bedsEarned = (S.bedsEarned || 0) + 1;
-    // Third bed unlocked is the right-angle corner piece.
     S.shed.push({ kind: 'bed', shape: S.bedsEarned === 3 ? 'L4' : (S.bedsEarned % 2 ? 'r2' : 'r3') });
   }
   save();
-  api('seed', { seedId: id, kind: deadline ? 'deadline' : 'friend' }); // [SERVER] link ID only; no name, tag, or number
-  const link = friendLink(token);
-  const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
-  const _nick = _rawNick.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-  const _v = CONFIG.msgFriendVariants;
-  const body = (deadline ? CONFIG.msgDeadline(S.first, link) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
-  const _phone = (pendingPlant && pendingPlant.phone) || '';
-  location.href = smsHref(body, _phone);
-  setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; renderGarden(); showTab('garden'); }, 600);
+  renderGarden(); showTab('garden');
+  showToast('Seed planted for ' + p.tag + ' 🌱');
 }
 // SMS link domain. VERIFIED BY SEND TESTS: mikesell.org and its subdomains are on
 // a carrier blocklist (every message containing them was dropped); github.io
@@ -1500,6 +1540,10 @@ function openShed() {
     sheet.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;margin-bottom:10px;">The Shed</div>` + S.shed.map((it, i) =>
       it.kind === 'bed'
         ? `<div class="rankrow">${bedIcon(it.shape || (it.n === 3 ? 'r3' : 'r2'))}<div class="rlab"><strong>${shapeLabel(it.shape || (it.n === 3 ? 'r3' : 'r2'))}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLACE to add to your garden</small></div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
+        : it.kind === 'grown'
+
+          ? `<div class="rankrow"><svg width="26" height="26"><use href="#${sp(it.species).art}"/></svg><div class="rlab"><strong>${esc(sp(it.species).name)}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Lifted from ${esc(it.tag || 'your garden')} · tap PLANT to put it back.</small></div><button class="collectbtn" onclick="replantGrown(${i})">PLANT</button></div>`
+
         : `<div class="rankrow"><svg width="26" height="26"><use href="#f-seed"/></svg><div class="rlab"><strong>🎁 Mystery Gift Seed</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLANT to reveal what blooms.</small></div><button class="collectbtn" onclick="plantGift(${i})">PLANT</button></div>`
     ).join('');
   }
@@ -1512,6 +1556,17 @@ function placeBed(i) {
   S.shed.splice(i, 1);
   S.beds.push({ id: S.nextId++, cells });
   save(); closeOv('ov-shed'); renderGarden();
+}
+function replantGrown(i) {
+  const spot = openSpot();
+  if (!spot) { showToast('No open spot — place a bed from your Shed first.'); return; }
+  const it = S.shed.splice(i, 1)[0];
+  S.plants.push({ id: 'p' + (S.nextId++), token: seedToken(), tag: it.tag || 'Flower',
+    bedId: spot.bedId, slot: spot.slot, state: 'bloomed',
+    species: it.species, traits: it.traits || { sun: false, pol: false, gli: false },
+    touches: CONFIG.maxTouches, lastTouch: Date.now() });
+  save(); closeOv('ov-shed'); renderGarden();
+  showToast('Flower replanted \U0001f331');
 }
 function plantGift(i) {
   const spot = openSpot();
