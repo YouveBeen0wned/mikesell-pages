@@ -1297,7 +1297,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-0140';
+const BUILD = '20260830-0145';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2034,34 +2034,19 @@ async function importFromGoogle() {
 let _registeredCache = []; // contacts filtered to registered voters
 
 async function filterRegisteredContacts(contacts) {
+  // Phone-only, same doctrine as matchContactList. Returns the legacy shape.
+  if (!CONFIG.phoneApi) return [];
+  let hits = {};
+  try { hits = await phoneMatch(contacts); } catch (e) {}
   const results = [];
-  // Group contacts by last-name prefix to batch fetches
-  const groups = {};
   for (const c of contacts) {
-    const parts = c.name.trim().split(/\s+/);
-    if (parts.length < 2) continue;
-    const first = parts[0], last = parts[parts.length - 1];
-    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
-    if (!groups[prefix]) groups[prefix] = [];
-    groups[prefix].push({ ...c, _first: first, _last: last });
-  }
-  // Fetch each unique prefix bucket, then match
-  for (const [prefix, group] of Object.entries(groups)) {
-    const bucket = await fetchVoterBucket(prefix);
-    for (const contact of group) {
-      const qlast = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
-      const qfirst = contact._first.replace(/[^A-Za-z]/g, '').toUpperCase();
-      const fl = Math.min(3, qfirst.length);
-      const match = bucket.find(([f, l]) => {
-        return l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast &&
-               f.replace(/[^A-Za-z]/g, '').toUpperCase().startsWith(qfirst.slice(0, fl));
-      });
-      if (match) results.push({ ...contact, voterCity: match[2] });
-    }
+    const hit = hits[c.name];
+    if (!hit) continue;
+    const parts = String(c.name).trim().split(/\s+/);
+    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '', voterCity: hit.voterCity });
   }
   return results;
 }
-
 
 function popOutToMatch() {
   closeOv('ov-popout');
@@ -2224,6 +2209,12 @@ async function phoneMatch(contacts) {
 
 // Shared matching core — every input method funnels through here.
 async function matchContactList(contacts, opts) {
+  // AUTOMATED matching is PHONE-ONLY (Mike's rule, 2026-08-29). Name matching
+  // produced two false positives in one day — a bad vendor append and a
+  // same-name stranger (Bill Goff of Kansas vs. William Goff of Jacksonville).
+  // A full-number hit against the confidence-1 index is the only link strong
+  // enough to assert. Names remain available in the MANUAL search, where the
+  // volunteer is deliberately looking someone up and can judge for themselves.
   opts = opts || {};
   const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub'), emoji = $('match-emoji');
   const setP = (pct, msg, detail) => {
@@ -2231,75 +2222,43 @@ async function matchContactList(contacts, opts) {
     if (msg && status) status.textContent = msg;
     if (detail !== undefined && sub) sub.textContent = detail;
   };
-  const breathe = () => new Promise(r => setTimeout(r, 0));
-  if (emoji) emoji.textContent = '🥚';
+  if (emoji) emoji.textContent = '🌱';
   openOv('ov-matching');
-  setP(12, 'Sorting ' + contacts.length + ' contacts…', 'Grouping by last name');
-  await breathe();
-
-  const groups = {};
-  for (const c of contacts) {
-    const parts = String(c.name).trim().split(/\s+/);
-    if (parts.length < 2) continue;
-    const last = parts[parts.length - 1];
-    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
-    (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
-  }
-  // Phone match first — highest confidence, catches married and preferred names.
-  let phoneHits = {};
-  if (CONFIG.phoneApi) {
-    setP(16, 'Checking phone numbers…', '');
-    try { phoneHits = await phoneMatch(contacts); } catch (e) {}
-  }
-
-  const entries = Object.entries(groups);
-  if (!entries.length && !Object.keys(phoneHits).length) {
+  const withPhone = contacts.filter(c => c.phone && String(c.phone).replace(/\D/g, '').length >= 10).length;
+  setP(15, 'Checking ' + withPhone + ' phone numbers…', 'Numbers are hashed on your phone — never uploaded.');
+  if (!withPhone || !CONFIG.phoneApi) {
     closeOv('ov-matching');
-    showToast('No matches yet — add last names or phone numbers to those contacts and try again.');
+    showToast('No phone numbers to check — matches are verified by number only.');
     return 0;
   }
-  const results = []; let done = 0;
-  for (const [prefix, group] of entries) {
-    const bucket = await fetchVoterBucket(prefix);
-    for (const contact of group) {
-      if (phoneHits[contact.name]) continue; // already matched by phone
-      const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
-      const m = bucket.find(([f, l]) =>
-        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql && firstNameMatches(f, contact._first));
-      if (m) results.push({ ...contact, voterCity: m[2] });
-    }
-    done++;
-    setP(12 + Math.round((done / entries.length) * 80),
-         'Checking voter rolls… ' + done + ' of ' + entries.length,
-         results.length + (results.length === 1 ? ' friend found' : ' friends found'));
-    await breathe();
-  }
-
+  let phoneHits = {};
+  try { phoneHits = await phoneMatch(contacts); } catch (e) {}
+  setP(90, 'Almost done…', '');
+  const results = [];
   for (const c of contacts) {
     const hit = phoneHits[c.name];
     if (!hit) continue;
     const parts = String(c.name).trim().split(/\s+/);
-    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1],
+    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '',
                    voterCity: hit.voterCity, matchedBy: 'phone' });
   }
   const found = results.map(c => ({
     name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '',
-    voterCity: c.voterCity || '', matchedBy: c.matchedBy || 'name'
+    voterCity: c.voterCity || '', matchedBy: 'phone'
   }));
   if (!opts.standalone) {
     const seen = {};
     S.registeredFriends = (S.registeredFriends || []).concat(found)
+      .filter(x => x.matchedBy === 'phone')
       .filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
   }
 
-  if (emoji) emoji.textContent = '🐉';
+  if (emoji) emoji.textContent = '🌷';
   const n = results.length;
-  const nPhone = results.filter(c => c.matchedBy === 'phone').length;
-  const nName = n - nPhone;
-  setP(100, 'All done!', nName
-    ? nPhone + ' verified by phone · ' + nName + ' same-name match' + (nName === 1 ? '' : 'es') + ' for you to confirm'
-    : n + (n === 1 ? ' friend verified' : ' friends verified'));
+  setP(100, 'All done!', n
+    ? n + (n === 1 ? ' friend verified by phone number' : ' friends verified by phone number')
+    : 'No verified matches — you can still look anyone up by hand.');
   await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
@@ -2313,11 +2272,11 @@ async function matchContactList(contacts, opts) {
         delivered = true;
       }
     } catch (e) {}
-    $('matchdone-title').textContent = n + (n === 1 ? ' friend found!' : ' friends found!');
+    $('matchdone-title').textContent = n + (n === 1 ? ' friend verified!' : ' friends verified!');
     $('matchdone-sub').textContent = !n
-      ? 'None of those matched the FL-04 voter rolls. You can still search any name by hand.'
-      : (delivered ? 'Sent back to your roost. You can close this tab.'
-                   : 'Keep this tab open and return to Dragon Farmer, then tap Find Friends again.');
+      ? 'No numbers matched the FL-04 voter rolls. You can still search any name by hand.'
+      : (delivered ? 'Sent back to your garden. You can close this tab.'
+                   : 'Keep this tab open and return to the game, then tap Find Friends again.');
     openOv('ov-matchdone');
     return n;
   }
@@ -2472,44 +2431,26 @@ function openConnectSheet(afterEmpty) {
 
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
+  // Self-heal: only phone-verified links may live in this list. Entries from
+  // the old name matcher (and anything without matchedBy) are dropped.
+  if (S && S.registeredFriends && S.registeredFriends.some(c => c.matchedBy !== 'phone')) {
+    S.registeredFriends = S.registeredFriends.filter(c => c.matchedBy === 'phone');
+    save();
+  }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const items = S.registeredFriends.map((c, i) => {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
-    // Phone matches come from the confidence-1 index and count as verified.
-    // A name-only match is a same-name voter on the rolls — possibly a
-    // different person entirely (learned via Bill Goff of Kansas vs. William
-    // Goff of Jacksonville, 2026-08-29) — so the VOLUNTEER confirms it,
-    // because only they know their friend. We never assert what we don't know.
-    const verified = c.matchedBy === 'phone' || c.confirmed;
-    const statusLine = verified
-      ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity)}</div>`
-      : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Same name on the rolls · ${esc(c.voterCity)} — is this your ${esc(c.first || c.name)}?</div>`;
-    const buttons = verified
-      ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
-      : `<div style="flex-shrink:0;display:flex;gap:6px;">
-           <div title="Yes, that's them" onclick="event.stopPropagation();confirmRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#dcfce7;border:2px solid #059669;display:flex;align-items:center;justify-content:center;color:#059669;font-size:13px;font-weight:700;">✓</div>
-           <div title="Not them" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#fef2f2;border:2px solid #fca5a5;display:flex;align-items:center;justify-content:center;color:#dc2626;font-size:13px;">✕</div>
-         </div>`;
-    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;${verified ? '' : 'background:#fffbf3;border-color:#f0d9a8;'}" onclick="selectRegisteredFriend(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:${verified ? '#dcfce7' : '#fdf3d9'};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${verified ? '#059669' : '#b45309'};flex-shrink:0;">${initials}</div>
+    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
+      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${initials}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        ${statusLine}
+        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity)}</div>
       </div>
-      ${buttons}
+      <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
     </div>`;
   }).join('');
-  const nv = S.registeredFriends.filter(c => c.matchedBy === 'phone' || c.confirmed).length;
-  const nq = S.registeredFriends.length - nv;
-  const hdr = 'YOUR REGISTERED FRIENDS · ' + nv + ' VERIFIED' + (nq ? ' · ' + nq + ' TO CONFIRM' : '');
-  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">${hdr}</div>` + items;
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} VERIFIED</div>` + items;
   listEl.style.display = 'block';
-}
-function confirmRegisteredFriend(idx) {
-  const c = (S.registeredFriends || [])[idx];
-  if (!c) return;
-  c.confirmed = true; save(); renderRegisteredFriends();
-  showToast('Thanks — marked as your ' + (c.first || c.name) + '.');
 }
 function selectRegisteredFriend(idx) {
   const c = (S.registeredFriends || [])[idx];
@@ -2541,7 +2482,7 @@ async function _renderContactList() {
   listEl.style.display = 'block';
   _registeredCache = await filterRegisteredContacts(_contactsCache);
   if (!_registeredCache.length) {
-    listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No contacts matched the voter rolls — use the search above.</div>';
+    listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No phone-verified matches — use the search above to look anyone up by hand.</div>';
     return;
   }
   const items = _registeredCache.map((c, i) => {
