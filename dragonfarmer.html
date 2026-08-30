@@ -1281,7 +1281,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1400';
+const BUILD = '20260830-1247';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2233,7 +2233,7 @@ async function matchContactList(contacts, opts) {
   setP(15, 'Checking ' + withPhone + ' phone numbers…', 'Numbers are hashed on your phone — never uploaded.');
   if (!withPhone || !CONFIG.phoneApi) {
     closeOv('ov-matching');
-    showToast('No phone numbers to check — matches are verified by number only.');
+    showToast('No phone numbers to check — matching starts from phone numbers.');
     if (S && S.pendingWelcome) maybeWelcome();
     return 0;
   }
@@ -2276,7 +2276,7 @@ async function matchContactList(contacts, opts) {
         delivered = true;
       }
     } catch (e) {}
-    $('matchdone-title').textContent = n + (n === 1 ? ' friend verified!' : ' friends verified!');
+    $('matchdone-title').textContent = n + (n === 1 ? ' friend matched!' : ' friends matched!');
     $('matchdone-sub').textContent = !n
       ? 'No numbers matched the FL-04 voter rolls. You can still search any name by hand.'
       : (delivered ? 'Sent back to your garden. You can close this tab.'

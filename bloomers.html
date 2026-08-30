@@ -1078,7 +1078,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1400';
+const BUILD = '20260830-1247';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2042,7 +2042,7 @@ async function matchContactList(contacts, opts) {
   setP(15, 'Checking ' + withPhone + ' phone numbers…', 'Numbers are hashed on your phone — never uploaded.');
   if (!withPhone || !CONFIG.phoneApi) {
     closeOv('ov-matching');
-    showToast('No phone numbers to check — matches are verified by number only.');
+    showToast('No phone numbers to check — matching starts from phone numbers.');
     if (S && S.pendingWelcome) maybeWelcome();
     return 0;
   }
@@ -2085,7 +2085,7 @@ async function matchContactList(contacts, opts) {
         delivered = true;
       }
     } catch (e) {}
-    $('matchdone-title').textContent = n + (n === 1 ? ' friend verified!' : ' friends verified!');
+    $('matchdone-title').textContent = n + (n === 1 ? ' friend matched!' : ' friends matched!');
     $('matchdone-sub').textContent = !n
       ? 'No numbers matched the FL-04 voter rolls. You can still search any name by hand.'
       : (delivered ? 'Sent back to your garden. You can close this tab.'
@@ -2197,10 +2197,10 @@ function removeRegisteredFriend(idx) {
 }
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
-  // One-time reset (v4, 2026-08-30): the phone index now drops ambiguous and
-  // blocklisted numbers at the source, so stored lists built against the old
-  // index must be wiped once and rebuilt clean. Any future change to matching
-  // rules bumps this again — fixed indexes don't fix devices.
+  // One-time reset (v5, 2026-08-30): matching is now two-tier (phone+last name =
+  // verified, phone-only = highly likely) and rows carry a `confirmed` flag, so
+  // lists built against the old single-tier logic must be wiped once and rebuilt.
+  // Any future change to matching rules bumps this again — fixed indexes don't fix devices.
   if (S && (S.friendsVer || 0) < 5) {
     const had = S.registeredFriends && S.registeredFriends.length;
     S.registeredFriends = [];
