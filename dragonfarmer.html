@@ -673,17 +673,6 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
     <button id="confirm-ok" class="bigbtn" style="flex:1;font-size:14px;"></button>
   </div>
 </div></div>
-<div class="overlay" id="ov-import" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
-  <div style="text-align:center;font-size:38px;">📇</div>
-  <div id="import-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
-  <div id="import-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
-  <div id="import-google"></div>
-  <div id="import-steps" style="background:#f7fbff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 14px;margin-top:14px;text-align:left;"></div>
-  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="pickVcf()">Choose my contacts file</button>
-  <div style="text-align:center;font-size:10px;color:#9aa3ad;margin-top:6px;">Then pick the .vcf file — <b>Downloads</b> on Android, <b>Files</b> on iPhone</div>
-  <div id="import-alt" style="text-align:center;margin-top:12px;"></div>
-  <div style="text-align:center;margin-top:10px;"><span onclick="closeOv('ov-import')" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
-</div></div>
 <div class="overlay" id="ov-connect" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
   <div style="text-align:center;font-size:38px;">🥚</div>
   <div id="connect-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
@@ -710,7 +699,6 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
   <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
   <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my roost</button>
 </div></div>
-<input type="file" id="vcf-input" multiple style="position:absolute;left:-9999px;width:1px;height:1px;" onchange="onVcfChosen(event)">
 <div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
   <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🥚</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);line-height:1.35;">Finding your registered friends</div>
@@ -1297,7 +1285,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-0145';
+const BUILD = '20260830-0157';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1340,6 +1328,7 @@ function doSignup() {
   renderGarden();
   show('scr-garden');
   startPolling();
+  if (S.contacts && CONFIG.googleClientId && !IN_IFRAME) loadGIS().catch(function(){}); // warm GIS so the OAuth popup opens inside the tap
   showWelcomeGift();
 }
 function showWelcomeGift() {
@@ -1351,7 +1340,7 @@ function showWelcomeGift() {
       <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing egg to see what hatches.</span>
       <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#eafaf1;border:2.5px solid #059669;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#047857;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;"><circle cx="17" cy="17" r="12" fill="#dcfce7"/><circle cx="17" cy="17" r="14" fill="none" stroke="#059669" stroke-width="2.4" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#d-egg" x="6" y="6" width="22" height="22"/></svg><span>Watch for this green ring. It means a friend answered &mdash; tap to hatch it.</span></span>
     </div>
-    <button class="bigbtn" onclick="closeOv('ov-rankup');if(S.contacts)openConnectSheet();">See my roost</button>`;
+    <button class="bigbtn" onclick="closeOv('ov-rankup');if(S.contacts)startAutoCompare();">See my roost</button>`;
   openOv('ov-rankup');
 }
 
@@ -1966,10 +1955,18 @@ function loadGIS() {
   });
   return _gisReady;
 }
+// Signup said "compare my contacts" — so compare, don't present a menu.
+// The welcome button's click supplies the user gesture both Google's popup
+// and the native picker need. Failure paths fall back to the options sheet.
+function startAutoCompare() {
+  if (googleAvailable()) { importFromGoogle(); return; }
+  if (contactPickerState() === 'ready') { runContactMatch(); return; }
+  openConnectSheet();
+}
 function googleAvailable() { return !!CONFIG.googleClientId && !IN_IFRAME; }
 async function importFromGoogle() {
   if (!googleAvailable()) return;
-  closeOv('ov-connect'); closeOv('ov-import');
+  closeOv('ov-connect');
   try { await loadGIS(); } catch (e) {
     showToast('Could not reach Google right now — pick another way below.');
     openConnectSheet(); return;
@@ -2034,16 +2031,31 @@ async function importFromGoogle() {
 let _registeredCache = []; // contacts filtered to registered voters
 
 async function filterRegisteredContacts(contacts) {
-  // Phone-only, same doctrine as matchContactList. Returns the legacy shape.
-  if (!CONFIG.phoneApi) return [];
+  // Phone hits = verified; name hits = possible. Same doctrine as matchContactList.
   let hits = {};
-  try { hits = await phoneMatch(contacts); } catch (e) {}
+  if (CONFIG.phoneApi) { try { hits = await phoneMatch(contacts); } catch (e) {} }
   const results = [];
+  const rest = [];
   for (const c of contacts) {
-    const hit = hits[c.name];
-    if (!hit) continue;
     const parts = String(c.name).trim().split(/\s+/);
-    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '', voterCity: hit.voterCity });
+    const _f = parts[0], _l = parts[parts.length - 1] || '';
+    const hit = hits[c.name];
+    if (hit) results.push({ ...c, _first: hit.first || _f, _last: hit.last || _l, voterCity: hit.voterCity, matchedBy: 'phone' });
+    else if (parts.length >= 2) rest.push({ ...c, _first: _f, _last: _l });
+  }
+  const groups = {};
+  for (const c of rest) {
+    const prefix = (c._last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
+    (groups[prefix] = groups[prefix] || []).push(c);
+  }
+  for (const [prefix, group] of Object.entries(groups)) {
+    const bucket = await fetchVoterBucket(prefix);
+    for (const contact of group) {
+      const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const m = bucket.find(([f, l]) =>
+        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql && firstNameMatches(f, contact._first));
+      if (m) results.push({ ...contact, voterCity: m[2], matchedBy: 'name' });
+    }
   }
   return results;
 }
@@ -2225,15 +2237,12 @@ async function matchContactList(contacts, opts) {
   if (emoji) emoji.textContent = '🌱';
   openOv('ov-matching');
   const withPhone = contacts.filter(c => c.phone && String(c.phone).replace(/\D/g, '').length >= 10).length;
-  setP(15, 'Checking ' + withPhone + ' phone numbers…', 'Numbers are hashed on your phone — never uploaded.');
-  if (!withPhone || !CONFIG.phoneApi) {
-    closeOv('ov-matching');
-    showToast('No phone numbers to check — matches are verified by number only.');
-    return 0;
-  }
+  setP(15, withPhone ? 'Checking ' + withPhone + ' phone numbers…' : 'Checking names against the rolls…', 'Everything runs on your phone — never uploaded.');
   let phoneHits = {};
-  try { phoneHits = await phoneMatch(contacts); } catch (e) {}
-  setP(90, 'Almost done…', '');
+  if (withPhone && CONFIG.phoneApi) {
+    try { phoneHits = await phoneMatch(contacts); } catch (e) {}
+  }
+  setP(28, 'Phone check done', '');
   const results = [];
   for (const c of contacts) {
     const hit = phoneHits[c.name];
@@ -2242,23 +2251,54 @@ async function matchContactList(contacts, opts) {
     results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '',
                    voterCity: hit.voterCity, matchedBy: 'phone' });
   }
+  // Name pass — POSSIBLE matches only (Mike, 2026-08-29): a same-name voter on
+  // the rolls might be a different person entirely (Bill Goff of Kansas vs.
+  // William Goff of Jacksonville), so these are surfaced as "possible" and the
+  // volunteer confirms or dismisses each one. Only full-number hits against
+  // the confidence-1 phone index are ever labeled verified.
+  const groups = {};
+  for (const c of contacts) {
+    if (phoneHits[c.name]) continue;
+    const parts = String(c.name).trim().split(/\s+/);
+    if (parts.length < 2) continue;
+    const last = parts[parts.length - 1];
+    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
+    (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
+  }
+  const entries = Object.entries(groups);
+  let done = 0;
+  for (const [prefix, group] of entries) {
+    const bucket = await fetchVoterBucket(prefix);
+    for (const contact of group) {
+      const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
+      const m = bucket.find(([f, l]) =>
+        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql && firstNameMatches(f, contact._first));
+      if (m) results.push({ ...contact, voterCity: m[2], matchedBy: 'name' });
+    }
+    done++;
+    setP(30 + Math.round((done / Math.max(1, entries.length)) * 60),
+         'Checking names against the rolls… ' + done + ' of ' + entries.length, '');
+    await new Promise(r => setTimeout(r, 0));
+  }
   const found = results.map(c => ({
     name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '',
-    voterCity: c.voterCity || '', matchedBy: 'phone'
+    voterCity: c.voterCity || '', matchedBy: c.matchedBy || 'name'
   }));
   if (!opts.standalone) {
     const seen = {};
     S.registeredFriends = (S.registeredFriends || []).concat(found)
-      .filter(x => x.matchedBy === 'phone')
       .filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
   }
 
   if (emoji) emoji.textContent = '🌷';
   const n = results.length;
-  setP(100, 'All done!', n
-    ? n + (n === 1 ? ' friend verified by phone number' : ' friends verified by phone number')
-    : 'No verified matches — you can still look anyone up by hand.');
+  const nPhone = results.filter(c => c.matchedBy === 'phone').length;
+  const nPoss = n - nPhone;
+  setP(100, 'All done!', nPoss
+    ? nPhone + ' verified by phone · ' + nPoss + ' possible match' + (nPoss === 1 ? '' : 'es') + ' by name'
+    : (n ? n + (n === 1 ? ' friend verified by phone number' : ' friends verified by phone number')
+         : 'No matches — you can still look anyone up by hand.'));
   await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
@@ -2310,31 +2350,6 @@ function popOutToMatch() {
 }
 
 // Tier 3: vCard upload — works in iframes, on iOS, and on desktop
-function pickVcf() {
-  // No accept filter: Android greys out Google Drive files and iOS greys out
-  // .vcf entirely when one is set. The parser validates content instead.
-  const inp = $('vcf-input');
-  inp.value = '';
-  inp.removeAttribute('accept');
-  inp.click();
-}
-async function onVcfChosen(ev) {
-  const files = Array.from(ev.target.files || []);
-  if (!files.length) return;
-  closeOv('ov-connect'); closeOv('ov-import');
-  let all = [];
-  for (const f of files) { try { all = all.concat(parseVCards(await f.text())); } catch (e) {} }
-  if (!all.length) {
-    const names = files.map(f => f.name).join(', ');
-    showToast(/\.vcf|\.vcard/i.test(names)
-      ? 'That .vcf had no readable contacts — try exporting again with All accounts selected.'
-      : 'That was not a contacts file. Look for one ending in .vcf, usually in Downloads.');
-    openImportSheet(); return;
-  }
-  await matchContactList(all, {});
-}
-
-// Tier 4: paste a list — works absolutely everywhere
 function openPasteSheet() { closeOv('ov-connect'); $('paste-box').value = ''; openOv('ov-paste'); }
 async function runPasteMatch() {
   const txt = $('paste-box').value || '';
@@ -2347,52 +2362,6 @@ async function runPasteMatch() {
 // The chooser — only ever offers methods that actually work here.
 
 // Per-platform export steps. Everything happens on the phone; no computer needed.
-function exportSteps() {
-  return [
-    { label: 'iPhone', icon: '', steps: [
-        'Open <b>Contacts</b>, tap <b>Lists</b> at the top left',
-        'Choose <b>All Contacts</b>, then tap and hold',
-        'Tap <b>Export</b> → <b>Save to Files</b>'] },
-    { label: 'Android', icon: '', steps: [
-        'Open <b>Contacts</b> → <b>⋮</b> → <b>Settings</b>',
-        'Under Manage contacts, tap <b>Export</b>',
-        'Pick your account → <b>Export to .vcf file</b>'] },
-  ];
-}
-
-function openImportSheet(afterEmpty) {
-  const canPick = contactPickerState() === 'ready';
-  $('import-title').textContent = afterEmpty ? 'No matches yet' : 'How to import your contacts';
-  $('import-sub').innerHTML = afterEmpty
-    ? 'Try importing your full contacts file instead — it checks everyone at once.'
-    : 'Save your contacts once, then every friend gets checked against the FL-04 voter rolls in one pass. Nothing is uploaded.';
-  $('import-google').innerHTML = googleAvailable()
-    ? `<button onclick="importFromGoogle()" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#f4f9ff;border:2px solid var(--blue);border-radius:14px;padding:13px 14px;margin-top:10px;cursor:pointer;">
-         <span style="font-size:22px;flex-shrink:0;">⚡</span>
-         <span style="flex:1;">
-           <span style="display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">Skip all this — import from Google</span>
-           <span style="display:block;font-size:10.5px;color:#7c8794;margin-top:2px;line-height:1.45;">One tap checks every contact saved to your Google account.</span>
-         </span>
-         <span style="color:#c3ccd6;font-size:16px;">›</span>
-       </button>
-       <div style="display:flex;align-items:center;gap:10px;margin-top:12px;"><span style="flex:1;height:1px;background:#e3ecf5;"></span><span style="font-size:10px;color:#9aa3ad;">or export a file</span><span style="flex:1;height:1px;background:#e3ecf5;"></span></div>`
-    : '';
-  $('import-steps').innerHTML = exportSteps().map(pf =>
-    `<div style="margin-top:10px;">
-       <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.12em;color:#059669;">${pf.label.toUpperCase()}</div>
-       ${pf.steps.map((s, i) =>
-         `<div style="display:flex;gap:8px;align-items:flex-start;margin-top:5px;">
-            <span style="flex-shrink:0;width:16px;height:16px;border-radius:50%;background:#dcfce7;color:#059669;font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;display:flex;align-items:center;justify-content:center;">${i + 1}</span>
-            <span style="flex:1;font-size:11.5px;color:#4b5563;line-height:1.45;">${s}</span>
-          </div>`).join('')}
-     </div>`).join('<div style="height:1px;background:#e3ecf5;margin-top:11px;"></div>');
-  $('import-alt').innerHTML = canPick
-    ? `<span onclick="closeOv('ov-import');openConnectSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">← Back to the other options</span>`
-    : `<span onclick="closeOv('ov-import');openPasteSheet();" style="font-size:11.5px;color:var(--blue);cursor:pointer;text-decoration:underline;">Or paste a list of names</span>`;
-  openOv('ov-import');
-}
-
-
 /* ---------------- diagnostics ---------------- */
 // Runs the exact code path the game uses, against the volunteer's real seeds.
 
@@ -2416,41 +2385,56 @@ function openConnectSheet(afterEmpty) {
   // 1 — pick contacts by hand (only where the phone allows it)
   if (st === 'ready') opts += row('📇', 'Select a few by hand', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', !hasGoogle);
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
-  // 2 — upload an exported contacts file
-  opts += row('📄', 'Upload a contacts file', 'Check everyone at once. We\'ll show you how to export it.', 'closeOv(\'ov-connect\');openImportSheet()', st !== 'ready' && st !== 'blocked-iframe');
+  // 2 — paste names (last resort; matches show as possible-by-name)
+  opts += row('📋', 'Paste a list of names', 'Type or paste names to check — name matches show as possible until you confirm.', 'openPasteSheet()', false);
 
   $('connect-title').textContent = afterEmpty ? 'No matches yet' : 'Find your registered friends';
   $('connect-sub').textContent = afterEmpty
     ? 'None of those matched the FL-04 rolls. Try another way:'
     : 'We check your friends against the FL-04 voter rolls, right here on your phone. Pick whichever is easiest.';
   // Only one method available? Don't make them pick from a list of one.
-  if (!hasGoogle && st !== 'ready' && st !== 'blocked-iframe' && !afterEmpty) { openImportSheet(); return; }
   $('connect-opts').innerHTML = opts;
   openOv('ov-connect');
 }
 
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
-  // Self-heal: only phone-verified links may live in this list. Entries from
-  // the old name matcher (and anything without matchedBy) are dropped.
-  if (S && S.registeredFriends && S.registeredFriends.some(c => c.matchedBy !== 'phone')) {
-    S.registeredFriends = S.registeredFriends.filter(c => c.matchedBy === 'phone');
-    save();
-  }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const items = S.registeredFriends.map((c, i) => {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
-    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${initials}</div>
+    // Phone hits (confidence-1 index) are verified. Name hits are only ever
+    // POSSIBLE — same-name strangers exist — until the volunteer, who actually
+    // knows their friend, confirms.
+    const verified = c.matchedBy === 'phone' || c.confirmed;
+    const statusLine = verified
+      ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ ${c.matchedBy === 'phone' ? 'Verified by phone number' : 'Confirmed by you'} · ${esc(c.voterCity)}</div>`
+      : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Possible match · ${esc(c.voterCity)} — same name on the rolls. Is this your ${esc(c.first || c.name)}?</div>`;
+    const buttons = verified
+      ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
+      : `<div style="flex-shrink:0;display:flex;gap:6px;">
+           <div title="Yes, that's them" onclick="event.stopPropagation();confirmRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#dcfce7;border:2px solid #059669;display:flex;align-items:center;justify-content:center;color:#059669;font-size:13px;font-weight:700;">✓</div>
+           <div title="Not them" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#fef2f2;border:2px solid #fca5a5;display:flex;align-items:center;justify-content:center;color:#dc2626;font-size:13px;">✕</div>
+         </div>`;
+    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;${verified ? '' : 'background:#fffbf3;border-color:#f0d9a8;'}" onclick="selectRegisteredFriend(${i})">
+      <div style="width:32px;height:32px;border-radius:50%;background:${verified ? '#dcfce7' : '#fdf3d9'};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${verified ? '#059669' : '#b45309'};flex-shrink:0;">${initials}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity)}</div>
+        ${statusLine}
       </div>
-      <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
+      ${buttons}
     </div>`;
   }).join('');
-  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} VERIFIED</div>` + items;
+  const nv = S.registeredFriends.filter(c => c.matchedBy === 'phone' || c.confirmed).length;
+  const nq = S.registeredFriends.length - nv;
+  const hdr = 'YOUR REGISTERED FRIENDS · ' + nv + ' VERIFIED' + (nq ? ' · ' + nq + ' POSSIBLE' : '');
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">${hdr}</div>` + items;
   listEl.style.display = 'block';
+}
+function confirmRegisteredFriend(idx) {
+  const c = (S.registeredFriends || [])[idx];
+  if (!c) return;
+  c.confirmed = true; save(); renderRegisteredFriends();
+  showToast('Thanks — marked as your ' + (c.first || c.name) + '.');
 }
 function selectRegisteredFriend(idx) {
   const c = (S.registeredFriends || [])[idx];
@@ -2482,7 +2466,7 @@ async function _renderContactList() {
   listEl.style.display = 'block';
   _registeredCache = await filterRegisteredContacts(_contactsCache);
   if (!_registeredCache.length) {
-    listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No phone-verified matches — use the search above to look anyone up by hand.</div>';
+    listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No matches — use the search above to look anyone up by hand.</div>';
     return;
   }
   const items = _registeredCache.map((c, i) => {
@@ -2491,7 +2475,9 @@ async function _renderContactList() {
       <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity || '')}</div>
+        ${c.matchedBy === 'phone'
+          ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity || '')}</div>`
+          : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Possible match (same name) · ${esc(c.voterCity || '')}</div>`}
       </div>
     </div>`;
   }).join('');
