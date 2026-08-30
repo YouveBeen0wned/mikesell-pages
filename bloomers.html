@@ -1096,7 +1096,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1749';
+const BUILD = '20260830-1834';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2253,7 +2253,7 @@ function renderRegisteredFriends() {
       ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
       : `<div style="flex-shrink:0;display:flex;gap:6px;">
            <div onclick="event.stopPropagation();confirmFriend(${i})" style="background:#059669;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #036b4c;">Yes</div>
-           <div onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="background:#dc2626;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #991b1b;">No</div>
+           <div onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="background:#dc2626;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #991b1b;">Unsure</div>
          </div>`;
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
       <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${initials}</div>
@@ -2329,7 +2329,7 @@ async function _renderContactList() {
     const buttons = confirmed ? '' :
       `<div style="flex-shrink:0;display:flex;gap:6px;">
          <div onclick="event.stopPropagation();pickerYes(${i})" style="background:#059669;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #036b4c;">Yes</div>
-         <div onclick="event.stopPropagation();pickerNo(${i})" style="background:#dc2626;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #991b1b;">No</div>
+         <div onclick="event.stopPropagation();pickerNo(${i})" style="background:#dc2626;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #991b1b;">Unsure</div>
        </div>`;
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectContact(${i})">
       <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
