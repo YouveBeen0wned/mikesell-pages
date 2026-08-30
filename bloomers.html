@@ -665,6 +665,19 @@ function shelfColor(sh) { return { g: '#059669', b: '#2563eb', p: '#7c3aed', au:
 function shelfName(sh) { return { g: 'Garden', b: 'Wildflower', p: 'Exotic', au: 'Gold' }[sh]; }
 // Rarity tier (how hard it is to get) as distinct from the shelf it lives on.
 function rarityName(sh) { return { g: 'Common', b: 'Uncommon', p: 'Rare', au: 'Legendary' }[sh]; }
+// Launch Messages via a real anchor click. Scripted top-frame navigation
+// (location.href = 'sms:...') makes some browsers interpose an
+// "Open / Close current window / Cancel" dialog because the page looks like
+// it is being abandoned; an in-gesture anchor click reads as the user tapping
+// a link and goes straight to the Messages app.
+function launchSms(href) {
+  const a = document.createElement('a');
+  a.href = href;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() { a.remove(); }, 1000);
+}
 function smsHref(body, phone) {
   const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
   const num = phone ? String(phone).replace(/\D/g, '') : '';
@@ -1077,7 +1090,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1336';
+const BUILD = '20260830-1351';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1392,7 +1405,7 @@ function plantNow(deadline) {
   const _nick = _rawNick.split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
   const _v = CONFIG.msgFriendVariants;
   const body = (deadline ? CONFIG.msgDeadline(S.first, link) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
-  location.href = smsHref(body, _ph);
+  launchSms(smsHref(body, _ph));
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; showTab('garden'); }, 600);
 }
 
@@ -1463,7 +1476,7 @@ function waterNow(id) {
   save(); closeOv('ov-plantpick');
   api('touch', { seedId: id, n: p.touches }); // [SERVER]
   const _fv = CONFIG.msgFollowVariants;
-  location.href = smsHref(_fv[p.touches % _fv.length](friendLink(tokenOf(p))).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || '');
+  launchSms(smsHref(_fv[p.touches % _fv.length](friendLink(tokenOf(p))).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || ''));
   if (p.touches >= CONFIG.maxTouches) setTimeout(() => doBloom(p, 'earned'), 800);
   else renderGarden();
 }
