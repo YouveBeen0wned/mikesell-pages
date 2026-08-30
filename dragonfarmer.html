@@ -1293,7 +1293,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1351';
+const BUILD = '20260830-1358';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2242,7 +2242,7 @@ async function matchContactList(contacts, opts) {
   if (emoji) emoji.textContent = '🌱';
   openOv('ov-matching');
   const withPhone = contacts.filter(c => c.phone && String(c.phone).replace(/\D/g, '').length >= 10).length;
-  setP(15, 'Checking ' + withPhone + ' phone numbers…', 'Numbers are hashed on your phone — never uploaded.');
+  setP(15, 'Checking ' + withPhone + ' phone numbers…', 'This may take a moment. Numbers are compared on your phone, never saved.');
   if (!withPhone || !CONFIG.phoneApi) {
     closeOv('ov-matching');
     showToast('No phone numbers to check — matching starts from phone numbers.');
