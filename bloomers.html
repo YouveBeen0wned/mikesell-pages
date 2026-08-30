@@ -642,7 +642,8 @@ function freshState(first, last, garden, contacts) {
     shed: [], // {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
-    registeredFriends: [], // [{name,first,last,phone,voterCity}] — filled at signup
+    registeredFriends: [], // [{name,first,last,phone,voterCity,matchedBy,confirmed}]
+    friendsVer: 2, // bump to force a one-time wipe of stored matches on old devices
   };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -1082,7 +1083,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-0233';
+const BUILD = '20260830-0240';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2218,6 +2219,17 @@ function openConnectSheet(afterEmpty) {
 
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
+  // One-time reset (v2, 2026-08-30): matches saved before the confidence-1
+  // index went live can carry stale "verified" links — Aiden surfaced as a
+  // valid match days after his number was scrubbed from the index, because
+  // his entry predated the scrub. Old lists are wiped once; re-running the
+  // finder rebuilds them against the clean index in seconds.
+  if (S && (S.friendsVer || 0) < 2) {
+    const had = S.registeredFriends && S.registeredFriends.length;
+    S.registeredFriends = [];
+    S.friendsVer = 2; save();
+    if (had) showToast('Match quality upgraded — run the friend finder once more to rebuild your list.');
+  }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const items = S.registeredFriends.map((c, i) => {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
