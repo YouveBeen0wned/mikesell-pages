@@ -678,7 +678,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
   <div id="connect-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
   <div id="connect-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
   <div id="connect-opts"></div>
-  <div style="text-align:center;margin-top:14px;"><span onclick="closeOv('ov-connect')" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
+  <div style="text-align:center;margin-top:14px;"><span onclick="closeOv('ov-connect');maybeWelcome();" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
 </div></div>
 <div class="overlay" id="ov-paste" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
   <div style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);">Paste your friends</div>
@@ -1285,7 +1285,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-0157';
+const BUILD = '20260830-0233';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1328,7 +1328,15 @@ function doSignup() {
   renderGarden();
   show('scr-garden');
   startPolling();
-  if (S.contacts && CONFIG.googleClientId && !IN_IFRAME) loadGIS().catch(function(){}); // warm GIS so the OAuth popup opens inside the tap
+  // Intro order (Mike, 2026-08-30): comparison workflow FIRST, thank-you
+  // welcome after. pendingWelcome guarantees the welcome always arrives no
+  // matter which branch the compare takes (done, declined, dismissed).
+  if (S.contacts) { S.pendingWelcome = true; save(); startAutoCompare(); }
+  else showWelcomeGift();
+}
+function maybeWelcome() {
+  if (!S || !S.pendingWelcome) return;
+  S.pendingWelcome = false; save();
   showWelcomeGift();
 }
 function showWelcomeGift() {
@@ -1340,7 +1348,7 @@ function showWelcomeGift() {
       <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing egg to see what hatches.</span>
       <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#eafaf1;border:2.5px solid #059669;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#047857;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;"><circle cx="17" cy="17" r="12" fill="#dcfce7"/><circle cx="17" cy="17" r="14" fill="none" stroke="#059669" stroke-width="2.4" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#d-egg" x="6" y="6" width="22" height="22"/></svg><span>Watch for this green ring. It means a friend answered &mdash; tap to hatch it.</span></span>
     </div>
-    <button class="bigbtn" onclick="closeOv('ov-rankup');if(S.contacts)startAutoCompare();">See my roost</button>`;
+    <button class="bigbtn" onclick="closeOv('ov-rankup');">See my roost</button>`;
   openOv('ov-rankup');
 }
 
@@ -1937,6 +1945,7 @@ function renderChampions() {
 }
 
 
+window.addEventListener('load', function() { if (typeof googleAvailable === 'function' && googleAvailable()) loadGIS().catch(function(){}); });
 /* ---------------- Google Contacts import ----------------
    The on-device Contact Picker deliberately has no select-all (W3C decision),
    so the one-tap "everything" path is OAuth into the volunteer's Google
@@ -2321,6 +2330,7 @@ async function matchContactList(contacts, opts) {
     return n;
   }
   renderGarden();
+  if (S && S.pendingWelcome) { maybeWelcome(); return n; }
   if (n) showTab('garden'); else openConnectSheet(true);
   return n;
 }
@@ -2336,7 +2346,7 @@ async function runContactMatch(popoutMode) {
   } catch (err) {
     closeOv('ov-matching');
     if (popoutMode) { showToast('Could not open contacts here.'); return; }
-    if (err && err.name === 'AbortError') { renderGarden(); return; }
+    if (err && err.name === 'AbortError') { renderGarden(); maybeWelcome(); return; }
     openConnectSheet();
   }
 }
