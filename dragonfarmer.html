@@ -601,7 +601,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
     <div id="agenda-line" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:13.5px;color:var(--ink);margin-top:4px;line-height:1.45;"></div>
     <div id="agenda-dots" style="display:flex;gap:4px;justify-content:center;margin-top:8px;"></div>
   </div>
-  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system<br><span id="build-stamp" style="opacity:0.4;"></span></div>
+  <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-garden"></nav>
 </section>
 
@@ -1257,7 +1257,6 @@ function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
   checkForUpdate();
-  const _bs = $('build-stamp'); if (_bs) _bs.textContent = 'build ' + BUILD;
   const m = location.search.match(/[?&](?:s|b)=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
   load();
@@ -1281,7 +1280,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1323';
+const BUILD = '20260830-1336';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2405,13 +2404,14 @@ function renderRegisteredFriends() {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
     const ring = confirmed ? '#dcfce7' : '#fef3c7';
     const ink  = confirmed ? '#059669' : '#b45309';
-    const sub  = confirmed
-      ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified · phone and last name · ${esc(c.voterCity || '')}</div>`
-      : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Highly likely · matched by phone · ${esc(c.voterCity || '')}</div>`;
+    // Verified: just the name and a green check — no explanation needed.
+    // Likely: ask the question a human would ask ("Is Dad Steve from Northside?").
+    const q = 'Is ' + esc(c.name) + ' ' + esc(c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?';
+    const sub  = confirmed ? '' : `<div style="font-size:10px;color:#b45309;margin-top:1px;">${q}</div>`;
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
       <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${initials}</div>
       <div style="flex:1;">
-        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}${confirmed ? ' <span style="color:#059669;">✓</span>' : ''}</div>
         ${sub}
       </div>
       <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
