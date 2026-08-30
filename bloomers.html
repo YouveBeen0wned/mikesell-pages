@@ -637,7 +637,7 @@ function freshState(first, last, garden, contacts) {
     nextId: 4, pendingRankup: null,
     registeredFriends: [], // [{name,first,last,phone,voterCity,matchedBy,confirmed}]
     excludedFriends: [], // keys a player removed by hand — never re-add them on re-compare
-    friendsVer: 3, // bump to force a one-time wipe of stored matches on old devices
+    friendsVer: 4, // bump to force a one-time wipe of stored matches on old devices
   };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -1078,7 +1078,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1230';
+const BUILD = '20260830-1300';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2187,13 +2187,14 @@ function removeRegisteredFriend(idx) {
 }
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
-  // One-time reset (v3, 2026-08-30): v2 cleared pre-filter phone links; v3
-  // clears the short-lived "possible match" name entries. Any future change
-  // to matching rules bumps this again — fixed indexes don't fix devices.
-  if (S && (S.friendsVer || 0) < 3) {
+  // One-time reset (v4, 2026-08-30): the phone index now drops ambiguous and
+  // blocklisted numbers at the source, so stored lists built against the old
+  // index must be wiped once and rebuilt clean. Any future change to matching
+  // rules bumps this again — fixed indexes don't fix devices.
+  if (S && (S.friendsVer || 0) < 4) {
     const had = S.registeredFriends && S.registeredFriends.length;
     S.registeredFriends = [];
-    S.friendsVer = 3; save();
+    S.friendsVer = 4; save();
     if (had) showToast('Match quality upgraded — run the friend finder once more to rebuild your list.');
   }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
