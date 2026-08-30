@@ -839,6 +839,7 @@ function freshState(first, last, garden, contacts) {
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
     registeredFriends: [], // [{name,first,last,phone,voterCity,matchedBy,confirmed}]
+    excludedFriends: [], // keys a player removed by hand — never re-add them on re-compare
     friendsVer: 3, // bump to force a one-time wipe of stored matches on old devices
   };
 }
@@ -1196,6 +1197,7 @@ window.addEventListener('message', function(e) {
     if (!S) return;
     const seen = {};
     S.registeredFriends = (S.registeredFriends || []).concat(e.data.friends)
+      .filter(x => !(S.excludedFriends || []).includes(friendKey(x)))   // honor hand-removed friends
       .filter(x => { const k = ((x.first || '') + (x.last || '')).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
     const n = e.data.friends.length;
@@ -1279,7 +1281,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-0246';
+const BUILD = '20260830-1200';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2250,6 +2252,7 @@ async function matchContactList(contacts, opts) {
     const seen = {};
     S.registeredFriends = (S.registeredFriends || []).concat(found)
       .filter(x => x.matchedBy === 'phone')
+      .filter(x => !(S.excludedFriends || []).includes(friendKey(x)))   // honor hand-removed friends
       .filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
   }
@@ -2348,6 +2351,26 @@ function openConnectSheet(afterEmpty) {
   openOv('ov-connect');
 }
 
+// Stable identity for a matched friend, matching the dedup key used when they
+// are added, with a name fallback for rows that carried no voter first/last.
+function friendKey(c) {
+  return (((c.first || '') + (c.last || '')).toUpperCase()) || String(c.name || '').toUpperCase();
+}
+// The ✕ on a friend card. Removes them from the list AND remembers the removal
+// so the next contact-compare never quietly re-adds the same person (the reason
+// a removed friend kept coming back — the button was never even wired up).
+function removeRegisteredFriend(idx) {
+  if (!S || !S.registeredFriends) return;
+  const c = S.registeredFriends[idx];
+  if (!c) return;
+  const key = friendKey(c);
+  S.excludedFriends = S.excludedFriends || [];
+  if (!S.excludedFriends.includes(key)) S.excludedFriends.push(key);
+  S.registeredFriends.splice(idx, 1);
+  save();
+  renderRegisteredFriends();
+  showToast('Removed ' + (c.name || 'that friend') + ' — they won\'t come back.');
+}
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
   // One-time reset (v3, 2026-08-30): v2 cleared pre-filter phone links; v3
