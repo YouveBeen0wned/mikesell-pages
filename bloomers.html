@@ -1094,7 +1094,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-0129';
+const BUILD = '20260830-0140';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2104,7 +2104,11 @@ async function matchContactList(contacts, opts) {
 
   if (emoji) emoji.textContent = '🌷';
   const n = results.length;
-  setP(100, 'All done!', n + (n === 1 ? ' registered friend added' : ' registered friends added'));
+  const nPhone = results.filter(c => c.matchedBy === 'phone').length;
+  const nName = n - nPhone;
+  setP(100, 'All done!', nName
+    ? nPhone + ' verified by phone · ' + nName + ' same-name match' + (nName === 1 ? '' : 'es') + ' for you to confirm'
+    : n + (n === 1 ? ' friend verified' : ' friends verified'));
   await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
@@ -2280,27 +2284,41 @@ function renderRegisteredFriends() {
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const items = S.registeredFriends.map((c, i) => {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
-    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${initials}</div>
+    // Phone matches come from the confidence-1 index and count as verified.
+    // A name-only match is a same-name voter on the rolls — possibly a
+    // different person entirely (learned via Bill Goff of Kansas vs. William
+    // Goff of Jacksonville, 2026-08-29) — so the VOLUNTEER confirms it,
+    // because only they know their friend. We never assert what we don't know.
+    const verified = c.matchedBy === 'phone' || c.confirmed;
+    const statusLine = verified
+      ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity)}</div>`
+      : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Same name on the rolls · ${esc(c.voterCity)} — is this your ${esc(c.first || c.name)}?</div>`;
+    const buttons = verified
+      ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
+      : `<div style="flex-shrink:0;display:flex;gap:6px;">
+           <div title="Yes, that's them" onclick="event.stopPropagation();confirmRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#dcfce7;border:2px solid #059669;display:flex;align-items:center;justify-content:center;color:#059669;font-size:13px;font-weight:700;">✓</div>
+           <div title="Not them" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#fef2f2;border:2px solid #fca5a5;display:flex;align-items:center;justify-content:center;color:#dc2626;font-size:13px;">✕</div>
+         </div>`;
+    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;${verified ? '' : 'background:#fffbf3;border-color:#f0d9a8;'}" onclick="selectRegisteredFriend(${i})">
+      <div style="width:32px;height:32px;border-radius:50%;background:${verified ? '#dcfce7' : '#fdf3d9'};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${verified ? '#059669' : '#b45309'};flex-shrink:0;">${initials}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity)}</div>
+        ${statusLine}
       </div>
-      <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
+      ${buttons}
     </div>`;
   }).join('');
-  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} FOUND</div>` + items;
+  const nv = S.registeredFriends.filter(c => c.matchedBy === 'phone' || c.confirmed).length;
+  const nq = S.registeredFriends.length - nv;
+  const hdr = 'YOUR REGISTERED FRIENDS · ' + nv + ' VERIFIED' + (nq ? ' · ' + nq + ' TO CONFIRM' : '');
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">${hdr}</div>` + items;
   listEl.style.display = 'block';
 }
-
-function removeRegisteredFriend(idx) {
+function confirmRegisteredFriend(idx) {
   const c = (S.registeredFriends || [])[idx];
   if (!c) return;
-  gameConfirm('Remove ' + (c.name || 'this match') + '?',
-    'Phone records are sometimes wrong — removing a bad match here only affects your list.',
-    'Yes, remove', 'background:var(--red,#dc2626);box-shadow:0 5px 0 #991b1b;',
-    function() { S.registeredFriends.splice(idx, 1); save(); renderRegisteredFriends(); showToast('Removed.'); },
-    function() {});
+  c.confirmed = true; save(); renderRegisteredFriends();
+  showToast('Thanks — marked as your ' + (c.first || c.name) + '.');
 }
 function selectRegisteredFriend(idx) {
   const c = (S.registeredFriends || [])[idx];
