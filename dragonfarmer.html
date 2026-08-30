@@ -2007,7 +2007,7 @@ async function importFromGoogle() {
   const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub');
   openOv('ov-matching');
   if (status) status.textContent = 'Fetching your Google contacts…';
-  if (sub) sub.textContent = 'They stay on your phone — never uploaded.';
+  if (sub) sub.textContent = 'This may take a moment. Numbers are compared on your phone, never saved.';
   if (bar) bar.style.width = '6%';
   const contacts = []; const seen = {};
   try {
