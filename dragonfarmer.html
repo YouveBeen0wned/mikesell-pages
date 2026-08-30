@@ -580,7 +580,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
     <text id="arch-name" x="150" y="24" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#f7e8c8">MY ROOST</text>
   </svg></div>
   <div id="gardenwrap" style="background:linear-gradient(180deg,#eeda9e,#dfc27b);border:3px solid #8a5f36;border-radius:22px;margin:0 12px;padding:6px;">
-    <div style="font-size:9px;color:#5c6b4f;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;opacity:0.75;">Hold to move &middot; drag out to the Barn</div>
+    <div style="font-size:9px;color:#5c6b4f;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Press and hold an egg to rearrange placement. Move outside of the roost to put it in the barn.</b></div>
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
   </div>
   <div class="toolbar">
@@ -822,7 +822,7 @@ const DEMO = /[?&]demo=1/.test(location.search);
 const HOUR = DEMO ? 60 * 1000 : 3600 * 1000;
 const KEY = 'dragonfarmer_v3';
 let S = null;
-let agendaIdx = 0;
+let agendaIdx = Math.floor(Math.random() * CONFIG.agenda.length); // a different policy position each visit
 let _contactsCache = null; // loaded once per session; never saved
 
 function freshState(first, last, garden, contacts) {
@@ -1299,7 +1299,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1359';
+const BUILD = '20260830-1749';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1454,6 +1454,17 @@ function renderGarden() {
   $('agenda-topic').textContent = ag[0]; $('agenda-line').textContent = ag[1];
   $('agenda-dots').innerHTML = CONFIG.agenda.map((_, i) => `<span onclick="event.stopPropagation();setAgenda(${i})" style="width:8px;height:8px;border-radius:50%;background:${i === agendaIdx ? 'var(--blue)' : '#d4e2ef'};cursor:pointer;display:inline-block;padding:2px;"></span>`).join('');
 
+  // Pulsing green starter cue: first empty slot of the middle bed, shown
+  // until the first real seed is planted.
+  let _starter = null;
+  if ((S.seedsPlanted || 0) === 0) {
+    const _order = [S.beds.find(x => x.id === 2)].concat(S.beds.filter(x => x.id !== 2)).filter(Boolean);
+    for (const bb of _order) {
+      const used = plantsInBed(bb.id).map(p => p.slot);
+      for (let k = 0; k < (bb.cells || []).length; k++) if (!used.includes(k)) { _starter = { bed: bb.id, slot: k }; break; }
+      if (_starter) break;
+    }
+  }
   const { placed, h } = layoutBeds();
   const el = $('gardensvg');
   el.setAttribute('viewBox', `0 0 364 ${h}`);
@@ -1476,13 +1487,18 @@ function renderGarden() {
       out += `<rect x="${o.x + i}" y="${o.y + i}" width="${w - i * 2}" height="${GRID.ch - i * 2}" rx="${(GRID.ch - i * 2) / 2}" fill="${soil}"/>`;
     }
     const inbed = plantsInBed(b.id);
+    const bedIdForStarter = b.id;  // the cells loop shadows `b`, so hold the id here
     const cells = b.cells || [];
     for (let i = 0; i < cells.length; i++) {
       const ctr = cellCenter(cells[i][0], cells[i][1]);
       const cx = ctr.cx, p = inbed.find((q) => q.slot === i);
       const b = { y: ctr.cy - 20, id: 0 };
       if (!p) {
-        out += `<g style="cursor:pointer;" onclick="goPlant()"><circle cx="${cx}" cy="${b.y + 20}" r="8" fill="#4d9fe6" opacity="0.5" style="animation:pulsehint 2.2s infinite;"/><path d="M${cx} ${b.y + 15} v10 M${cx - 5} ${b.y + 20} h10" stroke="#1a2a4a" stroke-width="2.2" stroke-linecap="round"/></g>`;
+        const _isStarter = _starter && _starter.bed === bedIdForStarter && _starter.slot === i;
+        const glow = _isStarter
+          ? `<circle cx="${cx}" cy="${b.y + 20}" r="11" fill="#059669" opacity="0.25"/><circle cx="${cx}" cy="${b.y + 20}" r="13" fill="none" stroke="#059669" stroke-width="2.5" style="animation:ringpulse 1.6s ease-out infinite;"/>`
+          : '';
+        out += `<g style="cursor:pointer;" onclick="goPlant()">${glow}<circle cx="${cx}" cy="${b.y + 20}" r="8" fill="${_isStarter ? '#059669' : '#8555ab'}" opacity="0.5" style="animation:pulsehint 2.2s infinite;"/><path d="M${cx} ${b.y + 15} v10 M${cx - 5} ${b.y + 20} h10" stroke="#1a2a4a" stroke-width="2.2" stroke-linecap="round"/></g>`;
         continue;
       }
       const lbl = `<text x="${cx}" y="${b.y + 36}" text-anchor="middle" class="lbl">${esc(p.tag.toUpperCase())}</text>`;
@@ -2352,7 +2368,7 @@ function openConnectSheet(afterEmpty) {
   let opts = '';
   const hasGoogle = googleAvailable();
   // 0 — the one-tap everything path
-  if (hasGoogle) opts += row('⚡', 'Import all from Google', 'One tap checks every contact saved to your Google account. Nothing to pick, nothing to export.', 'importFromGoogle()', true);
+  if (hasGoogle) opts += row('⚡', 'Import all from Google', 'One tap checks every contact in your Google account. Google may show a one-time “unverified app” notice while our review finishes — tap Advanced, then Continue.', 'importFromGoogle()', true);
   // 1 — pick contacts by hand (only where the phone allows it)
   if (st === 'ready') opts += row('📇', 'Select a few by hand', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', !hasGoogle);
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
@@ -2406,10 +2422,9 @@ function removeRegisteredFriend(idx) {
 }
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
-  // One-time reset (v5, 2026-08-30): matching is now two-tier (phone+last name =
-  // verified, phone-only = highly likely) and rows carry a `confirmed` flag, so
-  // lists built against the old single-tier logic must be wiped once and rebuilt.
-  // Any future change to matching rules bumps this again — fixed indexes don't fix devices.
+  // One-time reset (v5, 2026-08-30): matching is two-tier (phone+last name =
+  // confirmed, phone-only = needs the volunteer's yes/no), and rows carry a
+  // `confirmed` flag. Any future change to matching rules bumps this again.
   if (S && (S.friendsVer || 0) < 5) {
     const had = S.registeredFriends && S.registeredFriends.length;
     S.registeredFriends = [];
@@ -2417,38 +2432,50 @@ function renderRegisteredFriends() {
     if (had) showToast('Match quality upgraded — run the friend finder once more to rebuild your list.');
   }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
-  // Two tiers: phone + last name = VERIFIED (top); phone number only = HIGHLY
-  // LIKELY (below). Both are shown; nothing false is ever labelled verified.
   const card = (c, i, confirmed) => {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
     const ring = confirmed ? '#dcfce7' : '#fef3c7';
     const ink  = confirmed ? '#059669' : '#b45309';
-    // Verified: just the name and a green check — no explanation needed.
-    // Likely: ask the question a human would ask ("Is Dad Steve from Northside?").
-    const q = 'Is ' + esc(c.name) + ' ' + esc(c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?';
-    const sub  = confirmed ? '' : `<div style="font-size:10px;color:#b45309;margin-top:1px;">${q}</div>`;
+    // Confirmed: name + green check, nothing else. Phone-only: the question a
+    // human would ask, answered with a green Yes / red No.
+    const q = 'Is "' + esc(c.name) + '" actually ' + esc(c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?';
+    const sub  = confirmed ? '' : `<div style="font-size:11px;color:#b45309;margin-top:2px;line-height:1.4;">${q}</div>`;
+    const buttons = confirmed
+      ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
+      : `<div style="flex-shrink:0;display:flex;gap:6px;">
+           <div onclick="event.stopPropagation();confirmFriend(${i})" style="background:#059669;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #036b4c;">Yes</div>
+           <div onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="background:#dc2626;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #991b1b;">No</div>
+         </div>`;
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
       <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${initials}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}${confirmed ? ' <span style="color:#059669;">✓</span>' : ''}</div>
         ${sub}
       </div>
-      <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
+      ${buttons}
     </div>`;
   };
-  const hdr = (t, color) => `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:${color};letter-spacing:0.12em;margin:14px 18px 4px;">${t}</div>`;
+  const hdr = (t, color) => `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-weight:700;font-size:13px;color:${color};letter-spacing:0.05em;margin:16px 18px 5px;">${t}</div>`;
   const confirmedRows = [], likelyRows = [];
   S.registeredFriends.forEach((c, i) => (c.confirmed ? confirmedRows : likelyRows).push(i));
   let html = '';
   if (confirmedRows.length)
-    html += hdr(`YOUR REGISTERED FRIENDS · ${confirmedRows.length} VERIFIED`, '#059669')
+    html += hdr('CONFIRMED VOTERS IN OUR DISTRICT', '#059669')
           + confirmedRows.map(i => card(S.registeredFriends[i], i, true)).join('');
   if (likelyRows.length)
-    html += hdr(`HIGHLY LIKELY · ${likelyRows.length} MORE BY PHONE`, '#b45309')
+    html += hdr('FOUND BY PHONE NUMBER ONLY', '#b45309')
           + likelyRows.map(i => card(S.registeredFriends[i], i, false)).join('');
   listEl.innerHTML = html;
   listEl.style.display = 'block';
 }
+function confirmFriend(idx) {
+  const c = (S && S.registeredFriends || [])[idx];
+  if (!c) return;
+  c.confirmed = true; save();
+  renderRegisteredFriends();
+  showToast((c.name || 'Friend') + ' confirmed ✓');
+}
+
 function selectRegisteredFriend(idx) {
   const c = (S.registeredFriends || [])[idx];
   if (!c) return;
@@ -2482,22 +2509,66 @@ async function _renderContactList() {
     listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No matches — use the search above to look anyone up by hand.</div>';
     return;
   }
-  _registeredCache.sort((a, b) => (b._confirmed ? 1 : 0) - (a._confirmed ? 1 : 0));  // verified first
-  const items = _registeredCache.map((c, i) => {
+  const hdr = (t, color) => `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-weight:700;font-size:13px;color:${color};letter-spacing:0.05em;margin:16px 18px 5px;">${t}</div>`;
+  const card = (c, i) => {
     const first = c._first || c.name.split(/\s+/)[0];
     const confirmed = !!c._confirmed;
     const ring = confirmed ? '#dcfce7' : '#fef3c7';
     const ink  = confirmed ? '#059669' : '#b45309';
+    const q = 'Is "' + esc(c.name) + '" actually ' + esc(c._first || c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?';
+    const sub  = confirmed ? '' : `<div style="font-size:11px;color:#b45309;margin-top:2px;line-height:1.4;">${q}</div>`;
+    const buttons = confirmed ? '' :
+      `<div style="flex-shrink:0;display:flex;gap:6px;">
+         <div onclick="event.stopPropagation();pickerYes(${i})" style="background:#059669;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #036b4c;">Yes</div>
+         <div onclick="event.stopPropagation();pickerNo(${i})" style="background:#dc2626;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #991b1b;">No</div>
+       </div>`;
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectContact(${i})">
       <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}${confirmed ? ' <span style="color:#059669;">✓</span>' : ''}</div>
-        ${confirmed ? '' : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Is ${esc(c.name)} ${esc(c._first || c.first || '')}${c.voterCity ? ' from ' + esc(c.voterCity) : ''}?</div>`}
+        ${sub}
       </div>
+      ${buttons}
     </div>`;
-  }).join('');
-  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${_registeredCache.length} FOUND</div>` + items;
+  };
+  const conf = [], likely = [];
+  _registeredCache.forEach((c, i) => (c._confirmed ? conf : likely).push(i));
+  let html = '';
+  if (conf.length)   html += hdr('CONFIRMED VOTERS IN OUR DISTRICT', '#059669') + conf.map(i => card(_registeredCache[i], i)).join('');
+  if (likely.length) html += hdr('FOUND BY PHONE NUMBER ONLY', '#b45309') + likely.map(i => card(_registeredCache[i], i)).join('');
+  listEl.innerHTML = html;
   listEl.style.display = 'block';
+}
+// Yes: this phone-only match really is my friend — promote to confirmed and
+// persist it alongside the saved list so the answer sticks.
+function pickerYes(idx) {
+  const c = _registeredCache[idx];
+  if (!c) return;
+  c._confirmed = true;
+  S.registeredFriends = S.registeredFriends || [];
+  const key = friendKey(c);
+  if (!S.registeredFriends.some(x => friendKey(x) === key)) {
+    S.registeredFriends.push({ name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '',
+                               voterCity: c.voterCity || '', matchedBy: 'phone', confirmed: true });
+  } else {
+    S.registeredFriends.forEach(x => { if (friendKey(x) === key) x.confirmed = true; });
+  }
+  save();
+  _renderContactList();
+  showToast((c.name || 'Friend') + ' confirmed ✓');
+}
+// No: wrong person — hide forever, everywhere.
+function pickerNo(idx) {
+  const c = _registeredCache[idx];
+  if (!c) return;
+  const key = friendKey(c);
+  S.excludedFriends = S.excludedFriends || [];
+  if (!S.excludedFriends.includes(key)) S.excludedFriends.push(key);
+  S.registeredFriends = (S.registeredFriends || []).filter(x => friendKey(x) !== key);
+  save();
+  _registeredCache.splice(idx, 1);
+  _renderContactList();
+  showToast('Removed — they won\'t come back.');
 }
 function selectContact(idx) {
   const c = _registeredCache[idx];
