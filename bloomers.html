@@ -480,13 +480,6 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
   <div id="connect-opts"></div>
   <div style="text-align:center;margin-top:14px;"><span onclick="closeOv('ov-connect');maybeWelcome();" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Maybe later</span></div>
 </div></div>
-<div class="overlay" id="ov-paste" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
-  <div style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);">Paste your friends</div>
-  <div style="text-align:center;font-size:11.5px;color:#5b6470;margin-top:7px;line-height:1.55;">One full name per line. A phone number after the name is optional.</div>
-  <textarea id="paste-box" rows="7" placeholder="Rebecca Johnson&#10;Marcus Williams 904-555-2222" style="width:100%;margin-top:12px;border:2px solid #c9def2;border-radius:12px;padding:11px;font-family:Arial,sans-serif;font-size:14px;color:var(--ink);resize:vertical;box-sizing:border-box;outline:none;"></textarea>
-  <button class="bigbtn" style="width:100%;box-sizing:border-box;" onclick="runPasteMatch()">Check the voter rolls</button>
-  <div style="text-align:center;margin-top:12px;"><span onclick="closeOv('ov-paste');openConnectSheet();" style="font-size:11.5px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Back</span></div>
-</div></div>
 <div class="overlay" id="ov-popstart" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
   <div style="font-size:44px;">📇</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;line-height:1.35;">Ready when you are</div>
@@ -643,7 +636,7 @@ function freshState(first, last, garden, contacts) {
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
     registeredFriends: [], // [{name,first,last,phone,voterCity,matchedBy,confirmed}]
-    friendsVer: 2, // bump to force a one-time wipe of stored matches on old devices
+    friendsVer: 3, // bump to force a one-time wipe of stored matches on old devices
   };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -1083,7 +1076,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-0240';
+const BUILD = '20260830-0246';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1850,31 +1843,16 @@ async function importFromGoogle() {
 let _registeredCache = []; // contacts filtered to registered voters
 
 async function filterRegisteredContacts(contacts) {
-  // Phone hits = verified; name hits = possible. Same doctrine as matchContactList.
+  // Phone-only, same doctrine as matchContactList.
+  if (!CONFIG.phoneApi) return [];
   let hits = {};
-  if (CONFIG.phoneApi) { try { hits = await phoneMatch(contacts); } catch (e) {} }
+  try { hits = await phoneMatch(contacts); } catch (e) {}
   const results = [];
-  const rest = [];
   for (const c of contacts) {
-    const parts = String(c.name).trim().split(/\s+/);
-    const _f = parts[0], _l = parts[parts.length - 1] || '';
     const hit = hits[c.name];
-    if (hit) results.push({ ...c, _first: hit.first || _f, _last: hit.last || _l, voterCity: hit.voterCity, matchedBy: 'phone' });
-    else if (parts.length >= 2) rest.push({ ...c, _first: _f, _last: _l });
-  }
-  const groups = {};
-  for (const c of rest) {
-    const prefix = (c._last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
-    (groups[prefix] = groups[prefix] || []).push(c);
-  }
-  for (const [prefix, group] of Object.entries(groups)) {
-    const bucket = await fetchVoterBucket(prefix);
-    for (const contact of group) {
-      const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
-      const m = bucket.find(([f, l]) =>
-        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql && firstNameMatches(f, contact._first));
-      if (m) results.push({ ...contact, voterCity: m[2], matchedBy: 'name' });
-    }
+    if (!hit) continue;
+    const parts = String(c.name).trim().split(/\s+/);
+    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '', voterCity: hit.voterCity, matchedBy: 'phone' });
   }
   return results;
 }
@@ -2040,12 +2018,11 @@ async function phoneMatch(contacts) {
 
 // Shared matching core — every input method funnels through here.
 async function matchContactList(contacts, opts) {
-  // AUTOMATED matching is PHONE-ONLY (Mike's rule, 2026-08-29). Name matching
-  // produced two false positives in one day — a bad vendor append and a
-  // same-name stranger (Bill Goff of Kansas vs. William Goff of Jacksonville).
-  // A full-number hit against the confidence-1 index is the only link strong
-  // enough to assert. Names remain available in the MANUAL search, where the
-  // volunteer is deliberately looking someone up and can judge for themselves.
+  // FINAL doctrine (Mike, 2026-08-30): matches come from PHONE NUMBERS only.
+  // No name matching, no "possible" maybes — a contact either has a
+  // full-number hit against the confidence-1 index or it is not a match.
+  // (Names produced three kinds of trouble: vendor mis-appends, same-name
+  // strangers, and a wall of maybes nobody wants to wade through.)
   opts = opts || {};
   const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub'), emoji = $('match-emoji');
   const setP = (pct, msg, detail) => {
@@ -2056,12 +2033,16 @@ async function matchContactList(contacts, opts) {
   if (emoji) emoji.textContent = '🌱';
   openOv('ov-matching');
   const withPhone = contacts.filter(c => c.phone && String(c.phone).replace(/\D/g, '').length >= 10).length;
-  setP(15, withPhone ? 'Checking ' + withPhone + ' phone numbers…' : 'Checking names against the rolls…', 'Everything runs on your phone — never uploaded.');
-  let phoneHits = {};
-  if (withPhone && CONFIG.phoneApi) {
-    try { phoneHits = await phoneMatch(contacts); } catch (e) {}
+  setP(15, 'Checking ' + withPhone + ' phone numbers…', 'Numbers are hashed on your phone — never uploaded.');
+  if (!withPhone || !CONFIG.phoneApi) {
+    closeOv('ov-matching');
+    showToast('No phone numbers to check — matches are verified by number only.');
+    if (S && S.pendingWelcome) maybeWelcome();
+    return 0;
   }
-  setP(28, 'Phone check done', '');
+  let phoneHits = {};
+  try { phoneHits = await phoneMatch(contacts); } catch (e) {}
+  setP(90, 'Almost done…', '');
   const results = [];
   for (const c of contacts) {
     const hit = phoneHits[c.name];
@@ -2070,54 +2051,23 @@ async function matchContactList(contacts, opts) {
     results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '',
                    voterCity: hit.voterCity, matchedBy: 'phone' });
   }
-  // Name pass — POSSIBLE matches only (Mike, 2026-08-29): a same-name voter on
-  // the rolls might be a different person entirely (Bill Goff of Kansas vs.
-  // William Goff of Jacksonville), so these are surfaced as "possible" and the
-  // volunteer confirms or dismisses each one. Only full-number hits against
-  // the confidence-1 phone index are ever labeled verified.
-  const groups = {};
-  for (const c of contacts) {
-    if (phoneHits[c.name]) continue;
-    const parts = String(c.name).trim().split(/\s+/);
-    if (parts.length < 2) continue;
-    const last = parts[parts.length - 1];
-    const prefix = (last.replace(/[^A-Za-z]/g, '').toUpperCase() + 'XX').slice(0, 2);
-    (groups[prefix] = groups[prefix] || []).push({ ...c, _first: parts[0], _last: last });
-  }
-  const entries = Object.entries(groups);
-  let done = 0;
-  for (const [prefix, group] of entries) {
-    const bucket = await fetchVoterBucket(prefix);
-    for (const contact of group) {
-      const ql = contact._last.replace(/[^A-Za-z]/g, '').toUpperCase();
-      const m = bucket.find(([f, l]) =>
-        l.replace(/[^A-Za-z]/g, '').toUpperCase() === ql && firstNameMatches(f, contact._first));
-      if (m) results.push({ ...contact, voterCity: m[2], matchedBy: 'name' });
-    }
-    done++;
-    setP(30 + Math.round((done / Math.max(1, entries.length)) * 60),
-         'Checking names against the rolls… ' + done + ' of ' + entries.length, '');
-    await new Promise(r => setTimeout(r, 0));
-  }
   const found = results.map(c => ({
     name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '',
-    voterCity: c.voterCity || '', matchedBy: c.matchedBy || 'name'
+    voterCity: c.voterCity || '', matchedBy: 'phone'
   }));
   if (!opts.standalone) {
     const seen = {};
     S.registeredFriends = (S.registeredFriends || []).concat(found)
+      .filter(x => x.matchedBy === 'phone')
       .filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
   }
 
   if (emoji) emoji.textContent = '🌷';
   const n = results.length;
-  const nPhone = results.filter(c => c.matchedBy === 'phone').length;
-  const nPoss = n - nPhone;
-  setP(100, 'All done!', nPoss
-    ? nPhone + ' verified by phone · ' + nPoss + ' possible match' + (nPoss === 1 ? '' : 'es') + ' by name'
-    : (n ? n + (n === 1 ? ' friend verified by phone number' : ' friends verified by phone number')
-         : 'No matches — you can still look anyone up by hand.'));
+  setP(100, 'All done!', n
+    ? n + (n === 1 ? ' friend verified by phone number' : ' friends verified by phone number')
+    : 'No verified matches — you can still look anyone up by hand.');
   await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
@@ -2170,18 +2120,6 @@ function popOutToMatch() {
 }
 
 // Tier 3: vCard upload — works in iframes, on iOS, and on desktop
-function openPasteSheet() { closeOv('ov-connect'); $('paste-box').value = ''; openOv('ov-paste'); }
-async function runPasteMatch() {
-  const txt = $('paste-box').value || '';
-  const list = parseNameList(txt);
-  if (!list.length) { showToast('Add one full name per line (first and last).'); return; }
-  closeOv('ov-paste');
-  await matchContactList(list, {});
-}
-
-// The chooser — only ever offers methods that actually work here.
-
-// Per-platform export steps. Everything happens on the phone; no computer needed.
 /* ---------------- diagnostics ---------------- */
 // Runs the exact code path the game uses, against the volunteer's real seeds.
 
@@ -2205,8 +2143,10 @@ function openConnectSheet(afterEmpty) {
   // 1 — pick contacts by hand (only where the phone allows it)
   if (st === 'ready') opts += row('📇', 'Select a few by hand', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', !hasGoogle);
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
-  // 2 — paste names (last resort; matches show as possible-by-name)
-  opts += row('📋', 'Paste a list of names', 'Type or paste names to check — name matches show as possible until you confirm.', 'openPasteSheet()', false);
+
+  // With Google and the picker both unavailable there is nothing to list —
+  // point to the by-hand search instead of showing an empty sheet.
+  if (!opts) opts = `<div style="font-size:12px;color:#5b6470;text-align:center;margin-top:10px;line-height:1.6;">This browser can't read contacts. Use <b>Check Voter Rolls</b> on the plant tab to look friends up by hand.</div>`;
 
   $('connect-title').textContent = afterEmpty ? 'No matches yet' : 'Find your registered friends';
   $('connect-sub').textContent = afterEmpty
@@ -2219,53 +2159,29 @@ function openConnectSheet(afterEmpty) {
 
 function renderRegisteredFriends() {
   const listEl = $('plant-contactlist');
-  // One-time reset (v2, 2026-08-30): matches saved before the confidence-1
-  // index went live can carry stale "verified" links — Aiden surfaced as a
-  // valid match days after his number was scrubbed from the index, because
-  // his entry predated the scrub. Old lists are wiped once; re-running the
-  // finder rebuilds them against the clean index in seconds.
-  if (S && (S.friendsVer || 0) < 2) {
+  // One-time reset (v3, 2026-08-30): v2 cleared pre-filter phone links; v3
+  // clears the short-lived "possible match" name entries. Any future change
+  // to matching rules bumps this again — fixed indexes don't fix devices.
+  if (S && (S.friendsVer || 0) < 3) {
     const had = S.registeredFriends && S.registeredFriends.length;
     S.registeredFriends = [];
-    S.friendsVer = 2; save();
+    S.friendsVer = 3; save();
     if (had) showToast('Match quality upgraded — run the friend finder once more to rebuild your list.');
   }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const items = S.registeredFriends.map((c, i) => {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
-    // Phone hits (confidence-1 index) are verified. Name hits are only ever
-    // POSSIBLE — same-name strangers exist — until the volunteer, who actually
-    // knows their friend, confirms.
-    const verified = c.matchedBy === 'phone' || c.confirmed;
-    const statusLine = verified
-      ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ ${c.matchedBy === 'phone' ? 'Verified by phone number' : 'Confirmed by you'} · ${esc(c.voterCity)}</div>`
-      : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Possible match · ${esc(c.voterCity)} — same name on the rolls. Is this your ${esc(c.first || c.name)}?</div>`;
-    const buttons = verified
-      ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
-      : `<div style="flex-shrink:0;display:flex;gap:6px;">
-           <div title="Yes, that's them" onclick="event.stopPropagation();confirmRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#dcfce7;border:2px solid #059669;display:flex;align-items:center;justify-content:center;color:#059669;font-size:13px;font-weight:700;">✓</div>
-           <div title="Not them" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="width:30px;height:30px;border-radius:50%;background:#fef2f2;border:2px solid #fca5a5;display:flex;align-items:center;justify-content:center;color:#dc2626;font-size:13px;">✕</div>
-         </div>`;
-    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;${verified ? '' : 'background:#fffbf3;border-color:#f0d9a8;'}" onclick="selectRegisteredFriend(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:${verified ? '#dcfce7' : '#fdf3d9'};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${verified ? '#059669' : '#b45309'};flex-shrink:0;">${initials}</div>
+    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
+      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${initials}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        ${statusLine}
+        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity)}</div>
       </div>
-      ${buttons}
+      <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
     </div>`;
   }).join('');
-  const nv = S.registeredFriends.filter(c => c.matchedBy === 'phone' || c.confirmed).length;
-  const nq = S.registeredFriends.length - nv;
-  const hdr = 'YOUR REGISTERED FRIENDS · ' + nv + ' VERIFIED' + (nq ? ' · ' + nq + ' POSSIBLE' : '');
-  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">${hdr}</div>` + items;
+  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} VERIFIED</div>` + items;
   listEl.style.display = 'block';
-}
-function confirmRegisteredFriend(idx) {
-  const c = (S.registeredFriends || [])[idx];
-  if (!c) return;
-  c.confirmed = true; save(); renderRegisteredFriends();
-  showToast('Thanks — marked as your ' + (c.first || c.name) + '.');
 }
 function selectRegisteredFriend(idx) {
   const c = (S.registeredFriends || [])[idx];
@@ -2306,9 +2222,7 @@ async function _renderContactList() {
       <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        ${c.matchedBy === 'phone'
-          ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity || '')}</div>`
-          : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Possible match (same name) · ${esc(c.voterCity || '')}</div>`}
+        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity || '')}</div>
       </div>
     </div>`;
   }).join('');
