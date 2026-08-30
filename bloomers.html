@@ -637,7 +637,7 @@ function freshState(first, last, garden, contacts) {
     nextId: 4, pendingRankup: null,
     registeredFriends: [], // [{name,first,last,phone,voterCity,matchedBy,confirmed}]
     excludedFriends: [], // keys a player removed by hand — never re-add them on re-compare
-    friendsVer: 4, // bump to force a one-time wipe of stored matches on old devices
+    friendsVer: 5, // bump to force a one-time wipe of stored matches on old devices
   };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -1078,7 +1078,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1300';
+const BUILD = '20260830-1400';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1847,16 +1847,15 @@ let _registeredCache = []; // contacts filtered to registered voters
 async function filterRegisteredContacts(contacts) {
   // Phone-only, same doctrine as matchContactList.
   if (!CONFIG.phoneApi) return [];
-  let hits = {};
-  try { hits = await phoneMatch(contacts); } catch (e) {}
-  const results = [];
+  let matched = [];
+  try { matched = await phoneMatch(contacts); } catch (e) {}
   const excl = (S && S.excludedFriends) || [];
-  for (const c of contacts) {
-    const hit = hits[c.name];
-    if (!hit) continue;
-    const parts = String(c.name).trim().split(/\s+/);
-    const row = { ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '', voterCity: hit.voterCity, matchedBy: 'phone' };
-    if (excl.includes(friendKey(row))) continue;   // honor hand-removed friends here too
+  const results = [];
+  for (const m of matched) {
+    const parts = String(m.contact.name).trim().split(/\s+/);
+    const row = { ...m.contact, _first: m.first || parts[0], _last: m.last || parts[parts.length - 1] || '',
+                  voterCity: m.voterCity, matchedBy: 'phone', _confirmed: lastNameConfirms(m.contact.name, m.last) };
+    if (excl.includes(friendKey(row))) continue;   // dismissed people never return
     results.push(row);
   }
   return results;
@@ -1999,26 +1998,28 @@ async function fetchPhoneBucket(prefix) {
 }
 
 async function phoneMatch(contacts) {
-  if (!CONFIG.phoneApi || !crypto.subtle) return {};
-  const byPrefix = {}, hashes = {};
+  // Returns ONE row per contact whose OWN number hit the index. Keyed by the
+  // contact's phone hash, never by name — name-keying (the old bug) let a match
+  // for one contact get pinned onto a different same-named contact.
+  if (!CONFIG.phoneApi || !crypto.subtle) return [];
+  const byPrefix = {};
   for (const c of contacts) {
     if (!c.phone) continue;
     const hk = await hashPhone(c.phone);
     if (!hk) continue;
-    hashes[c.name] = hk;
-    (byPrefix[hk.slice(0, 2)] = byPrefix[hk.slice(0, 2)] || []).push(c);
+    (byPrefix[hk.slice(0, 2)] = byPrefix[hk.slice(0, 2)] || []).push({ c, rest: hk.slice(2, 14) });
   }
-  const out = {};
+  const matched = [];
   for (const [prefix, group] of Object.entries(byPrefix)) {
     const bucket = await fetchPhoneBucket(prefix);
     const map = {};
     for (const [rest, f, l, city] of bucket) map[rest] = [f, l, city];
-    for (const c of group) {
-      const hit = map[hashes[c.name].slice(2, 14)];
-      if (hit) out[c.name] = { first: hit[0], last: hit[1], voterCity: hit[2], via: 'phone' };
+    for (const { c, rest } of group) {
+      const hit = map[rest];
+      if (hit) matched.push({ contact: c, first: hit[0], last: hit[1], voterCity: hit[2] });
     }
   }
-  return out;
+  return matched;
 }
 
 // Shared matching core — every input method funnels through here.
@@ -2045,35 +2046,32 @@ async function matchContactList(contacts, opts) {
     if (S && S.pendingWelcome) maybeWelcome();
     return 0;
   }
-  let phoneHits = {};
-  try { phoneHits = await phoneMatch(contacts); } catch (e) {}
+  let matched = [];
+  try { matched = await phoneMatch(contacts); } catch (e) {}
   setP(90, 'Almost done…', '');
-  const results = [];
-  for (const c of contacts) {
-    const hit = phoneHits[c.name];
-    if (!hit) continue;
-    const parts = String(c.name).trim().split(/\s+/);
-    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '',
-                   voterCity: hit.voterCity, matchedBy: 'phone' });
-  }
-  const found = results.map(c => ({
-    name: c.name, first: c._first || '', last: c._last || '', phone: c.phone || '',
-    voterCity: c.voterCity || '', matchedBy: 'phone'
-  }));
+  const found = matched.map(m => {
+    const parts = String(m.contact.name).trim().split(/\s+/);
+    return {
+      name: m.contact.name, first: m.first || '', last: m.last || '', phone: m.contact.phone || '',
+      voterCity: m.voterCity || '', matchedBy: 'phone',
+      confirmed: lastNameConfirms(m.contact.name, m.last)   // phone + last name = verified tier
+    };
+  });
   if (!opts.standalone) {
     const seen = {};
     S.registeredFriends = (S.registeredFriends || []).concat(found)
       .filter(x => x.matchedBy === 'phone')
-      .filter(x => !(S.excludedFriends || []).includes(friendKey(x)))   // honor hand-removed friends
-      .filter(x => { const k = (x.first + x.last).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
+      .filter(x => !(S.excludedFriends || []).includes(friendKey(x)))   // dismissed people never return
+      .filter(x => { const k = friendKey(x); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
   }
 
   if (emoji) emoji.textContent = '🌷';
-  const n = results.length;
+  const n = found.length;
+  const conf = found.filter(x => x.confirmed).length;
   setP(100, 'All done!', n
-    ? n + (n === 1 ? ' friend verified by phone number' : ' friends verified by phone number')
-    : 'No verified matches — you can still look anyone up by hand.');
+    ? (conf + ' verified, ' + (n - conf) + ' likely by phone')
+    : 'No matches — you can still look anyone up by hand.');
   await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
@@ -2170,6 +2168,18 @@ function friendKey(c) {
   const last  = c.last  || c._last  || '';
   return ((first + last).toUpperCase()) || String(c.name || '').toUpperCase();
 }
+function normLast(s) { return String(s || '').toLowerCase().replace(/[^a-z]/g, ''); }
+// A phone hit is CONFIRMED only when the contact's last name matches the voter's.
+// A phone hit with no/other last name is still surfaced, but as "highly likely",
+// never as verified — that is what keeps a wrong-person match (Aiden) out of the
+// verified tier while still showing it.
+function lastNameConfirms(contactName, voterLast) {
+  const parts = String(contactName || '').trim().split(/\s+/);
+  if (parts.length < 2) return false;             // single-name contact can't confirm
+  const cl = normLast(parts[parts.length - 1]), vl = normLast(voterLast);
+  if (!cl || !vl) return false;
+  return cl === vl || cl.includes(vl) || vl.includes(cl);
+}
 // The ✕ on a friend card. Removes them from the list AND remembers the removal
 // so the next contact-compare never quietly re-adds the same person (the reason
 // a removed friend kept coming back — the button was never even wired up).
@@ -2191,25 +2201,42 @@ function renderRegisteredFriends() {
   // blocklisted numbers at the source, so stored lists built against the old
   // index must be wiped once and rebuilt clean. Any future change to matching
   // rules bumps this again — fixed indexes don't fix devices.
-  if (S && (S.friendsVer || 0) < 4) {
+  if (S && (S.friendsVer || 0) < 5) {
     const had = S.registeredFriends && S.registeredFriends.length;
     S.registeredFriends = [];
-    S.friendsVer = 4; save();
+    S.friendsVer = 5; save();
     if (had) showToast('Match quality upgraded — run the friend finder once more to rebuild your list.');
   }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
-  const items = S.registeredFriends.map((c, i) => {
+  // Two tiers: phone + last name = VERIFIED (top); phone number only = HIGHLY
+  // LIKELY (below). Both are shown; nothing false is ever labelled verified.
+  const card = (c, i, confirmed) => {
     const initials = (c.first || c.name || '?')[0].toUpperCase();
+    const ring = confirmed ? '#dcfce7' : '#fef3c7';
+    const ink  = confirmed ? '#059669' : '#b45309';
+    const sub  = confirmed
+      ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified · phone and last name · ${esc(c.voterCity || '')}</div>`
+      : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Highly likely · matched by phone · ${esc(c.voterCity || '')}</div>`;
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${initials}</div>
+      <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${initials}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity)}</div>
+        ${sub}
       </div>
       <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
     </div>`;
-  }).join('');
-  listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} VERIFIED</div>` + items;
+  };
+  const hdr = (t, color) => `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:${color};letter-spacing:0.12em;margin:14px 18px 4px;">${t}</div>`;
+  const confirmedRows = [], likelyRows = [];
+  S.registeredFriends.forEach((c, i) => (c.confirmed ? confirmedRows : likelyRows).push(i));
+  let html = '';
+  if (confirmedRows.length)
+    html += hdr(`YOUR REGISTERED FRIENDS · ${confirmedRows.length} VERIFIED`, '#059669')
+          + confirmedRows.map(i => card(S.registeredFriends[i], i, true)).join('');
+  if (likelyRows.length)
+    html += hdr(`HIGHLY LIKELY · ${likelyRows.length} MORE BY PHONE`, '#b45309')
+          + likelyRows.map(i => card(S.registeredFriends[i], i, false)).join('');
+  listEl.innerHTML = html;
   listEl.style.display = 'block';
 }
 function selectRegisteredFriend(idx) {
@@ -2245,13 +2272,20 @@ async function _renderContactList() {
     listEl.innerHTML = '<div style="font-size:11px;color:#9aa3ad;margin:12px 18px 0;text-align:center;">No matches — use the search above to look anyone up by hand.</div>';
     return;
   }
+  _registeredCache.sort((a, b) => (b._confirmed ? 1 : 0) - (a._confirmed ? 1 : 0));  // verified first
   const items = _registeredCache.map((c, i) => {
     const first = c._first || c.name.split(/\s+/)[0];
+    const confirmed = !!c._confirmed;
+    const ring = confirmed ? '#dcfce7' : '#fef3c7';
+    const ink  = confirmed ? '#059669' : '#b45309';
+    const sub  = confirmed
+      ? `<div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified · phone and last name · ${esc(c.voterCity || '')}</div>`
+      : `<div style="font-size:10px;color:#b45309;margin-top:1px;">Highly likely · matched by phone · ${esc(c.voterCity || '')}</div>`;
     return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectContact(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
+      <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${esc(first[0].toUpperCase())}</div>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
-        <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Verified by phone number · ${esc(c.voterCity || '')}</div>
+        ${sub}
       </div>
     </div>`;
   }).join('');
