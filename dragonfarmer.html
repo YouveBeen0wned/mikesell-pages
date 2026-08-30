@@ -1297,7 +1297,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260829-2256';
+const BUILD = '20260830-0129';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2477,12 +2477,22 @@ function renderRegisteredFriends() {
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}</div>
         <div style="font-size:10px;color:#059669;margin-top:1px;">✓ Registered · ${esc(c.voterCity)}</div>
       </div>
+      <div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>
     </div>`;
   }).join('');
   listEl.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#059669;letter-spacing:0.12em;margin:14px 18px 4px;">YOUR REGISTERED FRIENDS · ${S.registeredFriends.length} FOUND</div>` + items;
   listEl.style.display = 'block';
 }
 
+function removeRegisteredFriend(idx) {
+  const c = (S.registeredFriends || [])[idx];
+  if (!c) return;
+  gameConfirm('Remove ' + (c.name || 'this match') + '?',
+    'Phone records are sometimes wrong — removing a bad match here only affects your list.',
+    'Yes, remove', 'background:var(--red,#dc2626);box-shadow:0 5px 0 #991b1b;',
+    function() { S.registeredFriends.splice(idx, 1); save(); renderRegisteredFriends(); showToast('Removed.'); },
+    function() {});
+}
 function selectRegisteredFriend(idx) {
   const c = (S.registeredFriends || [])[idx];
   if (!c) return;
