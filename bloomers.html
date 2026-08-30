@@ -673,6 +673,12 @@ function rarityName(sh) { return { g: 'Common', b: 'Uncommon', p: 'Rare', au: 'L
 function launchSms(href) {
   const a = document.createElement('a');
   a.href = href;
+  // target=_blank: the sms: handoff happens in a NEW browsing context, so this
+  // page is never navigated away from. That removes the reason browsers
+  // (Samsung Internet especially) ask "Open / Close current window / Cancel" —
+  // there is no window being left. Messages opens; the game stays put.
+  a.target = '_blank';
+  a.rel = 'noopener';
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
@@ -1090,7 +1096,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1358';
+const BUILD = '20260830-1359';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
