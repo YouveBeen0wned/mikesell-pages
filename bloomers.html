@@ -1078,7 +1078,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1200';
+const BUILD = '20260830-1230';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1850,11 +1850,14 @@ async function filterRegisteredContacts(contacts) {
   let hits = {};
   try { hits = await phoneMatch(contacts); } catch (e) {}
   const results = [];
+  const excl = (S && S.excludedFriends) || [];
   for (const c of contacts) {
     const hit = hits[c.name];
     if (!hit) continue;
     const parts = String(c.name).trim().split(/\s+/);
-    results.push({ ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '', voterCity: hit.voterCity, matchedBy: 'phone' });
+    const row = { ...c, _first: hit.first || parts[0], _last: hit.last || parts[parts.length - 1] || '', voterCity: hit.voterCity, matchedBy: 'phone' };
+    if (excl.includes(friendKey(row))) continue;   // honor hand-removed friends here too
+    results.push(row);
   }
   return results;
 }
@@ -2163,7 +2166,9 @@ function openConnectSheet(afterEmpty) {
 // Stable identity for a matched friend, matching the dedup key used when they
 // are added, with a name fallback for rows that carried no voter first/last.
 function friendKey(c) {
-  return (((c.first || '') + (c.last || '')).toUpperCase()) || String(c.name || '').toUpperCase();
+  const first = c.first || c._first || '';
+  const last  = c.last  || c._last  || '';
+  return ((first + last).toUpperCase()) || String(c.name || '').toUpperCase();
 }
 // The ✕ on a friend card. Removes them from the list AND remembers the removal
 // so the next contact-compare never quietly re-adds the same person (the reason
