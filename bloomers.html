@@ -557,7 +557,7 @@ const CONFIG = {
   // Not-in-the-rolls message: casual, hedged, registration first.
   msgDeadline: (first, link) => `Hi NAME, it's ${first}. Could be wrong, but it looks like you're not registered to vote... only takes about two minutes at registertovoteflorida.gov. If you get signed up, give Mike Sell a look while you're at it. Then tap here to tell me you're in: ${link}`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
-  waterGapH: 48, praiseCycleH: 0.2, maxTouches: 3, dailyTextCap: 5,
+  waterGapH: 48, praiseCycleH: 0.2, maxTouches: 3, dailyTextCap: 50,
   poolBaseCycles: 3, // + 1 per rank
   yields: { g: 1, b: 2, p: 4, au: 5 },
   ranks: [
@@ -1096,7 +1096,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260830-1834';
+const BUILD = '20260901-1814';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1409,7 +1409,7 @@ function openSpot() {
   return null;
 }
 function plantNow(deadline) {
-  if (S.textsToday >= CONFIG.dailyTextCap) { showToast('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
+  if (S.textsToday >= CONFIG.dailyTextCap) { showToast(CONFIG.dailyTextCap + ' texts a day keeps it human. Come back tomorrow 🌱'); return; }
   const spot = openSpot();
   if (!spot) { showToast('Your garden is full — place a bed from your Shed first, or wait for a bloom to earn one.'); return; }
   const tag = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first.toUpperCase();
@@ -1493,7 +1493,7 @@ function seedTap(id) {
 function waterNow(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p || !waterReady(p)) return;
-  if (S.textsToday >= CONFIG.dailyTextCap) { showToast('Five texts a day keeps it human. Come back tomorrow 🌱'); return; }
+  if (S.textsToday >= CONFIG.dailyTextCap) { showToast(CONFIG.dailyTextCap + ' texts a day keeps it human. Come back tomorrow 🌱'); return; }
   p.touches++; p.lastTouch = Date.now(); S.textsToday++;
   save(); closeOv('ov-plantpick');
   api('touch', { seedId: id, n: p.touches }); // [SERVER]
