@@ -1299,7 +1299,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260901-2305';
+const BUILD = '20260902-0548';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1373,15 +1373,15 @@ function showWelcomeGift() {
    and rows. A bed is just a set of grid cells, which is what makes
    right-angle (L) beds possible. */
 const GRID = { cols: 8, rows: 3, cw: 42, ch: 44, ox: 14, oy: 10 };
-// `rows` is the STARTING size, not the limit. The roost grows downward as nests
-// fill it: gridRows() reports how many rows are actually in use (never fewer
-// than the starting 3), and findFit may place a nest below the current bottom,
-// which makes the next render taller. MAX_ROWS is a sanity stop, not a target.
+// `rows` is the STARTING size, not the limit. The yard always shows ONE EMPTY
+// ROW below the deepest bed, so there is visibly somewhere to put the next one
+// and the player never has to discover they are out of room. Filling that spare
+// row simply reveals another. MAX_ROWS is a sanity stop, not a target.
 const MAX_ROWS = 12;
 function gridRows() {
-  let deepest = 0;
+  let deepest = 0;   // 1 + index of the lowest row containing a bed
   if (S && S.beds) for (const b of S.beds) for (const [, r] of (b.cells || [])) if (r + 1 > deepest) deepest = r + 1;
-  return Math.max(GRID.rows, deepest);
+  return Math.min(MAX_ROWS, Math.max(GRID.rows, deepest + 1));
 }
 const BED_SHAPES = {
   r2: [[0, 0], [1, 0]],
