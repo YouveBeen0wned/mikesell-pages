@@ -2189,7 +2189,7 @@ function openConnectSheet(afterEmpty) {
   let opts = '';
   const hasGoogle = googleAvailable();
   // 0 — the one-tap everything path
-  if (hasGoogle) opts += row('⚡', 'Import all from Google', 'One tap checks every contact in your Google account. Google may show a one-time “unverified app” notice while our review finishes — tap Advanced, then Continue.', 'importFromGoogle()', true);
+  if (hasGoogle) opts += row('⚡', 'Import all from Google', 'One tap checks every contact in your Google account. Nothing is uploaded — the comparison happens on your phone.', 'importFromGoogle()', true);
   // 1 — pick contacts by hand (only where the phone allows it)
   if (st === 'ready') opts += row('📇', 'Select a few by hand', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', !hasGoogle);
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
