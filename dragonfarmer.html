@@ -2378,7 +2378,20 @@ async function matchContactList(contacts, opts) {
        + (skipped ? ' · ' + skipped + ' hidden (removed earlier)' : ''))
     : (skipped ? skipped + ' matches are hidden because you removed them earlier.'
                : 'No matches — you can still look anyone up by hand.'));
-  await new Promise(r => setTimeout(r, 1200));
+  // A surprisingly low result is the one case where the volunteer needs to SEE
+  // the arithmetic. Hold the panel and spell out where the numbers went, rather
+  // than flashing "2 matches" for a second and leaving them to wonder.
+  if (n < 5) {
+    setP(100, n ? ('Only ' + n + ' matched') : 'No matches',
+      'Scanned ' + numberCount + ' numbers across ' + withPhone + ' contacts · '
+      + conf + ' verified · ' + (n - conf) + ' likely'
+      + (skipped ? ' · ' + skipped + ' hidden because you removed them earlier' : '')
+      + '. Only cell numbers on the FL-04 rolls can match — landlines, out-of-district '
+      + 'friends and numbers the state does not have on file never will.');
+    await new Promise(r => setTimeout(r, 9000));
+  } else {
+    await new Promise(r => setTimeout(r, 1200));
+  }
   closeOv('ov-matching');
 
   if (opts.standalone) {
