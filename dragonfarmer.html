@@ -590,7 +590,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
         <span>🔥 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
         <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT</button>
       </div>
-      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Roost Embers: +<span id="hud-percycle">0</span> 🔥 every 12 min</div>
+      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Roost Embers: +<span id="hud-percycle">0</span> 🔥 in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
     </div>
   </div>
   <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
@@ -978,6 +978,25 @@ function tickPraise() {
     save();
   }
 }
+// Live countdown to the next ember payout. Runs once a second, touches one
+// text node, and reads the same S.poolTick anchor tickPraise() uses — so the
+// number on screen can never disagree with the number that actually lands.
+function renderCycleCountdown() {
+  const el = document.getElementById('hud-cyclecd');
+  if (!el || !S) return;
+  const cyc = CONFIG.praiseCycleH * HOUR;
+  const per = perCycle();
+  if (!per) { el.textContent = '—'; el.style.color = '#9aa3ad'; el.title = 'Raise something to start earning.'; return; }
+  if (S.pool >= poolCap()) { el.textContent = 'full'; el.style.color = '#b45309'; el.title = 'Your pool is full — spend some before it stops filling.'; return; }
+  let left = cyc - ((Date.now() - S.poolTick) % cyc);
+  if (left < 0 || left > cyc) left = 0;
+  const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+  el.textContent = m + ':' + String(s).padStart(2, '0');
+  el.style.color = left <= 15000 ? '#b45309' : '#059669';   // amber in the last 15s
+  el.title = 'Next ember payout';
+}
+setInterval(function () { try { renderCycleCountdown(); } catch (e) {} }, 1000);
+
 function addPraise(n) {
   S.lifetime += n; S.weekly += n;
   pushScore();
@@ -2098,11 +2117,13 @@ async function filterRegisteredContacts(contacts) {
   return results;
 }
 
-function popOutToMatch() {
-  closeOv('ov-popout');
-  window.open(SELF_URL + '?match=1', '_blank');
-  showToast('Finish matching in the new tab, then come back here 🥚');
-}
+// (Removed 2026-09-05: a second, older popOutToMatch() lived here and referenced
+// an undefined SELF_URL. It was shadowed by the real definition further down —
+// function declarations hoist, so the LAST one wins — which is the only reason
+// it never threw. Left in place it was a landmine: any reordering of this file
+// would have swapped the working version for one that dies on an undefined
+// variable, silently killing the contacts pop-out. The live version uses
+// POPOUT_URL and is defined once, below.)
 
 function parseVCards(text) {
   let t = String(text).replace(/\r\n/g, '\n');
