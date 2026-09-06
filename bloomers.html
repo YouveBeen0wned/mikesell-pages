@@ -2136,9 +2136,16 @@ async function matchContactList(contacts, opts) {
   if (emoji) emoji.textContent = '🌷';
   const n = found.length;
   const conf = found.filter(x => x.confirmed).length;
+  // How many real hits were thrown away because that person was dismissed
+  // earlier? Dismissals are permanent and survive re-runs, so without this
+  // number a volunteer sees "2 matches" and has no idea 30 were suppressed.
+  const skipped = found.filter(x => (S && S.excludedFriends || []).includes(friendKey(x))).length;
+  window._lastMatchStats = { scanned: withPhone, found: n, verified: conf, skipped: skipped };
   setP(100, 'All done!', n
-    ? (conf + ' verified, ' + (n - conf) + ' likely by phone')
-    : 'No matches — you can still look anyone up by hand.');
+    ? (conf + ' verified, ' + (n - conf) + ' likely by phone'
+       + (skipped ? ' · ' + skipped + ' hidden (removed earlier)' : ''))
+    : (skipped ? skipped + ' matches are hidden because you removed them earlier.'
+               : 'No matches — you can still look anyone up by hand.'));
   await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
@@ -2215,6 +2222,14 @@ function openConnectSheet(afterEmpty) {
   if (st === 'ready') opts += row('📇', 'Select a few by hand', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', !hasGoogle);
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
 
+  // Removed people stay removed forever, which is right — but it also means a
+  // volunteer who cleared a few by accident sees a short list and no reason why.
+  // Surface the count and give them the way back.
+  const _dq = dismissedCount();
+  if (_dq) opts += row('↩️', 'Bring back ' + _dq + ' removed ' + (_dq === 1 ? 'person' : 'people'),
+    'You removed ' + (_dq === 1 ? 'someone' : 'them') + ' earlier, so they stopped matching. This makes them eligible again.',
+    'closeOv(\'ov-connect\');restoreDismissed()', false);
+
   // With Google and the picker both unavailable there is nothing to list —
   // point to the by-hand search instead of showing an empty sheet.
   if (!opts) opts = `<div style="font-size:12px;color:#5b6470;text-align:center;margin-top:10px;line-height:1.6;">This browser can't read contacts. Use <b>Check Voter Rolls</b> on the plant tab to look friends up by hand.</div>`;
@@ -2230,6 +2245,23 @@ function openConnectSheet(afterEmpty) {
 
 // Stable identity for a matched friend, matching the dedup key used when they
 // are added, with a name fallback for rows that carried no voter first/last.
+// Dismissals are permanent by design — a wrong match should never come back on
+// its own. But that makes an over-zealous dismissal invisible and unrecoverable,
+// so this is the escape hatch. Callable from the Find Friends sheet.
+function restoreDismissed() {
+  if (!S) return;
+  const n = (S.excludedFriends || []).length;
+  if (!n) { showToast('Nothing has been removed.'); return; }
+  gameConfirm('Bring back removed people?',
+    n + (n === 1 ? ' person you removed will be' : ' people you removed will be')
+      + ' eligible to match again the next time you run the friend finder.',
+    'Bring them back', 'background:var(--green);box-shadow:0 5px 0 #047857;', function () {
+      S.excludedFriends = []; save();
+      showToast('Restored. Run the friend finder again to rebuild your list 🌱');
+    });
+}
+function dismissedCount() { return ((S && S.excludedFriends) || []).length; }
+
 function friendKey(c) {
   const first = c.first || c._first || '';
   const last  = c.last  || c._last  || '';
