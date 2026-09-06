@@ -840,7 +840,7 @@ function freshState(first, last, garden, contacts) {
     nextId: 4, pendingRankup: null,
     registeredFriends: [], // [{name,first,last,phone,voterCity,matchedBy,confirmed}]
     excludedFriends: [], // keys a player removed by hand — never re-add them on re-compare
-    friendsVer: 5, // bump to force a one-time wipe of stored matches on old devices
+    friendsVer: 6, // bump to force a one-time wipe of stored matches on old devices
   };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -2599,11 +2599,21 @@ function renderRegisteredFriends() {
   // One-time reset (v5, 2026-08-30): matching is two-tier (phone+last name =
   // confirmed, phone-only = needs the volunteer's yes/no), and rows carry a
   // `confirmed` flag. Any future change to matching rules bumps this again.
-  if (S && (S.friendsVer || 0) < 5) {
-    const had = S.registeredFriends && S.registeredFriends.length;
+  if (S && (S.friendsVer || 0) < 6) {
+    // v6 (2026-09-06): until today the "Unsure" button wrote the SAME permanent
+    // blacklist entry as "Not them", so every honest "I'm not certain" deleted a
+    // real voter forever — keyed on the voter's name, immune to every index
+    // rebuild. The stored exclusion list therefore cannot be trusted: there is
+    // no way to tell a genuine rejection from an "Unsure" after the fact. Clear
+    // it once, so wrongly-deleted people come back on their own. From here the
+    // two buttons are distinct and only "Not them" blacklists.
+    const hadX = (S.excludedFriends || []).length;
+    S.excludedFriends = [];
     S.registeredFriends = [];
-    S.friendsVer = 5; save();
-    if (had) showToast('Match quality upgraded — run the friend finder once more to rebuild your list.');
+    S.friendsVer = 6; save();
+    showToast(hadX
+      ? (hadX + (hadX === 1 ? ' person was' : ' people were') + ' wrongly removed by the old Unsure button — restored. Run the friend finder again.')
+      : 'Match quality upgraded — run the friend finder once more to rebuild your list.');
   }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const card = (c, i, confirmed) => {
@@ -2648,11 +2658,17 @@ function renderRegisteredFriends() {
   // One-time reset (v5, 2026-08-30): matching is two-tier (phone+last name =
   // confirmed, phone-only = needs the volunteer's yes/no), and rows carry a
   // `confirmed` flag. Any future change to matching rules bumps this again.
-  if (S && (S.friendsVer || 0) < 5) {
-    const had = S.registeredFriends && S.registeredFriends.length;
+  if (S && (S.friendsVer || 0) < 6) {
+    // See the v6 note on the other renderer: the old "Unsure" button wrote the
+    // same permanent blacklist entry as "Not them", so the stored exclusion
+    // list is untrustworthy and gets cleared once.
+    const hadX = (S.excludedFriends || []).length;
+    S.excludedFriends = [];
     S.registeredFriends = [];
-    S.friendsVer = 5; save();
-    if (had) showToast('Match quality upgraded — run the friend finder once more to rebuild your list.');
+    S.friendsVer = 6; save();
+    showToast(hadX
+      ? (hadX + (hadX === 1 ? ' person was' : ' people were') + ' wrongly removed by the old Unsure button — restored. Run the friend finder again.')
+      : 'Match quality upgraded — run the friend finder once more to rebuild your list.');
   }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const card = (c, i, confirmed) => {
