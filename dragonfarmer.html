@@ -2075,11 +2075,18 @@ async function importFromGoogle() {
       for (const p of (d.connections || [])) {
         const nm = p.names && p.names[0] && p.names[0].displayName;
         if (!nm) continue;
-        const ph = (p.phoneNumbers && p.phoneNumbers[0] &&
-                    (p.phoneNumbers[0].canonicalForm || p.phoneNumbers[0].value)) || '';
-        const key = (nm + '|' + ph).toUpperCase();
+        // Check EVERY number on the contact, not just phoneNumbers[0].
+        // (Fixed 2026-09-05: reading only the first number silently missed
+        // anyone whose cell is listed second — home or work first is extremely
+        // common — and the voter file is indexed on CELL numbers, so those are
+        // exactly the ones that would have matched. This was the single biggest
+        // source of missed matches.)
+        const phones = (p.phoneNumbers || [])
+          .map(pn => pn.canonicalForm || pn.value || '').filter(Boolean);
+        if (!phones.length) continue;
+        const key = (nm + '|' + phones.join(',')).toUpperCase();
         if (seen[key]) continue; seen[key] = 1;
-        contacts.push({ name: nm, phone: ph });
+        contacts.push({ name: nm, phone: phones[0], phones: phones });
       }
       if (status) status.textContent = 'Fetched ' + contacts.length + ' contacts…';
       pageToken = d.nextPageToken || '';
@@ -2174,8 +2181,15 @@ function parseVCards(text) {
     while ((m = telRe.exec(card)) !== null) tels.push({ params: m[1] || '', value: m[2].trim() });
     const mobile = tels.find(x => /CELL|MOBILE|IPHONE/i.test(x.params));
     phone = (mobile || tels[0] || { value: '' }).value.replace(/[^\d+]/g, '');
+    // Keep every number on the card, mobile first — the match checks them all.
+    const phones = [];
+    if (mobile) phones.push(mobile.value.replace(/[^\d+]/g, ''));
+    for (const t of tels) {
+      const v = t.value.replace(/[^\d+]/g, '');
+      if (v && phones.indexOf(v) === -1) phones.push(v);
+    }
 
-    out.push({ name, phone });
+    out.push({ name, phone, phones });
   }
   return out;
 }
@@ -2235,6 +2249,23 @@ function firstNameMatches(voterFirst, contactFirst) {
 /* ---------------- phone matching (private backend, k-anonymity) ---------------- */
 const _phoneCache = new Map();
 
+// Every usable number on a contact, de-duplicated by its last 10 digits.
+// Accepts `phones: []` (all import paths now supply this) and falls back to a
+// single `phone` so older stored rows keep working.
+function contactNumbers(c) {
+  const out = [], seen = {};
+  const list = (c && c.phones && c.phones.length) ? c.phones : [c && c.phone];
+  for (const p of list) {
+    if (!p) continue;
+    const d = String(p).replace(/\D/g, '');
+    if (d.length < 10) continue;
+    const k = d.slice(-10);
+    if (seen[k]) continue;
+    seen[k] = 1; out.push(p);
+  }
+  return out;
+}
+
 async function hashPhone(digits) {
   const d = String(digits).replace(/\D/g, '');
   if (d.length < 10) return null;
@@ -2262,19 +2293,26 @@ async function phoneMatch(contacts) {
   if (!CONFIG.phoneApi || !crypto.subtle) return [];
   const byPrefix = {};
   for (const c of contacts) {
-    if (!c.phone) continue;
-    const hk = await hashPhone(c.phone);
-    if (!hk) continue;
-    (byPrefix[hk.slice(0, 2)] = byPrefix[hk.slice(0, 2)] || []).push({ c, rest: hk.slice(2, 14) });
+    // A contact can carry several numbers and the cell is often not the first
+    // one. The voter file is indexed on CELL numbers, so checking only one
+    // number throws away most of the real matches. Check them all.
+    for (const raw of contactNumbers(c)) {
+      const hk = await hashPhone(raw);
+      if (!hk) continue;
+      (byPrefix[hk.slice(0, 2)] = byPrefix[hk.slice(0, 2)] || []).push({ c, raw, rest: hk.slice(2, 14) });
+    }
   }
   const matched = [];
+  const claimed = new Set();          // one row per contact, even if two of their numbers hit
   for (const [prefix, group] of Object.entries(byPrefix)) {
     const bucket = await fetchPhoneBucket(prefix);
     const map = {};
     for (const [rest, f, l, city] of bucket) map[rest] = [f, l, city];
-    for (const { c, rest } of group) {
+    for (const { c, raw, rest } of group) {
       const hit = map[rest];
-      if (hit) matched.push({ contact: c, first: hit[0], last: hit[1], voterCity: hit[2] });
+      if (!hit || claimed.has(c)) continue;
+      claimed.add(c);
+      matched.push({ contact: { ...c, phone: raw }, first: hit[0], last: hit[1], voterCity: hit[2] });
     }
   }
   return matched;
@@ -2296,8 +2334,11 @@ async function matchContactList(contacts, opts) {
   };
   if (emoji) emoji.textContent = '🌱';
   openOv('ov-matching');
-  const withPhone = contacts.filter(c => c.phone && String(c.phone).replace(/\D/g, '').length >= 10).length;
-  setP(15, 'Checking ' + withPhone + ' phone numbers…', 'This may take a moment. Numbers are compared on your phone, never saved.');
+  // Count NUMBERS, not contacts — a contact with a home and a cell contributes
+  // two, and both get checked.
+  const numberCount = contacts.reduce((a, c) => a + contactNumbers(c).length, 0);
+  const withPhone = contacts.filter(c => contactNumbers(c).length).length;
+  setP(15, 'Checking ' + numberCount + ' numbers across ' + withPhone + ' contacts…', 'This may take a moment. Numbers are compared on your phone, never saved.');
   if (!withPhone || !CONFIG.phoneApi) {
     closeOv('ov-matching');
     showToast('No phone numbers to check — matching starts from phone numbers.');
@@ -2369,7 +2410,7 @@ async function runContactMatch(popoutMode) {
   try {
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
     const contacts = (raw || []).filter(c => c.name && c.name[0])
-      .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
+      .map(c => ({ name: c.name[0], phone: (c.tel && c.tel[0]) || '', phones: (c.tel || []).filter(Boolean) }));
     if (!contacts.length) { showToast('No contacts selected.'); return; }
     await matchContactList(contacts, { standalone: !!popoutMode });
   } catch (err) {
@@ -2560,7 +2601,7 @@ async function tryLoadContacts() {
   try {
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
     _contactsCache = (raw || []).filter(c => c.name && c.name[0])
-      .map(c => ({ name: c.name[0], phone: c.tel && c.tel[0] ? c.tel[0] : '' }));
+      .map(c => ({ name: c.name[0], phone: (c.tel && c.tel[0]) || '', phones: (c.tel || []).filter(Boolean) }));
   } catch(e) { _contactsCache = []; }
   await _renderContactList();
 }
