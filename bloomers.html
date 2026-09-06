@@ -2190,24 +2190,12 @@ async function matchContactList(contacts, opts) {
     save();
   }
   setP(100, 'All done!', n
-    ? (conf + ' verified, ' + (n - conf) + ' likely by phone'
-       + (skipped ? ' · ' + skipped + ' hidden (removed earlier)' : ''))
-    : (skipped ? skipped + ' matches are hidden because you removed them earlier.'
-               : 'No matches — you can still look anyone up by hand.'));
+    ? (conf + ' verified, ' + (n - conf) + ' likely by phone')
+    : 'No matches — you can still look anyone up by hand.');
   // A surprisingly low result is the one case where the volunteer needs to SEE
   // the arithmetic. Hold the panel and spell out where the numbers went, rather
   // than flashing "2 matches" for a second and leaving them to wonder.
-  if (n < 25 || skipped) {
-    setP(100, n ? ('Only ' + n + ' matched') : 'No matches',
-      'Scanned ' + numberCount + ' numbers across ' + withPhone + ' contacts · '
-      + conf + ' verified · ' + (n - conf) + ' likely'
-      + (skipped ? ' · ' + skipped + ' hidden because you removed them earlier' : '')
-      + '. Only cell numbers on the FL-04 rolls can match — landlines, out-of-district '
-      + 'friends and numbers the state does not have on file never will.');
-    await new Promise(r => setTimeout(r, 9000));
-  } else {
-    await new Promise(r => setTimeout(r, 1200));
-  }
+  await new Promise(r => setTimeout(r, 1200));
   closeOv('ov-matching');
 
   if (opts.standalone) {
@@ -2286,20 +2274,21 @@ function openConnectSheet(afterEmpty) {
   // Removed people stay removed forever, which is right — but it also means a
   // volunteer who cleared a few by accident sees a short list and no reason why.
   // Surface the count and give them the way back.
-  // Always offer the last run's numbers. When a match comes back nearly empty
-  // this is the difference between "it's broken" and knowing which part is.
-  if (S && S.lastMatch) {
-    const m = S.lastMatch;
-    opts += row('🔎', 'Why did I only get ' + m.found + '?',
-      'Last run checked ' + m.numbers + ' numbers across ' + m.contacts + ' contacts · '
-      + m.verified + ' verified · ' + m.hidden + ' hidden. Tap to copy the details.',
-      'copyMatchDiagnostics()', false);
+  // Maintenance rows — hidden from volunteers, shown only with ?debug=1.
+  // Nobody running the game should have to see our diagnostics.
+  if (DEBUG_UI) {
+    if (S && S.lastMatch) {
+      const m = S.lastMatch;
+      opts += row('🔎', 'Last run: ' + m.found + ' matched',
+        m.numbers + ' numbers across ' + m.contacts + ' contacts · '
+        + m.verified + ' verified · ' + m.hidden + ' hidden. Tap to copy.',
+        'copyMatchDiagnostics()', false);
+    }
+    const _dq = dismissedCount();
+    if (_dq) opts += row('↩️', 'Bring back ' + _dq + ' removed ' + (_dq === 1 ? 'person' : 'people'),
+      'Makes them eligible to match again.',
+      'closeOv(\'ov-connect\');restoreDismissed()', false);
   }
-
-  const _dq = dismissedCount();
-  if (_dq) opts += row('↩️', 'Bring back ' + _dq + ' removed ' + (_dq === 1 ? 'person' : 'people'),
-    'You removed ' + (_dq === 1 ? 'someone' : 'them') + ' earlier, so they stopped matching. This makes them eligible again.',
-    'closeOv(\'ov-connect\');restoreDismissed()', false);
 
   // With Google and the picker both unavailable there is nothing to list —
   // point to the by-hand search instead of showing an empty sheet.
@@ -2332,6 +2321,9 @@ function restoreDismissed() {
     });
 }
 function dismissedCount() { return ((S && S.excludedFriends) || []).length; }
+
+// Maintenance UI is opt-in: add ?debug=1 to the URL. Volunteers never see it.
+const DEBUG_UI = /[?&]debug=1/.test(location.search);
 
 // One line describing the last run, for pasting to whoever is debugging it.
 function matchDiagnosticLine() {
@@ -2416,13 +2408,12 @@ function renderRegisteredFriends() {
     // no way to tell a genuine rejection from an "Unsure" after the fact. Clear
     // it once, so wrongly-deleted people come back on their own. From here the
     // two buttons are distinct and only "Not them" blacklists.
-    const hadX = (S.excludedFriends || []).length;
+    // Silent on purpose. The volunteer did nothing wrong and does not need to
+    // hear about our bug — clearing the list is enough, and anyone wrongly
+    // removed simply reappears the next time they check. Their existing matches
+    // are left alone so nothing visibly disappears.
     S.excludedFriends = [];
-    S.registeredFriends = [];
     S.friendsVer = 6; save();
-    showToast(hadX
-      ? (hadX + (hadX === 1 ? ' person was' : ' people were') + ' wrongly removed by the old Unsure button — restored. Run the friend finder again.')
-      : 'Match quality upgraded — run the friend finder once more to rebuild your list.');
   }
   if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
   const card = (c, i, confirmed) => {
