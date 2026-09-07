@@ -2186,6 +2186,11 @@ async function matchContactList(contacts, opts) {
   // Count NUMBERS, not contacts — a contact with a home and a cell contributes
   // two, and both get checked.
   const numberCount = contacts.reduce((a, c) => a + contactNumbers(c).length, 0);
+  // Keep the last-10 digits of everything we actually read, so the debug
+  // lookup can say whether a given number ever reached the matcher. Device
+  // memory only — never saved, never sent anywhere.
+  window._lastImportNumbers = contacts.flatMap(c =>
+    contactNumbers(c).map(p => String(p).replace(/\D/g, '').slice(-10)));
   const withPhone = contacts.filter(c => contactNumbers(c).length).length;
   setP(15, 'Checking ' + numberCount + ' numbers across ' + withPhone + ' contacts…', 'This may take a moment. Numbers are compared on your phone, never saved.');
   let matched = [];
@@ -2330,6 +2335,9 @@ function openConnectSheet(afterEmpty) {
     if (_dq) opts += row('↩️', 'Bring back ' + _dq + ' removed ' + (_dq === 1 ? 'person' : 'people'),
       'Makes them eligible to match again.',
       'closeOv(\'ov-connect\');restoreDismissed()', false);
+    opts += row('🔢', 'Look up one number',
+      'Says whether the state has that number, under whose name, and whether your last import contained it.',
+      'closeOv(\'ov-connect\');testOneNumber()', false);
   }
 
   // With Google and the picker both unavailable there is nothing to list —
@@ -2379,6 +2387,30 @@ function matchDiagnosticLine() {
        + ' ver=' + (S.friendsVer || 0)
        + ' when=' + new Date(m.when).toLocaleString();
 }
+// Ask the index directly about one number. Ends the "is it her number or is it
+// the code?" argument in five seconds: paste the number from the contact card
+// and it says whether the state has it, and under whose name.
+async function testOneNumber(pre) {
+  const raw = pre || window.prompt('Phone number to look up in the FL-04 voter index:');
+  if (!raw) return;
+  const d = String(raw).replace(/\D/g, '').slice(-10);
+  if (d.length !== 10) { showToast('That is not a 10-digit number.'); return; }
+  let msg;
+  try {
+    const hk = await hashPhone(d);
+    const bucket = await fetchPhoneBucket(hk.slice(0, 2));
+    const hit = bucket.find(r => r[0] === hk.slice(2, 14));
+    msg = hit
+      ? (d + ' IS on the rolls as ' + hit[1] + ' ' + hit[2] + (hit[3] ? ' of ' + hit[3] : '') + '.')
+      : (d + ' is NOT in the voter index. The state has no record with this number, '
+         + 'so no phone match is possible for it.');
+  } catch (e) { msg = 'Lookup failed: ' + (e && e.message); }
+  const seenIt = (window._lastImportNumbers || []).includes(d);
+  msg += '\n\nLast import: this number was ' + (seenIt ? 'PRESENT' : 'NOT present')
+       + ' among the ' + ((window._lastImportNumbers || []).length) + ' numbers read from your contacts.';
+  window.prompt('Result (copyable):', msg.replace(/\n+/g, ' | '));
+}
+
 function copyMatchDiagnostics() {
   const line = matchDiagnosticLine();
   const done = () => showToast('Diagnostics copied — paste them to whoever is helping 📋');
