@@ -1882,8 +1882,13 @@ async function importFromGoogle() {
       if (!r.ok) throw new Error('people-' + r.status);
       const d = await r.json();
       for (const p of (d.connections || [])) {
-        const nm = p.names && p.names[0] && p.names[0].displayName;
-        if (!nm) continue;
+        // NEVER skip on a missing name. Matching is driven by the phone number;
+        // the name is only a label. Dropping nameless contacts here meant a
+        // contact saved as just a number — or with only a nickname, an org, or
+        // a relationship label — never had its number hashed at all. Its match
+        // was impossible before the matcher ever ran.
+        const nm = (p.names && p.names[0] &&
+                    (p.names[0].displayName || p.names[0].unstructuredName)) || '';
         // Check EVERY number on the contact, not just phoneNumbers[0].
         // (Fixed 2026-09-05: reading only the first number silently missed
         // anyone whose cell is listed second — home or work first is extremely
@@ -1892,10 +1897,14 @@ async function importFromGoogle() {
         // source of missed matches.)
         const phones = (p.phoneNumbers || [])
           .map(pn => pn.canonicalForm || pn.value || '').filter(Boolean);
-        if (!phones.length) continue;
+        // Keep contacts that have NO number. They used to be discarded here,
+        // which was harmless while matching was phone-only — but the name tier
+        // exists precisely to catch people the phone pass cannot place, and
+        // dropping them at the door starved it of its best candidates.
+        if (!nm && !phones.length) continue;          // nothing usable at all
         const key = (nm + '|' + phones.join(',')).toUpperCase();
         if (seen[key]) continue; seen[key] = 1;
-        contacts.push({ name: nm, phone: phones[0], phones: phones });
+        contacts.push({ name: nm || (phones[0] || ''), phone: phones[0] || '', phones: phones });
       }
       if (status) status.textContent = 'Fetched ' + contacts.length + ' contacts…';
       pageToken = d.nextPageToken || '';
@@ -2127,13 +2136,44 @@ async function phoneMatch(contacts) {
   return matched;
 }
 
+// Every contact whose name resolves to exactly ONE voter, for contacts the
+// phone pass could not place. These are POSSIBLES, never verified: the state's
+// file only has a cell number for about half of registered voters, so a real
+// friend can be on the rolls and still have no number we can match. "Becky
+// Sell" -> Rebecca Sell of Baldwin is precisely that case.
+//
+// Guards against the three problems that got name matching removed in August:
+//   1. Ambiguity — if the name resolves to more than one voter, skip it. No
+//      guessing between two William Goffs.
+//   2. Status — these can never be marked verified. They land in their own
+//      tier and require an explicit Yes from the volunteer.
+//   3. Volume — capped, and only contacts with a real first AND last name.
+async function nameMatch(contacts, alreadyMatched) {
+  const out = [];
+  const taken = new Set(alreadyMatched.map(m => String(m.contact.name).toUpperCase()));
+  for (const c of contacts) {
+    if (out.length >= 60) break;                       // never a wall of maybes
+    const nm = String(c.name || '').trim();
+    if (!nm || taken.has(nm.toUpperCase())) continue;
+    const parts = nm.split(/\s+/).filter(w => /^[a-zA-Z'’-]{2,}$/.test(w));
+    if (parts.length < 2) continue;                    // need a first AND a last
+    let hits = [];
+    try { hits = await voterSearch(parts[0], parts[parts.length - 1]); } catch (e) { continue; }
+    if (hits.length !== 1) continue;                   // ambiguous or nothing: skip
+    const [vf, vl, vcity] = hits[0];
+    out.push({ contact: c, first: vf, last: vl, voterCity: vcity });
+  }
+  return out;
+}
+
 // Shared matching core — every input method funnels through here.
 async function matchContactList(contacts, opts) {
-  // FINAL doctrine (Mike, 2026-08-30): matches come from PHONE NUMBERS only.
-  // No name matching, no "possible" maybes — a contact either has a
-  // full-number hit against the confidence-1 index or it is not a match.
-  // (Names produced three kinds of trouble: vendor mis-appends, same-name
-  // strangers, and a wall of maybes nobody wants to wade through.)
+  // Three tiers, in descending confidence:
+  //   phone + last name  -> VERIFIED
+  //   phone only         -> HIGHLY LIKELY   (confirm)
+  //   name only          -> POSSIBLE        (confirm)
+  // Only the first is ever presented as fact. The other two ask the volunteer,
+  // because they are the ones who know whether "Becky" is Rebecca.
   opts = opts || {};
   const bar = $('match-bar'), status = $('match-status'), sub = $('match-sub'), emoji = $('match-emoji');
   const setP = (pct, msg, detail) => {
@@ -2148,27 +2188,27 @@ async function matchContactList(contacts, opts) {
   const numberCount = contacts.reduce((a, c) => a + contactNumbers(c).length, 0);
   const withPhone = contacts.filter(c => contactNumbers(c).length).length;
   setP(15, 'Checking ' + numberCount + ' numbers across ' + withPhone + ' contacts…', 'This may take a moment. Numbers are compared on your phone, never saved.');
-  if (!withPhone || !CONFIG.phoneApi) {
-    closeOv('ov-matching');
-    showToast('No phone numbers to check — matching starts from phone numbers.');
-    if (S && S.pendingWelcome) maybeWelcome();
-    return 0;
-  }
   let matched = [];
-  try { matched = await phoneMatch(contacts); } catch (e) {}
+  if (withPhone && CONFIG.phoneApi) {
+    try { matched = await phoneMatch(contacts); } catch (e) {}
+  }
+  setP(70, 'Checking names against the rolls…', '');
+  let named = [];
+  try { named = await nameMatch(contacts, matched); } catch (e) {}
   setP(90, 'Almost done…', '');
-  const found = matched.map(m => {
-    const parts = String(m.contact.name).trim().split(/\s+/);
-    return {
-      name: m.contact.name, first: m.first || '', last: m.last || '', phone: m.contact.phone || '',
-      voterCity: m.voterCity || '', matchedBy: 'phone',
-      confirmed: lastNameConfirms(m.contact.name, m.last)   // phone + last name = verified tier
-    };
-  });
+  const found = matched.map(m => ({
+    name: m.contact.name, first: m.first || '', last: m.last || '', phone: m.contact.phone || '',
+    voterCity: m.voterCity || '', matchedBy: 'phone',
+    confirmed: lastNameConfirms(m.contact.name, m.last)     // phone + last name = verified tier
+  })).concat(named.map(m => ({
+    name: m.contact.name, first: m.first || '', last: m.last || '',
+    phone: (contactNumbers(m.contact)[0] || ''),
+    voterCity: m.voterCity || '', matchedBy: 'name',
+    confirmed: false                                        // a name is never proof
+  })));
   if (!opts.standalone) {
     const seen = {};
     S.registeredFriends = (S.registeredFriends || []).concat(found)
-      .filter(x => x.matchedBy === 'phone')
       .filter(x => !(S.excludedFriends || []).includes(friendKey(x)))   // dismissed people never return
       .filter(x => { const k = friendKey(x); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
@@ -2226,8 +2266,10 @@ async function matchContactList(contacts, opts) {
 async function runContactMatch(popoutMode) {
   try {
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
-    const contacts = (raw || []).filter(c => c.name && c.name[0])
-      .map(c => ({ name: c.name[0], phone: (c.tel && c.tel[0]) || '', phones: (c.tel || []).filter(Boolean) }));
+    // Keep a contact that has a number but no name — the number is what matches.
+    const contacts = (raw || []).filter(c => (c.name && c.name[0]) || (c.tel && c.tel[0]))
+      .map(c => ({ name: (c.name && c.name[0]) || (c.tel && c.tel[0]) || '',
+                   phone: (c.tel && c.tel[0]) || '', phones: (c.tel || []).filter(Boolean) }));
     if (!contacts.length) { showToast('No contacts selected.'); return; }
     await matchContactList(contacts, { standalone: !!popoutMode });
   } catch (err) {
@@ -2422,7 +2464,10 @@ function renderRegisteredFriends() {
     const ink  = confirmed ? '#059669' : '#b45309';
     // Confirmed: name + green check, nothing else. Phone-only: the question a
     // human would ask, answered with a green Yes / red No.
-    const q = 'Is "' + esc(c.name) + '" actually ' + esc(c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?';
+    const q = c.matchedBy === 'name'
+      ? ('A ' + esc(c.first || '') + ' ' + esc(c.last || '') + (c.voterCity ? ' of ' + esc(c.voterCity) : '')
+         + ' is registered. Same person?')
+      : ('Is "' + esc(c.name) + '" actually ' + esc(c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?');
     const sub  = confirmed ? '' : `<div style="font-size:11px;color:#b45309;margin-top:2px;line-height:1.4;">${q}</div>`;
     const buttons = confirmed
       ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
@@ -2441,8 +2486,12 @@ function renderRegisteredFriends() {
     </div>`;
   };
   const hdr = (t, color) => `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-weight:700;font-size:13px;color:${color};letter-spacing:0.05em;margin:16px 18px 5px;">${t}</div>`;
-  const confirmedRows = [], likelyRows = [];
-  S.registeredFriends.forEach((c, i) => (c.confirmed ? confirmedRows : likelyRows).push(i));
+  const confirmedRows = [], likelyRows = [], maybeRows = [];
+  S.registeredFriends.forEach((c, i) => {
+    if (c.confirmed) confirmedRows.push(i);
+    else if (c.matchedBy === 'name') maybeRows.push(i);   // name only — weakest tier
+    else likelyRows.push(i);
+  });
   let html = '';
   if (confirmedRows.length)
     html += hdr('CONFIRMED VOTERS IN OUR DISTRICT', '#059669')
@@ -2450,6 +2499,9 @@ function renderRegisteredFriends() {
   if (likelyRows.length)
     html += hdr('FOUND BY PHONE NUMBER ONLY', '#b45309')
           + likelyRows.map(i => card(S.registeredFriends[i], i, false)).join('');
+  if (maybeRows.length)
+    html += hdr('SAME NAME ON THE ROLLS — IS THIS THEM?', '#6b21a8')
+          + maybeRows.map(i => card(S.registeredFriends[i], i, false)).join('');
   listEl.innerHTML = html;
   listEl.style.display = 'block';
 }
@@ -2479,8 +2531,9 @@ async function tryLoadContacts() {
   listEl.style.display = 'block';
   try {
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
-    _contactsCache = (raw || []).filter(c => c.name && c.name[0])
-      .map(c => ({ name: c.name[0], phone: (c.tel && c.tel[0]) || '', phones: (c.tel || []).filter(Boolean) }));
+    _contactsCache = (raw || []).filter(c => (c.name && c.name[0]) || (c.tel && c.tel[0]))
+      .map(c => ({ name: (c.name && c.name[0]) || (c.tel && c.tel[0]) || '',
+                   phone: (c.tel && c.tel[0]) || '', phones: (c.tel || []).filter(Boolean) }));
   } catch(e) { _contactsCache = []; }
   await _renderContactList();
 }
