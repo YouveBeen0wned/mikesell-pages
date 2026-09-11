@@ -734,9 +734,9 @@ function availCardVoter(first, last, city, age) {
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#059669;letter-spacing:0.06em;margin-bottom:6px;">✓ REGISTERED VOTER · ${esc(loc.toUpperCase())}</div>
     <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#f-seed"/></svg>
     <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Plant a seed for
-      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
+      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" oninput="renderMsgPreview()" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
     </button>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">You click the button, we populate the message. You can edit or just hit send.</div>
+    ${msgPreviewBlock('friend', '#037ad8')}
   </div>`;
 }
 
@@ -759,6 +759,7 @@ function selectVoterMatch(i) {
   pendingPlant = Object.assign(pendingPlant || {}, { first: mf, name: mf + ' ' + ml });
   document.querySelectorAll('.pick').forEach((b, j) => { b.classList.toggle('on', j === i); });
   $('voter-match-result').innerHTML = availCardVoter(mf, ml, mc, ma);
+  renderMsgPreview();
   $('voter-match-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -1115,7 +1116,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260902-0548';
+const BUILD = '20260911-1200';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1408,14 +1409,15 @@ async function doSearch() {
   } else {
     box.innerHTML = multiMatchCard(matches, first, last);
   }
+  renderMsgPreview();
 }
 function availCard(first) {
   return `<div class="statecard avail">
     <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#f-seed"/></svg>
     <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Let's plant a seed with
-      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
+      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" oninput="renderMsgPreview()" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
     </button>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">You click the button, we populate the message. You can edit or just hit send.</div>
+    ${msgPreviewBlock('friend', '#037ad8')}
   </div>`;
 }
 function nomatchCard(first) {
@@ -1424,10 +1426,122 @@ function nomatchCard(first) {
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">We couldn't confirm ${esc(first)} in the voter rolls — a registration reminder is always welcome.</div>
     <div style="font-size:11.5px;color:#5b6470;margin:7px 8px 0;line-height:1.5;">They may have moved, married, or not registered yet. A nudge to check still counts.</div>
     <button class="plantbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;" onclick="plantNow(true)">Let's plant a seed with
-      <span class="namechip" style="border:2px dashed #cdb3e0;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#8555ab" stroke-width="2" stroke-linejoin="round"/></svg></span>
+      <span class="namechip" style="border:2px dashed #cdb3e0;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" oninput="renderMsgPreview()" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#8555ab" stroke-width="2" stroke-linejoin="round"/></svg></span>
     </button>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">A deadline reminder opens in Messages. You can edit or just hit send.</div>
+    ${msgPreviewBlock('deadline', '#8555ab')}
   </div>`;
+}
+/* ---------------- message preview + editable template ----------------
+   The volunteer sees exactly what will land in Messages before they tap.
+   The seed link is NOT part of the editable text — it is appended at send
+   time so a volunteer can never break or delete their own tracking link.
+   An edited template is saved to S.msgTpl and reused for everyone after. */
+function msgDefaultTpl(kind) {
+  // Call the CONFIG builder with an empty link, then trim the trailing
+  // whitespace so re-appending ' ' + link reproduces the original message
+  // byte for byte (the deadline variant keeps its ':' on purpose).
+  const raw = (kind === 'deadline')
+    ? CONFIG.msgDeadline(S && S.first ? S.first : '', '')
+    : CONFIG.msgFriendVariants[0]('');
+  return raw.replace(/\s+$/, '');
+}
+function msgTpl(kind) {
+  const saved = S && S.msgTpl && S.msgTpl[kind];
+  return (saved && saved.trim()) ? saved : msgDefaultTpl(kind);
+}
+function msgIsCustom(kind) {
+  return !!(S && S.msgTpl && S.msgTpl[kind] && S.msgTpl[kind].trim());
+}
+// The nickname currently typed on the seed chip, title-cased the same way
+// plantNow() does it, so the preview and the sent message always agree.
+function msgNick() {
+  const el = $('tagname');
+  const raw = (el ? el.value.trim() : '') || (pendingPlant && pendingPlant.first) || '';
+  if (!raw) return 'NAME'; // nothing typed yet — leave the placeholder visible
+  return raw.split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
+}
+function msgPreviewBlock(kind, accent) {
+  const a = accent || '#037ad8';
+  return `<div id="msgprev-wrap" data-kind="${kind}" data-accent="${a}" style="margin-top:12px;text-align:left;background:#f7fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:10px 11px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <span style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.11em;color:#5b6470;">MESSAGE PREVIEW<span id="msgprev-custom" style="color:${a};display:none;"> · YOURS</span></span>
+      <button id="msgprev-editbtn" onclick="event.stopPropagation();toggleMsgEdit()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:${a};background:none;border:none;padding:2px 4px;cursor:pointer;">Edit</button>
+    </div>
+    <div id="msgprev-body" style="font-size:12px;color:var(--ink);line-height:1.55;white-space:pre-wrap;"></div>
+    <textarea id="msgprev-ta" maxlength="400" oninput="msgCount()" onclick="event.stopPropagation()" style="display:none;width:100%;box-sizing:border-box;font-family:inherit;font-size:12px;line-height:1.5;color:var(--ink);border:1.5px solid ${a};border-radius:9px;padding:8px;resize:vertical;min-height:96px;"></textarea>
+    <div id="msgprev-actions" style="display:none;margin-top:7px;">
+      <button onclick="event.stopPropagation();saveMsgTpl()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${a};border:none;border-radius:8px;padding:6px 12px;cursor:pointer;">Save for everyone</button>
+      <button onclick="event.stopPropagation();cancelMsgEdit()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;">Cancel</button>
+      <button id="msgprev-reset" onclick="event.stopPropagation();resetMsgTpl()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#9aa3ad;background:none;border:none;padding:6px 8px;cursor:pointer;">Use default</button>
+      <div id="msgprev-count" style="font-size:10px;color:#9aa3ad;margin-top:5px;"></div>
+      <div style="font-size:10px;color:#9aa3ad;margin-top:4px;line-height:1.45;">Type NAME anywhere and it becomes their name. Keep it personal — no extra links or money asks, or carriers may block it.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;margin-top:8px;padding-top:7px;border-top:1px dashed #dfe6ec;">
+      <svg style="width:11px;height:11px;flex:0 0 auto;" viewBox="0 0 24 24"><path d="M7 12h10M9 8.5a4 4 0 0 0 0 7h1M15 8.5a4 4 0 0 1 0 7h-1" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round"/></svg>
+      <span style="font-size:10px;color:#9aa3ad;">Your seed link is added at the end automatically. It can't be edited.</span>
+    </div>
+  </div>`;
+}
+function renderMsgPreview() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  const kind = wrap.dataset.kind;
+  const body = $('msgprev-body');
+  if (body) body.textContent = msgTpl(kind).replace(/NAME/g, msgNick());
+  const badge = $('msgprev-custom');
+  if (badge) badge.style.display = msgIsCustom(kind) ? 'inline' : 'none';
+}
+function msgCount() {
+  const ta = $('msgprev-ta'), out = $('msgprev-count');
+  if (!ta || !out) return;
+  // ~28 chars of link get appended; 320 is a comfortable 2-segment ceiling.
+  const n = ta.value.replace(/NAME/g, msgNick()).length + 30;
+  out.textContent = n + ' characters with the link' + (n > 320 ? ' — long messages can split into two texts.' : '');
+  out.style.color = n > 320 ? '#b45309' : '#9aa3ad';
+}
+function toggleMsgEdit() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  const ta = $('msgprev-ta');
+  ta.value = msgTpl(wrap.dataset.kind);
+  $('msgprev-body').style.display = 'none';
+  ta.style.display = 'block';
+  $('msgprev-actions').style.display = 'block';
+  $('msgprev-editbtn').style.display = 'none';
+  $('msgprev-reset').style.display = msgIsCustom(wrap.dataset.kind) ? 'inline' : 'none';
+  msgCount();
+  ta.focus();
+}
+function cancelMsgEdit() {
+  if (!$('msgprev-wrap')) return;
+  $('msgprev-ta').style.display = 'none';
+  $('msgprev-actions').style.display = 'none';
+  $('msgprev-body').style.display = 'block';
+  $('msgprev-editbtn').style.display = 'inline';
+  renderMsgPreview();
+}
+function saveMsgTpl() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  let v = ($('msgprev-ta').value || '').trim();
+  if (!v) { showToast('A message can\'t be empty. Tap Use default to go back.'); return; }
+  // Strip any URL the volunteer pasted in — the seed link is the only link
+  // allowed, and a second one is what gets a text filtered by the carrier.
+  const had = /https?:\/\/\S+|\bwww\.\S+/i.test(v);
+  v = v.replace(/https?:\/\/\S+/gi, '').replace(/\bwww\.\S+/gi, '').replace(/[ \t]{2,}/g, ' ').trim();
+  if (!S.msgTpl) S.msgTpl = {};
+  S.msgTpl[wrap.dataset.kind] = v;
+  save();
+  cancelMsgEdit();
+  showToast(had ? 'Saved — the extra link was removed so carriers deliver it.' : 'Saved. Every seed from now on uses your words 🌱');
+}
+function resetMsgTpl() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  if (S.msgTpl) delete S.msgTpl[wrap.dataset.kind];
+  save();
+  cancelMsgEdit();
+  showToast('Back to the default message.');
 }
 function openSpot() {
   for (const b of S.beds) {
@@ -1454,8 +1568,9 @@ function plantNow(deadline) {
   const link = friendLink(token);
   const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
   const _nick = _rawNick.split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
-  const _v = CONFIG.msgFriendVariants;
-  const body = (deadline ? CONFIG.msgDeadline(S.first, link) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
+  // Template comes from msgTpl() so a volunteer's saved wording is used for
+  // everyone. The link is appended here, never inside the editable text.
+  const body = msgTpl(deadline ? 'deadline' : 'friend').replace(/NAME/g, _nick) + ' ' + link;
   launchSms(smsHref(body, _ph));
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; showTab('garden'); }, 600);
 }
@@ -2551,6 +2666,7 @@ function selectRegisteredFriend(idx) {
   pendingPlant = { name: c.name, first: c.first || c.name.split(/\s+/)[0], phone: c.phone || '' };
   $('plant-contactlist').style.display = 'none';
   $('plant-result').innerHTML = availCardVoter(c.first || c.name.split(/\s+/)[0], c.last || '', c.voterCity, null);
+  renderMsgPreview();
   $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -2654,6 +2770,7 @@ function selectContact(idx) {
   pendingPlant = { name: c.name, first: c._first, phone: c.phone || '' };
   $('plant-contactlist').style.display = 'none';
   $('plant-result').innerHTML = availCardVoter(c._first, c._last, c.voterCity, null);
+  renderMsgPreview();
   $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
