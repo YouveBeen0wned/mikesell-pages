@@ -448,10 +448,10 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
 <section id="scr-friend" class="screen">
   <div class="bgdeco" id="deco-friend"></div>
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:20px 0;">
-    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;color:var(--ink);text-align:center;line-height:1.4;padding:0 16px;"><span id="friend-sender" style="color:var(--blue);">A friend</span> has planted a voter reminder seed<br><span style="color:#d97706;">in your name</span> 🌱</div>
+    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;color:var(--ink);text-align:center;line-height:1.4;padding:0 16px;"><span id="friend-sender" style="color:var(--blue);">A friend</span> planted a voter reminder seed<br><span style="color:#d97706;">in your name</span></div>
     <div style="margin:16px 0 0;filter:drop-shadow(0 4px 10px rgba(3,122,216,0.35));animation:grow 1.8s infinite;"><svg style="width:66px;height:66px;display:block;"><use href="#f-seed"/></svg></div>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap makes it bloom.</div>
-    <button class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I will be voting this November</button>
+    <button class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I'm voting in November!</button>
     <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🌸 Your friend's flower bloomed! See you at the polls!</div>
     <button class="bigbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;margin-top:16px;font-size:17px;font-weight:700;animation:popglow 2.6s infinite;" onclick="window.open('https://mike4us.org/v','_blank')">Play Along!</button>
     <div class="card" style="align-self:stretch;background:linear-gradient(135deg,#002d5b,#037ad8);border:none;padding:18px 20px;margin-top:14px;">
@@ -547,9 +547,9 @@ const CONFIG = {
   // Mike's approved wording (2026-08-16). NAME is replaced with the recipient's
   // first name or the nickname the volunteer typed on the seed.
   msgFriendVariants: [
-    (link) => `Hi NAME, Mike is hosting a game called Bloomers to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
+    (link) => `Hi NAME, I'm helping Mike remind people to vote in November! Click the link to confirm you're in! ${link}`,
   ],
-  msgFriend: (first, link) => `Hi NAME, Mike is hosting a game called Bloomers to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
+  msgFriend: (first, link) => `Hi NAME, I'm helping Mike remind people to vote in November! Click the link to confirm you're in! ${link}`,
   msgFollowVariants: [
     (link) => `Hi NAME, still hoping to hear from you on the Bloomers game. One click confirms you're in this November. ${link}`,
   ],
@@ -1116,7 +1116,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260911-1200';
+const BUILD = '20260911-1315';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1470,7 +1470,7 @@ function msgPreviewBlock(kind, accent) {
     <div id="msgprev-body" style="font-size:12px;color:var(--ink);line-height:1.55;white-space:pre-wrap;"></div>
     <textarea id="msgprev-ta" maxlength="400" oninput="msgCount()" onclick="event.stopPropagation()" style="display:none;width:100%;box-sizing:border-box;font-family:inherit;font-size:12px;line-height:1.5;color:var(--ink);border:1.5px solid ${a};border-radius:9px;padding:8px;resize:vertical;min-height:96px;"></textarea>
     <div id="msgprev-actions" style="display:none;margin-top:7px;">
-      <button onclick="event.stopPropagation();saveMsgTpl()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${a};border:none;border-radius:8px;padding:6px 12px;cursor:pointer;">Save for everyone</button>
+      <button onclick="event.stopPropagation();saveMsgTpl()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${a};border:none;border-radius:8px;padding:6px 12px;cursor:pointer;">Save</button>
       <button onclick="event.stopPropagation();cancelMsgEdit()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;">Cancel</button>
       <button id="msgprev-reset" onclick="event.stopPropagation();resetMsgTpl()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#9aa3ad;background:none;border:none;padding:6px 8px;cursor:pointer;">Use default</button>
       <div id="msgprev-count" style="font-size:10px;color:#9aa3ad;margin-top:5px;"></div>
