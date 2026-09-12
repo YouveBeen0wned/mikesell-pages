@@ -1916,7 +1916,7 @@ function renderChampions() {
     rows = rows.slice().sort((a, b) => b.l - a.l).slice(0, 25);
     $('champlist').innerHTML = rows.map((row, i) => {
       const me = row.n === S.garden;
-      const badge = row.g === 'd' ? '🐉' : '🌱';
+      const badge = row.g === 'd' ? '🐉' : (row.g === 'k' ? '🎆' : '🌱');
       return `<div class="rankrow ${me ? 'now' : ''}">
         <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:14px;color:var(--purple);width:18px;text-align:center;">${i + 1}</div>
         <span style="width:26px;">${sealSvg(Math.min(row.r, 6), 24)}</span>

@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dragon Farmer · Raise our community, one friend at a time</title>
-<meta name="description" content="Dragon Farmer is a dragon game where a text to a friend nests an egg, and their promise to vote makes it hatch. Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.">
+<title>Boomers · Light up the sky for the people who raised you</title>
+<meta name="description" content="Boomers is a fireworks game for ages 16 and up. Check whether the adults in your family are registered to vote, and every one who confirms puts a shell in your show. Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.">
 <style>
 @font-face{font-family:'clarendon-w01-medium';src:url('https://static.parastorage.com/services/santa-resources/resources/viewer/user-site-fonts/fonts/e2ffff81-a48c-42fc-9b03-6a4a5d0d052e.woff2') format('woff2');font-display:swap;}
 @font-face{font-family:'avenir-heavy';src:url('https://static.parastorage.com/services/santa-resources/resources/viewer/user-site-fonts/fonts/da923d0d-1e6b-4a02-8ba6-3bfb21f0a889.woff2') format('woff2');font-display:swap;}
 :root{--blue:#037ad8;--purple:#8555ab;--red:#ea504e;--ink:#1a2a4a;--gold:#f59e0b;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;background:#e9dfc6;height:100%;overflow:hidden;}
+html,body{margin:0;padding:0;background:#dfe8f2;height:100%;overflow:hidden;}
 body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
-#shell{max-width:430px;margin:0 auto;height:100dvh;background:#fdfaf2;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(10,30,60,0.18);}
+#shell{max-width:430px;margin:0 auto;height:100dvh;background:#fff;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(10,30,60,0.18);}
 .screen{display:none;flex-direction:column;flex:1;position:relative;}
 .screen.on{display:flex;overflow-y:auto;padding-bottom:104px;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 9px;position:relative;z-index:5;}
 .gametitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--ink);white-space:nowrap;}
-.pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #e0d2b0;}
+.pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fff;border:2px solid #c9def2;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #c9def2;}
 .rule{height:5px;display:flex;position:relative;z-index:5;}
 .rule i{flex:1;}.rule i:nth-child(1){background:var(--blue);}.rule i:nth-child(2){background:var(--purple);}.rule i:nth-child(3){background:var(--red);}
-.bottomnav{display:flex;justify-content:space-evenly;background:#fdfaf2;border-top:2px solid #e0d2b0;padding:10px 0 calc(12px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;width:100%;z-index:100;}
+.bottomnav{display:flex;justify-content:space-evenly;background:#fff;border-top:2px solid #c9def2;padding:10px 0 calc(12px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;width:100%;z-index:100;}
 .bn{opacity:0.45;text-align:center;cursor:pointer;flex:1;border:none;background:none;padding:0;}
 .bn.on{opacity:1;transform:scale(1.12);}
 .bn small{display:block;font-size:9px;font-family:'avenir-heavy',Arial,sans-serif;color:#6b7280;margin-top:2px;}
@@ -32,7 +32,7 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 #shell .screen>*:not(.bgdeco){position:relative;z-index:1;}
 .screen>.petal{position:absolute;}
 .petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
-.field{background:#fffdf6;border:1.5px solid #ded0ac;border-radius:12px;padding:8px 14px 9px;margin:9px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(138,95,54,0.06);align-self:stretch;}
+.field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:8px 14px 9px;margin:9px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
 .field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:52px;font-size:26px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
 .field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
 .field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
@@ -66,31 +66,31 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
   #scr-signup .smsnote{font-size:7.5px;line-height:1.35;padding:5px 9px;margin-top:6px;}
 }
 
-.card{background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:12px 15px;margin:12px 16px 0;box-shadow:0 2px 0 #ece0c4;}
+.card{background:#fff;border:2px solid #c9def2;border-radius:16px;padding:12px 15px;margin:12px 16px 0;box-shadow:0 2px 0 #dfeaf5;}
 .overlay{display:none;position:fixed;inset:0;background:rgba(6,20,35,0.55);z-index:40;align-items:center;justify-content:center;padding:20px;}
 .overlay.on{display:flex;}
-.sheet{background:#fffdf7;border-radius:22px;max-width:390px;width:100%;max-height:88dvh;overflow-y:auto;padding:18px;position:relative;}
-.rankrow{display:flex;align-items:center;gap:10px;background:#fffdf6;border:2px solid #e0d2b0;border-radius:14px;padding:8px 12px;margin:0 0 7px;}
+.sheet{background:#fff;border-radius:22px;max-width:390px;width:100%;max-height:88dvh;overflow-y:auto;padding:18px;position:relative;}
+.rankrow{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid #c9def2;border-radius:14px;padding:8px 12px;margin:0 0 7px;}
 .rankrow.now{border-color:var(--blue);background:#eef6fd;}
 .rankrow.locked{opacity:0.65;}
 .rlab{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:var(--ink);flex:1;}
 .rlab small{display:block;font-family:Georgia,serif;font-size:9.5px;color:#8a94a3;font-weight:400;margin-top:1px;}
 .rnum{font-family:'clarendon-w01-medium',Georgia,serif;font-size:12px;color:var(--blue);white-space:nowrap;}
 .toolbar{display:flex;gap:8px;margin:10px 14px 0;}
-.tchip{display:flex;align-items:center;gap:8px;background:#fffdf6;border:2px solid #d9c69c;border-radius:14px;padding:8px 12px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;color:var(--ink);cursor:pointer;}
+.tchip{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #bcd9f2;border-radius:14px;padding:8px 12px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;color:var(--ink);cursor:pointer;}
 .collectbtn{font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;letter-spacing:0.05em;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:7px 14px;box-shadow:0 3px 0 #a05a04;cursor:pointer;}
 .collectbtn:disabled{background:#d3ddea;box-shadow:none;}
 #gardensvg{touch-action:none;-webkit-touch-callout:none;user-select:none;}
 #gardensvg *{transform-box:fill-box;}
 #gardensvg circle[style*="pulsehint"],#gardensvg circle[style*="ringpulse"]{transform-origin:center;}
-svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a4326;paint-order:stroke;stroke:#fdfaf2;stroke-width:1.5px;}
+svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a33;paint-order:stroke;stroke:#fff;stroke-width:1.5px;}
 .almgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:12px 16px;}
-.almcell{aspect-ratio:1;border:2.5px solid #e0d2b0;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#fffdf6;cursor:pointer;}
+.almcell{aspect-ratio:1;border:2.5px solid #c9def2;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer;}
 .almcell.g{border-color:#059669;}.almcell.b{border-color:#2563eb;}.almcell.p{border-color:#7c3aed;}.almcell.au{border-color:var(--gold);box-shadow:0 0 10px rgba(245,158,11,0.35);}
 .almcell.locked svg{filter:grayscale(1);opacity:0.3;}
-.qtitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin:10px 18px 2px;line-height:1.4;text-align:center;text-shadow:0 2px 0 #fdfaf2;}
+.qtitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin:10px 18px 2px;line-height:1.4;text-align:center;text-shadow:0 2px 0 #fff;}
 .qtitle b{color:var(--purple);font-weight:400;}
-.searchbox{display:flex;align-items:center;gap:8px;background:#fffdf6;border:2px solid var(--blue);border-radius:16px;padding:11px 14px;margin:12px 16px 0;box-shadow:0 2px 0 #d9c69c;}
+.searchbox{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--blue);border-radius:16px;padding:11px 14px;margin:12px 16px 0;box-shadow:0 2px 0 #bcd9f2;}
 .searchbox input{border:none;outline:none;flex:1;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:var(--ink);background:transparent;}
 .statecard{position:relative;border-radius:20px;padding:16px;margin:14px 16px 0;text-align:center;overflow:hidden;}
 .statecard.avail{background:#f4f9ff;border:2.5px solid var(--blue);box-shadow:0 6px 16px rgba(3,122,216,0.16);}
@@ -99,9 +99,9 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 .namechip{display:inline-flex;align-items:center;gap:5px;background:#fff;border-radius:10px;padding:3px 9px;}
 .namechip input{border:none;outline:none;width:90px;text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:transparent;}
 .pickrow{display:flex;gap:7px;justify-content:center;margin:6px 12px 0;flex-wrap:wrap;}
-.pick{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;background:#fffdf6;border:2px solid #e0d2b0;border-radius:12px;padding:7px 12px;color:#9aa3ad;cursor:pointer;}
+.pick{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;background:#fff;border:2px solid #c9def2;border-radius:12px;padding:7px 12px;color:#9aa3ad;cursor:pointer;}
 .pick.on{background:#eef6fd;border-color:var(--blue);color:var(--blue);}
-.agenda{background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:11px 15px;margin:14px 16px 0;text-align:left;box-shadow:0 2px 0 #ece0c4;}
+.agenda{background:#fff;border:2px solid #c9def2;border-radius:16px;padding:11px 15px;margin:14px 16px 0;text-align:left;box-shadow:0 2px 0 #dfeaf5;}
 .chip-anim{opacity:0;animation:revealpop 0.5s forwards;}
 @media (min-width:500px){ body{padding:0;} }
 </style>
@@ -123,6 +123,24 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 @keyframes cineflower{0%{opacity:0;transform:translateX(-50%) scale(0.15);}70%{opacity:1;transform:translateX(-50%) scale(1.12);}100%{opacity:1;transform:translateX(-50%) scale(1);}}
 @keyframes revealpop{0%{opacity:0;transform:scale(0.6) translateY(8px);}70%{opacity:1;transform:scale(1.06);}100%{opacity:1;transform:scale(1) translateY(0);}}
 @keyframes popring{0%{transform:scale(0.4);opacity:0.9;}100%{transform:scale(1.5);opacity:0;}}
+/* ---- Boomers: the rise, then the break -------------------------------------
+   Every reveal and every claim gets a lift stage first. The shell leaves the
+   rack, climbs, and only then opens. */
+@keyframes rise{0%{transform:translateY(16px) scale(0.45);opacity:0;}
+  22%{opacity:1;}70%{transform:translateY(-6px) scale(0.6);opacity:1;}
+  100%{transform:translateY(0) scale(1);opacity:1;}}
+@keyframes climb{0%{transform:translateY(30px);opacity:0;}
+  15%{opacity:1;}100%{transform:translateY(-34px);opacity:0;}}
+@keyframes breakout{0%{transform:scale(0.08);opacity:0;}
+  45%{opacity:1;}72%{transform:scale(1.14);}100%{transform:scale(1);opacity:1;}}
+@keyframes trailfade{0%{opacity:0.85;}100%{opacity:0;}}
+@keyframes embers{0%{transform:translateY(0);opacity:0.9;}100%{transform:translateY(16px);opacity:0;}}
+@keyframes fuserun{from{left:-6%;}to{left:104%;}}
+.riser{animation:climb 0.62s ease-in both;}
+.breaker{animation:breakout 0.72s cubic-bezier(.2,.9,.3,1) both;}
+#fuseline{position:absolute;left:0;right:0;bottom:6px;height:3px;z-index:6;pointer-events:none;display:none;}
+#fuseline i{position:absolute;top:-5px;width:12px;height:12px;border-radius:50%;background:#fde68a;
+  box-shadow:0 0 16px 6px rgba(245,158,11,0.85);animation:fuserun 1.1s linear both;}
 .popring{position:absolute;border-radius:50%;border:3px solid #fcd34d;opacity:0;pointer-events:none;}
 </style>
 </head>
@@ -131,352 +149,153 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <svg width="0" height="0" style="position:absolute">
 <defs>
 
-<radialGradient id="gh-glow"><stop offset="0%" stop-color="#fde047" stop-opacity="0.85"/><stop offset="45%" stop-color="#fde68a" stop-opacity="0.5"/><stop offset="100%" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
-
-<symbol id="d-ember" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#a8352a" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#a8352a"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#b23528"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#a8352a" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#d84b3c"/>
-  <circle cx="26" cy="28" r="4.3" fill="#a8352a" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#a8352a" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#f7c58c"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#d84b3c" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#d84b3c"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#d84b3c"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#a8352a"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#f0b429"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#f0b429" opacity="0.85"/>
-  <g fill="#f0b429"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <circle cx="37.2" cy="14.2" r="1.5" fill="#f59e0b"/><circle cx="37.2" cy="14.2" r="0.7" fill="#fde68a"/>
+<symbol id="f-camellia" viewBox="0 0 40 40">
+  <g stroke="#e78fb3" stroke-width="0.7"><ellipse cx="20" cy="8.5" rx="5.5" ry="7" fill="#f2a9c4"/><ellipse cx="20" cy="31.5" rx="5.5" ry="7" fill="#f2a9c4"/><ellipse cx="8.5" cy="20" rx="7" ry="5.5" fill="#f2a9c4"/><ellipse cx="31.5" cy="20" rx="7" ry="5.5" fill="#f2a9c4"/>
+  <ellipse cx="12" cy="12" rx="5.5" ry="5.5" fill="#f6bcd2"/><ellipse cx="28" cy="12" rx="5.5" ry="5.5" fill="#f6bcd2"/><ellipse cx="12" cy="28" rx="5.5" ry="5.5" fill="#f6bcd2"/><ellipse cx="28" cy="28" rx="5.5" ry="5.5" fill="#f6bcd2"/></g>
+  <g stroke="#d96f9d" stroke-width="0.6"><ellipse cx="20" cy="13.5" rx="4" ry="5" fill="#ee96b8"/><ellipse cx="26" cy="20" rx="5" ry="4" fill="#ee96b8"/><ellipse cx="20" cy="26.5" rx="4" ry="5" fill="#ee96b8"/><ellipse cx="14" cy="20" rx="5" ry="4" fill="#ee96b8"/></g>
+  <circle cx="20" cy="20" r="5.8" fill="#ea7fa9"/><circle cx="20" cy="20" r="3.6" fill="#f7c3d8"/><path d="M20 17.4 a2.6 2.6 0 0 1 2.6 2.6 a2 2 0 0 1 -2 2 a1.5 1.5 0 0 1 -1.5 -1.5 a1.1 1.1 0 0 1 1.1 -1.1" fill="none" stroke="#c25c86" stroke-width="0.9" stroke-linecap="round"/>
 </symbol>
 
-<symbol id="d-jade" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#1f7a4f" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#1f7a4f"/>
-  <path d="M18 21 Q20 9 30 9.5 Q26 14 26.5 18 Q22 16.5 18.5 22.5 Z" fill="#1f7a4f"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#2e9e6b"/>
-  <circle cx="26" cy="28" r="4.3" fill="#1f7a4f" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#1f7a4f" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#c8ecd8"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#2e9e6b" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#2e9e6b"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#2e9e6b"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#1f7a4f"/>
-  <path d="M8.3 6.8 L9.7 3 L11.1 6.2 L12.5 3.2 L13.7 6.8 L11.1 8.8 Z" fill="#16604a"/>
-  <g fill="#16604a"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <path d="M14 25.5 q3.5 1.6 7 0" stroke="#8fd8b4" stroke-width="1" fill="none" opacity="0.8"/>
+<symbol id="f-tulip" viewBox="0 0 40 40">
+  <path d="M9 16 Q9 34 20 35 Q31 34 31 16 Q27 20 24 17 Q22 21 20 21 Q18 21 16 17 Q13 20 9 16 Z" fill="#e05252"/>
+  <path d="M9 16 Q9 34 20 35 L20 21 Q18 21 16 17 Q13 20 9 16 Z" fill="#c93b3b"/>
+  <path d="M16 17 Q22 8 24 17 Q22 21 20 21 Q18 21 16 17 Z" fill="#f07575"/>
 </symbol>
 
-<symbol id="d-copper" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#9a5a26" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#9a5a26"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#9a5a26"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#9a5a26" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#c47a3a"/>
-  <circle cx="26" cy="28" r="4.3" fill="#9a5a26" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#9a5a26" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#f2d3ae"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#c47a3a" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#c47a3a"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#c47a3a"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#9a5a26"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#3f9e8a"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#3f9e8a" opacity="0.85"/>
-  <g fill="#3f9e8a"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <g fill="#3f9e8a" opacity="0.75"><circle cx="23" cy="24" r="1"/><circle cx="26" cy="27" r="0.8"/><circle cx="20" cy="22.5" r="0.7"/></g>
+<symbol id="f-daisy" viewBox="0 0 40 40">
+  <g fill="#fffdf4" stroke="#cfc6a8" stroke-width="1">
+  <ellipse cx="20" cy="7" rx="3.4" ry="7"/><ellipse cx="20" cy="33" rx="3.4" ry="7"/><ellipse cx="7" cy="20" rx="7" ry="3.4"/><ellipse cx="33" cy="20" rx="7" ry="3.4"/>
+  <ellipse cx="11" cy="11" rx="3.2" ry="6.6" transform="rotate(-45 11 11)"/><ellipse cx="29" cy="11" rx="3.2" ry="6.6" transform="rotate(45 29 11)"/><ellipse cx="11" cy="29" rx="3.2" ry="6.6" transform="rotate(45 11 29)"/><ellipse cx="29" cy="29" rx="3.2" ry="6.6" transform="rotate(-45 29 29)"/></g>
+  <circle cx="20" cy="20" r="6.2" fill="#f0b429"/><circle cx="18" cy="18.4" r="1.9" fill="#f7ce63"/>
 </symbol>
 
-<symbol id="d-cobalt" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#1c418f" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#1c418f"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#1c418f"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#1c418f" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#2b5fc7"/>
-  <circle cx="26" cy="28" r="4.3" fill="#1c418f" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#1c418f" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#c9d9f7"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#2b5fc7" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#2b5fc7"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#2b5fc7"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#1c418f"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#f0b429"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#f0b429" opacity="0.85"/>
-  <g fill="#f0b429"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+<symbol id="f-marigold" viewBox="0 0 40 40">
+  <g fill="#f59e0b"><circle cx="20" cy="9" r="4.6"/><circle cx="28" cy="12" r="4.6"/><circle cx="31" cy="20" r="4.6"/><circle cx="28" cy="28" r="4.6"/><circle cx="20" cy="31" r="4.6"/><circle cx="12" cy="28" r="4.6"/><circle cx="9" cy="20" r="4.6"/><circle cx="12" cy="12" r="4.6"/></g>
+  <g fill="#e17f10"><circle cx="20" cy="13.5" r="3.8"/><circle cx="26.5" cy="20" r="3.8"/><circle cx="20" cy="26.5" r="3.8"/><circle cx="13.5" cy="20" r="3.8"/></g>
+  <circle cx="20" cy="20" r="4.6" fill="#c2590e"/><circle cx="20" cy="20" r="2" fill="#f7c04a"/>
 </symbol>
 
-<symbol id="d-clay" viewBox="0 0 40 40">
-  <ellipse cx="21" cy="34.8" rx="12.5" ry="2.4" fill="#7a3f22" opacity="0.3"/>
-  <path d="M33 17.5 L38 12.5 L36.5 19.5 Z" fill="#8a4a28"/>
-  <path d="M12 14 Q9.5 22 16 26.5 Q22.5 30.5 28.5 27.5 Q35 24 35 16" fill="none" stroke="#b0663d" stroke-width="7" stroke-linecap="round"/>
-  <path d="M13.5 18 Q12.5 22.5 17 25.2" fill="none" stroke="#cf8a5c" stroke-width="2" stroke-linecap="round"/>
-  <g fill="#8a4a28"><path d="M17.5 22.4 L18.6 19.8 L20 22.2 Z"/><path d="M22 23.6 L23.2 21 L24.6 23.4 Z"/><path d="M26.5 22.8 L27.6 20.2 L29 22.6 Z"/></g>
-  <circle cx="11" cy="11" r="4.8" fill="#b0663d"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#b0663d"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#8a4a28"/>
-  <path d="M9.2 7.6 L8.4 3.0 L10.8 7.2 Z" fill="#8a4a28"/><path d="M11.6 7.4 L13.7 4.2 L13.1 7.9 Z" fill="#8a4a28"/>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
+<symbol id="f-iris" viewBox="0 0 40 40">
+  <path d="M20 4 Q25 11 20 19 Q15 11 20 4 Z" fill="#6d5bd0"/>
+  <path d="M11 8 Q19 12 19.5 19 Q11 17 11 8 Z" fill="#5b4ab8"/>
+  <path d="M29 8 Q21 12 20.5 19 Q29 17 29 8 Z" fill="#5b4ab8"/>
+  <path d="M20 19 Q9 21 7 32 Q16 31 20 22 Z" fill="#4f46a5"/>
+  <path d="M20 19 Q31 21 33 32 Q24 31 20 22 Z" fill="#4f46a5"/>
+  <path d="M20 19 Q16 28 20 35 Q24 28 20 19 Z" fill="#6d5bd0"/>
+  <path d="M17.5 20 Q20 17.5 22.5 20" fill="none" stroke="#f0b429" stroke-width="2" stroke-linecap="round"/>
 </symbol>
 
-<symbol id="d-coral" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#cf5a6b" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#cf5a6b"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#cf5a6b"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#cf5a6b" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#ee7d8b"/>
-  <circle cx="26" cy="28" r="4.3" fill="#cf5a6b" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#cf5a6b" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#fcdce0"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#ee7d8b" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#ee7d8b"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#ee7d8b"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#cf5a6b"/>
-  <path d="M10 8 L8.8 3.5 L10.6 5.6 L10.4 2 L12.6 5 L13.8 3.2 L13.6 6.6 Q12.2 8.2 11.2 9.6 Z" fill="#e86a50"/>
-  <g fill="#e86a50"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <path d="M14 26 q3 1.8 6 0" stroke="#f8b8c0" stroke-width="1" fill="none" opacity="0.85"/>
+<symbol id="f-poppy" viewBox="0 0 40 40">
+  <circle cx="13.5" cy="13.5" r="9.5" fill="#d64545"/><circle cx="26.5" cy="13.5" r="9.5" fill="#c93b3b"/><circle cx="13.5" cy="26.5" r="9.5" fill="#c93b3b"/><circle cx="26.5" cy="26.5" r="9.5" fill="#d64545"/>
+  <circle cx="20" cy="20" r="5.4" fill="#3b2430"/><g fill="#e9b6c9"><circle cx="20" cy="16.4" r="1"/><circle cx="23.2" cy="18.6" r="1"/><circle cx="22" cy="22.8" r="1"/><circle cx="18" cy="22.8" r="1"/><circle cx="16.8" cy="18.6" r="1"/></g>
 </symbol>
 
-<symbol id="d-amber" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#c1832a" stroke-width="3.2" stroke-linecap="round"/>
-  <circle cx="35.5" cy="14.5" r="3.2" fill="#fde68a" stroke="#f0b429" stroke-width="1.1"/><circle cx="35.5" cy="14.5" r="1.2" fill="#f59e0b"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#c1832a"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#c1832a" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#e8a83b"/>
-  <circle cx="26" cy="28" r="4.3" fill="#c1832a" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#c1832a" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#fde68a"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#e8a83b" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#e8a83b"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#e8a83b"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#c1832a"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#8a5212"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#8a5212" opacity="0.85"/>
-  <g fill="#8a5212"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <circle cx="17" cy="29.5" r="2.2" fill="#f59e0b" opacity="0.55"/>
+<symbol id="f-phlox" viewBox="0 0 40 40">
+  <g fill="#b79ae0"><path d="M20 20 L14.6 5.8 Q20 2.6 25.4 5.8 Z M20 20 L34 12.5 Q36.4 18.2 33 23 Z M20 20 L28.6 33.6 Q23.4 37 18 35 Z M20 20 L11.4 33.6 Q6.4 30 6.2 24.4 Z M20 20 L6 12.5 Q7.6 6.8 13 5.4 Z"/></g>
+  <g fill="#cdb7ec"><ellipse cx="20" cy="10" rx="4.4" ry="6.4"/><ellipse cx="29.4" cy="16.6" rx="4.4" ry="6.4" transform="rotate(72 29.4 16.6)"/><ellipse cx="25.8" cy="27.8" rx="4.4" ry="6.4" transform="rotate(144 25.8 27.8)"/><ellipse cx="14.2" cy="27.8" rx="4.4" ry="6.4" transform="rotate(-144 14.2 27.8)"/><ellipse cx="10.6" cy="16.6" rx="4.4" ry="6.4" transform="rotate(-72 10.6 16.6)"/></g>
+  <circle cx="20" cy="20" r="3.4" fill="#fffdf4"/><circle cx="20" cy="20" r="1.4" fill="#8f6cc9"/>
 </symbol>
 
-<symbol id="d-slate" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#4f5d6e" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#4f5d6e"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#4f5d6e"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#4f5d6e" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#6b7a8c"/>
-  <circle cx="26" cy="28" r="4.3" fill="#4f5d6e" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#4f5d6e" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#cdd6de"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#6b7a8c" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#6b7a8c"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#6b7a8c"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#4f5d6e"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#3e4a58"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#3e4a58" opacity="0.85"/>
-  <g fill="#3e4a58"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <g fill="#4f5d6e" opacity="0.75"><rect x="21" y="23" width="3.4" height="2.4" rx="0.7"/><rect x="24.8" y="26" width="3" height="2.2" rx="0.7"/><rect x="18" y="21.5" width="2.8" height="2" rx="0.7"/></g>
+<symbol id="f-zinnia" viewBox="0 0 40 40">
+  <g fill="#ef6a5a"><ellipse cx="20" cy="7.5" rx="2.6" ry="6.5"/><ellipse cx="20" cy="32.5" rx="2.6" ry="6.5"/><ellipse cx="7.5" cy="20" rx="6.5" ry="2.6"/><ellipse cx="32.5" cy="20" rx="6.5" ry="2.6"/><ellipse cx="11.2" cy="11.2" rx="2.5" ry="6.2" transform="rotate(-45 11.2 11.2)"/><ellipse cx="28.8" cy="11.2" rx="2.5" ry="6.2" transform="rotate(45 28.8 11.2)"/><ellipse cx="11.2" cy="28.8" rx="2.5" ry="6.2" transform="rotate(45 11.2 28.8)"/><ellipse cx="28.8" cy="28.8" rx="2.5" ry="6.2" transform="rotate(-45 28.8 28.8)"/></g>
+  <g fill="#f9917f"><ellipse cx="20" cy="12" rx="2.3" ry="5"/><ellipse cx="27" cy="15" rx="2.3" ry="5" transform="rotate(67 27 15)"/><ellipse cx="24.5" cy="26" rx="2.3" ry="5" transform="rotate(135 24.5 26)"/><ellipse cx="15.5" cy="26" rx="2.3" ry="5" transform="rotate(-135 15.5 26)"/><ellipse cx="13" cy="15" rx="2.3" ry="5" transform="rotate(-67 13 15)"/></g>
+  <circle cx="20" cy="20" r="4.4" fill="#7a3040"/><g fill="#f0b429"><circle cx="20" cy="17.6" r="0.9"/><circle cx="22.2" cy="20.6" r="0.9"/><circle cx="17.8" cy="20.6" r="0.9"/><circle cx="20" cy="22.6" r="0.9"/></g>
 </symbol>
 
-<!-- ============ WILDLIFE DRAGONS (blue shelf) ============ -->
-
-<symbol id="d-silver" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#97a1b0" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#97a1b0"/>
-  <path d="M17.5 21 Q19 7 34 8 Q31 12 27 13 Q28.5 15.2 25 16.5 Q26.5 18.5 22 19 Q22.8 21 18 22.5 Z" fill="#97a1b0" stroke="#a8b2bf" stroke-width="0.8"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#c6cdd8" stroke="#a8b2bf" stroke-width="0.8"/>
-  <circle cx="26" cy="28" r="4.3" fill="#97a1b0" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#97a1b0" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#eef1f5"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#c6cdd8" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#c6cdd8" stroke="#a8b2bf" stroke-width="0.8"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#c6cdd8" stroke="#a8b2bf" stroke-width="0.8"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#97a1b0"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#7d8794"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#7d8794" opacity="0.85"/>
-  <g fill="#7d8794"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <path d="M15 24.5 q4 -1.6 8 0" stroke="#fff" stroke-width="1" fill="none" opacity="0.9"/>
+<symbol id="f-aster" viewBox="0 0 40 40">
+  <g fill="#8b6ff0"><path d="M20 20 L18 4 L22 4 Z M20 20 L28 6 L31 9 Z M20 20 L34 12 L36 16 Z M20 20 L36 22 L34 26 Z M20 20 L31 31 L28 34 Z M20 20 L22 36 L18 36 Z M20 20 L12 34 L9 31 Z M20 20 L4 26 L4 22 Z M20 20 L4 16 L6 12 Z M20 20 L9 9 L12 6 Z"/></g>
+  <circle cx="20" cy="20" r="5.6" fill="#f0b429"/><circle cx="20" cy="20" r="2.6" fill="#e17f10"/>
 </symbol>
 
-<symbol id="d-frost" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#5fa3c2" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#5fa3c2"/>
-  <ellipse cx="24" cy="15.5" rx="7" ry="4" fill="#5fa3c2" stroke="#7db8d2" stroke-width="0.8" transform="rotate(-32 24 15.5)"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#9fd4e8" stroke="#7db8d2" stroke-width="0.8"/>
-  <circle cx="26" cy="28" r="4.3" fill="#5fa3c2" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#5fa3c2" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#eaf7fc"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#9fd4e8" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#9fd4e8" stroke="#7db8d2" stroke-width="0.8"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#9fd4e8" stroke="#7db8d2" stroke-width="0.8"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#5fa3c2"/>
-  <path d="M9.2 7.6 L8.5 2.4 L10.8 7.2 Z" fill="#ffffff"/><path d="M11.7 7.4 L13.8 3.2 L13.2 7.9 Z" fill="#ffffff" opacity="0.9"/>
-  <g fill="#ffffff"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <g fill="#fff" opacity="0.9"><circle cx="22" cy="23.5" r="0.9"/><circle cx="25.5" cy="26.5" r="0.7"/><circle cx="18.5" cy="22" r="0.7"/></g>
+<symbol id="f-primrose" viewBox="0 0 40 40">
+  <g fill="#f7e08d" stroke="#e3c65e" stroke-width="0.8"><path d="M20 21 C12 15 12 5 20 6 C28 5 28 15 20 21 Z"/><path d="M20 19 C26 27 36 27 35 19 C36 11 26 11 20 19 Z"/><path d="M20 19 C12 25 12 35 20 34 C28 35 28 25 20 19 Z"/><path d="M19 20 C13 12 3 12 4 20 C3 28 13 28 19 20 Z"/></g>
+  <circle cx="20" cy="20" r="3.6" fill="#e8a53c"/><circle cx="20" cy="20" r="1.5" fill="#fbf3d8"/>
 </symbol>
 
-<symbol id="d-obsidian" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#262130" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#262130"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#262130"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#262130" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#3a3444"/>
-  <circle cx="26" cy="28" r="4.3" fill="#262130" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#262130" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#6b6378"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#3a3444" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#3a3444"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#3a3444"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#262130"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#8a7fa0"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#8a7fa0" opacity="0.85"/>
-  <g fill="#8a7fa0"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#fde68a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <path d="M15 22.5 q5 -2.4 10 0" stroke="#8f7bb8" stroke-width="0.9" fill="none" opacity="0.9"/><circle cx="24" cy="25" r="0.8" fill="#8f7bb8"/>
+<symbol id="f-coreopsis" viewBox="0 0 40 40">
+  <g fill="#f7c948" stroke="#dda92e" stroke-width="0.7">
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(45 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(90 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(135 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(180 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(225 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(270 20 20)"/>
+    <path d="M20 20 C16.5 14 16.5 8.5 18 5.5 L20 8 L22 5.5 C23.5 8.5 23.5 14 20 20 Z" transform="rotate(315 20 20)"/>
+  </g>
+  <circle cx="20" cy="20" r="4.4" fill="#7a4a1e"/><circle cx="20" cy="20" r="2.1" fill="#b0762f"/>
 </symbol>
 
-<!-- ============ EXOTIC (purple shelf) ============ -->
-
-<symbol id="d-storm" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#3f3390" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#3f3390"/>
-  <path d="M17.5 21 L19.5 7 L23 12 L26.5 6 L28.5 12.5 L33.5 8.5 L29.5 16 Q24 14.5 24.5 18.5 Q20.5 17.5 18 22.5 Z" fill="#3f3390"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#5b4ab8"/>
-  <circle cx="26" cy="28" r="4.3" fill="#3f3390" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#3f3390" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#8b7fd6"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#5b4ab8" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#5b4ab8"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#5b4ab8"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#3f3390"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#f0b429"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#f0b429" opacity="0.85"/>
-  <g fill="#f0b429"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#fde68a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <path d="M20.5 23.5 L18.9 26.6 L20.4 26.6 L19 29.9 L22.3 25.9 L20.7 25.9 L22.1 23.5 Z" fill="#f0b429"/>
+<symbol id="f-pitcher" viewBox="0 0 40 40">
+  <path d="M14 8 C11 16 12 28 16 37 L24 37 C28 28 29 16 26 8 Z" fill="#a9cf72" stroke="#6d8f45" stroke-width="0.9"/>
+  <g stroke="#7fa353" stroke-width="0.7" fill="none" opacity="0.85">
+    <path d="M17 11 C15.5 19 16 28 18 35"/><path d="M23 11 C24.5 19 24 28 22 35"/><path d="M20 10 C20 19 20 28 20 36"/>
+  </g>
+  <path d="M13.5 9.5 C13 3.5 27 3.5 26.5 9.5 C26.5 12 13.5 12 13.5 9.5 Z" fill="#b98fd0" stroke="#7d55a0" stroke-width="0.9"/>
+  <g stroke="#7d55a0" stroke-width="0.6" opacity="0.7"><path d="M16 9 C16.5 6.5 18 5 20 4.8"/><path d="M24 9 C23.5 6.5 22 5 20 4.8"/></g>
+  <ellipse cx="20" cy="10.6" rx="6" ry="1.7" fill="#5f3f80" opacity="0.55"/>
 </symbol>
 
-<!-- ============ GOLD SHELF ============ -->
-
-<symbol id="d-opal" viewBox="0 0 40 40">
-  <path d="M28 26.5 Q37 25.5 36 16" fill="none" stroke="#e4e0ea" stroke-width="3" stroke-linecap="round"/>
-  <path d="M17.5 21 Q19 6.5 33.5 7.5 Q27.5 11.5 28.5 15.5 Q23.5 14 24 18.5 Q20.5 17.5 18 22.5 Z" fill="#efedf4" stroke="#d9d4e0" stroke-width="0.8"/>
-  <path d="M20 19 Q23 10.5 30.5 9 M21.5 19.5 Q24.5 13.5 27.5 13" stroke="#e4e0ea" stroke-width="0.7" fill="none" opacity="0.5"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#ffffff" stroke="#d9d4e0" stroke-width="0.8"/>
-  <circle cx="26" cy="28" r="4.3" fill="#e4e0ea" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#e4e0ea" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#f6f4f9"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#d9d4e0" stroke-width="7" stroke-linecap="round"/><path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#ffffff" stroke="#d9d4e0" stroke-width="0.8"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#ffffff" stroke="#d9d4e0" stroke-width="0.8"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#e4e0ea"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#e8e2f0"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#e8e2f0" opacity="0.85"/>
-  <g fill="#e8e2f0"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#5fb8b0"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <g opacity="0.95"><circle cx="22.5" cy="23.5" r="1.1" fill="#8fd8e8"/><circle cx="18" cy="25.5" r="0.9" fill="#f5a8c8"/><circle cx="25.5" cy="27" r="0.9" fill="#fde68a"/><circle cx="15.5" cy="22.5" r="0.7" fill="#c9b8f0"/></g>
+<symbol id="f-blazing" viewBox="0 0 40 40">
+  <g fill="#9d6fe8"><circle cx="20" cy="6" r="3"/><circle cx="17" cy="10" r="3.4"/><circle cx="23" cy="10.5" r="3.2"/><circle cx="19" cy="15" r="3.8"/><circle cx="24" cy="16" r="3.2"/><circle cx="16" cy="20" r="3.6"/><circle cx="22" cy="21" r="3.8"/><circle cx="18" cy="26" r="3.6"/><circle cx="23" cy="27" r="3.2"/><circle cx="20" cy="31" r="3.4"/><circle cx="20" cy="35.5" r="2.6"/></g>
+  <g fill="#c5a6f5"><circle cx="20.5" cy="8" r="1.2"/><circle cx="21" cy="13" r="1.3"/><circle cx="18" cy="18" r="1.3"/><circle cx="21.5" cy="23.5" r="1.3"/><circle cx="19" cy="29" r="1.2"/><circle cx="20.5" cy="33.5" r="1.1"/></g>
 </symbol>
 
-<!-- ============ OBJECTS ============ -->
-
-<symbol id="d-egg" viewBox="0 0 40 40">
-  <path d="M20 3.5 C27.5 3.5 32.5 11.5 32.5 21 C32.5 30.5 27 37 20 37 C13 37 7.5 30.5 7.5 21 C7.5 11.5 12.5 3.5 20 3.5 Z" fill="#0b4176"/>
-  <path d="M20 3.5 C27.5 3.5 32.5 11.5 32.5 21 C32.5 29.5 28.2 35.5 22.5 36.7 C26.5 31.5 27.8 23 26.2 15.5 C25 10.2 23 6.2 20 3.5 Z" fill="#002d5b"/>
-  <ellipse cx="14.8" cy="12.5" rx="3.2" ry="5" fill="#f59e0b" transform="rotate(20 14.8 12.5)" opacity="0.95"/>
-  <ellipse cx="14" cy="11" rx="1.3" ry="2" fill="#fbd27e" transform="rotate(20 14 11)"/>
-  <g fill="#f0b429" opacity="0.85"><circle cx="24" cy="24.5" r="1.3"/><circle cx="17.5" cy="29" r="1.1"/><circle cx="26" cy="17" r="1"/><circle cx="12.5" cy="21.5" r="0.9"/></g>
+<symbol id="f-passion" viewBox="0 0 40 40">
+  <g fill="#e4d9f4"><ellipse cx="20" cy="7.5" rx="4" ry="6.6"/><ellipse cx="30" cy="11.5" rx="4" ry="6.6" transform="rotate(52 30 11.5)"/><ellipse cx="33.5" cy="22" rx="4" ry="6.6" transform="rotate(105 33.5 22)"/><ellipse cx="27.5" cy="31" rx="4" ry="6.6" transform="rotate(150 27.5 31)"/><ellipse cx="16.5" cy="33" rx="4" ry="6.6" transform="rotate(195 16.5 33)"/><ellipse cx="8" cy="27" rx="4" ry="6.6" transform="rotate(240 8 27)"/><ellipse cx="6.5" cy="16" rx="4" ry="6.6" transform="rotate(295 6.5 16)"/><ellipse cx="12.5" cy="8.5" rx="4" ry="6.6" transform="rotate(337 12.5 8.5)"/></g>
+  <g stroke="#6d3fb0" stroke-width="1.1" stroke-linecap="round"><line x1="20" y1="20" x2="20" y2="10.5"/><line x1="20" y1="20" x2="26.8" y2="13.4"/><line x1="20" y1="20" x2="29.5" y2="20"/><line x1="20" y1="20" x2="26.8" y2="26.6"/><line x1="20" y1="20" x2="20" y2="29.5"/><line x1="20" y1="20" x2="13.2" y2="26.6"/><line x1="20" y1="20" x2="10.5" y2="20"/><line x1="20" y1="20" x2="13.2" y2="13.4"/><line x1="20" y1="20" x2="24.7" y2="11.7"/><line x1="20" y1="20" x2="28.3" y2="15.3"/><line x1="20" y1="20" x2="28.3" y2="24.7"/><line x1="20" y1="20" x2="24.7" y2="28.3"/><line x1="20" y1="20" x2="15.3" y2="28.3"/><line x1="20" y1="20" x2="11.7" y2="24.7"/><line x1="20" y1="20" x2="11.7" y2="15.3"/><line x1="20" y1="20" x2="15.3" y2="11.7"/></g>
+  <circle cx="20" cy="20" r="5" fill="#8f5fd6"/><circle cx="20" cy="20" r="2.4" fill="#bcf0c9"/>
 </symbol>
 
-<symbol id="d-flame" viewBox="0 0 20 20">
-  <circle cx="10" cy="10" r="9" fill="#fff" stroke="#f2c063" stroke-width="1.2"/>
-  <path d="M10 3.6 C12.9 7 14 9.2 13.6 11.6 C14.4 11 14.8 10 15 9.2 C16 13 14 16.4 10 16.4 C6.6 16.4 4.6 14 5.2 11 C5.6 9 7.4 6.4 10 3.6 Z" fill="#f59e0b"/>
-  <path d="M10 9 C11.4 11 11.2 13.2 10 14.4 C8.8 13.2 8.6 11 10 9 Z" fill="#fde68a"/>
+<symbol id="f-ghost" viewBox="0 0 40 40">
+  <g fill="#ffffff" stroke="#d5dce4" stroke-width="0.9">
+  <path d="M20 17 Q11 13 8 5 Q17 7 20.5 14 Z"/>
+  <path d="M20 17 Q29 13 32 5 Q23 7 19.5 14 Z"/>
+  <ellipse cx="14" cy="17.5" rx="6.4" ry="3.6" transform="rotate(-18 14 17.5)"/>
+  <ellipse cx="26" cy="17.5" rx="6.4" ry="3.6" transform="rotate(18 26 17.5)"/>
+  <path d="M20 15.5 Q26 20 24 26 Q22 30 20 30.5 Q18 30 16 26 Q14 20 20 15.5 Z"/>
+  <path d="M17.5 28 Q12 33 12.5 38 Q16 35 18.6 29.8 Z"/>
+  <path d="M22.5 28 Q28 33 27.5 38 Q24 35 21.4 29.8 Z"/></g>
+  <circle cx="20" cy="18.6" r="1.7" fill="#c8d4b8"/>
 </symbol>
 
-<symbol id="d-fire" viewBox="0 0 20 20">
-  <path d="M10 1.6 C13.4 5.4 14.7 8 14.2 10.8 C15.2 10.1 15.7 8.9 15.9 7.9 C17.2 12.6 14.8 16.8 10 16.8 C5.8 16.8 3.4 13.8 4.2 10.2 C4.7 7.8 7 4.8 10 1.6 Z" fill="#f59e0b"/>
-  <path d="M10 7.5 C11.8 9.9 11.6 12.6 10 14 C8.4 12.6 8.2 9.9 10 7.5 Z" fill="#fde68a"/>
+<symbol id="f-seed" viewBox="0 0 40 40">
+  <path d="M20 4 C28.5 8 32.5 16.5 31.5 24 C30.5 32 25.5 36.5 20 36.5 C14.5 36.5 9.5 32 8.5 24 C7.5 16.5 11.5 8 20 4 Z" fill="#0b4176"/>
+  <path d="M20 4 C28.5 8 32.5 16.5 31.5 24 C30.8 30.2 28 34.4 24 35.9 C27 30 28 21.5 26 14.8 C24.6 10.3 22.5 6.8 20 4 Z" fill="#002d5b"/>
+  <ellipse cx="15.5" cy="14.5" rx="3" ry="5.2" fill="#f59e0b" transform="rotate(18 15.5 14.5)"/>
+  <ellipse cx="14.8" cy="13.2" rx="1.2" ry="2.1" fill="#fbd27e" transform="rotate(18 14.8 13.2)"/>
 </symbol>
 
-<symbol id="d-hatchling" viewBox="0 0 40 40">
-  <circle cx="20" cy="15.5" r="8" fill="#67a85b"/>
-  <path d="M16 9 L15 5.5 L18.2 7.6 Z" fill="#f0b429"/><path d="M24 9 L25 5.5 L21.8 7.6 Z" fill="#f0b429"/>
-  <circle cx="17.3" cy="15" r="1.7" fill="#1a2a4a"/><circle cx="22.7" cy="15" r="1.7" fill="#1a2a4a"/><circle cx="17.9" cy="14.4" r="0.6" fill="#fff"/><circle cx="23.3" cy="14.4" r="0.6" fill="#fff"/>
-  <path d="M11 22.5 L14 25.5 L17 22.5 L20 25.5 L23 22.5 L26 25.5 L29 22.5 L29 27 C29 33 25 36.5 20 36.5 C15 36.5 11 33 11 27 Z" fill="#0b4176"/>
-  <ellipse cx="16" cy="29.5" rx="1.6" ry="2.6" fill="#f59e0b" transform="rotate(15 16 29.5)"/>
+<symbol id="f-drop" viewBox="0 0 20 20">
+  <circle cx="10" cy="10" r="9" fill="#fff" stroke="#a8cbeb" stroke-width="1.2"/>
+  <path d="M10 4.2 C13 8.3 14.6 10.7 14.6 12.6 A4.6 4.6 0 0 1 5.4 12.6 C5.4 10.7 7 8.3 10 4.2 Z" fill="#4a9fe0"/>
+  <ellipse cx="8.5" cy="12.5" rx="1.1" ry="1.6" fill="#c3e2f8" transform="rotate(-20 8.5 12.5)"/>
 </symbol>
 
-<symbol id="d-bird" viewBox="0 0 40 40">
-  <path d="M13 22 Q6 17 3.5 19.5 Q6.5 26 13.5 26.5 Z" fill="#2c7cc0"/>
-  <ellipse cx="19" cy="24" rx="9.5" ry="7.8" fill="#4a9fe0"/>
-  <ellipse cx="18" cy="25.5" rx="5" ry="3.8" fill="#cfe7f8"/>
-  <circle cx="26.5" cy="16" r="5.8" fill="#5fb0ea"/>
-  <path d="M31.8 14.6 L37.5 16.2 L31.8 18.4 Z" fill="#f0b429"/>
-  <circle cx="28" cy="14.6" r="1.3" fill="#1a2a4a"/><circle cx="28.5" cy="14.2" r="0.45" fill="#fff"/>
-  <path d="M15 31.5 v3 M22 31.5 v3" stroke="#f0b429" stroke-width="1.4" stroke-linecap="round"/>
+<symbol id="f-sproutling" viewBox="0 0 40 40">
+  <path d="M20 36 L20 20" stroke="#4e8a45" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M20 21 Q8 20 7 9 Q19 10 20.5 20 Z" fill="#67a85b"/>
+  <path d="M20 21 Q32 20 33 9 Q21 10 19.5 20 Z" fill="#7fbb6f"/>
 </symbol>
 
-<symbol id="d-anole" viewBox="0 0 40 40">
-  <path d="M7 25 Q13 20 20 21.5 Q29 23.5 32 16 Q33.5 12 31 9.5" fill="none" stroke="#5aa04f" stroke-width="5" stroke-linecap="round"/>
-  <circle cx="7.5" cy="24" r="4.6" fill="#5aa04f"/>
-  <circle cx="6" cy="22.8" r="1.2" fill="#1a2a4a"/><circle cx="6.4" cy="22.4" r="0.4" fill="#fff"/>
-  <ellipse cx="8.5" cy="28.5" rx="1.7" ry="2.3" fill="#e05252"/>
-  <g stroke="#4e8a45" stroke-width="1.8" stroke-linecap="round"><line x1="13" y1="26" x2="12" y2="30"/><line x1="21" y1="24.5" x2="21.5" y2="28.5"/></g>
+<symbol id="f-bfly" viewBox="0 0 40 40">
+  <ellipse cx="20" cy="21" rx="1.7" ry="7" fill="#5a4632"/>
+  <path d="M18.6 18 Q7 6 4.5 14 Q3.5 21 18 21.5 Z" fill="#f59e0b"/>
+  <path d="M21.4 18 Q33 6 35.5 14 Q36.5 21 22 21.5 Z" fill="#f59e0b"/>
+  <path d="M18.4 22 Q8 24 9 30.5 Q11 35 18.6 24.5 Z" fill="#e17f10"/>
+  <path d="M21.6 22 Q32 24 31 30.5 Q29 35 21.4 24.5 Z" fill="#e17f10"/>
+  <circle cx="9.5" cy="14.5" r="1.6" fill="#fdf3d9"/><circle cx="30.5" cy="14.5" r="1.6" fill="#fdf3d9"/>
+  <path d="M18.8 14.5 Q16 10 14 9 M21.2 14.5 Q24 10 26 9" stroke="#5a4632" stroke-width="1" fill="none" stroke-linecap="round"/>
 </symbol>
 
-<symbol id="d-spark" viewBox="0 0 12 16"><path d="M6 0 L7.5 6 L12 8 L7.5 10 L6 16 L4.5 10 L0 8 L4.5 6 Z" fill="currentColor"/></symbol>
-
-<symbol id="d-bronze" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#7e5228" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#7e5228"/>
-  <path d="M12.5 24.5 Q13 12 21.5 12 Q30 12 30.5 24.5 Z" fill="#8a5c30" stroke="#7e5228" stroke-width="1"/>
-  <path d="M21.5 12 V24.5 M15.5 15.5 Q21.5 19.5 27.5 15.5" stroke="#7e5228" stroke-width="0.8" fill="none" opacity="0.8"/>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#a97142"/>
-  <circle cx="26" cy="28" r="4.3" fill="#7e5228" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#7e5228" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#e3c8a4"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#a97142" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#a97142"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#a97142"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#7e5228"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#5f3d1c"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#5f3d1c" opacity="0.85"/>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <g fill="#5f3d1c" opacity="0.8"><circle cx="16.5" cy="16.5" r="0.7"/><circle cx="21.5" cy="14.8" r="0.7"/><circle cx="26.5" cy="16.5" r="0.7"/></g>
+<symbol id="f-bee" viewBox="0 0 40 40">
+  <ellipse cx="20" cy="23" rx="9" ry="7" fill="#f0b429"/>
+  <path d="M14.5 18.5 q5.5 -3 11 0 M12.8 23 h14.4 M14.5 27.5 q5.5 3 11 0" stroke="#5a4632" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="13" cy="12" rx="6" ry="4.4" fill="#dcecf5" opacity="0.9" transform="rotate(-25 13 12)"/>
+  <ellipse cx="27" cy="12" rx="6" ry="4.4" fill="#dcecf5" opacity="0.9" transform="rotate(25 27 12)"/>
 </symbol>
 
-<symbol id="d-amethyst" viewBox="0 0 40 40">
-  <path d="M28 26 Q36.5 24.5 35.5 16.5" fill="none" stroke="#6a3fa8" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M33 17.5 L38.5 12.5 L36.8 19.5 Z" fill="#6a3fa8"/>
-  <g fill="#b48ae8"><path d="M18 21 L20 9.5 L23 20 Z"/><path d="M23 20.5 L26.5 11.5 L28.5 20.5 Z"/><path d="M15.5 21.5 L16.5 14.5 L19 21 Z"/></g>
-  <ellipse cx="20" cy="27" rx="10.5" ry="7.2" fill="#8e5bd0"/>
-  <circle cx="26" cy="28" r="4.3" fill="#6a3fa8" opacity="0.85"/>
-  <path d="M26.5 31.5 v4 M15 32 v3.6" stroke="#6a3fa8" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="17" cy="29.5" rx="6.2" ry="4" fill="#ddc9f5"/>
-  <path d="M13.5 23.5 Q11 18.5 11.5 13" fill="none" stroke="#8e5bd0" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="11" cy="11" r="4.8" fill="#8e5bd0"/>
-  <ellipse cx="6.9" cy="12.4" rx="3" ry="2.3" fill="#8e5bd0"/>
-  <circle cx="5.7" cy="11.8" r="0.55" fill="#6a3fa8"/>
-  <path d="M9.1 7.6 Q8.5 4.4 8.7 2.7 Q10.2 5.1 10.7 7.3 Z" fill="#c9a8f0"/>
-  <path d="M11.5 7.3 Q12.7 4.6 14.2 3.1 Q13.8 5.9 13.1 8.0 Z" fill="#c9a8f0" opacity="0.85"/>
-  <g fill="#c9a8f0"><path d="M13.6 21.6 L15.0 18.9 L16.1 21.0 Z"/><path d="M16.6 20.6 L18.1 17.7 L19.2 20.1 Z"/><path d="M19.7 20.1 L21.2 17.3 L22.3 19.8 Z"/><path d="M22.8 20.4 L24.2 18.0 L25.2 20.6 Z"/></g>
-  <circle cx="11.6" cy="10.2" r="1.15" fill="#1a2a4a"/><circle cx="12" cy="9.8" r="0.4" fill="#fff"/>
-  <g fill="#c9a8f0" opacity="0.9"><path d="M22.5 24 L23.5 21.5 L24.5 24 Z"/><path d="M25.5 26 L26.3 24 L27.1 26 Z"/></g>
-</symbol>
-
-<symbol id="d-haybale" viewBox="0 0 40 40">
-  <rect x="4" y="12" width="32" height="22" rx="6" fill="#e6c168" stroke="#b98f34" stroke-width="1.6"/>
-  <line x1="14" y1="12" x2="14" y2="34" stroke="#b98f34" stroke-width="1.4"/>
-  <line x1="26" y1="12" x2="26" y2="34" stroke="#b98f34" stroke-width="1.4"/>
-  <circle cx="20" cy="23" r="5.5" fill="none" stroke="#c9a04a" stroke-width="1.4"/>
-  <circle cx="20" cy="23" r="2.2" fill="none" stroke="#c9a04a" stroke-width="1.2"/>
-</symbol>
+<symbol id="f-petal" viewBox="0 0 12 16"><path d="M6 0 Q12 6 6 16 Q0 6 6 0 Z" fill="currentColor"/></symbol>
 
 <symbol id="n-shed" viewBox="0 0 24 24"><path d="M2.5 10.5 L12 3.5 L21.5 10.5" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 9.5 V20 H19.5 V9.5" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round"/><path d="M9.5 20 V12.5 H14.5 V20" fill="none" stroke="#3d4d3d" stroke-width="2" stroke-linejoin="round"/><path d="M12 12.5 V20" stroke="#3d4d3d" stroke-width="1.4"/></symbol>
 <symbol id="n-trowel" viewBox="0 0 24 24"><path d="M14.5 9.5 L19.5 4.5" stroke="#3d4d3d" stroke-width="2.6" stroke-linecap="round"/><path d="M13 8 C10 5.5 6.5 6.5 4.5 9 C7 9.5 8.5 10.5 9.5 12 C10.5 13.5 11.5 15 14 15.5 C16.5 13.5 17.5 10 15 7.5 Z" fill="#3d4d3d" transform="rotate(8 12 11)"/><path d="M4.5 19.5 h6" stroke="#3d4d3d" stroke-width="2" stroke-linecap="round" opacity="0.5"/></symbol>
@@ -493,46 +312,68 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 
 <div id="toast"></div>
 <div id="drag-ghost"></div>
-<div id="remove-hint">🗑 Drag outside the roost to remove</div>
+<div id="remove-hint">🗑 Drag outside the garden to remove</div>
+<!-- ============ PERMISSION GATE ============
+     Nothing in the app is reachable until this is tapped. Serious, short, and
+     written so a parent reading over a shoulder is reassured rather than
+     alarmed. The line that does the real work is the one telling them the
+     texts come from their own phone. -->
+<section id="scr-gate" class="screen">
+  <div class="bgdeco" id="deco-gate"></div>
+  <div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:20px 20px 10px;">
+    <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;letter-spacing:0.14em;color:#9aa3ad;">BEFORE YOU START</div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:34px;color:var(--blue);margin-top:4px;">Boomers</div>
+    <svg viewBox="0 0 220 26" style="width:190px;height:21px;margin-top:2px;">
+      <path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/>
+      <path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/>
+      <path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/>
+    </svg>
+    <div class="card" style="margin-top:16px;align-self:stretch;">
+      <div style="font-size:14px;line-height:1.65;color:var(--ink);">
+        <p style="margin:0 0 10px;">Boomers is for people 16 and older.</p>
+        <p style="margin:0 0 10px;">This game sends text messages from your phone to people in your family. They will see your number.</p>
+        <p style="margin:0 0 10px;">Talk to your parent or guardian first. Make sure they are okay with you playing.</p>
+        <p style="margin:0;">Only add people you are actually related to and actually know. Nobody else.</p>
+      </div>
+    </div>
+    <button class="bigbtn" style="animation:popglow 2.6s infinite;font-size:14.5px;padding:14px 20px;" onclick="attest()">I am 16 or older and I have permission</button>
+    <div class="tinytxt" style="padding-top:12px;">In Florida you can preregister to vote at 16. If you turn 18 before the general election, you can vote in the primary at 17. <a href="https://registertovoteflorida.gov" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline;">Check your own status</a>.</div>
+  </div>
+</section>
+
 <!-- ============ SIGN UP ============ -->
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
   <div id="sg-wrap" style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:14px 0 8px;">
-    <svg id="sg-flowers" viewBox="0 0 238 56" width="238" height="56" style="display:block;flex-shrink:0;margin-bottom:6px;overflow:visible;"><defs><filter id="sg-glow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#fde68a"/></filter></defs><use href="#d-jade" x="0" y="32" width="22" height="22"/><use href="#d-obsidian" x="29" y="23" width="26" height="26"/><use href="#d-storm" x="62" y="14" width="30" height="30"/><use href="#d-opal" x="99" y="2" width="40" height="40" filter="url(#sg-glow)"/><use href="#d-ember" x="146" y="14" width="30" height="30"/><use href="#d-frost" x="183" y="23" width="26" height="26"/><use href="#d-copper" x="216" y="32" width="22" height="22"/></svg>
-    <div id="sg-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:29px;color:var(--blue);margin-top:0;line-height:1.1;">Dragon Farmer</div>
+    <svg id="sg-flowers" viewBox="0 0 238 56" width="238" height="56" style="display:block;flex-shrink:0;margin-bottom:6px;overflow:visible;"><defs><filter id="sg-glow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#fde68a"/></filter></defs><use href="#f-ring" x="0" y="32" width="22" height="22" style="color:#4cc9ff"/><use href="#f-willow" x="29" y="23" width="26" height="26" style="color:#ff7ac4"/><use href="#f-chrys" x="62" y="14" width="30" height="30" style="color:#4ade80"/><use href="#f-kamuro" x="99" y="2" width="40" height="40" filter="url(#sg-glow)" style="color:#ffc233"/><use href="#f-cross" x="146" y="14" width="30" height="30" style="color:#b18cff"/><use href="#f-palm" x="183" y="23" width="26" height="26" style="color:#ff9a3c"/><use href="#f-peony" x="216" y="32" width="22" height="22" style="color:#ff4d4d"/></svg>
+    <div id="sg-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:29px;color:var(--blue);margin-top:0;line-height:1.1;">Boomers</div>
     <svg id="sg-swoosh" viewBox="0 0 220 26" style="width:205px;height:23px;margin-top:2px;">
       <path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/>
       <path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/>
       <path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/>
     </svg>
-    <div id="sg-tag" style="font-size:11.5px;color:#5b6470;margin-top:3px;letter-spacing:0.02em;">Raise our community, one friend at a time</div>
+    <div id="sg-tag" style="font-size:11.5px;color:#5b6470;margin-top:3px;letter-spacing:0.02em;">Light up the sky for the people who raised you</div>
     <div id="sg-names" style="display:flex;gap:10px;margin:14px 24px 0;align-self:stretch;">
       <div class="field" style="flex:1;margin:0;"><label>FIRST NAME</label><input id="f-first" autocomplete="given-name" placeholder="Engaged"></div>
       <div class="field" style="flex:1;margin:0;"><label>LAST NAME</label><input id="f-last" autocomplete="family-name" placeholder="Voter"></div>
     </div>
-    <div class="field focus"><div class="fieldnote"><label style="color:var(--blue);">KEEPER NAME</label><em>what other keepers see</em></div><input id="f-garden" placeholder="DragonTamer904" maxlength="20"></div>
-    <div class="field"><div class="fieldnote"><label>ZIP CODE</label><em>keeps your roost local</em></div><input id="f-zip" inputmode="numeric" autocomplete="postal-code" placeholder="32234" maxlength="5"></div>
+    <div class="field focus"><div class="fieldnote"><label style="color:var(--blue);">SHOW NAME</label><em>the only name anyone else sees</em></div><input id="f-garden" placeholder="Riverside Skies" maxlength="20"></div>
+    <div class="field"><div class="fieldnote"><label>ZIP CODE</label><em>keeps your show local</em></div><input id="f-zip" inputmode="numeric" autocomplete="postal-code" placeholder="32234" maxlength="5"></div>
     <div class="field" style="margin-left:16px;margin-right:16px;">
-      <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your roost</em></div>
+      <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your garden</em></div>
       <div style="display:flex;gap:9px;margin-top:6px;">
         <input class="pindot" placeholder="·" id="s-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin0','s-pin1')">
         <input class="pindot" placeholder="·" id="s-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin1','s-pin2')">
         <input class="pindot" placeholder="·" id="s-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin2','s-pin3')">
         <input class="pindot" placeholder="·" id="s-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin3',null)">
       </div>
-      <div style="font-size:8.5px;color:#9aa3ad;margin-top:3px;line-height:1.4;">We store no data, so we cannot look this up for you. Write it down.</div>
+      <div style="font-size:8.5px;color:#9aa3ad;margin-top:3px;line-height:1.4;">Boomers stores no data, so we cannot look this up for you. Write it down.</div>
     </div>
-    <div class="field" style="display:flex;align-items:center;gap:10px;background:#f4f9ff;border:2px solid var(--blue);cursor:pointer;" onclick="toggleContacts()">
-      <span style="font-size:16px;">🔎</span>
-      <div style="flex:1;">
-        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--ink);">Find District 4 voters from my contacts</div>
-        <div style="font-size:9px;color:#9aa3ad;margin-top:1px;">Compared once on your phone. Never saved.</div>
-      </div>
-      <span id="f-contacts" data-on="0" style="width:36px;height:20px;background:#c9d4de;border-radius:10px;position:relative;flex-shrink:0;transition:background 0.2s;"><i style="position:absolute;left:3px;top:3px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left 0.2s;"></i></span>
-    </div>
+    <!-- Boomers never reads contacts. There is deliberately no toggle here. -->
+    <div class="smsnote" style="background:#f6fbf7;border-color:#bfe7cd;color:#1c6b3c;">Boomers never opens your contacts. You type a name, we check the public voter rolls, and that is the whole search.</div>
     <div id="signup-err" style="display:none;font-size:11px;color:var(--red);margin-top:8px;"></div>
     <div class="smsnote">This game works by texting people you know. Messages open in your phone's own messaging app and are sent by you — your carrier's terms apply and standard message and data rates may apply.</div>
-    <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;"><use href="#d-egg"/></svg>Start my roost</button>
+    <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;color:#fde68a;"><use href="#f-shell"/></svg>Start my show</button>
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.08em;color:var(--ink);margin-top:10px;">NOT LEFT. NOT RIGHT. FORWARD.</div>
     <div class="tinytxt">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.<br>This game is for entertainment purposes only, and scoring runs on the honor system.<br>This app does not collect data.<br>Texts are sent from your own phone and are subject to your carrier's terms and rates.<br>Paid for by Friends of Mike · 119 Center St S #143, Jacksonville, FL 32234 · <a href="https://www.mikesell.org/privacy" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Privacy</a></div>
   </div>
@@ -553,7 +394,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
       <input class="pindot" placeholder="·" id="lock-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin3',null)" onkeydown="if(event.key==='Enter')doUnlock()">
     </div>
     <div id="lock-err" style="display:none;font-size:11px;color:var(--red);margin:4px 0 8px;text-align:center;"></div>
-    <button class="bigbtn" style="margin-top:10px;" onclick="doUnlock()">Unlock my roost</button>
+    <button class="bigbtn" style="margin-top:10px;" onclick="doUnlock()">Unlock my garden</button>
     <div style="margin-top:22px;"><span onclick="confirmReset()" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Forgot PIN · start fresh</span></div>
   </div>
 </section>
@@ -561,36 +402,36 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <!-- ============ GARDEN ============ -->
 <section id="scr-garden" class="screen">
   <div class="bgdeco" id="deco-garden"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#d-hatchling"/></svg> My Roost</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">🔥 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;color:#f0b429;"><use href="#f-shell"/></svg> My Show</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">👏 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;" onclick="openLadder()">
     <span id="hud-seal" style="width:40px;flex-shrink:0;"></span>
     <div style="flex:1;min-width:0;">
-      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13.5px;"><span id="hud-gname">...</span> · <span id="hud-rank" style="color:var(--blue);">Egg Tender</span></div>
-      <div style="height:7px;background:#e8dcbb;border-radius:5px;margin-top:6px;overflow:hidden;"><i id="hud-xp" style="display:block;height:100%;width:0;background:var(--blue);border-radius:5px;"></i></div>
+      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13.5px;"><span id="hud-gname">...</span> · <span id="hud-rank" style="color:var(--blue);">Good Neighbor</span></div>
+      <div style="height:7px;background:#dbe7f3;border-radius:5px;margin-top:6px;overflow:hidden;"><i id="hud-xp" style="display:block;height:100%;width:0;background:var(--blue);border-radius:5px;"></i></div>
     </div>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:11.5px;color:var(--blue);white-space:nowrap;text-align:right;"><span id="hud-plots">0</span> hollows<br><small style="font-family:Arial;font-size:8.5px;color:#6b7280;">next: <span id="hud-next">100</span>🔥</small></div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:11.5px;color:var(--blue);white-space:nowrap;text-align:right;"><span id="hud-plots">0</span> tubes<br><small style="font-family:Arial;font-size:8.5px;color:#6b7280;">next: <span id="hud-next">100</span>👏</small></div>
   </div>
   <div style="margin:8px 30px -4px;"><svg viewBox="0 0 300 44" style="width:100%;display:block;">
-    <rect x="16" y="12" width="9" height="32" rx="2" fill="#6e4a28"/>
-    <rect x="275" y="12" width="9" height="32" rx="2" fill="#6e4a28"/>
-    <rect x="8" y="6" width="284" height="27" rx="6" fill="#8a5f36" stroke="#6e4a28" stroke-width="2"/>
-    <path d="M22 12.5 H278 M22 27 H278" stroke="#7a5230" stroke-width="1" opacity="0.6"/>
-    <path d="M150 1 l1.7 3.6 3.9 0.5 -2.8 2.7 0.7 3.9 -3.5 -1.9 -3.5 1.9 0.7 -3.9 -2.8 -2.7 3.9 -0.5 Z" fill="#f0b429" stroke="#b98f34" stroke-width="0.7"/>
-    <text id="arch-name" x="150" y="24" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#f7e8c8">MY ROOST</text>
+    <path d="M12 44 V26 Q150 -10 288 26 V44" fill="none" stroke="#3d4d3d" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M24 40 V27 Q150 -3 276 27 V40" fill="none" stroke="#3d4d3d" stroke-width="1.4" opacity="0.55"/>
+    <circle cx="12" cy="22" r="2.6" fill="#3d4d3d"/><circle cx="288" cy="22" r="2.6" fill="#3d4d3d"/>
+    <circle cx="150" cy="7" r="2.2" fill="#f59e0b"/>
+    <text id="arch-name" x="150" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#3d4d3d">MY GARDEN</text>
   </svg></div>
-  <div id="gardenwrap" style="background:linear-gradient(180deg,#eeda9e,#dfc27b);border:3px solid #8a5f36;border-radius:22px;margin:0 12px;padding:6px;">
-    <div style="font-size:9px;color:#5c6b4f;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Press and hold an egg to rearrange placement. Move outside of the roost to put it in the barn.</b></div>
+  <div id="gardenwrap" style="position:relative;background:linear-gradient(180deg,#070d22 0%,#0e1838 55%,#16224a 100%);border:3px solid #3b4a78;border-radius:22px;margin:0 12px;padding:6px;overflow:hidden;">
+    <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Press and hold a shell to move it. Drag it off the field to put it back in the shed.</b></div>
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
+    <div id="fuseline"><i></i></div>
   </div>
   <div class="toolbar">
-    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>BARN (<span id="hud-shed">0</span>)</span></div>
+    <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>SHED (<span id="hud-shed">0</span>)</span></div>
     <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span>🔥 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
-        <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT</button>
+        <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
+        <button class="collectbtn" id="btn-collect" onclick="collectPraise()">SPARK THE FUSE</button>
       </div>
-      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Roost Embers: +<span id="hud-percycle">0</span> 🔥 in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
+      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Next show: +<span id="hud-percycle">0</span> 👏 in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
     </div>
   </div>
   <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
@@ -609,12 +450,12 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <section id="scr-plant" class="screen">
   <div class="bgdeco" id="deco-plant"></div>
   <div style="padding-top:18px;"></div>
-  <div class="qtitle">Find a friend in the <b>voter registration</b> file 🥚</div>
+  <div class="qtitle">Check a <b>relative</b> against the voter rolls 🎆</div>
+  <div style="font-size:10.5px;color:#9aa3ad;text-align:center;margin:2px 24px 0;line-height:1.5;">Family only. Type their name the way it would appear on a voter record.</div>
   <div id="plant-searchwrap">
     <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="First and last name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch();}"></div>
     <div style="display:flex;gap:9px;justify-content:center;margin:12px 16px 0;">
       <button id="plant-go" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;" onclick="doSearch()">Check Voter Rolls</button>
-      <button id="plant-contacts" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;background:#fff;color:var(--blue);border:2px solid var(--blue);box-shadow:0 5px 0 #cfe3f7;" onclick="openConnectSheet()">Search by Contacts</button>
     </div>
   </div>
   <div id="plant-result"></div>
@@ -626,7 +467,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <!-- ============ COLLECTION ============ -->
 <section id="scr-collection" class="screen">
   <div class="bgdeco" id="deco-collection"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Dragon Registry</div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Collection</div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div id="coll-container"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
@@ -636,7 +477,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <!-- ============ CHAMPIONS ============ -->
 <section id="scr-champions" class="screen">
   <div class="bgdeco" id="deco-champions"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Roost Champions</div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Community Champions</div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BOTH GAMES</div>
   <div id="champlist" style="padding:0 14px;"></div>
@@ -648,11 +489,11 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <section id="scr-friend" class="screen">
   <div class="bgdeco" id="deco-friend"></div>
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:20px 0;">
-    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;color:var(--ink);text-align:center;line-height:1.4;padding:0 16px;"><span id="friend-sender" style="color:var(--blue);">A friend</span> has left a voter reminder egg<br><span style="color:#d97706;">in your name</span> 🥚</div>
-    <div style="margin:16px 0 0;filter:drop-shadow(0 4px 10px rgba(3,122,216,0.35));animation:grow 1.8s infinite;"><svg style="width:66px;height:66px;display:block;"><use href="#d-egg"/></svg></div>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap makes it hatch.</div>
-    <button class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I will be voting this November</button>
-    <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🐉 Your friend's dragon hatched! See you at the polls!</div>
+    <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;color:var(--ink);text-align:center;line-height:1.4;padding:0 16px;"><span id="friend-sender" style="color:var(--blue);">Someone in your family</span> loaded a shell<br><span style="color:#d97706;">with your name on it</span></div>
+    <div style="margin:16px 0 0;filter:drop-shadow(0 4px 14px rgba(240,180,41,0.45));animation:grow 1.8s infinite;"><svg style="width:66px;height:66px;display:block;color:#f0b429;"><use href="#f-shell"/></svg></div>
+    <div id="friend-lead" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap sends it up.</div>
+    <button id="friend-go" class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I'm voting in November!</button>
+    <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🎆 Their shell just went up. See you at the polls!</div>
     <button class="bigbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;margin-top:16px;font-size:17px;font-weight:700;animation:popglow 2.6s infinite;" onclick="window.open('https://mike4us.org/v','_blank')">Play Along!</button>
     <div class="card" style="align-self:stretch;background:linear-gradient(135deg,#002d5b,#037ad8);border:none;padding:18px 20px;margin-top:14px;">
       <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:#fff;margin-bottom:6px;">Meet the candidate who created this game</div>
@@ -674,7 +515,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
   </div>
 </div></div>
 <div class="overlay" id="ov-connect" style="z-index:400;"><div class="sheet" style="max-width:340px;padding:24px 20px 20px;">
-  <div style="text-align:center;font-size:38px;">🥚</div>
+  <div style="text-align:center;font-size:38px;">🌱</div>
   <div id="connect-title" style="text-align:center;font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);margin-top:4px;"></div>
   <div id="connect-sub" style="text-align:center;font-size:12px;color:#5b6470;margin-top:7px;line-height:1.55;"></div>
   <div id="connect-opts"></div>
@@ -683,17 +524,17 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <div class="overlay" id="ov-popstart" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
   <div style="font-size:44px;">📇</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;line-height:1.35;">Ready when you are</div>
-  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Pick the contacts you'd like to check. Your phone requires this tap. Nothing is uploaded, and results go straight back to your roost.</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Pick the contacts you'd like to check. Your phone requires this tap. Nothing is uploaded, and results go straight back to your garden.</div>
   <button class="bigbtn" onclick="closeOv('ov-popstart');runContactMatch(true);">Choose Contacts</button>
 </div></div>
 <div class="overlay" id="ov-matchdone" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
-  <div style="font-size:46px;">🐉</div>
+  <div style="font-size:46px;">🌷</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;" id="matchdone-title">All set!</div>
   <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
-  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my roost</button>
+  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my garden</button>
 </div></div>
 <div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
-  <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🥚</div>
+  <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🌱</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--blue);line-height:1.35;">Finding your registered friends</div>
   <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10.5px;color:#059669;letter-spacing:0.1em;margin:16px 0 8px;" id="match-status">Starting…</div>
   <div style="background:#e5f3ff;border-radius:20px;height:10px;overflow:hidden;width:100%;">
@@ -715,10 +556,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 
 'use strict';
 /* ============================================================
-   DRAGON FARMER · mikesell.org/dragons · v2.0
-   Parallel build of Bloomers (base: build 20260820-2057): identical
-   rules engine, backend contract, and CONFIG structure; dragon ranch
-   interface.
+   BLOOMERS · mikesell.org/bloomers · v7.0
    Single-file client build. Everything in CONFIG is meant to be
    edited by the campaign; everything marked [SERVER] is a demo
    stand-in awaiting the production backend.
@@ -749,28 +587,34 @@ const CONFIG = {
   // one ask, active voice, no partisan labels. Player can edit before sending.
   // Mike's approved wording (2026-08-16). NAME is replaced with the recipient's
   // first name or the nickname the volunteer typed on the seed.
+  // NAME becomes the relationship label, which reads as a salutation on its
+  // own: Hi Mom, Hi Aunt Carol, Hi Marcus.
   msgFriendVariants: [
-    (link) => `Hi NAME, Mike is hosting a game called Dragon Farmer to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
+    (link) => `Hi NAME, I am making sure everyone in my family is set to vote in November. You are registered. Tap here to tell me you are voting. ${link}`,
   ],
-  msgFriend: (first, link) => `Hi NAME, Mike is hosting a game called Dragon Farmer to encourage us to get out and vote. I thought of you. Click the link to confirm you're in this November. ${link}`,
+  msgFriend: (first, link) => `Hi NAME, I am making sure everyone in my family is set to vote in November. You are registered. Tap here to tell me you are voting. ${link}`,
   msgFollowVariants: [
-    (link) => `Hi NAME, still hoping to hear from you on the Dragon Farmer game. One click confirms you're in this November. ${link}`,
+    (link) => `Hi NAME, still waiting on you. One tap tells me you are voting in November. ${link}`,
   ],
-  msgFollow: (first, link) => `Hi NAME, still hoping to hear from you on the Dragon Farmer game. One click confirms you're in this November. ${link}`,
-  // Not-in-the-rolls message: casual, hedged, registration first.
-  msgDeadline: (first, link) => `Hi NAME, it's ${first}. Could be wrong, but it looks like you're not registered to vote... only takes about two minutes at registertovoteflorida.gov. If you get signed up, give Mike Sell a look while you're at it. Then tap here to tell me you're in: ${link}`,
+  msgFollow: (first, link) => `Hi NAME, still waiting on you. One tap tells me you are voting in November. ${link}`,
+  // Not on the rolls. Stage one of two: register first, confirm the vote after.
+  msgDeadline: (first, link) => `Hi NAME, I could not find you on the voter rolls. It takes about two minutes to sign up at registertovoteflorida.gov. Tap here once you are registered. ${link}`,
+  // Stage two, sent after they say they registered.
+  msgStage2: (link) => `Hi NAME, you are registered now. One more tap tells me you are voting in November. ${link}`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
-  waterGapH: 48, praiseCycleH: 0.2, maxTouches: 3, dailyTextCap: 50,
+  // Follow ups open after 24 hours, not 48. Two separate daily caps: five new
+  // relatives and three follow ups, so a full rack can still be nudged.
+  waterGapH: 24, praiseCycleH: 0.2, maxTouches: 3, dailyTextCap: 5, dailyNudgeCap: 3,
   poolBaseCycles: 3, // + 1 per rank
   yields: { g: 1, b: 2, p: 4, au: 5 },
   ranks: [
-    { name: 'Egg Tender',       at: 0 },
-    { name: 'Hatchling Keeper',       at: 100, },
-    { name: 'Dragon Wrangler', at: 250,  unlock: 'Nest editing',   teach: 'Hold and drag any nest to rearrange your roost.' },
-    { name: 'Beast Master',        at: 600 },
-    { name: 'Dragon Rider',      at: 1400 },
-    { name: 'Elder Keeper',               at: 3000 },
-    { name: 'Dragonlord',            at: 6500 },
+    { name: 'Good Neighbor',       at: 0 },
+    { name: 'Block Captain',       at: 100, },
+    { name: 'Community Organizer', at: 250,  unlock: 'Bed editing',   teach: 'Hold and drag any bed to rearrange your garden.' },
+    { name: 'Civic Leader',        at: 600 },
+    { name: 'Council Member',      at: 1400 },
+    { name: 'Mayor',               at: 3000 },
+    { name: 'Governor',            at: 6500 },
   ],
   // [SERVER] internal gift schedule: shelf of the gift seed per rank reached (index 1..6)
   giftShelf: { 1: 'b', 2: 'b', 3: 'p', 4: 'p', 5: 'au', 6: 'au' },
@@ -783,22 +627,49 @@ const CONFIG = {
     tap:    [['g', 0.60], ['b', 0.24], ['p', 0.12], ['au', 0.04]],
     earned: [['g', 0.78], ['b', 0.15], ['p', 0.06], ['au', 0.01]],
   },
+  // Eight real pyrotechnic shell types. Field names match the Bloomers species
+  // list exactly so every downstream code path keeps working untouched.
   species: [
-    { id: 'ember',    art: 'd-ember',    name: 'Ember',    shelf: 'g', loc: 'dock fires and warm chimneys along the St. Johns' },
-    { id: 'jade',     art: 'd-jade',     name: 'Jade',     shelf: 'g', loc: 'the deep greens of the Timucuan marshes' },
-    { id: 'copper',   art: 'd-copper',   name: 'Copper',   shelf: 'g', loc: 'sunset light on the Main Street Bridge' },
-    { id: 'cobalt',   art: 'd-cobalt',   name: 'Cobalt',   shelf: 'g', loc: 'the blue water off the Mayport jetties' },
-    { id: 'amethyst', art: 'd-amethyst', name: 'Amethyst', shelf: 'g', loc: 'riverbank geodes, if you believe the old keepers' },
-    { id: 'amber',    art: 'd-amber',    name: 'Amber',    shelf: 'g', loc: 'the lamplit lanes of St. Augustine' },
-    { id: 'slate',    art: 'd-slate',    name: 'Slate',    shelf: 'g', loc: 'the old stone walls of the Ancient City' },
-    { id: 'coral',    art: 'd-coral',    name: 'Coral',    shelf: 'g', loc: 'the reefs and sandbars off the First Coast' },
-    { id: 'silver',   art: 'd-silver',   name: 'Silver',   shelf: 'b', loc: 'moonlight on the Intracoastal' },
-    { id: 'bronze',   art: 'd-bronze',   name: 'Bronze',   shelf: 'b', loc: 'the old bronze markers of downtown Jacksonville' },
-    { id: 'frost',    art: 'd-frost',    name: 'Frost',    shelf: 'b', loc: 'the rare frost mornings of North Florida' },
-    { id: 'storm',    art: 'd-storm',    name: 'Storm',    shelf: 'b', loc: 'summer thunderheads over the First Coast' },
-    { id: 'clay',     art: 'd-clay',     name: 'Clay',     shelf: 'p', loc: 'the red clay banks of Black Creek' },
-    { id: 'obsidian', art: 'd-obsidian', name: 'Obsidian', shelf: 'p', loc: 'the darkest new-moon nights over the river' },
-    { id: 'opal',     art: 'd-opal',     name: 'Opal',     shelf: 'au', loc: 'almost never seen; keepers argue over whether it exists' },
+    { id: 'peony',   art: 'f-peony',   name: 'Peony',         shelf: 'g',  loc: 'the most common shell in any show, a clean round break with no trails' },
+    { id: 'chrys',   art: 'f-chrys',   name: 'Chrysanthemum', shelf: 'g',  loc: 'a round break where every star drags a tail of sparks behind it' },
+    { id: 'ring',    art: 'f-ring',    name: 'Ring',          shelf: 'g',  loc: 'stars thrown into a clean halo, hard to time and easy to love' },
+    { id: 'willow',  art: 'f-willow',  name: 'Willow',        shelf: 'b',  loc: 'long gold stars that hang in the air and drift down like branches' },
+    { id: 'palm',    art: 'f-palm',    name: 'Palm',          shelf: 'b',  loc: 'thick rising streams that open overhead like palm fronds' },
+    { id: 'brocade', art: 'f-brocade', name: 'Brocade',       shelf: 'b',  loc: 'fine silver lace, brighter and sharper than a willow' },
+    { id: 'cross',   art: 'f-cross',   name: 'Crossette',     shelf: 'p',  loc: 'every star splits again into four, a burst inside a burst' },
+    { id: 'kamuro',  art: 'f-kamuro',  name: 'Kamuro',        shelf: 'au', loc: 'a dense head with a heavy glitter trail, named for a Japanese haircut' },
+  ],
+  // Relatives only. Stepparents count, legal guardians do not, and there is no
+  // neighbour, friend or coworker on purpose.
+  // label: 'title' = title alone | 'last' = title + last name
+  //        'first' = title + first name | 'bare' = first name alone
+  rels: [
+    { id: 'mom',   label: 'title', title: 'Mom' },
+    { id: 'dad',   label: 'title', title: 'Dad' },
+    { id: 'smom',  label: 'title', title: 'Stepmom' },
+    { id: 'sdad',  label: 'title', title: 'Stepdad' },
+    { id: 'gma',   label: 'last',  title: 'Grandma' },
+    { id: 'gpa',   label: 'last',  title: 'Grandpa' },
+    { id: 'ggma',  label: 'last',  title: 'Great-grandma' },
+    { id: 'ggpa',  label: 'last',  title: 'Great-grandpa' },
+    { id: 'aunt',  label: 'first', title: 'Aunt' },
+    { id: 'uncle', label: 'first', title: 'Uncle' },
+    { id: 'bro',   label: 'bare',  title: 'Brother' },
+    { id: 'sis',   label: 'bare',  title: 'Sister' },
+    { id: 'cuz',   label: 'bare',  title: 'Cousin' },
+    { id: 'other', label: 'bare',  title: 'Other relative' },
+  ],
+  // The second axis. Eight colours across eight shells is 64 things to collect
+  // out of eight drawings.
+  colors: [
+    { id: 'red',    name: 'Red',    hex: '#ff4d4d' },
+    { id: 'gold',   name: 'Gold',   hex: '#ffc233' },
+    { id: 'green',  name: 'Green',  hex: '#4ade80' },
+    { id: 'blue',   name: 'Blue',   hex: '#4cc9ff' },
+    { id: 'purple', name: 'Purple', hex: '#b18cff' },
+    { id: 'pink',   name: 'Pink',   hex: '#ff7ac4' },
+    { id: 'white',  name: 'White',  hex: '#f4f8ff' },
+    { id: 'orange', name: 'Orange', hex: '#ff9a3c' },
   ],
   agenda: [
     ['EDUCATION', 'Fully fund public education, and pay teachers like the professionals they are.'],
@@ -813,14 +684,14 @@ const CONFIG = {
   ],
   sides: ['Westside', 'Arlington', 'Mandarin', 'Northside', 'the Beaches', 'Orange Park'],
   champs: [ // [SERVER] weekly board comes from the backend later
-    ['MandarinMary', 5, 940], ['DuvalDrake', 3, 610], ['AmeliaWyng', 2, 350], ['CoveKeeper', 1, 210], ['PalmValleyPete', 1, 180],
+    ['MandarinMary', 5, 940], ['DuvalDaisy', 3, 610], ['AmeliaOaks', 2, 350], ['CoveKeeper', 1, 210], ['PalmValleyPete', 1, 180],
   ],
 };
 
 /* ---------------- state ---------------- */
 const DEMO = /[?&]demo=1/.test(location.search);
 const HOUR = DEMO ? 60 * 1000 : 3600 * 1000;
-const KEY = 'dragonfarmer_v3';
+const KEY = 'boomers_v1';
 let S = null;
 let agendaIdx = Math.floor(Math.random() * CONFIG.agenda.length); // a different policy position each visit
 let _contactsCache = null; // loaded once per session; never saved
@@ -829,13 +700,13 @@ function freshState(first, last, garden, contacts) {
   return {
     first, last, garden, contacts,
     created: Date.now(), lifetime: 0, weekly: 0, pool: 0, poolTick: Date.now(),
-    rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, textsDay: dayKey(),
+    rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, nudgesToday: 0, textsDay: dayKey(),
     visits: 0,
-    // The welcome thank-you egg nests itself in the first hollow — new keepers
-    // have no placing or moving powers yet, so nothing should sit in the Barn.
-    plants: [ { id: 'pgift1', tag: 'GIFT', bedId: 1, slot: 0, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true, giftShelf: 'b' } ],
+    // The welcome thank-you seed plants itself in the first spot — new gardeners
+    // have no placing or moving powers yet, so nothing should sit in the Shed.
+    plants: [ { id: 'pgift1', tag: 'WELCOME', bedId: 1, slot: 0, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true, giftShelf: 'b' } ],
     beds: [ { id: 1, cells: [[0,0],[1,0]] }, { id: 2, cells: [[3,1],[4,1],[5,1]] }, { id: 3, cells: [[6,2],[7,2]] } ],
-    shed: [], // {kind:'bed',shape} | {kind:'gift',shelf}
+    shed: [], // {kind:'bed',n:2} | {kind:'gift',shelf:'b'}
     coll: {}, // speciesId -> {sun,pol,gli}
     nextId: 4, pendingRankup: null,
     registeredFriends: [], // [{name,first,last,phone,voterCity,matchedBy,confirmed}]
@@ -865,9 +736,9 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function sp(id) { return CONFIG.species.find((s) => s.id === id); }
 function shelfColor(sh) { return { g: '#059669', b: '#2563eb', p: '#7c3aed', au: '#f59e0b' }[sh]; }
-function shelfName(sh) { return { g: 'Common', b: 'Rare', p: 'Exotic', au: 'Legendary' }[sh]; }
+function shelfName(sh) { return { g: 'Standard', b: 'Aerial', p: 'Specialty', au: 'Finale' }[sh]; }
 // Rarity tier (how hard it is to get) as distinct from the shelf it lives on.
-function rarityName(sh) { return { g: 'Common', b: 'Rare', p: 'Exotic', au: 'Legendary' }[sh]; }
+function rarityName(sh) { return { g: 'Common', b: 'Uncommon', p: 'Rare', au: 'Legendary' }[sh]; }
 // Launch Messages via a real anchor click. Scripted top-frame navigation
 // (location.href = 'sms:...') makes some browsers interpose an
 // "Open / Close current window / Cancel" dialog because the page looks like
@@ -905,6 +776,81 @@ function rollTraits(kind, pity) {
   if (pity && !t.sun && !t.pol && !t.gli) t[pick(['sun', 'pol', 'gli'])] = true;
   return t;
 }
+/* ---------------- firework shell art ---------------------------------------
+   Bloomers hand-draws 15 flower symbols. Boomers needs 8 patterns times 8
+   colors, so the symbols are generated once at boot and injected into the same
+   <defs> block. Everything downstream keeps using <use href="#f-peony"> exactly
+   the way it used <use href="#f-camellia">, and colour is applied with CSS
+   because every stroke and fill below is currentColor. */
+function shellGeom(type){
+  const C = 20;                                   // 40x40 box, same as the flowers
+  const P = (a,r) => [ (C+Math.cos(a)*r).toFixed(1), (C+Math.sin(a)*r).toFixed(1) ];
+  const rays = (n,r0,r1,w,op) => { let s='';
+    for (let i=0;i<n;i++){ const a=(i/n)*Math.PI*2, p0=P(a,r0), p1=P(a,r1);
+      s += `<line x1="${p0[0]}" y1="${p0[1]}" x2="${p1[0]}" y2="${p1[1]}" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" opacity="${op}"/>`; }
+    return s; };
+  const dots = (n,r,rad,op) => { let s='';
+    for (let i=0;i<n;i++){ const a=(i/n)*Math.PI*2, p=P(a,r);
+      s += `<circle cx="${p[0]}" cy="${p[1]}" r="${rad}" fill="currentColor" opacity="${op}"/>`; }
+    return s; };
+
+  switch(type){
+    case 'peony':   return dots(22,15,1.15,1) + `<circle cx="20" cy="20" r="1.5" fill="currentColor" opacity=".9"/>`;
+    case 'chrys':   return rays(22,3.5,14,.65,.7) + dots(22,15,1,1);
+    case 'ring':    return dots(20,16.2,1.1,1);
+    case 'willow': { let g=''; const n=11;
+      for (let i=0;i<n;i++){ const a=(i/n)*Math.PI*2, p=P(a,11.5), y2=(+p[1]+6.5).toFixed(1);
+        g += `<path d="M20 20 Q ${p[0]} ${p[1]} ${p[0]} ${y2}" fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="round" opacity=".85"/>`;
+        g += `<circle cx="${p[0]}" cy="${y2}" r=".95" fill="currentColor"/>`; }
+      return g; }
+    case 'palm': { let g=''; const n=6;
+      for (let i=0;i<n;i++){ const a=(-Math.PI*0.93)+(i/(n-1))*(Math.PI*0.86), p=P(a,13.5);
+        g += `<path d="M20 22.5 Q ${(20+(p[0]-20)*.55).toFixed(1)} ${(20+(p[1]-20)*.8).toFixed(1)} ${p[0]} ${p[1]}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".92"/>`;
+        g += `<circle cx="${p[0]}" cy="${p[1]}" r="1.25" fill="currentColor"/>`; }
+      return g; }
+    case 'brocade': return rays(34,2.5,16.5,.38,.5) + dots(34,17,.55,.9);
+    case 'cross': { let g = rays(8,3.5,12,.8,.8);
+      for (let i=0;i<8;i++){ const a=(i/8)*Math.PI*2, p=P(a,13.2);
+        g += `<line x1="${(+p[0]-1.7).toFixed(1)}" y1="${p[1]}" x2="${(+p[0]+1.7).toFixed(1)}" y2="${p[1]}" stroke="currentColor" stroke-width=".8" stroke-linecap="round"/>`;
+        g += `<line x1="${p[0]}" y1="${(+p[1]-1.7).toFixed(1)}" x2="${p[0]}" y2="${(+p[1]+1.7).toFixed(1)}" stroke="currentColor" stroke-width=".8" stroke-linecap="round"/>`; }
+      return g; }
+    case 'kamuro': { let g = rays(16,2,11.5,.95,.9);
+      for (let i=0;i<16;i++){ const a=(i/16)*Math.PI*2, p=P(a,11.5), y2=(+p[1]+5.4).toFixed(1);
+        g += `<line x1="${p[0]}" y1="${p[1]}" x2="${p[0]}" y2="${y2}" stroke="currentColor" stroke-width=".6" stroke-linecap="round" opacity=".7"/>`;
+        g += `<circle cx="${p[0]}" cy="${y2}" r=".8" fill="currentColor" opacity=".95"/>`; }
+      return g; }
+  }
+  return '';
+}
+// Injected once, before anything renders.
+function buildShellSymbols(){
+  const defs = document.querySelector('svg defs');
+  if (!defs || defs.querySelector('#f-peony')) return;
+  let out = '';
+  for (const s of CONFIG.species){
+    out += `<symbol id="${s.art}" viewBox="0 0 40 40">${shellGeom(s.id)}</symbol>`;
+  }
+  // An unlit shell sitting in its tube. This is what waits in the rack, and it
+  // is the Boomers equivalent of the Bloomers seed.
+  out += `<symbol id="f-shell" viewBox="0 0 40 40">
+    <path d="M12 36 L12 18 Q12 11 20 11 Q28 11 28 18 L28 36 Z" fill="#243357" stroke="#4a5c8f" stroke-width="1.6"/>
+    <path d="M12 36 L12 18 Q12 11 20 11 L20 36 Z" fill="#1b2745"/>
+    <ellipse cx="20" cy="12.5" rx="8" ry="2.6" fill="#33456f"/>
+    <circle cx="20" cy="19" r="5.2" fill="currentColor" opacity="0.92"/>
+    <circle cx="18.2" cy="17.4" r="1.6" fill="#ffffff" opacity="0.45"/>
+    <path d="M20 11 Q23.5 6.5 21 3" fill="none" stroke="#9aa3ad" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>`;
+  defs.insertAdjacentHTML('beforeend', out);
+}
+// A shell is a pattern plus a colour. Both are needed to draw one.
+function shellUse(speciesId, colorId, size, extra){
+  const s = sp(speciesId) || CONFIG.species[0];
+  const hex = colorHex(colorId);
+  return `<svg style="width:${size}px;height:${size}px;color:${hex};${extra||''}"><use href="#${s.art}"/></svg>`;
+}
+function colorHex(id){ const c = CONFIG.colors.find(x=>x.id===id); return c ? c.hex : '#ffc233'; }
+function colorName(id){ const c = CONFIG.colors.find(x=>x.id===id); return c ? c.name : 'Gold'; }
+
 /* ---------------- voter registration lookup -------------------------------- */
 const _voterCache = new Map(); // prefix → array of [first, last, city, age]
 let _pendingMatches = [];      // for multi-match picker
@@ -935,12 +881,41 @@ function availCardVoter(first, last, city, age) {
   const loc = city || '';
   return `<div class="statecard avail">
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#059669;letter-spacing:0.06em;margin-bottom:6px;">✓ REGISTERED VOTER · ${esc(loc.toUpperCase())}</div>
-    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#d-egg"/></svg>
-    <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Nest an egg for
-      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
-    </button>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">You click the button, we populate the message. You can edit or just hit send.</div>
+    <svg style="width:34px;height:34px;color:#f0b429;filter:drop-shadow(0 0 9px #fde68a);animation:grow 1.6s infinite;"><use href="#f-shell"/></svg>
+    ${relBlock(first, last, false)}
+    ${msgPreviewBlock('friend', '#037ad8')}
   </div>`;
+}
+
+/* ---------------- the relationship question IS the send button --------------
+   There is no generic send control anywhere in Boomers. The player has to name
+   a real relationship before a text can go out, which is the guardrail, and the
+   answer becomes the label on the shell in the same tap. */
+function relBlock(first, last, deadline) {
+  const col = deadline ? 'var(--purple)' : 'var(--blue)';
+  return `<div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:16px;color:${col};margin-top:14px;">How do you know ${esc(cap(first))}?</div>
+    <div style="font-size:10.5px;color:#9aa3ad;margin-top:3px;line-height:1.45;">Family only. Tapping one sends the text.</div>
+    <div class="pickrow" style="margin-top:9px;">${CONFIG.rels.map(r =>
+      `<button class="pick" style="color:${col};border-color:#c9def2;" onclick="plantNow(${deadline ? 'true' : 'false'},'${r.id}')">${esc(r.title)}</button>`
+    ).join('')}</div>`;
+}
+// Title case that leaves an all caps roll entry looking human.
+function cap(s) {
+  return String(s || '').split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
+}
+/* Label rules, locked by Mike 2026-09-12:
+   Mom/Dad/Stepmom/Stepdad  -> the title alone, you only have one
+   Grandparents             -> title plus LAST name, which splits the two sides
+   Aunt/Uncle               -> title plus first name
+   Brother/Sister/Cousin    -> first name alone
+   Other relative           -> first name alone                                */
+function labelFor(relId, first, last) {
+  const r = CONFIG.rels.find(x => x.id === relId);
+  if (!r) return cap(first);
+  if (r.label === 'title') return r.title;
+  if (r.label === 'last') return r.title + ' ' + cap(last);
+  if (r.label === 'first') return r.title + ' ' + cap(first);
+  return cap(first);
 }
 
 function multiMatchCard(matches, first, last) {
@@ -962,6 +937,7 @@ function selectVoterMatch(i) {
   pendingPlant = Object.assign(pendingPlant || {}, { first: mf, name: mf + ' ' + ml });
   document.querySelectorAll('.pick').forEach((b, j) => { b.classList.toggle('on', j === i); });
   $('voter-match-result').innerHTML = availCardVoter(mf, ml, mc, ma);
+  renderMsgPreview();
   $('voter-match-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -978,7 +954,7 @@ function tickPraise() {
     save();
   }
 }
-// Live countdown to the next ember payout. Runs once a second, touches one
+// Live countdown to the next praise payout. Runs once a second, touches one
 // text node, and reads the same S.poolTick anchor tickPraise() uses — so the
 // number on screen can never disagree with the number that actually lands.
 function renderCycleCountdown() {
@@ -986,14 +962,14 @@ function renderCycleCountdown() {
   if (!el || !S) return;
   const cyc = CONFIG.praiseCycleH * HOUR;
   const per = perCycle();
-  if (!per) { el.textContent = '—'; el.style.color = '#9aa3ad'; el.title = 'Raise something to start earning.'; return; }
+  if (!per) { el.textContent = '—'; el.style.color = '#9aa3ad'; el.title = 'Grow something to start earning.'; return; }
   if (S.pool >= poolCap()) { el.textContent = 'full'; el.style.color = '#b45309'; el.title = 'Your pool is full — spend some before it stops filling.'; return; }
   let left = cyc - ((Date.now() - S.poolTick) % cyc);
   if (left < 0 || left > cyc) left = 0;
   const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
   el.textContent = m + ':' + String(s).padStart(2, '0');
   el.style.color = left <= 15000 ? '#b45309' : '#059669';   // amber in the last 15s
-  el.title = 'Next ember payout';
+  el.title = 'Next praise payout';
 }
 setInterval(function () { try { renderCycleCountdown(); } catch (e) {} }, 1000);
 
@@ -1005,11 +981,42 @@ function addPraise(n) {
   if (S.rank > prev) S.pendingRankup = S.rank;
   save();
 }
+// Claiming is sparking the fuse. The spark runs the ground, then every shell
+// you own climbs out of its tube and breaks, one after another.
+let _sparking = false;
 function collectPraise() {
   tickPraise();
-  if (S.pool <= 0) return;
+  if (S.pool <= 0 || _sparking) return;
+  _sparking = true;
   addPraise(S.pool); S.pool = 0; S.poolTick = Date.now(); save();
-  renderGarden(); maybeRankup();
+  renderGarden();
+
+  const fl = $('fuseline');
+  if (fl) { fl.style.display = 'block'; fl.innerHTML = '<i></i>'; }
+  setTimeout(function () {
+    if (fl) fl.style.display = 'none';
+    runShow(function () { _sparking = false; renderGarden(); maybeRankup(); });
+  }, 1100);
+}
+// Every broken shell relaunches: it drops back to its tube, climbs, and opens.
+function runShow(done) {
+  const svg = $('gardensvg');
+  if (!svg) { if (done) done(); return; }
+  const shells = Array.prototype.slice.call(svg.querySelectorAll('use')).filter(function (u) {
+    const h = u.getAttribute('href') || '';
+    return h !== '#f-shell' && h !== '#f-drop';
+  });
+  if (!shells.length) { if (done) done(); return; }
+  shells.forEach(function (u, i) {
+    u.style.opacity = '0';
+    setTimeout(function () {
+      u.style.opacity = '';
+      u.style.transformOrigin = 'center';
+      u.classList.add('breaker');
+      setTimeout(function () { u.classList.remove('breaker'); }, 800);
+    }, 180 + i * 230);
+  });
+  setTimeout(function () { if (done) done(); }, 180 + shells.length * 230 + 800);
 }
 
 /* ---------------- backend adapter [SERVER] ---------------- */
@@ -1029,7 +1036,7 @@ async function checkActive() {
   const st = await api('status', {});
   if (st && st.active === false) {
     document.body.innerHTML = '<div style="max-width:430px;margin:0 auto;min-height:100dvh;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:Arial,sans-serif;color:#1a2a4a;">' +
-      '<div style="font-family:Georgia,serif;font-size:24px;color:#037ad8;">This roost is paused.</div>' +
+      '<div style="font-family:Georgia,serif;font-size:24px;color:#037ad8;">This garden is paused.</div>' +
       '<div style="font-size:13px;color:#5b6470;margin-top:10px;line-height:1.6;">If you think this is a mistake, reach the campaign through mikesell.org and we will take a look together.</div>' +
       '<div style="font-size:10px;color:#9aa3ad;margin-top:20px;">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04</div></div>';
     return false;
@@ -1140,11 +1147,11 @@ function attachGardenDrag() {
       const gone = S.plants.find(function(p) { return p.id === _pressPid; });
       S.plants = S.plants.filter(function(p) { return p.id !== _pressPid; });
       if (gone && gone.state === 'bloomed') {
-        // A grown dragon isn't destroyed — it goes back to the Barn to replant.
+        // A grown flower isn't destroyed — it goes back to the Shed to replant.
         S.shed.push({ kind: 'grown', species: gone.species, traits: gone.traits, tag: gone.tag });
-        showToast('Dragon moved to your Barn.');
+        showToast('Flower moved to your Shed.');
       } else {
-        showToast('Egg removed.');
+        showToast('Seed removed.');
       }
       save(); renderGarden();
     } else {
@@ -1192,8 +1199,8 @@ function showLock() {
 function doUnlock() {
   const pin = ['lock-pin0','lock-pin1','lock-pin2','lock-pin3'].map(id => $(id).value.replace(/\D/g,'')).join('');
   if (pin === S.pin) {
-    sessionStorage.setItem('df_auth', '1');
-    S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
+    sessionStorage.setItem('bm_auth', '1');
+    S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; S.nudgesToday = 0; }
     migrateBeds();
     tickPraise(); save();
     renderGarden(); show('scr-garden'); maybeRankup();
@@ -1216,13 +1223,13 @@ function gameConfirm(title, msg, okLabel, okCss, onOk, onCancel) {
   openOv('ov-confirm');
 }
 function doLogout() {
-  gameConfirm('Log out?', 'Your roost stays saved in this browser — just enter your PIN to get back in.', 'Log out', 'background:var(--blue);box-shadow:0 5px 0 #045ea6;', function() {
-    sessionStorage.removeItem('df_auth'); showLock();
+  gameConfirm('Log out?', 'Your garden stays saved in this browser — just enter your PIN to get back in.', 'Log out', 'background:var(--blue);box-shadow:0 5px 0 #045ea6;', function() {
+    sessionStorage.removeItem('bm_auth'); showLock();
   });
 }
 function confirmReset() {
-  gameConfirm('Start fresh?', 'This clears your entire roost and all progress. This cannot be undone.', 'Clear everything', 'background:#dc2626;box-shadow:0 5px 0 #991b1b;', function() {
-    localStorage.removeItem(KEY); sessionStorage.removeItem('df_auth'); location.reload();
+  gameConfirm('Start fresh?', 'This clears your entire garden and all progress. This cannot be undone.', 'Clear everything', 'background:#dc2626;box-shadow:0 5px 0 #991b1b;', function() {
+    localStorage.removeItem(KEY); sessionStorage.removeItem('bm_auth'); location.reload();
   });
 }
 
@@ -1239,7 +1246,7 @@ window.addEventListener('message', function(e) {
       .filter(x => { const k = ((x.first || '') + (x.last || '')).toUpperCase(); if (seen[k]) return false; seen[k] = 1; return true; });
     save();
     const n = e.data.friends.length;
-    showToast(n ? ('Added ' + n + (n === 1 ? ' registered friend' : ' registered friends') + ' 🥚') : 'No matches found — try another way.');
+    showToast(n ? ('Added ' + n + (n === 1 ? ' registered friend' : ' registered friends') + ' 🌱') : 'No matches found — try another way.');
     if (n) showTab('garden'); else openConnectSheet(true);
   }
 });
@@ -1260,9 +1267,9 @@ async function checkForUpdate() {
     if (!r.ok) return;
     const m = (await r.text()).match(/const BUILD = '([^']+)'/);
     if (!m) return;
-    if (m[1] === BUILD) { sessionStorage.removeItem('df_upd'); return; }
-    if (sessionStorage.getItem('df_upd') === m[1]) return; // already tried; don't loop
-    sessionStorage.setItem('df_upd', m[1]);
+    if (m[1] === BUILD) { sessionStorage.removeItem('bm_upd'); return; }
+    if (sessionStorage.getItem('bm_upd') === m[1]) return; // already tried; don't loop
+    sessionStorage.setItem('bm_upd', m[1]);
     location.reload();
   } catch (e) {}
 }
@@ -1273,7 +1280,7 @@ function startPolling() {
   const pollNow = () => {
     checkPendingSeed();
     return checkRemoteBlooms().then(ok => {
-      if (ok) { renderGarden(); showToast('A friend said yes! Tap their glowing egg 🥚'); }
+      if (ok) { renderGarden(); showToast('Somebody said yes. Tap their shell 🎆'); }
     });
   };
   setInterval(async () => {
@@ -1282,7 +1289,7 @@ function startPolling() {
     const remote = await checkRemoteBlooms();
     if (!$('scr-garden').classList.contains('on')) return;
     tickPraise(); renderGarden();
-    if (local || remote) showToast('A friend said yes! Tap their glowing egg to see it hatch 🥚');
+    if (local || remote) showToast('Somebody said yes. Tap their shell to send it up 🎆');
   }, 30 * 1000);
   pollNow();
   // Volunteers leave the app to send the text and come back — check on return.
@@ -1293,7 +1300,7 @@ function startPolling() {
 
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
-  buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
+  buildShellSymbols(); buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
   checkForUpdate();
   const m = location.search.match(/[?&](?:s|b)=([\w-]+)/);
   if (m) { initFriend(m[1]); return; }
@@ -1305,9 +1312,12 @@ function boot() {
     openOv('ov-popstart'); // picker needs a user gesture; cannot auto-fire on load
     return;
   }
+  // The gate comes before everything, and it is remembered separately from the
+  // save file so clearing a half finished signup does not skip it.
+  if (!attested()) { show('scr-gate'); return; }
   if (!S) { show('scr-signup'); return; }
-  if (S.pin && sessionStorage.getItem('df_auth') !== '1') { showLock(); return; }
-  S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; }
+  if (S.pin && sessionStorage.getItem('bm_auth') !== '1') { showLock(); return; }
+  S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; S.nudgesToday = 0; }
   checkActive().then((ok) => { if (!ok) return; }); // [SERVER] deactivation gate
   migrateBeds();
   consumeBloomQueue();
@@ -1318,7 +1328,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260902-0548';
+const BUILD = '20260912-1400';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1328,7 +1338,7 @@ const IN_IFRAME = (function(){ try { return window.self !== window.top; } catch(
 // Pop-out matching needs a TOP-LEVEL page, which means a visible URL.
 // Leave blank until a branded domain (e.g. https://vote.mikesell.org/bloomers.html)
 // points at the host - we never surface the raw hosting address to voters.
-const POPOUT_URL = 'https://vote.mikesell.org/dragonfarmer.html'; // [DEPLOY] dragon page on the branded domain
+const POPOUT_URL = '';   // Boomers never pops out to match contacts.
 
 // Contact Picker exists but is BLOCKED in cross-origin iframes (SecurityError).
 // Only Chrome-Android supports it at all. Detect honestly, never assume.
@@ -1345,6 +1355,14 @@ function toggleContacts() {
   el.style.background = on ? 'var(--blue)' : '#c9d4de';
   el.firstElementChild.style.left = on ? '19px' : '3px';
 }
+/* ---------------- age and permission attestation ---------------- */
+const ATT_KEY = KEY + '_att';
+function attested() { try { return !!localStorage.getItem(ATT_KEY); } catch (e) { return false; } }
+function attest() {
+  try { localStorage.setItem(ATT_KEY, JSON.stringify({ at: Date.now(), v: 1 })); } catch (e) {}
+  show(S ? 'scr-garden' : 'scr-signup');
+  if (S) { renderGarden(); startPolling(); }
+}
 function doSignup() {
   const first = $('f-first').value.trim(), last = $('f-last').value.trim();
   const garden = $('f-garden').value.trim(), zip = $('f-zip').value.replace(/\D/g, '');
@@ -1353,9 +1371,10 @@ function doSignup() {
   if (!first || !last || !garden || !zip) { err.textContent = 'All four fields make the account. Nothing else, ever.'; err.style.display = 'block'; return; }
   if (pin && pin.length !== 4) { err.textContent = 'PIN needs all 4 digits, or leave it blank.'; err.style.display = 'block'; return; }
   if (zip.length !== 5) { err.textContent = 'ZIP code needs all 5 digits.'; err.style.display = 'block'; return; }
-  S = freshState(first, last, garden, $('f-contacts').dataset.on === '1');
+  // Contacts are always false. Boomers has no contact path at all.
+  S = freshState(first, last, garden, false);
   S.zip = zip;
-  if (pin) { S.pin = pin; sessionStorage.setItem('df_auth', '1'); }
+  if (pin) { S.pin = pin; sessionStorage.setItem('bm_auth', '1'); }
   save();
   api('signup', { first, last, zip, contactsOptIn: S.contacts }); // [SERVER] account record
   renderGarden();
@@ -1372,16 +1391,17 @@ function maybeWelcome() {
   S.pendingWelcome = false; save();
   showWelcomeGift();
 }
+
 function showWelcomeGift() {
   $('rankup-sheet').innerHTML = `
-    <span style="display:inline-block;filter:drop-shadow(0 0 10px #fde68a);animation:grow 1.8s infinite;"><svg style="width:54px;height:54px;"><use href="#d-egg"/></svg></span>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">Welcome to the Roost!</div>
+    <span style="display:inline-block;filter:drop-shadow(0 0 10px #fde68a);animation:grow 1.8s infinite;"><svg style="width:54px;height:54px;color:#f0b429;"><use href="#f-shell"/></svg></span>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">Welcome to the show!</div>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
-      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 Our thank-you gift: a mystery egg, nested and ready in your roost</span>
-      <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing egg to see what hatches.</span>
-      <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#eafaf1;border:2.5px solid #059669;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#047857;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;"><circle cx="17" cy="17" r="12" fill="#dcfce7"/><circle cx="17" cy="17" r="14" fill="none" stroke="#059669" stroke-width="2.4" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#d-egg" x="6" y="6" width="22" height="22"/></svg><span>Watch for this green ring. It means a friend answered &mdash; tap to hatch it.</span></span>
+      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 One shell on the house, already loaded in your rack</span>
+      <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing shell and see what you got. Then add someone in your family.</span>
+      <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#fdf6e3;border:2.5px solid #f0b429;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#b45309;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;color:#f0b429;"><circle cx="17" cy="17" r="12" fill="#fdf3d9"/><circle cx="17" cy="17" r="14" fill="none" stroke="#f0b429" stroke-width="2.4" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-shell" x="6" y="6" width="22" height="22"/></svg><span>Watch for this gold ring. It means somebody answered, and the shell is ready to go up.</span></span>
     </div>
-    <button class="bigbtn" onclick="closeOv('ov-rankup');">See my roost</button>`;
+    <button class="bigbtn" onclick="closeOv('ov-rankup');">See my show</button>`;
   openOv('ov-rankup');
 }
 
@@ -1407,7 +1427,7 @@ const BED_SHAPES = {
   r3: [[0, 0], [1, 0], [2, 0]],
   L4: [[0, 0], [1, 0], [2, 0], [2, 1]],   // right angle
 };
-function shapeLabel(k) { return { r2: '2-hollow nest', r3: '3-hollow nest', L4: 'Corner nest (4 hollows)' }[k] || 'Straw nest'; }
+function shapeLabel(k) { return { r2: '2-spot bed', r3: '3-spot bed', L4: 'Corner bed (4 spots)' }[k] || 'Flower bed'; }
 function cellXY(c, r) { return { x: GRID.ox + c * GRID.cw, y: GRID.oy + r * GRID.ch }; }
 function cellCenter(c, r) { const o = cellXY(c, r); return { cx: o.x + GRID.cw / 2, cy: o.y + GRID.ch / 2 }; }
 function occupied() {
@@ -1463,7 +1483,7 @@ function hoursLeft(p) { return Math.max(0, Math.ceil((CONFIG.waterGapH * HOUR - 
 
 function renderGarden() {
   tickPraise();
-  $('hud-gname').textContent = S.garden; $('arch-name').textContent = (S.garden + "'S ROOST").toUpperCase();
+  $('hud-gname').textContent = S.garden; $('arch-name').textContent = (S.garden + "'S SHOW").toUpperCase();
   $('hud-lifetime').textContent = fmt(S.lifetime);
   $('hud-rank').textContent = CONFIG.ranks[S.rank].name;
   const spots = S.beds.reduce((a, b) => a + ((b.cells || []).length || b.n || 0), 0);
@@ -1498,11 +1518,16 @@ function renderGarden() {
   const el = $('gardensvg');
   el.setAttribute('viewBox', `0 0 364 ${h}`);
   let out = '';
-  for (let gx = 10; gx < 364; gx += 44) for (let gy = 8; gy < h; gy += 44) out += `<circle cx="${gx}" cy="${gy}" r="1.1" fill="#a3854f" opacity="0.28"/>`;
+  // Stars instead of soil dots. Same grid, different night.
+  for (let gx = 10; gx < 364; gx += 22) for (let gy = 6; gy < h; gy += 19) {
+    const j = ((gx * 7 + gy * 13) % 11) / 11;
+    out += `<circle cx="${gx + j * 6}" cy="${gy + j * 5}" r="${(0.5 + j * 0.9).toFixed(2)}" fill="#dbe7ff" opacity="${(0.18 + j * 0.42).toFixed(2)}"/>`;
+  }
   for (const b of placed) {
     const gold = plantsInBed(b.id).some((p) => p.state === 'bloomed' && sp(p.species).shelf === 'au');
     const runs = bedRuns(b);
-    const soil = b.id % 2 ? '#e9d18b' : '#e3c675', edge = gold ? '#f59e0b' : '#a17a35';
+    // Beds become mortar racks standing on the ground.
+    const soil = b.id % 2 ? '#1b2745' : '#212e52', edge = gold ? '#f59e0b' : '#43558a';
     // Outline pass then fill pass, so an L merges into one shape with no seam.
     // Inset from the cell bounds so two beds in neighbouring columns keep a gutter.
     const GUT = 4;
@@ -1532,26 +1557,33 @@ function renderGarden() {
       }
       const lbl = `<text x="${cx}" y="${b.y + 36}" text-anchor="middle" class="lbl">${esc(p.tag.toUpperCase())}</text>`;
       if (p.state === 'bloomed') {
-        const s = sp(p.species);
-        let deco = '';
-        if (s.shelf === 'au') deco += `<circle cx="${cx}" cy="${b.y + 16}" r="15" fill="url(#gh-glow)" opacity="0.9"/>`;
-        if (p.traits.sun) deco += `<circle cx="${cx}" cy="${b.y + 16}" r="16.5" fill="url(#gh-glow)" style="animation:pulsehint 2.6s infinite;"/>`;
-        out += deco + `<use href="#${s.art}" x="${cx - 12}" y="${b.y + 4}" width="24" height="24" style="cursor:pointer;${s.shelf === 'au' ? 'animation:goldshine 2.6s infinite;' : ''}" onclick="showPlaque('${p.species}','${p.id}')"/>`;
-        if (p.traits.gli) out += `<circle cx="${cx - 5}" cy="${b.y + 10.3}" r="2" fill="#60a5fa" opacity="0.45" style="animation:pulsehint 2.6s infinite;"/><circle cx="${cx - 5}" cy="${b.y + 10.3}" r="1.1" fill="#2563eb"/><circle cx="${cx - 4.6}" cy="${b.y + 9.9}" r="0.4" fill="#fff"/>`;
-        if (p.traits.pol) out += `<use href="#d-fire" x="${cx - 20}" y="${b.y + 6}" width="9" height="9" style="animation:glint 2.1s infinite;"/>`;
+        // A broken shell hangs above its tube, in the colour it burst in.
+        const s = sp(p.species), hex = colorHex(p.color);
+        let deco = `<circle cx="${cx}" cy="${b.y + 13}" r="14" fill="${hex}" opacity="0.10"/>`;
+        if (s.shelf === 'au') deco += `<circle cx="${cx}" cy="${b.y + 13}" r="15" fill="#fde68a" opacity="0.22"/>`;
+        if (p.traits.sun) deco += `<circle cx="${cx}" cy="${b.y + 13}" r="15" fill="none" stroke="#f0b429" stroke-width="1.6" style="animation:goldshine 2.6s infinite;"/>`;
+        // Faint ember trail down to the rack it came out of.
+        deco += `<line x1="${cx}" y1="${b.y + 22}" x2="${cx}" y2="${b.y + 34}" stroke="${hex}" stroke-width="1" opacity="0.28"/>`;
+        out += deco + `<use href="#${s.art}" x="${cx - 13}" y="${b.y}" width="26" height="26" style="cursor:pointer;color:${hex};${s.shelf === 'au' ? 'animation:goldshine 2.6s infinite;' : ''}" onclick="showPlaque('${p.species}','${p.id}')"/>`;
+        if (p.traits.gli) out += `<text x="${cx - 9}" y="${b.y + 6}" font-size="6" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text><text x="${cx + 8}" y="${b.y + 12}" font-size="5" fill="#fde68a" style="animation:glint 3s 1.2s infinite;">✦</text>`;
         out += lbl;
       } else if (p.state === 'ready') {
-        out += `<circle cx="${cx}" cy="${b.y + 16}" r="10" fill="#dcfce7" opacity="0.7"/>`;
-        out += `<circle cx="${cx}" cy="${b.y + 16}" r="12" fill="none" stroke="#059669" stroke-width="2"/>`;
-        out += `<use href="#d-egg" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
-        out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#059669" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">✓ TAP</text>`;
+        out += `<circle cx="${cx}" cy="${b.y + 16}" r="11" fill="#f59e0b" opacity="0.22"/>`;
+        out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#f0b429" stroke-width="2" style="animation:ringpulse 1.6s ease-out infinite;"/>`;
+        out += `<use href="#f-shell" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;color:#fde68a;" onclick="seedTap('${p.id}')"/>`;
+        out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#fde68a" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">✓ LIGHT IT</text>`;
         out += lbl;
       } else {
-        if (p.gift) out += `<circle cx="${cx}" cy="${b.y + 16}" r="11" fill="#fde68a" opacity="0.4"/><circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#f0b429" stroke-width="1.6" style="animation:ringpulse 1.8s ease-out infinite;"/>`;
-        out += `<use href="#d-egg" x="${cx - 9}" y="${b.y + 7}" width="18" height="18" style="cursor:pointer;" onclick="seedTap('${p.id}')"/>` + lbl;
-        if (p.gift) out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#b45309" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">🎁 TAP</text>`;
-        else if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#f59e0b" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#d-flame" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
-        else if (p.touches < CONFIG.maxTouches) out += `<g opacity="0.92"><rect x="${cx - 11}" y="${b.y - 9}" width="26" height="12" rx="6" fill="#fff" stroke="#ddd5c2"/><text x="${cx + 2}" y="${b.y}" font-size="7.5" text-anchor="middle" fill="#8a8272" font-family="Arial">${hoursLeft(p)}${DEMO ? 'm' : 'h'}</text></g>`;
+        if (p.gift) out += `<circle cx="${cx}" cy="${b.y + 16}" r="11" fill="#fde68a" opacity="0.35"/><circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#f0b429" stroke-width="1.6" style="animation:ringpulse 1.8s ease-out infinite;"/>`;
+        // 'climbing' is the halfway state: they registered but have not yet
+        // confirmed the vote, so the shell is in the air and has not opened.
+        const climbing = p.stage === 'climb';
+        if (climbing) out += `<circle cx="${cx}" cy="${b.y + 10}" r="9" fill="#8555ab" opacity="0.20"/><line x1="${cx}" y1="${b.y + 19}" x2="${cx}" y2="${b.y + 32}" stroke="#b18cff" stroke-width="1.2" opacity="0.5" style="animation:trailfade 1.8s infinite;"/>`;
+        out += `<use href="#f-shell" x="${cx - 9}" y="${b.y + (climbing ? 1 : 7)}" width="18" height="18" style="cursor:pointer;color:${climbing ? '#b18cff' : '#6b7aa8'};" onclick="seedTap('${p.id}')"/>` + lbl;
+        if (p.gift) out += `<text x="${cx}" y="${b.y - 2}" font-size="5.5" text-anchor="middle" fill="#f0b429" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">🎁 TAP</text>`;
+        else if (climbing) out += `<text x="${cx}" y="${b.y - 4}" font-size="5.5" text-anchor="middle" fill="#c4a6ff" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">IN THE AIR</text>`;
+        else if (waterReady(p)) out += `<circle cx="${cx}" cy="${b.y + 16}" r="12.5" fill="none" stroke="#4a9fe0" stroke-width="1.5" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-drop" x="${cx + 8}" y="${b.y - 2}" width="13" height="13" style="animation:dropbob 1.6s infinite;cursor:pointer;" onclick="seedTap('${p.id}')"/>`;
+        else if (!p.gift && p.touches < CONFIG.maxTouches) out += `<g opacity="0.92"><rect x="${cx - 11}" y="${b.y - 9}" width="26" height="12" rx="6" fill="#16213f" stroke="#3b4a78"/><text x="${cx + 2}" y="${b.y}" font-size="7.5" text-anchor="middle" fill="#9fb0d8" font-family="Arial">${hoursLeft(p)}${DEMO ? 'm' : 'h'}</text></g>`;
       }
     }
   }
@@ -1571,7 +1603,7 @@ function sealSvg(rank, size) {
   const strokes = ['#8fae62', '#8a6238', '#9ca3af', '#d97706', '#d97706', '#64748b', '#b45309'];
   const starfill = ['#8fae62', '#8a6238', '#6b7280', '#b45309', '#b45309', '#475569', '#b45309'];
   let g = `<svg width="${size}" height="${size * 1.1}" viewBox="0 0 34 40"><circle cx="17" cy="16" r="12" fill="${fills[rank]}" stroke="${strokes[rank]}" stroke-width="2.5"/>`;
-  if (rank === 0) g += `<use href="#d-egg" x="11" y="10" width="12" height="12"/>`;
+  if (rank === 0) g += `<use href="#f-sproutling" x="11" y="10" width="12" height="12"/>`;
   g += stars.map(([x, y]) => `<text x="${x}" y="${y}" font-size="${rank >= 4 ? 5 : 6.5}" text-anchor="middle" fill="${starfill[rank]}">★</text>`).join('');
   if (rank >= 1) g += `<path d="M12 27 l-3 9 l5 -3 Z" fill="#037ad8"/><path d="M22 27 l3 9 l-5 -3 Z" fill="#037ad8"/>`;
   return g + '</svg>';
@@ -1594,7 +1626,7 @@ async function doSearch() {
   }
   const first = nameParts[0];
   const last = nameParts[nameParts.length - 1];
-  pendingPlant = { name: q, first };
+  pendingPlant = { name: q, first, last };
   box.innerHTML = `<div class="statecard" style="text-align:center;padding:20px;">
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#5b6470;">Checking voter rolls for ${esc(first)}…</div>
     <div style="font-size:10px;color:#9aa3ad;margin-top:5px;">Searching 570,000+ FL-CD4 registrations</div>
@@ -1605,31 +1637,141 @@ async function doSearch() {
     box.innerHTML = nomatchCard(first);
   } else if (matches.length === 1) {
     const [mf, ml, mc, ma] = matches[0];
-    pendingPlant.first = mf;
+    pendingPlant.first = mf; pendingPlant.last = ml;
     box.innerHTML = availCardVoter(mf, ml, mc, ma);
   } else {
     box.innerHTML = multiMatchCard(matches, first, last);
   }
+  renderMsgPreview();
 }
 function availCard(first) {
   return `<div class="statecard avail">
-    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #7cc0f8);animation:grow 1.6s infinite;"><use href="#d-egg"/></svg>
-    <button class="plantbtn" style="background:var(--blue);box-shadow:0 5px 0 #045ea6;" onclick="plantNow(false)">Let's nest an egg with
-      <span class="namechip" style="border:2px dashed #a8cbea;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#037ad8" stroke-width="2" stroke-linejoin="round"/></svg></span>
-    </button>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">You click the button, we populate the message. You can edit or just hit send.</div>
+    <svg style="width:34px;height:34px;color:#f0b429;filter:drop-shadow(0 0 9px #fde68a);animation:grow 1.6s infinite;"><use href="#f-shell"/></svg>
+    ${relBlock(first, (pendingPlant && pendingPlant.last) || '', false)}
+    ${msgPreviewBlock('friend', '#037ad8')}
   </div>`;
 }
 function nomatchCard(first) {
   return `<div class="statecard nomatch">
-    <svg style="width:34px;height:34px;filter:drop-shadow(0 0 7px #c9b3dd);"><use href="#d-egg"/></svg>
+    <svg style="width:34px;height:34px;color:#b18cff;filter:drop-shadow(0 0 9px #c9b3dd);"><use href="#f-shell"/></svg>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">We couldn't confirm ${esc(first)} in the voter rolls — a registration reminder is always welcome.</div>
     <div style="font-size:11.5px;color:#5b6470;margin:7px 8px 0;line-height:1.5;">They may have moved, married, or not registered yet. A nudge to check still counts.</div>
-    <button class="plantbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;" onclick="plantNow(true)">Let's nest an egg with
-      <span class="namechip" style="border:2px dashed #cdb3e0;"><input id="tagname" value="${esc(first.toUpperCase())}" maxlength="10" onclick="event.stopPropagation()"><svg style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M4 20 L5.5 15.5 L16.5 4.5 A2.1 2.1 0 0 1 19.5 7.5 L8.5 18.5 Z" fill="none" stroke="#8555ab" stroke-width="2" stroke-linejoin="round"/></svg></span>
-    </button>
-    <div style="font-size:10px;color:#9aa3ad;margin-top:8px;">A deadline reminder opens in Messages. You can edit or just hit send.</div>
+    ${relBlock(first, (pendingPlant && pendingPlant.last) || '', true)}
+    ${msgPreviewBlock('deadline', '#8555ab')}
   </div>`;
+}
+/* ---------------- message preview + editable template ----------------
+   The volunteer sees exactly what will land in Messages before they tap.
+   The seed link is NOT part of the editable text — it is appended at send
+   time so a volunteer can never break or delete their own tracking link.
+   An edited template is saved to S.msgTpl and reused for everyone after. */
+function msgDefaultTpl(kind) {
+  // Call the CONFIG builder with an empty link, then trim the trailing
+  // whitespace so re-appending ' ' + link reproduces the original message
+  // byte for byte (the deadline variant keeps its ':' on purpose).
+  const raw = (kind === 'deadline') ? CONFIG.msgDeadline(S && S.first ? S.first : '', '')
+            : (kind === 'follow')   ? CONFIG.msgFollowVariants[0]('')
+            : (kind === 'stage2')   ? CONFIG.msgStage2('')
+            : CONFIG.msgFriendVariants[0]('');
+  return raw.replace(/\s+$/, '');
+}
+function msgTpl(kind) {
+  const saved = S && S.msgTpl && S.msgTpl[kind];
+  return (saved && saved.trim()) ? saved : msgDefaultTpl(kind);
+}
+function msgIsCustom(kind) {
+  return !!(S && S.msgTpl && S.msgTpl[kind] && S.msgTpl[kind].trim());
+}
+// The nickname currently typed on the seed chip, title-cased the same way
+// plantNow() does it, so the preview and the sent message always agree.
+function msgNick() {
+  const el = $('tagname');
+  const raw = (el ? el.value.trim() : '') || (pendingPlant && pendingPlant.first) || '';
+  if (!raw) return 'NAME'; // nothing typed yet — leave the placeholder visible
+  return raw.split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
+}
+function msgPreviewBlock(kind, accent) {
+  const a = accent || '#037ad8';
+  return `<div id="msgprev-wrap" data-kind="${kind}" data-accent="${a}" style="margin-top:12px;text-align:left;background:#f7fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:10px 11px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <span style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.11em;color:#5b6470;">MESSAGE PREVIEW<span id="msgprev-custom" style="color:${a};display:none;"> · YOURS</span></span>
+      <button id="msgprev-editbtn" onclick="event.stopPropagation();toggleMsgEdit()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:${a};background:none;border:none;padding:2px 4px;cursor:pointer;">Edit</button>
+    </div>
+    <div id="msgprev-body" style="font-size:12px;color:var(--ink);line-height:1.55;white-space:pre-wrap;"></div>
+    <textarea id="msgprev-ta" maxlength="400" oninput="msgCount()" onclick="event.stopPropagation()" style="display:none;width:100%;box-sizing:border-box;font-family:inherit;font-size:12px;line-height:1.5;color:var(--ink);border:1.5px solid ${a};border-radius:9px;padding:8px;resize:vertical;min-height:96px;"></textarea>
+    <div id="msgprev-actions" style="display:none;margin-top:7px;">
+      <button onclick="event.stopPropagation();saveMsgTpl()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${a};border:none;border-radius:8px;padding:6px 12px;cursor:pointer;">Save</button>
+      <button onclick="event.stopPropagation();cancelMsgEdit()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;">Cancel</button>
+      <button id="msgprev-reset" onclick="event.stopPropagation();resetMsgTpl()" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#9aa3ad;background:none;border:none;padding:6px 8px;cursor:pointer;">Use default</button>
+      <div id="msgprev-count" style="font-size:10px;color:#9aa3ad;margin-top:5px;"></div>
+      <div style="font-size:10px;color:#9aa3ad;margin-top:4px;line-height:1.45;">Type NAME anywhere and it becomes their name. Keep it personal — no extra links or money asks, or carriers may block it.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;margin-top:8px;padding-top:7px;border-top:1px dashed #dfe6ec;">
+      <svg style="width:11px;height:11px;flex:0 0 auto;" viewBox="0 0 24 24"><path d="M7 12h10M9 8.5a4 4 0 0 0 0 7h1M15 8.5a4 4 0 0 1 0 7h-1" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round"/></svg>
+      <span style="font-size:10px;color:#9aa3ad;">Your seed link is added at the end automatically. It can't be edited.</span>
+    </div>
+  </div>`;
+}
+function renderMsgPreview() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  const kind = wrap.dataset.kind;
+  const body = $('msgprev-body');
+  if (body) body.textContent = msgTpl(kind).replace(/NAME/g, msgNick());
+  const badge = $('msgprev-custom');
+  if (badge) badge.style.display = msgIsCustom(kind) ? 'inline' : 'none';
+}
+function msgCount() {
+  const ta = $('msgprev-ta'), out = $('msgprev-count');
+  if (!ta || !out) return;
+  // ~28 chars of link get appended; 320 is a comfortable 2-segment ceiling.
+  const n = ta.value.replace(/NAME/g, msgNick()).length + 30;
+  out.textContent = n + ' characters with the link' + (n > 320 ? ' — long messages can split into two texts.' : '');
+  out.style.color = n > 320 ? '#b45309' : '#9aa3ad';
+}
+function toggleMsgEdit() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  const ta = $('msgprev-ta');
+  ta.value = msgTpl(wrap.dataset.kind);
+  $('msgprev-body').style.display = 'none';
+  ta.style.display = 'block';
+  $('msgprev-actions').style.display = 'block';
+  $('msgprev-editbtn').style.display = 'none';
+  $('msgprev-reset').style.display = msgIsCustom(wrap.dataset.kind) ? 'inline' : 'none';
+  msgCount();
+  ta.focus();
+}
+function cancelMsgEdit() {
+  if (!$('msgprev-wrap')) return;
+  $('msgprev-ta').style.display = 'none';
+  $('msgprev-actions').style.display = 'none';
+  $('msgprev-body').style.display = 'block';
+  $('msgprev-editbtn').style.display = 'inline';
+  renderMsgPreview();
+}
+function saveMsgTpl() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  let v = ($('msgprev-ta').value || '').trim();
+  if (!v) { showToast('A message can\'t be empty. Tap Use default to go back.'); return; }
+  // Strip any URL the volunteer pasted in — the seed link is the only link
+  // allowed, and a second one is what gets a text filtered by the carrier.
+  const had = /https?:\/\/\S+|\bwww\.\S+/i.test(v);
+  v = v.replace(/https?:\/\/\S+/gi, '').replace(/\bwww\.\S+/gi, '').replace(/[ \t]{2,}/g, ' ').trim();
+  if (!S.msgTpl) S.msgTpl = {};
+  S.msgTpl[wrap.dataset.kind] = v;
+  save();
+  cancelMsgEdit();
+  showToast(had ? 'Saved — the extra link was removed so carriers deliver it.' : 'Saved. Every seed from now on uses your words 🌱');
+}
+function resetMsgTpl() {
+  const wrap = $('msgprev-wrap');
+  if (!wrap) return;
+  if (S.msgTpl) delete S.msgTpl[wrap.dataset.kind];
+  save();
+  cancelMsgEdit();
+  showToast('Back to the default message.');
 }
 function openSpot() {
   for (const b of S.beds) {
@@ -1639,25 +1781,29 @@ function openSpot() {
   }
   return null;
 }
-function plantNow(deadline) {
-  if (S.textsToday >= CONFIG.dailyTextCap) { showToast(CONFIG.dailyTextCap + ' texts a day keeps it human. Come back tomorrow 🥚'); return; }
+function plantNow(deadline, relId) {
+  if (S.textsToday >= CONFIG.dailyTextCap) {
+    showToast(CONFIG.dailyTextCap + ' new people a day keeps this human. Come back tomorrow. You can still send follow ups.');
+    return;
+  }
   const spot = openSpot();
-  if (!spot) { showToast('Your roost is full — place a nest from your Barn first, or wait for a hatch to earn one.'); return; }
-  const tag = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first.toUpperCase();
+  if (!spot) { showToast('Your rack is full. Place another one from the Shed, or wait to earn one.'); return; }
+  // The label comes from the relationship, never from a free text box.
+  const tag = labelFor(relId, pendingPlant.first, pendingPlant.last || '');
   const _ph = (pendingPlant && pendingPlant.phone) ? String(pendingPlant.phone).replace(/\D/g, '') : '';
   const token = seedToken();
 
-  // Hold the egg aside instead of nested it now. It only goes in the roost
+  // Hold the seed aside instead of planted it now. It only goes in the garden
   // once the volunteer confirms they actually sent the message, so backing out
   // of Messages leaves nothing behind.
   S.pendingSeed = { token, tag, phone: _ph, deadline: !!deadline, at: Date.now() };
   save();
 
-  const link = friendLink(token);
-  const _rawNick = ($('tagname') ? $('tagname').value.trim() : '') || pendingPlant.first;
-  const _nick = _rawNick.split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
-  const _v = CONFIG.msgFriendVariants;
-  const body = (deadline ? CONFIG.msgDeadline(S.first, link) : _v[S.seedsPlanted % _v.length](link)).replace('NAME', _nick);
+  // Stage one of the unregistered branch carries &r=1 so the landing page asks
+  // them to register first and the confirmation lands on a separate token.
+  const link = friendLink(token) + (deadline ? '&r=1' : '');
+  // The label doubles as the salutation: Hi Mom, Hi Aunt Carol, Hi Marcus.
+  const body = msgTpl(deadline ? 'deadline' : 'friend').replace(/NAME/g, tag) + ' ' + link;
   launchSms(smsHref(body, _ph));
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; showTab('garden'); }, 600);
 }
@@ -1669,17 +1815,17 @@ function checkPendingSeed() {
   if (Date.now() - (S.pendingSeed.at || 0) < 1200) return; // still mid-handoff
   _askingPending = true;
   const p = S.pendingSeed;
-  gameConfirm('Did you send the text?', 'Only nested a egg for ' + p.tag + ' if the message actually went out.',
+  gameConfirm('Did you send it?', 'Only load a shell for ' + p.tag + ' if the message actually went out.',
     'Yes, I sent it', 'background:var(--blue);box-shadow:0 5px 0 #045ea6;',
     function() { commitPendingSeed(); _askingPending = false; },
-    function() { S.pendingSeed = null; save(); _askingPending = false; showToast('No egg nested.'); });
+    function() { S.pendingSeed = null; save(); _askingPending = false; showToast('Nothing loaded.'); });
 }
 function commitPendingSeed() {
   const p = S.pendingSeed;
   if (!p) return;
   S.pendingSeed = null;
   const spot = openSpot();
-  if (!spot) { save(); showToast('Your roost is full — place a nest from your Barn first, or wait for a hatch to earn one.'); return; }
+  if (!spot) { save(); showToast('Your garden is full — place a bed from your Shed first, or wait for a bloom to earn one.'); return; }
   S.plants.push({ id: 'p' + (S.nextId++), token: p.token, tag: p.tag, bedId: spot.bedId, slot: spot.slot,
     state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!p.deadline, phone: p.phone || '' });
   S.seedsPlanted++; S.textsToday++;
@@ -1689,14 +1835,14 @@ function commitPendingSeed() {
   }
   save();
   renderGarden(); showTab('garden');
-  showToast('Egg nested for ' + p.tag + ' 🥚');
+  showToast('Shell loaded for ' + p.tag + ' 🎆');
 }
 // SMS link domain. VERIFIED BY SEND TESTS: mikesell.org and its subdomains are on
 // a carrier blocklist (every message containing them was dropped); github.io
 // delivers fine. GitHub Pages 301s this to the branded domain with ?s= intact,
 // so recipients still land on vote.mikesell.org. Swap this one constant if a
 // neutral branded domain is registered later.
-const LINK_DOMAIN = 'https://mike4us.org/dragonfarmer'; // mike4us.org redirects here; mikesell.org links are carrier-blocked
+const LINK_DOMAIN = 'https://mike4us.org/k'; // mike4us.org redirects here; mikesell.org links are carrier-blocked
 function friendLink(id) { return LINK_DOMAIN + '?s=' + id; }
 function seedTap(id) {
   if (Date.now() - _dragEndAt < 350) return; // that was the end of a drag
@@ -1705,31 +1851,40 @@ function seedTap(id) {
   if (p.gift && p.state === 'seed') { hatchGift(p); return; }
   if (p.state === 'ready') { doBloom(p, 'tap'); return; }
   const sheet = $('plantpick-sheet');
-  let inner = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;">${esc(p.tag)}'s Reminder Egg</div>`;
+  const climbing = p.stage === 'climb';
+  let inner = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;">${esc(p.tag)}'s shell</div>`;
+  if (climbing) {
+    inner += `<div style="font-size:11.5px;color:#8555ab;text-align:center;margin-top:6px;">They registered. The shell is in the air. It breaks when they confirm they are voting.</div>`;
+  }
   if (waterReady(p)) {
-    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Ready for a friendly follow-up (${p.touches} of ${CONFIG.maxTouches} touches used).</div>
-      <button class="bigbtn" onclick="waterNow('${id}')"><svg style="width:16px;height:16px;vertical-align:-3px;"><use href="#d-flame"/></svg> Warm it (send a follow-up)</button>`;
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Ready for a follow up (${p.touches} of ${CONFIG.maxTouches} used).</div>
+      <button class="bigbtn" onclick="waterNow('${id}')">${climbing ? 'Ask them to confirm the vote' : 'Send a follow up'}</button>`;
   } else if (p.touches >= CONFIG.maxTouches) {
-    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">All ${CONFIG.maxTouches} touches used. It can still hatch the moment they tap.</div>`;
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">All ${CONFIG.maxTouches} touches used. It can still break the moment they tap.</div>`;
   } else {
-    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">Warming again in ${hoursLeft(p)}${DEMO ? ' minutes' : ' hours'}. Eggs need a little patience 🥚</div>`;
+    inner += `<div style="font-size:11.5px;color:#5b6470;text-align:center;margin-top:6px;">You can follow up in ${hoursLeft(p)}${DEMO ? ' minutes' : ' hours'}. Give them a day.</div>`;
   }
   const canSync = !!(CONFIG.bloomApi && p.token);
   inner += canSync
-    ? `<div style="font-size:10.5px;color:#059669;text-align:center;margin-top:9px;line-height:1.5;">✓ Watching for their confirmation — this hatches on its own once they tap.</div>`
-    : `<div style="font-size:10.5px;color:#b45309;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:8px 10px;text-align:center;margin-top:9px;line-height:1.5;">This egg predates automatic confirmation. Nest a new one — this one can't hatch on its own.</div>`;
+    ? `<div style="font-size:10.5px;color:#059669;text-align:center;margin-top:9px;line-height:1.5;">✓ Watching for their confirmation — this blooms on its own once they tap.</div>`
+    : `<div style="font-size:10.5px;color:#b45309;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:8px 10px;text-align:center;margin-top:9px;line-height:1.5;">This seed predates automatic confirmation. Plant a new one — this one can't bloom on its own.</div>`;
   sheet.innerHTML = inner;
   openOv('ov-plantpick');
 }
 function waterNow(id) {
   const p = S.plants.find((q) => q.id === id);
   if (!p || !waterReady(p)) return;
-  if (S.textsToday >= CONFIG.dailyTextCap) { showToast(CONFIG.dailyTextCap + ' texts a day keeps it human. Come back tomorrow 🥚'); return; }
-  p.touches++; p.lastTouch = Date.now(); S.textsToday++;
+  // Follow ups draw from their own daily allowance, not the new-people one.
+  if ((S.nudgesToday || 0) >= CONFIG.dailyNudgeCap) { showToast(CONFIG.dailyNudgeCap + ' follow ups a day. More tomorrow.'); return; }
+  p.touches++; p.lastTouch = Date.now(); S.nudgesToday = (S.nudgesToday || 0) + 1;
   save(); closeOv('ov-plantpick');
   api('touch', { seedId: id, n: p.touches }); // [SERVER]
-  const _fv = CONFIG.msgFollowVariants;
-  launchSms(smsHref(_fv[p.touches % _fv.length](friendLink(tokenOf(p))).replace('NAME', p.tag[0] + p.tag.slice(1).toLowerCase()), p.phone || ''));
+  // Someone who registered but has not confirmed the vote gets the stage two
+  // ask. Everyone else gets the ordinary nudge.
+  const stage2 = p.stage === 'climb';
+  const body = (stage2 ? CONFIG.msgStage2(friendLink(tokenOf(p)))
+                       : msgTpl('follow').replace(/NAME/g, p.tag) + ' ' + friendLink(tokenOf(p)));
+  launchSms(smsHref(body.replace(/NAME/g, p.tag), p.phone || ''));
   if (p.touches >= CONFIG.maxTouches) setTimeout(() => doBloom(p, 'earned'), 800);
   else renderGarden();
 }
@@ -1739,8 +1894,34 @@ function initFriend(id, fname) {
   $('scr-friend').dataset.pid = id;
   let f = fname || (location.search.match(/[?&]f=([^&]+)/) || [])[1] || '';
   try { f = decodeURIComponent(f); } catch(_) {}
-  $('friend-sender').textContent = f || 'A friend';
+  $('friend-sender').textContent = f || 'Someone in your family';
+  // Stage one: they are not on the rolls, so register comes before anything.
+  if (/[?&]r=1/.test(location.search) && !$('scr-friend').dataset.stage2) {
+    $('friend-title').innerHTML = `<span id="friend-sender" style="color:var(--blue);">Someone in your family</span> could not find you<br><span style="color:#d97706;">on the voter rolls</span>`;
+    $('friend-lead').textContent = 'It takes about two minutes to fix.';
+    $('friend-go').textContent = 'Register to vote';
+    $('friend-go').setAttribute('onclick', "window.open(CONFIG.registerUrl,'_blank');showStage2()");
+  }
   show('scr-friend');
+}
+// After they have gone to register, the same page turns into the vote ask.
+function showStage2() {
+  const el = $('scr-friend');
+  el.dataset.stage2 = '1';
+  $('friend-title').innerHTML = `One more tap and<br><span style="color:#d97706;">their sky lights up</span>`;
+  $('friend-lead').textContent = 'Tell them you are voting in November.';
+  const b = $('friend-go');
+  b.textContent = "I'm voting in November!";
+  b.setAttribute('onclick', 'friendTap()');
+  // Report stage one so the shell leaves the rack and starts climbing.
+  const id = el.dataset.pid;
+  if (CONFIG.bloomApi && id) {
+    try { fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/bloom/' + encodeURIComponent(id + 'r'), { method: 'POST', keepalive: true }); } catch (e) {}
+  }
+  try {
+    const q = JSON.parse(localStorage.getItem(KEY + '_taps') || '[]');
+    if (!q.includes(id + 'r')) { q.push(id + 'r'); localStorage.setItem(KEY + '_taps', JSON.stringify(q)); }
+  } catch (e) {}
 }
 function friendTap() {
   const id = $('scr-friend').dataset.pid;
@@ -1758,17 +1939,28 @@ function friendTap() {
 // Ask the server which of our outstanding seeds have been confirmed.
 async function checkRemoteBlooms() {
   if (!CONFIG.bloomApi || !S) return false;
-  const pending = S.plants.filter(p => p.state === 'seed' && !p.gift);
+  const pending = S.plants.filter(p => p.state === 'seed');
   if (!pending.length) return false;
   try {
-    const ids = pending.map(tokenOf).filter(Boolean).slice(0, 100).join(',');
-    const r = await fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/blooms?ids=' + encodeURIComponent(ids));
+    // Unregistered shells carry two tokens: <t>r means they registered,
+    // <t> means they confirmed the vote.
+    const ids = [];
+    for (const p of pending) {
+      const t = tokenOf(p); if (!t) continue;
+      ids.push(t);
+      if (p.deadline && p.stage !== 'climb') ids.push(t + 'r');
+    }
+    const r = await fetch(CONFIG.bloomApi.replace(/\/$/, '') + '/blooms?ids=' + encodeURIComponent(ids.slice(0, 100).join(',')));
     if (!r.ok) return false;
     const data = await r.json();
     const hit = {};
     for (const t of (data.confirmed || [])) hit[t] = 1;
     let changed = false;
-    for (const p of pending) if (hit[tokenOf(p)]) { p.state = 'ready'; changed = true; }
+    for (const p of pending) {
+      const t = tokenOf(p);
+      if (hit[t]) { p.state = 'ready'; changed = true; }
+      else if (p.deadline && p.stage !== 'climb' && hit[t + 'r']) { p.stage = 'climb'; p.lastTouch = 0; changed = true; }
+    }
     if (changed) save();
     return changed;
   } catch (e) { return false; }
@@ -1780,11 +1972,35 @@ function consumeBloomQueue() {
   localStorage.setItem(KEY + '_taps', '[]');
   let changed = false;
   for (const id of q) {
-    const p = S.plants.find((x) => x.id === id && x.state === 'seed');
-    if (p) { p.state = 'ready'; changed = true; }
+    const reg = /r$/.test(id);
+    const base = reg ? id.slice(0, -1) : id;
+    const p = S.plants.find((x) => (x.id === base || tokenOf(x) === base) && x.state === 'seed');
+    if (!p) continue;
+    if (reg) { if (p.stage !== 'climb') { p.stage = 'climb'; p.lastTouch = 0; changed = true; } }
+    else { p.state = 'ready'; changed = true; }
   }
   if (changed) { save(); return true; }
   return false;
+}
+// Colour is the second axis of the collection. Eight shells times eight
+// colours is 64 things to find.
+function rollColor() { return pick(CONFIG.colors).id; }
+function recordShell(s, traits, color) {
+  S.coll[s.id] = S.coll[s.id] || { sun: false, pol: false, gli: false, colors: {} };
+  if (!S.coll[s.id].colors) S.coll[s.id].colors = {};
+  for (const k of ['sun', 'pol', 'gli']) if (traits[k]) S.coll[s.id][k] = true;
+  S.coll[s.id].colors[color] = true;
+}
+function hatchGift(p) {
+  const s = rollSpecies(p.giftShelf || 'b');
+  const traits = rollTraits('tap', false);
+  const color = rollColor();
+  S.blooms++;
+  p.state = 'bloomed'; p.species = s.id; p.traits = traits; p.color = color;
+  const firstEver = !S.coll[s.id];
+  recordShell(s, traits, color);
+  save();
+  showBloomCinematic(p, s, traits, firstEver, false, 'tap');
 }
 function doBloom(p, kind) {
   S.blooms++;
@@ -1792,10 +2008,10 @@ function doBloom(p, kind) {
   const shelf = p.deadline ? 'b' : rollShelf(kind);
   const s = rollSpecies(shelf);
   const traits = rollTraits(kind, pity);
-  p.state = 'bloomed'; p.species = s.id; p.traits = traits;
+  const color = rollColor();
+  p.state = 'bloomed'; p.species = s.id; p.traits = traits; p.color = color;
   const firstEver = !S.coll[s.id];
-  S.coll[s.id] = S.coll[s.id] || { sun: false, pol: false, gli: false };
-  for (const k of ['sun', 'pol', 'gli']) if (traits[k]) S.coll[s.id][k] = true;
+  recordShell(s, traits, color);
   let bed = null;
   if (kind === 'tap') bed = { kind: 'bed', n: 3 };
   else if (kind === 'earned') bed = { kind: 'bed', n: 2 };
@@ -1808,49 +2024,69 @@ function doBloom(p, kind) {
 function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
   const el = $('bloom-sheet');
   const anns = [];
-  if (traits.sun) anns.push(['☀ A Golden Hour Hatch!', '#d97706']);
-  if (traits.pol) anns.push(['🔥 A Firebreather!', '#c2410c']);
-  if (traits.gli) anns.push(['👁 Blue Eyes!', '#2563eb']);
+  if (traits.sun) anns.push(['☀ Gold ring around the break!', '#d97706']);
+  if (traits.pol) anns.push(['✸ It crackled!', '#8555ab']);
+  if (traits.gli) anns.push(['✦ Glitter tail!', '#b48908']);
   let t = 4.2;
   const annHtml = anns.map(([txt, col]) => { t += 0.6; return `<div class="chip-anim" style="animation-delay:${t}s;font-family:'clarendon-w01-medium',Georgia,serif;font-size:16px;color:${col};text-shadow:0 1px 0 #fff,0 0 12px #fde68a;">${txt}</div>`; }).join('');
   el.innerHTML = `
     <div style="height:${anns.length ? 70 : 12}px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;">${annHtml}</div>
-    <div style="position:relative;width:250px;height:250px;margin:6px auto 0;border-radius:22px;overflow:hidden;border:3px solid #8a5f36;background:linear-gradient(180deg,#cfe9f4 0%,#f2e5b6 78%,#e3c877 100%);">
-      <span style="position:absolute;left:50%;top:74%;transform:translateX(-50%);animation:cinebean 1.4s ease forwards;"><svg style="width:26px;height:26px;display:block;"><use href="#d-egg"/></svg></span>
-      <span style="position:absolute;left:50%;top:50%;opacity:0;transform:translateX(-50%);animation:cinesprout 0.8s 1.1s ease forwards,cinesproutout 0.4s 2s forwards;"><svg style="width:38px;height:38px;"><use href="#d-hatchling"/></svg></span>
-      ${traits.sun ? `<span style="position:absolute;left:calc(50% - 87px);top:38px;width:174px;height:174px;border-radius:50%;background:radial-gradient(circle,rgba(253,224,71,0.85) 0%,rgba(253,230,138,0.5) 45%,rgba(253,230,138,0) 72%);opacity:0;animation:revealpop 0.6s 3.4s forwards,pulsehint 2.6s 4s infinite;"></span>` : ''}
-      <span style="position:absolute;left:50%;top:60px;opacity:0;animation:cineflower 1s 2s ease forwards;"><svg style="width:130px;height:130px;display:block;"><use href="#${s.art}"/></svg></span>
-      ${traits.pol ? `<span style="position:absolute;left:8%;top:44%;opacity:0;animation:revealpop 0.5s 3.6s forwards,glint 2.2s 4.2s infinite;"><svg style="width:34px;height:34px;"><use href="#d-fire"/></svg></span><span style="position:absolute;left:20%;top:34%;opacity:0;animation:revealpop 0.5s 3.9s forwards,glint 2.6s 4.5s infinite;"><svg style="width:20px;height:20px;"><use href="#d-fire"/></svg></span>` : ''}
-      ${traits.gli ? `<span style="position:absolute;left:89px;top:84.5px;width:17px;height:17px;border-radius:50%;background:#2563eb;box-shadow:0 0 20px 8px rgba(59,130,246,0.85);opacity:0;animation:revealpop 0.5s 4s forwards,pulsehint 2.4s 4.6s infinite;"></span><span style="position:absolute;left:94.5px;top:88.5px;width:5.5px;height:5.5px;border-radius:50%;background:#fff;opacity:0;animation:revealpop 0.5s 4.1s forwards;"></span><span style="position:absolute;left:66px;top:70px;font-size:15px;color:#93c5fd;text-shadow:0 0 7px #60a5fa;opacity:0;animation:revealpop 0.4s 4.3s forwards,glint 2.8s 4.8s infinite;">✦</span>` : ''}
+  const hex = colorHex(p.color);
+  el.innerHTML = `
+    <div style="position:relative;width:250px;height:250px;margin:6px auto 0;border-radius:22px;overflow:hidden;border:3px solid #3b4a78;background:linear-gradient(180deg,#060a1c 0%,#0e1838 62%,#1a2750 100%);">
+      <!-- ground line the shell sits on -->
+      <span style="position:absolute;left:0;right:0;bottom:16px;height:3px;background:linear-gradient(#2a3a6b,#16224a);"></span>
+      <!-- 1. the shell waits in its tube -->
+      <span style="position:absolute;left:50%;bottom:12px;transform:translateX(-50%);animation:cinebean 1.3s 0.9s ease forwards;"><svg style="width:30px;height:30px;display:block;color:${hex};"><use href="#f-shell"/></svg></span>
+      <!-- 2. it climbs. this is the rising stage -->
+      <span style="position:absolute;left:50%;bottom:40px;opacity:0;transform:translateX(-50%);animation:climb 1.05s 1.15s ease-in forwards;"><svg style="width:15px;height:15px;display:block;color:${hex};"><use href="#f-shell"/></svg></span>
+      <span style="position:absolute;left:50%;bottom:40px;width:2px;height:96px;margin-left:-1px;background:linear-gradient(${hex},transparent);opacity:0;animation:revealpop 0.3s 1.3s forwards,trailfade 1.1s 1.7s forwards;"></span>
+      <!-- 3. it breaks -->
+      ${traits.sun ? `<span style="position:absolute;left:calc(50% - 70px);top:48px;width:140px;height:140px;border-radius:50%;border:3.5px solid #f0b429;opacity:0;animation:revealpop 0.6s 3.4s forwards,goldshine 2.6s 4s infinite;"></span>` : ''}
+      <span style="position:absolute;left:50%;top:50px;opacity:0;transform:translateX(-50%);animation:cineflower 0.9s 2.25s ease forwards;"><svg style="width:140px;height:140px;display:block;color:${hex};filter:drop-shadow(0 0 16px ${hex});"><use href="#${s.art}"/></svg></span>
+      ${traits.gli ? `<span style="position:absolute;left:30%;top:26%;font-size:18px;color:#fff;text-shadow:0 0 6px #f0b429;opacity:0;animation:revealpop 0.4s 3.6s forwards,glint 3s 4s infinite;">✦</span><span style="position:absolute;left:60%;top:34%;font-size:15px;color:#fffbe8;text-shadow:0 0 5px #f0b429;opacity:0;animation:revealpop 0.4s 3.8s forwards,glint 3s 4.2s infinite;">✦</span>` : ''}
+      ${traits.pol ? `<span style="position:absolute;left:18%;top:62%;font-size:15px;color:${hex};opacity:0;animation:revealpop 0.4s 3.5s forwards,embers 1.6s 3.9s infinite;">✸</span><span style="position:absolute;right:20%;top:56%;font-size:13px;color:#fde68a;opacity:0;animation:revealpop 0.4s 3.7s forwards,embers 1.8s 4.1s infinite;">✸</span>` : ''}
     </div>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:#0468b8;margin-top:10px;animation:grow 1.8s infinite;">${esc(p.tag.toUpperCase())}'S EGG HATCHED!</div>
+    <div style="height:${anns.length ? 62 : 8}px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;">${annHtml}</div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:#0468b8;margin-top:8px;animation:grow 1.8s infinite;">${esc(p.tag.toUpperCase())} IS VOTING!</div>
     <div style="margin-top:10px;display:flex;flex-direction:column;gap:7px;align-items:center;">
-      <span class="chip-anim" style="animation-delay:3s;background:#fff;border:2px solid #c9def2;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;">${firstEver ? '<b style="background:#d97706;color:#fff;border-radius:8px;padding:2px 7px;font-size:9px;margin-right:6px;letter-spacing:0.05em;">NEW</b>' : ''}<svg style="width:15px;height:15px;vertical-align:-3px;margin-right:3px;"><use href="#${s.art}"/></svg>${esc(s.name.toUpperCase())} · ${shelfName(s.shelf).toUpperCase()}</span>
-      ${gotBed ? `<span class="chip-anim" style="animation-delay:${t + 0.8}s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">New Straw Nest unlocked!</span>` : ''}
+      <span class="chip-anim" style="animation-delay:3s;background:#fff;border:2px solid #c9def2;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;">${firstEver ? '<b style="background:#d97706;color:#fff;border-radius:8px;padding:2px 7px;font-size:9px;margin-right:6px;letter-spacing:0.05em;">NEW</b>' : ''}<svg style="width:15px;height:15px;vertical-align:-3px;margin-right:3px;color:${hex};"><use href="#${s.art}"/></svg>${esc(colorName(p.color).toUpperCase())} ${esc(s.name.toUpperCase())} · ${shelfName(s.shelf).toUpperCase()}</span>
+      ${gotBed ? `<span class="chip-anim" style="animation-delay:${t + 0.8}s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">New rack unlocked!</span>` : ''}
     </div>
-    <button class="bigbtn" onclick="closeOv('ov-bloom');renderGarden();maybeRankup();">Back to my roost</button>`;
+    <button class="bigbtn" onclick="closeOv('ov-bloom');renderGarden();maybeRankup();">Back to my show</button>`;
   openOv('ov-bloom');
 }
 
 /* ---------------- plaque / collection ---------------- */
 function showPlaque(spid, pid) {
   if (Date.now() - _dragEndAt < 350) return; // that was the end of a drag
-  const s = sp(spid); const c = S.coll[spid] || { sun: false, pol: false, gli: false };
+  const s = sp(spid); const c = S.coll[spid] || { sun: false, pol: false, gli: false, colors: {} };
+  const found = c.colors || {};
+  const nFound = CONFIG.colors.filter(x => found[x.id]).length;
+  const swatches = CONFIG.colors.map(x =>
+    `<span title="${esc(x.name)}" style="width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:${found[x.id] ? x.hex : '#e9edf3'};border:2px solid ${found[x.id] ? x.hex : '#dfe5ee'};${found[x.id] ? '' : 'opacity:.5;'}"></span>`
+  ).join('');
   const row = (icon, name, found) => `<div style="display:flex;align-items:center;gap:8px;background:${found ? '#fdf6e3' : '#f3f4f6'};border:2px solid ${found ? '#f0b429' : '#e5e7eb'};border-radius:12px;padding:8px 13px;margin-top:7px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:${found ? '#b45309' : '#9ca3af'};">${icon} ${name} · ${found ? 'Discovered' : 'Undiscovered'}</div>`;
   $('plaque-sheet').innerHTML = `
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink);">${esc(s.name)}</div>
+    <div style="font-size:9.5px;letter-spacing:0.14em;color:${shelfColor(s.shelf)};margin-top:3px;font-family:'avenir-heavy',Arial,sans-serif;">${rarityName(s.shelf).toUpperCase()}</div>
     <div style="width:120px;height:120px;margin:10px auto 0;background:radial-gradient(circle,#fff 30%,#fdf6e3 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;"><svg style="width:86px;height:86px;"><use href="#${s.art}"/></svg></div>
     <div style="display:flex;gap:7px;justify-content:center;margin-top:10px;"><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:${shelfColor(s.shelf)};border:2px solid ${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">Unlocked!</div><div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;background:${shelfColor(s.shelf)};border-radius:12px;padding:4px 13px;">${shelfName(s.shelf)}</div></div>
-    ${row('👁', 'Blue Eyes', c.gli)}${row('☀', 'Golden Hour Hatch', c.sun)}${row('🔥', 'Firebreathing', c.pol)}
+    <div style="font-size:12px;color:#5b6470;margin-top:9px;">${esc(s.loc)}</div>
+    <div style="margin-top:12px;">
+      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:9.5px;letter-spacing:0.12em;color:#9aa3ad;">COLOURS SEEN · ${nFound} OF ${CONFIG.colors.length}</div>
+      <div style="display:flex;gap:6px;justify-content:center;margin-top:7px;">${swatches}</div>
+    </div>
+    ${row('✦', 'Glitter tail', c.gli)}${row('☀', 'Gold ring', c.sun)}${row('✸', 'Crackle', c.pol)}
     <div style="margin-top:12px;font-size:12px;color:#9aa3ad;cursor:pointer;" onclick="closeOv('ov-plaque')">✕ close</div>`;
   openOv('ov-plaque');
 }
 function renderCollection() {
   const shelves = [
-    { key: 'g', label: 'Common', color: '#059669' },
-    { key: 'b', label: 'Rare', color: '#2563eb' },
-    { key: 'p', label: 'Exotic', color: '#7c3aed' },
-    { key: 'au', label: 'Legendary', color: '#f59e0b' },
+    { key: 'g', label: 'Standard', color: '#059669' },
+    { key: 'b', label: 'Aerial', color: '#2563eb' },
+    { key: 'p', label: 'Specialty', color: '#7c3aed' },
+    { key: 'au', label: 'Finale', color: '#f59e0b' },
   ];
   let html = '';
   for (const sh of shelves) {
@@ -1870,21 +2106,21 @@ function bedIcon(key) {
   const cells = BED_SHAPES[key] || BED_SHAPES.r2;
   const w = Math.max(...cells.map(c => c[0])) + 1, hh = Math.max(...cells.map(c => c[1])) + 1;
   const rects = cells.map(([c, r]) =>
-    `<rect x="${c * 20 + 2}" y="${r * 20 + 2}" width="16" height="16" rx="6" fill="#e3c675" stroke="#a17a35" stroke-width="2"/>`).join('');
+    `<rect x="${c * 20 + 2}" y="${r * 20 + 2}" width="16" height="16" rx="6" fill="#c49766" stroke="#8a6238" stroke-width="2"/>`).join('');
   return `<svg width="46" height="26" viewBox="0 0 ${w * 20} ${hh * 20}" style="flex-shrink:0;">${rects}</svg>`;
 }
 function openShed() {
   const sheet = $('shed-sheet');
-  if (!S.shed.length) { sheet.innerHTML = `<div style="text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">The Barn is empty.</div><div style="text-align:center;font-size:11.5px;color:#5b6470;margin-top:6px;">Every 3rd egg you nest earns a nest, and every hatch can drop one too.</div>`; }
+  if (!S.shed.length) { sheet.innerHTML = `<div style="text-align:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">The Shed is empty.</div><div style="text-align:center;font-size:11.5px;color:#5b6470;margin-top:6px;">Every 3rd seed you plant earns a bed, and every bloom can drop one too.</div>`; }
   else {
-    sheet.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;margin-bottom:10px;">The Barn</div>` + S.shed.map((it, i) =>
+    sheet.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;margin-bottom:10px;">The Shed</div>` + S.shed.map((it, i) =>
       it.kind === 'bed'
-        ? `<div class="rankrow">${bedIcon(it.shape || (it.n === 3 ? 'r3' : 'r2'))}<div class="rlab"><strong>${shapeLabel(it.shape || (it.n === 3 ? 'r3' : 'r2'))}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLACE to add to your roost</small></div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
+        ? `<div class="rankrow">${bedIcon(it.shape || (it.n === 3 ? 'r3' : 'r2'))}<div class="rlab"><strong>${shapeLabel(it.shape || (it.n === 3 ? 'r3' : 'r2'))}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLACE to add to your garden</small></div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
         : it.kind === 'grown'
 
-          ? `<div class="rankrow"><svg width="26" height="26"><use href="#${sp(it.species).art}"/></svg><div class="rlab"><strong>${esc(sp(it.species).name)}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Lifted from ${esc(it.tag || 'your roost')} · tap NEST to put it back.</small></div><button class="collectbtn" onclick="replantGrown(${i})">NEST</button></div>`
+          ? `<div class="rankrow"><svg width="26" height="26"><use href="#${sp(it.species).art}"/></svg><div class="rlab"><strong>${esc(sp(it.species).name)}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Lifted from ${esc(it.tag || 'your garden')} · tap PLANT to put it back.</small></div><button class="collectbtn" onclick="replantGrown(${i})">PLANT</button></div>`
 
-        : `<div class="rankrow"><svg width="26" height="26"><use href="#d-egg"/></svg><div class="rlab"><strong>🎁 Mystery Gift Egg</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap NEST to reveal what hatches.</small></div><button class="collectbtn" onclick="plantGift(${i})">NEST</button></div>`
+        : `<div class="rankrow"><svg width="26" height="26" style="color:#f0b429;"><use href="#f-shell"/></svg><div class="rlab"><strong>🎁 Mystery Shell</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap LOAD to find out what is inside.</small></div><button class="collectbtn" onclick="plantGift(${i})">LOAD</button></div>`
     ).join('');
   }
   openOv('ov-shed');
@@ -1892,35 +2128,33 @@ function openShed() {
 function placeBed(i) {
   const key = S.shed[i].shape || (S.shed[i].n === 3 ? 'r3' : 'r2');
   const cells = findFit(BED_SHAPES[key] || BED_SHAPES.r2);
-  if (!cells) { showToast('No room left in the roost for that nest.'); return; }
+  if (!cells) { showToast('No room left in the garden for that bed.'); return; }
   const before = gridRows();
   S.shed.splice(i, 1);
   S.beds.push({ id: S.nextId++, cells });
   save(); closeOv('ov-shed'); renderGarden();
-  if (gridRows() > before) showToast('Your roost grew — a new row of straw opened up 🥚');
+  if (gridRows() > before) showToast('Your garden grew — a new row of soil opened up 🌱');
 }
 function replantGrown(i) {
   const spot = openSpot();
-  if (!spot) { showToast('No open hollow — place a nest from your Barn first.'); return; }
+  if (!spot) { showToast('No open spot — place a bed from your Shed first.'); return; }
   const it = S.shed.splice(i, 1)[0];
-  S.plants.push({ id: 'p' + (S.nextId++), token: seedToken(), tag: it.tag || 'Dragon',
+  S.plants.push({ id: 'p' + (S.nextId++), token: seedToken(), tag: it.tag || 'Flower',
     bedId: spot.bedId, slot: spot.slot, state: 'bloomed',
     species: it.species, traits: it.traits || { sun: false, pol: false, gli: false },
     touches: CONFIG.maxTouches, lastTouch: Date.now() });
   save(); closeOv('ov-shed'); renderGarden();
-  showToast('Dragon replanted \U0001f331');
+  showToast('Flower replanted \U0001f331');
 }
 function plantGift(i) {
   const spot = openSpot();
-  if (!spot) { showToast('No open hollow — place a nest from your Barn first.'); return; }
+  if (!spot) { showToast('No open spot — place a bed from your Shed first.'); return; }
   const it = S.shed.splice(i, 1)[0];
   const id = 'p' + (S.nextId++);
   const p = { id, tag: 'GIFT', bedId: spot.bedId, slot: spot.slot, state: 'seed', touches: 0, lastTouch: Date.now(), gift: true, giftShelf: it.shelf };
   S.plants.push(p); save(); closeOv('ov-shed');
-  hatchGift(p);
-}
-function hatchGift(p) {
-  const s = rollSpecies(p.giftShelf || 'b');
+  // instant roll, straight to the Bloom
+  const s = rollSpecies(it.shelf);
   const traits = rollTraits('tap', false);
   S.blooms++;
   p.state = 'bloomed'; p.species = s.id; p.traits = traits;
@@ -1932,10 +2166,10 @@ function hatchGift(p) {
 }
 function openLadder() {
   const sheet = $('ladder-sheet');
-  sheet.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="gametitle">Keeper's Guild</div><div class="pill" style="cursor:pointer;" onclick="closeOv('ov-ladder')">✕</div></div>` +
+  sheet.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="gametitle">Leaderboard</div><div class="pill" style="cursor:pointer;" onclick="closeOv('ov-ladder')">✕</div></div>` +
     CONFIG.ranks.map((r, i) => {
       const cls = i === S.rank ? 'now' : (i > S.rank ? 'locked' : '');
-      return `<div class="rankrow ${cls}"><span style="width:28px;">${sealSvg(i, 26)}</span><div class="rlab">${r.name}${r.unlock ? `<small>unlocks ${r.unlock} · 🎁 mystery gift</small>` : '<small>🎁 mystery gift</small>'}</div><div class="rnum">${i === S.rank ? 'YOU · ' + fmt(S.lifetime) : (i < S.rank ? '✓' : fmt(r.at))}🔥</div></div>`;
+      return `<div class="rankrow ${cls}"><span style="width:28px;">${sealSvg(i, 26)}</span><div class="rlab">${r.name}${r.unlock ? `<small>unlocks ${r.unlock} · 🎁 mystery gift</small>` : '<small>🎁 mystery gift</small>'}</div><div class="rnum">${i === S.rank ? 'YOU · ' + fmt(S.lifetime) : (i < S.rank ? '✓' : fmt(r.at))}👏</div></div>`;
     }).join('');
   openOv('ov-ladder');
 }
@@ -1949,18 +2183,18 @@ function maybeRankup() {
     <span style="display:inline-block;filter:drop-shadow(0 0 8px #bcd9f2);animation:grow 1.8s infinite;">${sealSvg(S.pendingRankup, 56)}</span>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">You made<br>${r.name}!</div>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
-      <span class="chip-anim" style="animation-delay:0.7s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 Mystery gift: an egg, waiting in your Barn</span>
+      <span class="chip-anim" style="animation-delay:0.7s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 Mystery gift: a seed, waiting in your Shed</span>
       ${r.unlock ? `<span class="chip-anim" style="animation-delay:1.3s;background:#eef6fd;border:2.5px solid var(--blue);border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:var(--blue);">New feature: ${r.unlock}</span>` : ''}
       ${r.teach ? `<span class="chip-anim" style="animation-delay:1.9s;font-size:11px;color:#5b6470;">${r.teach}</span>` : ''}
-      <span class="chip-anim" style="animation-delay:2.3s;font-size:11px;color:#5b6470;">Drop the gift egg on any open hollow to see what hatches.</span>
+      <span class="chip-anim" style="animation-delay:2.3s;font-size:11px;color:#5b6470;">Drop the gift seed on any open spot to see what blooms.</span>
       ${offerContacts ? `<span class="chip-anim" style="animation-delay:2.8s;background:#f4f9ff;border:2px dashed var(--blue);border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:var(--blue);">🔎 Compare contacts again? New friends may match now.</span>` : ''}
     </div>
-    <button class="bigbtn" onclick="S.pendingRankup=null;save();closeOv('ov-rankup');renderGarden();">Back to my roost</button>`;
+    <button class="bigbtn" onclick="S.pendingRankup=null;save();closeOv('ov-rankup');renderGarden();">Back to my garden</button>`;
   openOv('ov-rankup');
 }
 
 /* ---------------- shared leaderboard (both games, one board) ---------------- */
-const GAME_ID = 'd';
+const GAME_ID = 'k';
 let _boardRows = null, _boardSent = 0;
 
 async function pushScore() {
@@ -1997,7 +2231,7 @@ function renderChampions() {
         <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:14px;color:var(--purple);width:18px;text-align:center;">${i + 1}</div>
         <span style="width:26px;">${sealSvg(Math.min(row.r, 6), 24)}</span>
         <div class="rlab">${esc(row.n)}${me ? ' · YOU' : ''}<small>${badge} ${CONFIG.ranks[Math.min(row.r, 6)].name}</small></div>
-        <div class="rnum">${fmt(row.l)} 🔥</div></div>`;
+        <div class="rnum">${fmt(row.l)} 👏</div></div>`;
     }).join('');
   };
   paint(_boardRows);
@@ -2462,6 +2696,7 @@ async function matchContactList(contacts, opts) {
 async function runContactMatch(popoutMode) {
   try {
     const raw = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+    // Keep a contact that has a number but no name — the number is what matches.
     const contacts = (raw || []).filter(c => (c.name && c.name[0]) || (c.tel && c.tel[0]))
       .map(c => ({ name: (c.name && c.name[0]) || (c.tel && c.tel[0]) || '',
                    phone: (c.tel && c.tel[0]) || '', phones: (c.tel || []).filter(Boolean) }));
@@ -2480,7 +2715,7 @@ function popOutToMatch() {
   if (!POPOUT_URL) { openConnectSheet(); return; }
   closeOv('ov-connect');
   window.open(POPOUT_URL + '?match=1', '_blank');
-  showToast('Finish in the new tab, then come back here 🥚');
+  showToast('Finish in the new tab, then come back here 🌱');
 }
 
 // Tier 3: vCard upload — works in iframes, on iOS, and on desktop
@@ -2508,6 +2743,9 @@ function openConnectSheet(afterEmpty) {
   if (st === 'ready') opts += row('📇', 'Select a few by hand', 'Choose who to check from your phone\'s contact list.', 'closeOv(\'ov-connect\');runContactMatch()', !hasGoogle);
   else if (st === 'blocked-iframe') opts += row('📇', 'Select my contacts', 'Opens full screen for a moment, then comes back.', 'popOutToMatch()', true);
 
+  // Removed people stay removed forever, which is right — but it also means a
+  // volunteer who cleared a few by accident sees a short list and no reason why.
+  // Surface the count and give them the way back.
   // Maintenance rows — hidden from volunteers, shown only with ?debug=1.
   // Nobody running the game should have to see our diagnostics.
   if (DEBUG_UI) {
@@ -2554,7 +2792,7 @@ function restoreDismissed() {
       + ' eligible to match again the next time you run the friend finder.',
     'Bring them back', 'background:var(--green);box-shadow:0 5px 0 #047857;', function () {
       S.excludedFriends = []; save();
-      showToast('Restored. Run the friend finder again to rebuild your list 🥚');
+      showToast('Restored. Run the friend finder again to rebuild your list 🌱');
     });
 }
 function dismissedCount() { return ((S && S.excludedFriends) || []).length; }
@@ -2567,7 +2805,7 @@ function matchDiagnosticLine() {
   const m = S && S.lastMatch;
   if (!m) return 'No contact match has been run on this device yet.';
   const g = (typeof gapi !== 'undefined');
-  return 'DRAGONFARMER MATCH DIAG · numbers=' + m.numbers + ' contacts=' + m.contacts
+  return 'BLOOMERS MATCH DIAG · numbers=' + m.numbers + ' contacts=' + m.contacts
        + ' found=' + m.found + ' verified=' + m.verified + ' hidden=' + m.hidden
        + ' dismissedTotal=' + dismissedCount()
        + ' kept=' + ((S.registeredFriends || []).length)
@@ -2618,11 +2856,11 @@ function friendKey(c) {
 function normLast(s) { return String(s || '').toLowerCase().replace(/[^a-z]/g, ''); }
 // A phone hit is CONFIRMED only when the contact's last name matches the voter's.
 // A phone hit with no/other last name is still surfaced, but as "highly likely",
-// never as verified — that is what keeps a wrong-person match out of the verified
-// tier while still showing it.
+// never as verified — that is what keeps a wrong-person match (Aiden) out of the
+// verified tier while still showing it.
 function lastNameConfirms(contactName, voterLast) {
   const parts = String(contactName || '').trim().split(/\s+/);
-  if (parts.length < 2) return false;
+  if (parts.length < 2) return false;             // single-name contact can't confirm
   const cl = normLast(parts[parts.length - 1]), vl = normLast(voterLast);
   if (!cl || !vl) return false;
   return cl === vl || cl.includes(vl) || vl.includes(cl);
@@ -2724,70 +2962,6 @@ function renderRegisteredFriends() {
   listEl.innerHTML = html;
   listEl.style.display = 'block';
 }
-function renderRegisteredFriends() {
-  const listEl = $('plant-contactlist');
-  // One-time reset (v5, 2026-08-30): matching is two-tier (phone+last name =
-  // confirmed, phone-only = needs the volunteer's yes/no), and rows carry a
-  // `confirmed` flag. Any future change to matching rules bumps this again.
-  if (S && (S.friendsVer || 0) < 6) {
-    // See the v6 note on the other renderer: the old "Unsure" button wrote the
-    // same permanent blacklist entry as "Not them", so the stored exclusion
-    // list is untrustworthy and gets cleared once.
-    // Silent on purpose. The volunteer did nothing wrong and does not need to
-    // hear about our bug — clearing the list is enough, and anyone wrongly
-    // removed simply reappears the next time they check. Their existing matches
-    // are left alone so nothing visibly disappears.
-    S.excludedFriends = [];
-    S.friendsVer = 6; save();
-  }
-  if (!S || !S.registeredFriends || !S.registeredFriends.length) { listEl.style.display = 'none'; return; }
-  const card = (c, i, confirmed) => {
-    const initials = (c.first || c.name || '?')[0].toUpperCase();
-    const ring = confirmed ? '#dcfce7' : '#fef3c7';
-    const ink  = confirmed ? '#059669' : '#b45309';
-    // Confirmed: name + green check, nothing else. Phone-only: the question a
-    // human would ask, answered with a green Yes / red No.
-    const q = c.matchedBy === 'name'
-      ? ('A ' + esc(c.first || '') + ' ' + esc(c.last || '') + (c.voterCity ? ' of ' + esc(c.voterCity) : '')
-         + ' is registered. Same person?')
-      : ('Is "' + esc(c.name) + '" actually ' + esc(c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?');
-    const sub  = confirmed ? '' : `<div style="font-size:11px;color:#b45309;margin-top:2px;line-height:1.4;">${q}</div>`;
-    const buttons = confirmed
-      ? `<div title="Not them? Remove" onclick="event.stopPropagation();removeRegisteredFriend(${i})" style="flex-shrink:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c3ccd6;font-size:13px;">✕</div>`
-      : `<div style="flex-shrink:0;display:flex;gap:6px;">
-           <div onclick="event.stopPropagation();confirmFriend(${i})" style="background:#059669;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #036b4c;">Yes</div>
-           <div onclick="event.stopPropagation();removeRegisteredFriend(${i}, false)" style="background:#f59e0b;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #b45309;">Not sure</div>
-           <div onclick="event.stopPropagation();removeRegisteredFriend(${i}, true)" style="background:#dc2626;color:#fff;border-radius:10px;padding:7px 13px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;box-shadow:0 2px 0 #991b1b;">Not them</div>
-         </div>`;
-    return `<div class="card" style="margin:5px 16px 0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px;" onclick="selectRegisteredFriend(${i})">
-      <div style="width:32px;height:32px;border-radius:50%;background:${ring};display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:${ink};flex-shrink:0;">${initials}</div>
-      <div style="flex:1;">
-        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;">${esc(c.name)}${confirmed ? ' <span style="color:#059669;">✓</span>' : ''}</div>
-        ${sub}
-      </div>
-      ${buttons}
-    </div>`;
-  };
-  const hdr = (t, color) => `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-weight:700;font-size:13px;color:${color};letter-spacing:0.05em;margin:16px 18px 5px;">${t}</div>`;
-  const confirmedRows = [], likelyRows = [], maybeRows = [];
-  S.registeredFriends.forEach((c, i) => {
-    if (c.confirmed) confirmedRows.push(i);
-    else if (c.matchedBy === 'name') maybeRows.push(i);   // name only — weakest tier
-    else likelyRows.push(i);
-  });
-  let html = '';
-  if (confirmedRows.length)
-    html += hdr('CONFIRMED VOTERS IN OUR DISTRICT', '#059669')
-          + confirmedRows.map(i => card(S.registeredFriends[i], i, true)).join('');
-  if (likelyRows.length)
-    html += hdr('FOUND BY PHONE NUMBER ONLY', '#b45309')
-          + likelyRows.map(i => card(S.registeredFriends[i], i, false)).join('');
-  if (maybeRows.length)
-    html += hdr('SAME NAME ON THE ROLLS — IS THIS THEM?', '#6b21a8')
-          + maybeRows.map(i => card(S.registeredFriends[i], i, false)).join('');
-  listEl.innerHTML = html;
-  listEl.style.display = 'block';
-}
 function confirmFriend(idx) {
   const c = (S && S.registeredFriends || [])[idx];
   if (!c) return;
@@ -2802,6 +2976,7 @@ function selectRegisteredFriend(idx) {
   pendingPlant = { name: c.name, first: c.first || c.name.split(/\s+/)[0], phone: c.phone || '' };
   $('plant-contactlist').style.display = 'none';
   $('plant-result').innerHTML = availCardVoter(c.first || c.name.split(/\s+/)[0], c.last || '', c.voterCity, null);
+  renderMsgPreview();
   $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -2836,10 +3011,7 @@ async function _renderContactList() {
     const confirmed = !!c._confirmed;
     const ring = confirmed ? '#dcfce7' : '#fef3c7';
     const ink  = confirmed ? '#059669' : '#b45309';
-    const q = c.matchedBy === 'name'
-      ? ('A ' + esc(c.first || '') + ' ' + esc(c.last || '') + (c.voterCity ? ' of ' + esc(c.voterCity) : '')
-         + ' is registered. Same person?')
-      : ('Is "' + esc(c.name) + '" actually ' + esc(c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?');
+    const q = 'Is "' + esc(c.name) + '" actually ' + esc(c._first || c.first || '') + (c.voterCity ? ' from ' + esc(c.voterCity) : '') + '?';
     const sub  = confirmed ? '' : `<div style="font-size:11px;color:#b45309;margin-top:2px;line-height:1.4;">${q}</div>`;
     const buttons = confirmed ? '' :
       `<div style="flex-shrink:0;display:flex;gap:6px;">
@@ -2908,6 +3080,7 @@ function selectContact(idx) {
   pendingPlant = { name: c.name, first: c._first, phone: c.phone || '' };
   $('plant-contactlist').style.display = 'none';
   $('plant-result').innerHTML = availCardVoter(c._first, c._last, c.voterCity, null);
+  renderMsgPreview();
   $('plant-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -2923,8 +3096,8 @@ function showTab(tab) {
 }
 function buildNavs() {
   const html = `
-    <button class="bn" data-tab="garden" onclick="showTab('garden')"><svg class="navic"><use href="#n-farm"/></svg><small>ROOST</small></button>
-    <button class="bn" data-tab="collection" onclick="showTab('collection')"><svg class="navic"><use href="#n-almanac"/></svg><small>REGISTRY</small></button>
+    <button class="bn" data-tab="garden" onclick="showTab('garden')"><svg class="navic"><use href="#n-farm"/></svg><small>MY SHOW</small></button>
+    <button class="bn" data-tab="collection" onclick="showTab('collection')"><svg class="navic"><use href="#n-almanac"/></svg><small>SHELLS</small></button>
     <button class="bn" data-tab="champions" onclick="showTab('champions')"><svg class="navic"><use href="#n-club"/></svg><small>CHAMPIONS</small></button>`;
   for (const id of ['nav-garden', 'nav-plant', 'nav-collection', 'nav-champions']) { $(id).innerHTML = html; }
   showTabMark();
@@ -2937,12 +3110,12 @@ function buildNavs() {
 function buildDecos() {
   const deco = `
     <svg style="position:absolute;left:-14%;top:34%;width:130%;opacity:0.08;" viewBox="0 0 220 26"><path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/><path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/><path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/></svg>
-    <svg style="position:absolute;left:0;right:0;bottom:110px;width:100%;opacity:0.14;" viewBox="0 0 340 60" preserveAspectRatio="xMidYMax meet"><path d="M0 46 H340" stroke="#8a5f36" stroke-width="3"/><path d="M38 46 V24 L62 8 L86 24 V46 Z" fill="#b5502e"/><path d="M33 27 L62 6 L91 27" stroke="#8a5f36" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="54" y="30" width="16" height="16" rx="2" fill="#8a5f36"/><path d="M54 30 L70 46 M70 30 L54 46" stroke="#e9dfc6" stroke-width="1.4"/><rect x="100" y="16" width="15" height="30" fill="#9a8a6a"/><path d="M99 16 A8.5 8.5 0 0 1 116 16 Z" fill="#8a5f36"/><g stroke="#8a5f36" stroke-width="2.4"><line x1="146" y1="30" x2="146" y2="46"/><line x1="186" y1="30" x2="186" y2="46"/><line x1="226" y1="30" x2="226" y2="46"/><line x1="266" y1="30" x2="266" y2="46"/><line x1="306" y1="30" x2="306" y2="46"/><line x1="134" y1="35" x2="318" y2="35"/><line x1="134" y1="42" x2="318" y2="42"/></g><ellipse cx="325" cy="42" rx="11" ry="7" fill="#c9a04a"/></svg>
+    <svg style="position:absolute;left:0;right:0;bottom:110px;width:100%;opacity:0.11;" viewBox="0 0 340 60" preserveAspectRatio="xMidYMax meet"><path d="M0 44 H340" stroke="#037ad8" stroke-width="3"/><path d="M40 44 Q95 6 150 44 M150 44 Q205 6 260 44" fill="none" stroke="#037ad8" stroke-width="3"/><g stroke="#037ad8" stroke-width="1.6"><line x1="65" y1="24" x2="65" y2="44"/><line x1="95" y1="15" x2="95" y2="44"/><line x1="125" y1="24" x2="125" y2="44"/><line x1="175" y1="24" x2="175" y2="44"/><line x1="205" y1="15" x2="205" y2="44"/><line x1="235" y1="24" x2="235" y2="44"/></g><path d="M0 52 q20 4 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#037ad8" stroke-width="2" opacity="0.7"/></svg>
     <div style="position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:space-around;align-items:flex-end;opacity:0.16;padding:0 10px;">
-      <svg style="width:18px;height:18px;"><use href="#d-haybale"/></svg><svg style="width:20px;height:20px;"><use href="#d-jade"/></svg><svg style="width:24px;height:24px;"><use href="#d-copper"/></svg><svg style="width:18px;height:18px;"><use href="#d-obsidian"/></svg><svg style="width:24px;height:24px;"><use href="#d-ember"/></svg><svg style="width:19px;height:19px;"><use href="#d-clay"/></svg><svg style="width:23px;height:23px;"><use href="#d-amber"/></svg><svg style="width:18px;height:18px;"><use href="#d-slate"/></svg><svg style="width:18px;height:18px;"><use href="#d-haybale"/></svg>
+      <svg style="width:20px;height:20px;color:#4cc9ff;"><use href="#f-ring"/></svg><svg style="width:24px;height:24px;color:#ffc233;"><use href="#f-chrys"/></svg><svg style="width:18px;height:18px;color:#ff7ac4;"><use href="#f-peony"/></svg><svg style="width:24px;height:24px;color:#b18cff;"><use href="#f-cross"/></svg><svg style="width:19px;height:19px;color:#4ade80;"><use href="#f-willow"/></svg><svg style="width:23px;height:23px;color:#ff9a3c;"><use href="#f-palm"/></svg><svg style="width:18px;height:18px;color:#ff4d4d;"><use href="#f-brocade"/></svg>
     </div>
-    <span class="petal" style="left:14%;animation-duration:8s;color:#f0b429;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#d-spark"/></svg></span>
-    <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#d-spark"/></svg></span>`;
+    <span class="petal" style="left:14%;animation-duration:8s;color:#f2a9c4;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#f-petal"/></svg></span>
+    <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#f-petal"/></svg></span>`;
   for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { const el = $(id); if (el) el.innerHTML = deco; }
 }
 
