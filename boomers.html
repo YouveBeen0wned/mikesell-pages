@@ -474,10 +474,17 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
     <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
-        <button class="collectbtn" id="btn-collect" onclick="collectPraise()">SPARK THE FUSE</button>
+        <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT PRAISE</button>
       </div>
-      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Next show: +<span id="hud-percycle">0</span> 👏 in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
+      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Next praise: +<span id="hud-percycle">0</span> 👏 in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
     </div>
+    <!-- Lighting the fuse is free and separate from the economy. It replays the
+         show you already own, every 30 seconds, for the pleasure of it. -->
+    <button class="tchip" id="btn-spark" onclick="sparkFuse()" title="Light the fuse"
+      style="flex:0 0 auto;flex-direction:column;gap:1px;padding:6px 11px;cursor:pointer;border-color:#f0b429;background:#fffaf0;">
+      <span style="font-size:17px;line-height:1;">🔥</span>
+      <span id="spark-lab" style="font-size:7.5px;letter-spacing:0.05em;color:#b45309;">FUSE</span>
+    </button>
   </div>
   <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
     <div style="display:flex;justify-content:space-between;align-items:baseline;">
@@ -1125,6 +1132,19 @@ function renderCycleCountdown() {
   el.title = 'Next praise payout';
 }
 setInterval(function () { try { renderCycleCountdown(); } catch (e) {} }, 1000);
+// The fuse cooldown counts down on the button itself.
+setInterval(function () {
+  try {
+    const sb = $('btn-spark'), sl = $('spark-lab');
+    if (!sb || !sl || !S || !$('scr-garden').classList.contains('on')) return;
+    const owned = S.plants.some(function (p) { return p.state === 'bloomed'; });
+    const cd = Math.ceil(sparkCooldownLeft() / 1000);
+    const ready = owned && cd === 0 && !_sparking;
+    sb.style.opacity = ready ? '1' : '0.45';
+    sb.style.borderColor = ready ? '#f0b429' : '#d8dde5';
+    sl.textContent = !owned ? 'FUSE' : (cd > 0 ? cd + 's' : 'FUSE');
+  } catch (e) {}
+}, 1000);
 
 function addPraise(n) {
   S.lifetime += n; S.weekly += n;
@@ -1134,22 +1154,38 @@ function addPraise(n) {
   if (S.rank > prev) S.pendingRankup = S.rank;
   save();
 }
-// Claiming is sparking the fuse. The spark runs the ground, then every shell
-// you own climbs out of its tube and breaks, one after another.
+/* Two separate actions on purpose.
+   COLLECT PRAISE is the economy: it banks the pool on the 12 minute cycle.
+   SPARK THE FUSE is the spectacle: free, every 30 seconds, replays the show
+   you already own. Tying them together meant you could only watch your own
+   fireworks twelve minutes at a time, which is backwards. */
 let _sparking = false;
+const SPARK_COOLDOWN = 30000;
 function collectPraise() {
   tickPraise();
-  if (S.pool <= 0 || _sparking) return;
-  _sparking = true;
+  if (S.pool <= 0) return;
   addPraise(S.pool); S.pool = 0; S.poolTick = Date.now(); save();
+  renderGarden(); maybeRankup();
+}
+function sparkCooldownLeft() {
+  return Math.max(0, SPARK_COOLDOWN - (Date.now() - (S && S.lastSpark ? S.lastSpark : 0)));
+}
+function sparkFuse() {
+  if (_sparking) return;
+  if (!S.plants.some(function (p) { return p.state === 'bloomed'; })) {
+    showToast('Nothing to launch yet. Light a shell first.');
+    return;
+  }
+  if (sparkCooldownLeft() > 0) {
+    showToast('Give the racks a moment. ' + Math.ceil(sparkCooldownLeft() / 1000) + 's.');
+    return;
+  }
+  _sparking = true;
+  S.lastSpark = Date.now();
+  S.showUntil = Date.now() + SKY_MS;   // the sky stays lit for 30 seconds
+  save();
   renderGarden();
-
-  const fl = $('fuseline');
-  if (fl) { fl.style.display = 'block'; fl.innerHTML = '<i></i>'; }
-  setTimeout(function () {
-    if (fl) fl.style.display = 'none';
-    runShow(function () { _sparking = false; renderGarden(); maybeRankup(); });
-  }, 1100);
+  runShow(function () { _sparking = false; renderGarden(); });
 }
 /* The show. A spark runs the ground, and as it passes each tube that tube
    flashes, a pixel lifts out of it, and the shell breaks at its own height.
@@ -1167,24 +1203,37 @@ function runShow(done) {
     });
   if (!bursts.length) { if (done) done(); return; }
 
-  const STEP = 430, RISE = 760;
+  /* Timing is driven by the spark, not by a queue. The spark crosses the
+     ground at a constant speed, and a column fires at the exact moment the
+     spark reaches THAT column's x. Slowed right down so you can watch a shell
+     leave its tube, climb, and open before the next one starts. */
+  const COLSTEP = 900;    // time the spark takes to cross one column
+  const LEAD = 700;       // spark travels in from the left before the first
+  const ROWGAP = 150;     // stacked shells in one column, front then back
+  const RISE = 950;       // tube to break point
   bursts.forEach(function (b) { b.style.opacity = '0'; });
 
-  // The spark crossing the ground, timed to arrive with the last shell.
+  const lastCol = Math.max.apply(null, bursts.map(function (b) { return +b.dataset.col; }));
+  const startX = SHOW.left - 16;
+  const endX = SHOW.left + lastCol * SHOW.pitch;
   const spark = document.createElementNS(NSSVG, 'rect');
-  spark.setAttribute('x', 2); spark.setAttribute('y', SHOW.ground - 3);
-  spark.setAttribute('width', 5); spark.setAttribute('height', 5);
+  spark.setAttribute('x', startX); spark.setAttribute('y', SHOW.ground - 3);
+  spark.setAttribute('width', 6); spark.setAttribute('height', 6);
   spark.setAttribute('rx', 1); spark.setAttribute('fill', '#fde68a');
-  const lastCol = +bursts[bursts.length - 1].dataset.col;
-  const runTo = SHOW.left + lastCol * SHOW.pitch;
-  spark.style.setProperty('--dx', runTo + 'px');
-  spark.style.animation = 'groundrun ' + ((bursts.length - 1) * STEP + RISE) + 'ms linear forwards';
+  spark.style.filter = 'drop-shadow(0 0 5px #f59e0b)';
+  spark.style.setProperty('--dx', (endX - startX) + 'px');
+  // Constant speed: lead-in plus one COLSTEP per column it has to cross.
+  spark.style.animation = 'groundrun ' + (LEAD + lastCol * COLSTEP) + 'ms linear forwards';
   svg.appendChild(spark);
 
-  let t = 0;
+  const rows = rackRows();
+  let lastFire = 0;
   bursts.forEach(function (b) {
     const col = +b.dataset.col, row = +b.dataset.row;
-    const s = slotOf(col * 2 + row);
+    const s = slotOf(col * rows + row);
+    // Fire when the spark is level with this column.
+    const t = LEAD + col * COLSTEP + row * ROWGAP;
+    if (t > lastFire) lastFire = t;
     setTimeout(function () {
       // the tube it came out of lights up
       const tube = svg.querySelector('.tube-g[data-col="' + col + '"][data-row="' + row + '"] rect');
@@ -1214,9 +1263,8 @@ function runShow(done) {
         }, 1060);
       }, RISE);
     }, t);
-    t += STEP;
   });
-  setTimeout(function () { spark.remove(); if (done) done(); }, t + RISE + 2700);
+  setTimeout(function () { spark.remove(); if (done) done(); }, lastFire + RISE + 2800);
 }
 
 /* ---------------- backend adapter [SERVER] ---------------- */
@@ -1527,7 +1575,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-0330';
+const BUILD = '20260913-0455';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1719,6 +1767,16 @@ function renderGarden() {
   _sh.style.color = S.shed.length > 0 ? 'var(--blue)' : '';
   $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap()); const _pc = $('hud-percycle'); if (_pc) _pc.textContent = perCycle();
   $('btn-collect').disabled = S.pool <= 0;
+  // The fuse button lives on its own timer, not the praise cycle.
+  const sb = $('btn-spark'), sl = $('spark-lab');
+  if (sb && sl) {
+    const owned = S.plants.some(function (p) { return p.state === 'bloomed'; });
+    const cd = Math.ceil(sparkCooldownLeft() / 1000);
+    const ready = owned && cd === 0 && !_sparking;
+    sb.style.opacity = ready ? '1' : '0.45';
+    sb.style.borderColor = ready ? '#f0b429' : '#d8dde5';
+    sl.textContent = !owned ? 'FUSE' : (cd > 0 ? cd + 's' : 'FUSE');
+  }
   const ag = CONFIG.agenda[agendaIdx];
   $('agenda-topic').textContent = ag[0]; $('agenda-line').textContent = ag[1];
   $('agenda-dots').innerHTML = CONFIG.agenda.map((_, i) => `<span onclick="event.stopPropagation();setAgenda(${i})" style="width:8px;height:8px;border-radius:50%;background:${i === agendaIdx ? 'var(--blue)' : '#d4e2ef'};cursor:pointer;display:inline-block;padding:2px;"></span>`).join('');
