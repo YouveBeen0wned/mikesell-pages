@@ -1767,7 +1767,14 @@ function stockShells(n) {
 }
 
 function boot() {
-  if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
+  if (/[?&]reset=1/.test(location.search)) {
+    localStorage.removeItem(KEY);
+    // Keep every other flag. Reloading on pathname alone silently dropped
+    // things like ?stock=, so a reset+stock combination did nothing.
+    const rest = location.search.replace(/(^\?|&)reset=1/, '').replace(/^&/, '?');
+    location.href = location.pathname + (rest && rest !== '?' ? rest : '');
+    return;
+  }
   buildShellSymbols(); buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
   checkForUpdate();
   const m = location.search.match(/[?&](?:s|b)=([\w-]+)/);
@@ -1797,7 +1804,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-1905';
+const BUILD = '20260913-1940';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1867,6 +1874,10 @@ function doSignup() {
   if (pin) { S.pin = pin; sessionStorage.setItem('bm_auth', '1'); }
   save();
   api('signup', { first, last, zip, contactsOptIn: S.contacts }); // [SERVER] account record
+  // A brand new account never passes through boot() again, so the test flag
+  // has to be honoured here too or it only works on the second load.
+  const st = location.search.match(/[?&]stock=(\d+)/);
+  if (st) stockShells(parseInt(st[1], 10));
   renderGarden();
   show('scr-garden');
   startPolling();
