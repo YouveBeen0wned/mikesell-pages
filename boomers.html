@@ -33,7 +33,9 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .screen>.petal{position:absolute;}
 .petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
 .field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:8px 14px 9px;margin:9px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
-.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:52px;font-size:26px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
+/* The four PIN boxes share the row evenly and end flush with the other
+   fields. A max-width left them short of the right edge and misaligned. */
+.field input.pindot,.pindot{flex:1 1 0;min-width:0;max-width:none;height:52px;font-size:26px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
 .field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
 .field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
 #drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
@@ -400,8 +402,15 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
       </div>
       <div style="font-size:8.5px;color:#9aa3ad;margin-top:3px;line-height:1.4;">Boomers stores no data, so we cannot look this up for you. Write it down.</div>
     </div>
-    <!-- Boomers never reads contacts. There is deliberately no toggle here. -->
-    <div class="smsnote" style="background:#f6fbf7;border-color:#bfe7cd;color:#1c6b3c;">Boomers never opens your contacts. You type a name, we check the public voter rolls, and that is the whole search.</div>
+    <!-- Age and permission. It lives in the form, not on a separate screen, so
+         it reads as part of signing up rather than a wall in front of it. -->
+    <div class="field" id="agerow" style="display:flex;align-items:flex-start;gap:10px;background:#faf7fd;border:2px solid #cdb3e0;cursor:pointer;" onclick="toggleAge()">
+      <span id="agebox" data-on="0" style="width:22px;height:22px;flex-shrink:0;margin-top:2px;border:2.5px solid #8555ab;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;color:#8555ab;font-family:'avenir-heavy',Arial,sans-serif;"></span>
+      <div style="flex:1;">
+        <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;color:var(--ink);line-height:1.4;">I am 16 or older and I have permission to play.</div>
+        <div style="font-size:9.5px;color:#6b7280;margin-top:3px;line-height:1.45;"><b>If you are under 18:</b> talk to your parent or guardian first, and only add people you are actually related to and actually know.</div>
+      </div>
+    </div>
     <div id="signup-err" style="display:none;font-size:11px;color:var(--red);margin-top:8px;"></div>
     <div class="smsnote">This game works by texting people you know. Messages open in your phone's own messaging app and are sent by you — your carrier's terms apply and standard message and data rates may apply.</div>
     <button class="bigbtn" style="display:flex;align-items:center;gap:9px;animation:popglow 2.6s infinite;" onclick="doSignup()"><svg style="width:20px;height:20px;color:#fde68a;"><use href="#f-shell"/></svg>Start my show</button>
@@ -489,15 +498,16 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
   <div class="qtitle">Who should we check on?</div>
   <div style="font-size:11px;color:#9aa3ad;text-align:center;margin:3px 24px 0;line-height:1.5;">You have to know their first and last name. Remember, family only.</div>
   <div id="plant-searchwrap">
-    <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="First and last name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch();}"></div>
-    <!-- The relationship is required BEFORE the rolls are checked, so the
-         message preview can be written in their real name from the start. -->
-    <div class="searchbox" style="padding:6px 12px;">
+    <!-- Relationship comes FIRST, on screen and in the code, so nobody fills in
+         a name, hits the button, and reads the refusal as a failed search. -->
+    <div class="searchbox" id="relbox" style="padding:6px 12px;">
       <span style="font-size:15px;">👪</span>
-      <select id="plant-rel" style="flex:1;border:none;outline:none;background:transparent;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:var(--ink);padding:5px 0;">
-        <option value="">How do you know them?</option>
+      <select id="plant-rel" onchange="relPicked()" style="flex:1;border:none;outline:none;background:transparent;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:var(--ink);padding:5px 0;">
+        <option value="">How do you know them? (required)</option>
       </select>
     </div>
+    <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="First and last name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch();}"></div>
+    <div style="font-size:9.5px;color:#9aa3ad;text-align:center;margin:6px 24px 0;line-height:1.45;">Voter records use legal names. If nothing comes back, try the name on their driver licence, not the one you call them.</div>
     <div style="display:flex;gap:9px;justify-content:center;margin:12px 16px 0;">
       <button id="plant-go" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;" onclick="doSearch()">Check Voter Status</button>
     </div>
@@ -974,16 +984,51 @@ async function fetchVoterBucket(prefix) {
   } catch(e) { _voterCache.set(prefix, []); return []; }
 }
 
+/* Voter rolls carry LEGAL first names. Players type the name they actually
+   use, especially for grandparents: Mike, Bob, Bill, Peggy, Kathy. The three
+   letter prefix match handles Kathy to Katherine, but it will never get Bob to
+   Robert, and a miss here is worse than useless because the player then tells
+   a registered relative that they are not registered. So a miss retries
+   against the legal names a nickname commonly stands for. */
+const NICKNAMES = {
+  AL:['ALBERT','ALFRED'], ANDY:['ANDREW'], ART:['ARTHUR'], BECKY:['REBECCA'],
+  BEN:['BENJAMIN'], BETH:['ELIZABETH'], BETSY:['ELIZABETH'], BETTY:['ELIZABETH'],
+  BILL:['WILLIAM'], BILLY:['WILLIAM'], BOB:['ROBERT'], BOBBY:['ROBERT'],
+  CARRIE:['CAROLINE','CAROL'], CHARLIE:['CHARLES'], CHUCK:['CHARLES'],
+  CINDY:['CYNTHIA'], CONNIE:['CONSTANCE'], DAN:['DANIEL'], DANNY:['DANIEL'],
+  DAVE:['DAVID'], DEB:['DEBORAH'], DEBBIE:['DEBORAH'], DICK:['RICHARD'],
+  DON:['DONALD'], DOT:['DOROTHY'], DOTTIE:['DOROTHY'], DOUG:['DOUGLAS'],
+  DREW:['ANDREW'], ED:['EDWARD'], EDDIE:['EDWARD'], ELLIE:['ELEANOR'],
+  FRANK:['FRANCIS','FRANKLIN'], GINNY:['VIRGINIA'], GREG:['GREGORY'],
+  HANK:['HENRY'], JAKE:['JACOB'], JEFF:['JEFFREY'], JEN:['JENNIFER'],
+  JENNY:['JENNIFER'], JIM:['JAMES'], JIMMY:['JAMES'], JOE:['JOSEPH'],
+  JOEY:['JOSEPH'], JOSH:['JOSHUA'], JUDY:['JUDITH'], KATE:['KATHERINE','CATHERINE'],
+  KEN:['KENNETH'], KIM:['KIMBERLY'], LARRY:['LAWRENCE'], LIZ:['ELIZABETH'],
+  MAGGIE:['MARGARET'], MANDY:['AMANDA'], MARTY:['MARTIN'], MATT:['MATTHEW'],
+  MEG:['MARGARET'], MICKEY:['MICHAEL'], MIKE:['MICHAEL'], MISSY:['MELISSA'],
+  MOLLY:['MARY'], NANCY:['ANN'], NED:['EDWARD'], NICK:['NICHOLAS'],
+  PAM:['PAMELA'], PEGGY:['MARGARET'], PETE:['PETER'], PHIL:['PHILIP','PHILLIP'],
+  POLLY:['MARY'], RAY:['RAYMOND'], RICK:['RICHARD'], ROB:['ROBERT'],
+  RON:['RONALD'], RUSS:['RUSSELL'], SALLY:['SARAH'], SAM:['SAMUEL','SAMANTHA'],
+  SANDY:['SANDRA'], STAN:['STANLEY'], STEVE:['STEVEN','STEPHEN'],
+  SUE:['SUSAN'], SUSIE:['SUSAN'], TED:['THEODORE','EDWARD'], TERRI:['THERESA'],
+  TINA:['CHRISTINA'], TOM:['THOMAS'], TOMMY:['THOMAS'], TONY:['ANTHONY'],
+  TRISH:['PATRICIA'], VAL:['VALERIE'], VICKY:['VICTORIA'], WALT:['WALTER'],
+  ZACH:['ZACHARY'],
+};
 async function voterSearch(firstName, lastName) {
   const qlast = lastName.replace(/[^A-Za-z]/g, '').toUpperCase();
   const qfirst = firstName.replace(/[^A-Za-z]/g, '').toUpperCase();
   const prefix = (qlast + 'XX').slice(0, 2);
   const bucket = await fetchVoterBucket(prefix);
-  // Exact last match + first starts with at least 3 chars (or full if short)
-  const fl = Math.min(3, qfirst.length);
-  return bucket.filter(([f, l]) =>
-    l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast && firstNameMatches(f, qfirst)
-  ).slice(0, 8);
+  const sameLast = bucket.filter(([, l]) => l.replace(/[^A-Za-z]/g, '').toUpperCase() === qlast);
+  let hits = sameLast.filter(([f]) => firstNameMatches(f, qfirst));
+  if (!hits.length && NICKNAMES[qfirst]) {
+    for (const alt of NICKNAMES[qfirst]) {
+      hits = hits.concat(sameLast.filter(([f]) => firstNameMatches(f, alt)));
+    }
+  }
+  return hits.slice(0, 8);
 }
 
 function availCardVoter(first, last, city, age) {
@@ -1467,9 +1512,8 @@ function boot() {
     openOv('ov-popstart'); // picker needs a user gesture; cannot auto-fire on load
     return;
   }
-  // The gate comes before everything, and it is remembered separately from the
-  // save file so clearing a half finished signup does not skip it.
-  if (!attested()) { show('scr-gate'); return; }
+  // Age and permission is a row inside signup now, so an account cannot exist
+  // without it and there is no separate gate screen to route around.
   if (!S) { show('scr-signup'); return; }
   if (S.pin && sessionStorage.getItem('bm_auth') !== '1') { showLock(); return; }
   S.visits++; if (S.textsDay !== dayKey()) { S.textsDay = dayKey(); S.textsToday = 0; S.nudgesToday = 0; }
@@ -1483,7 +1527,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-0015';
+const BUILD = '20260913-0330';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1510,13 +1554,19 @@ function toggleContacts() {
   el.style.background = on ? 'var(--blue)' : '#c9d4de';
   el.firstElementChild.style.left = on ? '19px' : '3px';
 }
-/* ---------------- age and permission attestation ---------------- */
+/* ---------------- age and permission attestation ----------------
+   A row in the signup form, checked before the account is created. */
 const ATT_KEY = KEY + '_att';
 function attested() { try { return !!localStorage.getItem(ATT_KEY); } catch (e) { return false; } }
-function attest() {
-  try { localStorage.setItem(ATT_KEY, JSON.stringify({ at: Date.now(), v: 1 })); } catch (e) {}
-  show(S ? 'scr-garden' : 'scr-signup');
-  if (S) { renderGarden(); startPolling(); }
+function toggleAge() {
+  const el = $('agebox'); if (!el) return;
+  const on = el.dataset.on !== '1';
+  el.dataset.on = on ? '1' : '0';
+  el.textContent = on ? '✓' : '';
+  el.style.background = on ? '#8555ab' : '#fff';
+  el.style.color = on ? '#fff' : '#8555ab';
+  const row = $('agerow');
+  if (row) { row.style.borderColor = '#cdb3e0'; row.style.boxShadow = ''; }
 }
 function doSignup() {
   const first = $('f-first').value.trim(), last = $('f-last').value.trim();
@@ -1526,6 +1576,21 @@ function doSignup() {
   if (!first || !last || !garden || !zip) { err.textContent = 'All four fields make the account. Nothing else, ever.'; err.style.display = 'block'; return; }
   if (pin && pin.length !== 4) { err.textContent = 'PIN needs all 4 digits, or leave it blank.'; err.style.display = 'block'; return; }
   if (zip.length !== 5) { err.textContent = 'ZIP code needs all 5 digits.'; err.style.display = 'block'; return; }
+  // Age and permission is required, and the row itself gets flagged so the
+  // message points at the thing that needs fixing.
+  const ageOn = $('agebox') && $('agebox').dataset.on === '1';
+  if (!ageOn) {
+    err.textContent = 'Please confirm your age and permission to continue.';
+    err.style.display = 'block';
+    const row = $('agerow');
+    if (row) {
+      row.style.borderColor = 'var(--red)';
+      row.style.boxShadow = '0 0 0 3px rgba(234,80,78,0.16)';
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return;
+  }
+  try { localStorage.setItem(ATT_KEY, JSON.stringify({ at: Date.now(), v: 1 })); } catch (e) {}
   // Contacts are always false. Boomers has no contact path at all.
   S = freshState(first, last, garden, false);
   S.zip = zip;
@@ -1905,6 +1970,13 @@ function sealSvg(rank, size) {
 function goPlant() { showTab('plant'); }
 let pendingPlant = null;
 // Fill the relationship dropdown once, in the order CONFIG defines.
+// Once a relationship is chosen, move them straight to the name field.
+function relPicked() {
+  const rb = $('relbox');
+  if (rb) { rb.style.borderColor = ''; rb.style.boxShadow = ''; }
+  const q = $('plant-q');
+  if (q && !q.value.trim()) q.focus();
+}
 function buildRelPicker() {
   const sel = $('plant-rel');
   if (!sel || sel.options.length > 1) return;
@@ -1922,10 +1994,17 @@ async function doSearch() {
   // them properly the moment the result comes back.
   const rel = $('plant-rel') ? $('plant-rel').value : '';
   if (!rel) {
-    box.innerHTML = `<div class="statecard nomatch" style="padding:16px;">
-      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--purple);">Tell us how you know them first.</div>
-      <div style="font-size:11px;color:#5b6470;margin-top:6px;">Pick a relationship from the list. Family only.</div>
-    </div>`;
+    // Do NOT print this where a result would go. Point at the field instead,
+    // or it reads as "no match found" and sends the player down a wrong path.
+    const rb = $('relbox');
+    if (rb) {
+      rb.style.borderColor = 'var(--purple)';
+      rb.style.boxShadow = '0 0 0 3px rgba(133,85,171,0.18)';
+      rb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(function () { rb.style.borderColor = ''; rb.style.boxShadow = ''; }, 2200);
+    }
+    if ($('plant-rel')) $('plant-rel').focus();
+    showToast('Pick how you know them first, then we can check the rolls.');
     return;
   }
   const nameParts = q.split(/\s+/).filter(w => /^[a-zA-Z'\u2019-]{2,}$/.test(w));
@@ -1955,6 +2034,9 @@ async function doSearch() {
     box.innerHTML = multiMatchCard(matches, first, last);
   }
   renderMsgPreview();
+  // On a phone the result card lands below the fold, so a successful match can
+  // look like nothing happened at all. Always bring it into view.
+  try { box.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
 }
 function availCard(first) {
   return `<div class="statecard avail">
@@ -3425,8 +3507,10 @@ function buildDecos() {
     <div style="position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:space-around;align-items:flex-end;opacity:0.16;padding:0 10px;">
       <svg style="width:20px;height:20px;color:#4cc9ff;"><use href="#f-ring"/></svg><svg style="width:24px;height:24px;color:#ffc233;"><use href="#f-chrys"/></svg><svg style="width:18px;height:18px;color:#ff7ac4;"><use href="#f-peony"/></svg><svg style="width:24px;height:24px;color:#b18cff;"><use href="#f-cross"/></svg><svg style="width:19px;height:19px;color:#4ade80;"><use href="#f-willow"/></svg><svg style="width:23px;height:23px;color:#ff9a3c;"><use href="#f-palm"/></svg><svg style="width:18px;height:18px;color:#ff4d4d;"><use href="#f-brocade"/></svg>
     </div>
-    <span class="petal" style="left:14%;animation-duration:8s;color:#f2a9c4;opacity:0.6;"><svg style="width:10px;height:13px;"><use href="#f-petal"/></svg></span>
-    <span class="petal" style="left:80%;animation-duration:9s;animation-delay:2.5s;color:#f0b429;opacity:0.6;"><svg style="width:9px;height:12px;"><use href="#f-petal"/></svg></span>`;
+    <span class="petal" style="left:14%;animation-duration:7s;opacity:0.75;"><svg viewBox="0 0 6 6" style="width:5px;height:5px;"><rect width="6" height="6" fill="#fde68a"/></svg></span>
+    <span class="petal" style="left:38%;animation-duration:9s;animation-delay:1.4s;opacity:0.6;"><svg viewBox="0 0 6 6" style="width:4px;height:4px;"><rect width="6" height="6" fill="#ff9a3c"/></svg></span>
+    <span class="petal" style="left:62%;animation-duration:6.5s;animation-delay:3.2s;opacity:0.7;"><svg viewBox="0 0 6 6" style="width:4px;height:4px;"><rect width="6" height="6" fill="#4cc9ff"/></svg></span>
+    <span class="petal" style="left:80%;animation-duration:8.5s;animation-delay:2.5s;opacity:0.7;"><svg viewBox="0 0 6 6" style="width:5px;height:5px;"><rect width="6" height="6" fill="#ff7ac4"/></svg></span>`;
   for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { const el = $(id); if (el) el.innerHTML = deco; }
 }
 

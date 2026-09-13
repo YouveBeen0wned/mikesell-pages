@@ -33,7 +33,9 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .screen>.petal{position:absolute;}
 .petal{position:absolute;top:0;animation:petals 6s linear infinite;pointer-events:none;}
 .field{background:#fff;border:1.5px solid #c3ddf2;border-radius:12px;padding:8px 14px 9px;margin:9px 24px 0;text-align:left;box-shadow:inset 0 1px 2px rgba(3,122,216,0.06);align-self:stretch;}
-.field input.pindot,.pindot{flex:1;min-width:0;max-width:62px;height:52px;font-size:26px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
+/* The four PIN boxes share the row evenly and end flush with the other
+   fields. A max-width left them short of the right edge and misaligned. */
+.field input.pindot,.pindot{flex:1 1 0;min-width:0;max-width:none;height:52px;font-size:26px;line-height:1;text-align:center;border:2.5px solid #b9d8f5;border-radius:14px;font-family:'avenir-heavy',Arial,sans-serif;color:var(--ink);background:#f4f9ff;box-shadow:inset 0 2px 4px rgba(3,122,216,0.07);margin-top:0;padding:0;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;caret-color:var(--blue);}
 .field input.pindot:focus,.pindot:focus{border-color:var(--blue);background:#fff;outline:none;box-shadow:0 0 0 4px rgba(3,122,216,0.15);}
 .field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){background:#fff;border-color:var(--blue);}
 #drag-ghost{position:fixed;pointer-events:none;display:none;width:44px;height:44px;background:#fee2e2;border:2.5px solid #dc2626;border-radius:50%;transform:translate(-50%,-50%);z-index:600;transition:background 0.15s,border-color 0.15s;}
