@@ -433,23 +433,6 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
   <!-- A fireworks stand instead of a garden arch: awning, counter, and a
        shadow line of rockets and shells racked up behind it. -->
   <div style="margin:8px 22px -6px;"><svg viewBox="0 0 300 52" style="width:100%;display:block;">
-    <g fill="#2b3558">
-      <rect x="34" y="30" width="6" height="3.5" rx="1.4"/><rect x="36" y="16" width="2" height="15"/>
-      <path d="M33 30 L37 21 L41 30 Z"/>
-      <rect x="52" y="27" width="9" height="7" rx="1.6"/><path d="M52 27 h9 l-4.5 -6 Z"/>
-      <rect x="72" y="30" width="5" height="3" rx="1.2"/><rect x="73.6" y="13" width="1.8" height="17"/>
-      <path d="M71 30 L74.5 18 L78 30 Z"/>
-      <rect x="88" y="24" width="11" height="10" rx="2"/><circle cx="93.5" cy="20" r="3.2"/>
-      <rect x="110" y="30" width="5" height="3" rx="1.2"/><rect x="111.6" y="18" width="1.8" height="12"/>
-      <path d="M109 30 L112.5 23 L116 30 Z"/>
-      <rect x="186" y="24" width="11" height="10" rx="2"/><circle cx="191.5" cy="20" r="3.2"/>
-      <rect x="210" y="30" width="5" height="3" rx="1.2"/><rect x="211.6" y="14" width="1.8" height="16"/>
-      <path d="M209 30 L212.5 20 L216 30 Z"/>
-      <rect x="228" y="27" width="9" height="7" rx="1.6"/><path d="M228 27 h9 l-4.5 -6 Z"/>
-      <rect x="248" y="30" width="6" height="3.5" rx="1.4"/><rect x="250" y="17" width="2" height="14"/>
-      <path d="M247 30 L251 22 L255 30 Z"/>
-      <rect x="266" y="25" width="10" height="9" rx="2"/><circle cx="271" cy="21" r="2.8"/>
-    </g>
     <path d="M10 34 H290" stroke="#3b4a78" stroke-width="2" stroke-linecap="round"/>
     <path d="M18 34 V22 H282 V34" fill="none" stroke="#3b4a78" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M18 22 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0" fill="none" stroke="#ea504e" stroke-width="2.2" opacity="0.75"/>
@@ -840,90 +823,84 @@ function rollTraits(kind, pity) {
    a square snapped to the grid, which is what makes these read at 24px in the
    rack and animate like sprite frames rather than vector art. */
 const PXG = 2;                                     // grid pitch
+/* Sparks are placed on a cell grid, never rasterized from arbitrary angles.
+   That matters: a ray at 37 degrees on a square grid gives you a staircase and
+   a lumpy silhouette. Only two placements land exactly on a square grid, the
+   four axes and the four diagonals, so every ring here is built from those.
+   The result is perfectly symmetric with no cleanup needed. */
+function Cells() {
+  const m = Object.create(null);
+  const api = {
+    add(x, y) { m[Math.round(x) + ',' + Math.round(y)] = 1; return api; },
+    pts(list) { for (const [x, y] of list) api.add(x, y); return api; },
+    // Author one side, get the other free. Keeps every shell symmetric.
+    mirrorX(list) { for (const [x, y] of list) { api.add(x, y); api.add(-x, y); } return api; },
+    ring8(r) { const d = Math.round(r / Math.SQRT2);
+      return api.add(r, 0).add(-r, 0).add(0, r).add(0, -r).add(d, d).add(-d, d).add(d, -d).add(-d, -d); },
+    ring4(r) { return api.add(r, 0).add(-r, 0).add(0, r).add(0, -r); },
+    ringTop(r) { const d = Math.round(r / Math.SQRT2);
+      return api.add(r, 0).add(-r, 0).add(0, -r).add(d, -d).add(-d, -d); },
+    block(x0, y0, w, h) { for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) api.add(x0 + x, y0 + y); return api; },
+    keys() { return Object.keys(m); },
+  };
+  return api;
+}
+const PXCELL = 2.4, PXORIGIN = 20;
+function cellsToSvg(c) {
+  return c.keys().map(function (k) {
+    const p = k.split(','), x = +p[0], y = +p[1];
+    return `<rect x="${(PXORIGIN + x * PXCELL - PXCELL / 2).toFixed(2)}" y="${(PXORIGIN + y * PXCELL - PXCELL / 2).toFixed(2)}" width="${PXCELL}" height="${PXCELL}" fill="currentColor"/>`;
+  }).join('');
+}
 function shellGeom(type){
-  const C = 20;
-  const snap = v => Math.round(v / PXG) * PXG;      // lock to the pixel grid
-  const seen = {};
-  let out = '';
-  // Plot one square. Duplicates on the same cell are dropped so dense patterns
-  // do not stack semi transparent pixels on top of each other.
-  const px = (x, y, size, op) => {
-    const sx = snap(x), sy = snap(y), s = size || PXG;
-    const k = sx + ',' + sy + ',' + s;
-    if (seen[k]) return;
-    seen[k] = 1;
-    out += `<rect x="${sx}" y="${sy}" width="${s}" height="${s}" fill="currentColor"${op ? ` opacity="${op}"` : ''}/>`;
-  };
-  // Walk a ray from r0 to r1 at angle a, dropping a pixel every step.
-  const ray = (a, r0, r1, size, op, step) => {
-    const st = step || PXG;
-    for (let r = r0; r <= r1; r += st) px(C + Math.cos(a) * r - size / 2, C + Math.sin(a) * r - size / 2, size, op);
-  };
-  const arc = (n, r, size, op) => {
-    for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2;
-      px(C + Math.cos(a) * r - size / 2, C + Math.sin(a) * r - size / 2, size, op); }
-  };
-  const fall = (a, r, len, size, op) => {          // pixels that drop straight down
-    const x = C + Math.cos(a) * r, y0 = C + Math.sin(a) * r;
-    for (let d = 0; d <= len; d += PXG) px(x - size / 2, y0 + d, size, d > len * 0.6 ? (op || 1) * 0.55 : op);
-  };
-
   switch (type) {
-    case 'peony':                                   // solid round break, no tails
-      arc(16, 13, 3, 1); arc(10, 8, 2, 0.85); px(19, 19, 2, 1); break;
-
-    case 'chrys':                                   // same break, every star trails
-      for (let i = 0; i < 12; i++) ray((i / 12) * Math.PI * 2, 4, 14, 2, 0.8);
-      arc(12, 15, 3, 1); break;
-
-    case 'ring':                                    // hollow halo only
-      arc(20, 15, 3, 1); break;
-
-    case 'comet': {                                 // one star running across
-      for (let i = 0; i < 9; i++) px(8 + i * 2.6, 27 - i * 2.2, i > 6 ? 4 : (i > 3 ? 3 : 2), 0.35 + i * 0.08);
-      px(30, 8, 4, 1); px(28, 12, 2, 0.7); break; }
-
-    case 'willow':                                  // long drooping branches
-      for (let i = 0; i < 9; i++) { const a = (i / 9) * Math.PI * 2;
-        ray(a, 3, 10, 2, 0.9); fall(a, 10, 8, 2, 0.9); }
-      break;
-
-    case 'palm':                                    // thick fronds, upward fan
-      for (let i = 0; i < 6; i++) { const a = -Math.PI * 0.92 + (i / 5) * Math.PI * 0.84;
-        ray(a, 3, 13, 4, 0.95); px(C + Math.cos(a) * 14 - 2, C + Math.sin(a) * 14 - 2, 4, 1); }
-      px(19, 22, 3, 0.8); break;
-
-    case 'brocade':                                 // dense lace
-      for (let i = 0; i < 20; i++) ray((i / 20) * Math.PI * 2, 3, 16, 2, 0.55);
-      arc(20, 17, 2, 0.95); break;
-
-    case 'spider':                                  // stiff straight legs
-      for (let i = 0; i < 10; i++) ray((i / 10) * Math.PI * 2, 2, 16, 2, 0.95, 2.4);
-      px(19, 19, 3, 1); break;
-
-    case 'cross': {                                 // every star splits in four
-      for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2;
-        ray(a, 3, 11, 2, 0.85);
-        const x = C + Math.cos(a) * 13, y = C + Math.sin(a) * 13;
-        px(x - 1, y - 1, 2, 1); px(x - 4, y - 1, 2, 1); px(x + 2, y - 1, 2, 1);
-        px(x - 1, y - 4, 2, 1); px(x - 1, y + 2, 2, 1); }
-      break; }
-
-    case 'kamuro':                                  // dense head, heavy trails
-      // Trail length capped at 7 so the lowest pixels stay inside the 40 box.
-      for (let i = 0; i < 14; i++) { const a = (i / 14) * Math.PI * 2;
-        ray(a, 2, 9, 3, 0.95); fall(a, 9, 7, 2, 0.8); }
-      break;
-
-    case 'horse':                                   // barely climbs, pours down
-      for (let i = 0; i < 7; i++) { const a = -Math.PI * 0.85 + (i / 6) * Math.PI * 0.7;
-        ray(a, 3, 9, 3, 0.95); fall(a, 9, 16, 3, 0.9); }
-      px(19, 17, 3, 1); break;
-
-    case 'salute':                                  // flash and shockwave
-      px(16, 16, 8, 1); arc(8, 9, 3, 0.9); arc(16, 15, 2, 0.5); arc(20, 18, 2, 0.25); break;
+    // an expanding starburst of sparks, densest at the core
+    case 'peony':  return cellsToSvg(Cells().add(0, 0).ring8(2).ring8(4).ring8(6));
+    // one clean halo and nothing inside it
+    case 'ring':   return cellsToSvg(Cells().ring8(6).ring4(6));
+    // the same break with a trail behind every star
+    case 'chrys':  return cellsToSvg(Cells().add(0, 0).ring8(2).ring8(3).ring8(4).ring8(5).ring8(6));
+    // dense fine lace, reaching further than the rest
+    case 'brocade': { const c = Cells();
+      for (let r = 2; r <= 7; r++) c.ring8(r);
+      return cellsToSvg(c.ring4(8)); }
+    // stiff straight legs that shoot out and stop dead
+    case 'spider': { const c = Cells().add(0, 0);
+      for (let r = 2; r <= 8; r++) { c.ring4(r); if (r % 2 === 0) c.ring8(r); }
+      return cellsToSvg(c); }
+    // every star splits again into four
+    case 'cross': { const c = Cells().add(0, 0).ring8(2).ring8(4);
+      for (const [x, y] of [[6, 0], [-6, 0], [0, 6], [0, -6], [4, 4], [-4, 4], [4, -4], [-4, -4]]) {
+        c.add(x, y).add(x - 1, y).add(x + 1, y).add(x, y - 1).add(x, y + 1);
+      }
+      return cellsToSvg(c); }
+    // a crown of sparks, then a widening curtain falling away from it
+    case 'willow': return cellsToSvg(Cells().add(0, 0).ring8(3)
+      .mirrorX([[2, -4], [4, -3], [5, -1]])
+      .mirrorX([[2, 1], [5, 2]])
+      .mirrorX([[3, 4], [6, 5]])
+      .pts([[0, -5], [0, 3], [0, 6]]));
+    // a half burst opening overhead on a short stem
+    case 'palm':   return cellsToSvg(Cells().block(0, 2, 1, 5).ringTop(5).ringTop(3)
+      .mirrorX([[2, -6], [5, -4], [6, -1]]));
+    // dense head with a heavy glitter trail
+    case 'kamuro': { const c = Cells().add(0, 0).ring8(2).ring8(3).ring8(4);
+      for (const x of [-4, -2, 0, 2, 4]) for (let d = 1; d <= 8; d += 2) c.add(x, d);
+      return cellsToSvg(c); }
+    // small heavy head that barely climbs, then pours straight back down
+    case 'horse':  return cellsToSvg(Cells().ring8(2).add(0, -4)
+      .mirrorX([[2, -3]])
+      .pts([[0, 0], [0, 2], [0, 4], [0, 6], [0, 8]])
+      .mirrorX([[2, 1], [2, 3], [2, 5], [2, 7]])
+      .mirrorX([[4, 2], [4, 4], [4, 6]]));
+    // one star running across the sky
+    case 'comet': { const c = Cells();
+      for (let i = 0; i < 7; i++) c.add(-6 + i, 5 - i);
+      return cellsToSvg(c.block(1, -5, 3, 3).add(0, -2).add(4, -2)); }
+    // almost no colour, just the flash and the shockwave
+    case 'salute': return cellsToSvg(Cells().block(-1, -1, 3, 3).ring8(4).ring4(7));
   }
-  return out;
+  return '';
 }
 // Injected once, before anything renders.
 function buildShellSymbols(){
@@ -1486,7 +1463,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260912-1840';
+const BUILD = '20260912-2015';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1681,14 +1658,19 @@ function renderGarden() {
    the sky than the front row shell in the same column, so a stacked pair
    reads as two layers rather than one pile. Index order fills column by
    column, front row first, which is also the order the fuse lights them. */
-const SHOW = { w: 364, h: 214, ground: 158, pitch: 27, left: 16 };
-// Where does this plant sit, and where does its shell break?
+const SHOW = { w: 364, h: 228, ground: 176, pitch: 28, left: 20 };
+/* Where a shell sits, and where it breaks.
+   The sky mirrors the ground. A shell breaks on the SAME vertical line as the
+   tube that fired it, and its height mirrors how far back its rack sits: the
+   front row is nearest the ground so it breaks low, the back row sits higher
+   on the ground so it breaks high. A stacked pair therefore shares one axis
+   and reads as two layers, never as one pile. */
 function slotOf(i) {
   const row = i % 2;                      // 0 front, 1 back
   const col = Math.floor(i / 2);
-  const x = SHOW.left + col * SHOW.pitch + (row ? 4 : 0);
-  const tubeY = row ? SHOW.ground - 22 : SHOW.ground - 6;
-  const burstY = row ? 44 : 100;          // back row breaks higher
+  const x = SHOW.left + col * SHOW.pitch; // identical for both rows: one axis
+  const tubeY = row ? SHOW.ground - 38 : SHOW.ground - 20;
+  const burstY = row ? 30 : 90;           // back row breaks higher
   return { row, col, x, tubeY, burstY };
 }
 function showCapacity() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch) * 2; }
@@ -1734,12 +1716,15 @@ function drawShow() {
     }
   }
 
-  // 2. one empty tube as the add button
-  if (list.length < cap) {
-    const s = slotOf(list.length);
+  // 2. every empty spot in the FRONT row gets its own plus, spaced a full
+  //    pitch apart so none of them touch.
+  for (let i = list.length; i < cap; i++) {
+    const s = slotOf(i);
+    if (s.row !== 0) continue;            // bottom row only
+    const first = i === list.length;
     out += `<g style="cursor:pointer;" onclick="goPlant()">
-      <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="none" stroke="#4a5c8f" stroke-width="1.6" stroke-dasharray="3 2"/>
-      <path d="M${s.x} ${s.tubeY + 5} v10 M${s.x - 5} ${s.tubeY + 10} h10" stroke="#8fa0cc" stroke-width="2" stroke-linecap="round" style="animation:pulsehint 2.2s infinite;"/></g>`;
+      <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="none" stroke="#4a5c8f" stroke-width="1.5" stroke-dasharray="3 2" opacity="${first ? 1 : 0.5}"/>
+      <path d="M${s.x} ${s.tubeY + 5} v10 M${s.x - 5} ${s.tubeY + 10} h10" stroke="#8fa0cc" stroke-width="2" stroke-linecap="round" opacity="${first ? 1 : 0.45}"${first ? ' style="animation:pulsehint 2.2s infinite;"' : ''}/></g>`;
   }
 
   // 3. the sky. Bursts sit directly above the tube that fired them.
