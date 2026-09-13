@@ -17,6 +17,8 @@ body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);}
 .screen.on{display:flex;overflow-y:auto;padding-bottom:104px;}
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 9px;position:relative;z-index:5;}
 .gametitle{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:var(--ink);white-space:nowrap;}
+/* Attribution under every screen title. */
+.gametitle small{display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:7.5px;letter-spacing:0.1em;text-transform:uppercase;color:#9aa3ad;font-weight:400;margin-top:1px;}
 .pill{white-space:nowrap;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;background:#fffdf6;border:2px solid #e0d2b0;border-radius:16px;padding:5px 12px;color:var(--ink);box-shadow:0 2px 0 #e0d2b0;}
 .rule{height:5px;display:flex;position:relative;z-index:5;}
 .rule i{flex:1;}.rule i:nth-child(1){background:var(--blue);}.rule i:nth-child(2){background:var(--purple);}.rule i:nth-child(3){background:var(--red);}
@@ -565,7 +567,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <!-- ============ GARDEN ============ -->
 <section id="scr-garden" class="screen">
   <div class="bgdeco" id="deco-garden"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#d-hatchling"/></svg> My Roost</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">🔥 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#d-hatchling"/></svg> My Roost<small>provided by Mike Sell</small></div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">🔥 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;" onclick="openLadder()">
     <span id="hud-seal" style="width:40px;flex-shrink:0;"></span>
@@ -630,7 +632,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <!-- ============ COLLECTION ============ -->
 <section id="scr-collection" class="screen">
   <div class="bgdeco" id="deco-collection"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Dragon Registry</div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Collection<small>provided by Mike Sell</small></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div id="coll-container"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
@@ -640,9 +642,9 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
 <!-- ============ CHAMPIONS ============ -->
 <section id="scr-champions" class="screen">
   <div class="bgdeco" id="deco-champions"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Roost Champions</div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Leaderboard<small>provided by Mike Sell</small></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
-  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BOTH GAMES</div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BLOOMERS, DRAGON FARMER AND BOOMERS</div>
   <div id="champlist" style="padding:0 14px;"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-champions"></nav>

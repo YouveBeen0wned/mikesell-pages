@@ -336,6 +336,9 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 #scr-garden.screen{padding-bottom:70px;}
 #scr-garden .topbar{padding:8px 14px 4px;}
 #scr-garden .gametitle{font-size:16px;}
+/* Attribution under every screen title. */
+.gametitle small{display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:7.5px;
+  letter-spacing:0.1em;text-transform:uppercase;color:#8fa0cc;font-weight:400;margin-top:1px;}
 #scr-garden .pill{font-size:12px;padding:3px 10px;}
 /* Rank bar */
 #scr-garden .card{margin:6px 12px 0;padding:7px 11px;}
@@ -638,7 +641,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 <!-- ============ GARDEN ============ -->
 <section id="scr-garden" class="screen">
   <div class="bgdeco" id="deco-garden"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;color:#f0b429;"><use href="#f-shell"/></svg> My Show</div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">👏 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;color:#f0b429;"><use href="#f-shell"/></svg> My Show<small>provided by Mike Sell</small></div><div style="display:flex;align-items:center;gap:6px;"><div class="pill">👏 <span id="hud-lifetime">0</span></div><button onclick="doLogout()" title="Log out" style="background:none;border:none;cursor:pointer;color:#9aa3ad;font-size:18px;padding:2px 6px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block;"><path d="M17 8l4 4-4 4M21 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" fill="none" stroke="#9aa3ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div class="card" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-top:10px;" onclick="openLadder()">
     <span id="hud-seal" style="width:40px;flex-shrink:0;"></span>
@@ -712,7 +715,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 <!-- ============ COLLECTION ============ -->
 <section id="scr-collection" class="screen">
   <div class="bgdeco" id="deco-collection"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Collection</div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-almanac"/></svg> Collection<small>provided by Mike Sell</small></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
   <div id="coll-container"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
@@ -722,9 +725,9 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 <!-- ============ CHAMPIONS ============ -->
 <section id="scr-champions" class="screen">
   <div class="bgdeco" id="deco-champions"></div>
-  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Community Champions</div></div>
+  <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Leaderboard<small>provided by Mike Sell</small></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
-  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BOTH GAMES</div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BLOOMERS, DRAGON FARMER AND BOOMERS</div>
   <div id="champlist" style="padding:0 14px;"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-champions"></nav>
@@ -936,8 +939,14 @@ const CONFIG = {
     ['CLIMATE', 'Protect our coast and fix flooding before it reaches the front door.'],
   ],
   sides: ['Westside', 'Arlington', 'Mandarin', 'Northside', 'the Beaches', 'Orange Park'],
-  champs: [ // [SERVER] weekly board comes from the backend later
-    ['MandarinMary', 5, 940], ['DuvalDaisy', 3, 610], ['AmeliaOaks', 2, 350], ['CoveKeeper', 1, 210], ['PalmValleyPete', 1, 180],
+  // Shown only until the live board answers. Four per game so a new player
+  // sees a real looking board instead of a single lonely row, and so the
+  // three games visibly share one leaderboard.
+  champs: [
+    ['MandarinMary', 5, 940, 'b'], ['SmaugMarco', 5, 880, 'd'], ['NorthsideNova', 4, 815, 'k'],
+    ['DuuuvalDaisy', 4, 705, 'b'], ['NassauNightwing', 4, 660, 'd'], ['WestsideWicks', 3, 590, 'k'],
+    ['BoldCityBloom', 3, 505, 'b'], ['AcostaAsh', 3, 470, 'd'], ['RiversideRockets', 2, 395, 'k'],
+    ['CoveKeeper', 2, 310, 'b'], ['OrtegaEmber', 2, 285, 'd'], ['BaldwinBangs', 1, 240, 'k'],
   ],
 };
 
@@ -1813,7 +1822,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-2115';
+const BUILD = '20260913-2230';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2941,8 +2950,11 @@ async function fetchBoard() {
 function renderChampions() {
   const mine = boardId();
   const local = [{ n: S.garden, r: S.rank, l: S.lifetime, g: GAME_ID, me: true }];
+  // Until the live board answers, show the seeded names so the board reads as
+  // shared across all three games rather than as a single empty row.
+  const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: c[1], l: c[2], g: c[3] }; });
   const paint = (rows) => {
-    if (!rows || !rows.length) rows = local;
+    if (!rows || !rows.length) rows = seeded.concat(local);
     else if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
     rows = rows.slice().sort((a, b) => b.l - a.l).slice(0, 25);
     $('champlist').innerHTML = rows.map((row, i) => {
