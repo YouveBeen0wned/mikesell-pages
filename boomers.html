@@ -148,13 +148,29 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
 @keyframes groundrun{from{transform:translateX(0);}to{transform:translateX(var(--dx,360px));}}
 /* Tube flashing as the fuse reaches it. */
 @keyframes tubeflash{0%,100%{stroke:#3b4a78;}35%{stroke:#fde68a;}}
-/* The burst does not travel and does not blink. It rotates on its own centre,
-   side to side, and then stops. Runs three times at 1.6s, so about 5 seconds
-   of motion and then it holds still. */
-@keyframes burnloop{
-  0%   {transform:rotate(-7deg);}
-  50%  {transform:rotate(7deg);}
-  100% {transform:rotate(-7deg);}}
+/* A shell does not sway. It punches out, dies, and another one opens nearby.
+   Five hard appearances inside a small patch of sky, each at its own offset,
+   angle and size, with true darkness between them. steps(1,end) guarantees
+   nothing ever slides from one position to the next. Ends hidden and stays
+   hidden until the next launch. */
+@keyframes popspots{
+  0%   {opacity:1;transform:translate(0,0) rotate(0deg) scale(0.35);}
+  6%   {opacity:1;transform:translate(0,0) rotate(0deg) scale(1.06);}
+  17%  {opacity:1;transform:translate(0,0) rotate(0deg) scale(1);}
+  20%  {opacity:0;transform:translate(0,0) rotate(0deg) scale(1);}
+  24%  {opacity:1;transform:translate(var(--x1,6px),var(--y1,-5px)) rotate(14deg) scale(0.82);}
+  38%  {opacity:1;transform:translate(var(--x1,6px),var(--y1,-5px)) rotate(14deg) scale(0.86);}
+  41%  {opacity:0;transform:translate(var(--x1,6px),var(--y1,-5px)) rotate(14deg) scale(0.86);}
+  45%  {opacity:1;transform:translate(var(--x2,-7px),var(--y2,4px)) rotate(-11deg) scale(1.04);}
+  58%  {opacity:1;transform:translate(var(--x2,-7px),var(--y2,4px)) rotate(-11deg) scale(1.08);}
+  61%  {opacity:0;transform:translate(var(--x2,-7px),var(--y2,4px)) rotate(-11deg) scale(1.08);}
+  65%  {opacity:1;transform:translate(var(--x3,5px),var(--y3,6px)) rotate(26deg) scale(0.7);}
+  76%  {opacity:1;transform:translate(var(--x3,5px),var(--y3,6px)) rotate(26deg) scale(0.74);}
+  79%  {opacity:0;transform:translate(var(--x3,5px),var(--y3,6px)) rotate(26deg) scale(0.74);}
+  83%  {opacity:1;transform:translate(var(--x4,-4px),var(--y4,-7px)) rotate(-22deg) scale(0.55);}
+  93%  {opacity:1;transform:translate(var(--x4,-4px),var(--y4,-7px)) rotate(-22deg) scale(0.5);}
+  94%  {opacity:0;}
+  100% {opacity:0;}}
 /* Fourth reveal stage: the result turns, so it reads as still burning. */
 @keyframes spinhold{0%{transform:rotate(0deg) scale(1);}
   25%{transform:rotate(9deg) scale(1.04);}50%{transform:rotate(0deg) scale(1);}
@@ -279,6 +295,14 @@ html,body{background:var(--night-0);}
 #plaque-sheet div[style*="#fdf6e3"]{background:#241d0c !important;border-color:#8a6a1f !important;color:#f0b429 !important;}
 /* Confirm dialog buttons. */
 #confirm-cancel{background:#222c4e !important;color:#c8d3f5 !important;}
+
+/* The message preview was still a near-white panel, so light type on it was
+   invisible. It is the one thing on that screen people actually have to read
+   before they send it. */
+#msgprev-wrap{background:#0f1730 !important;border-color:#2b3760 !important;}
+#msgprev-body{color:#e8eeff !important;}
+#msgprev-ta{background:#080e22 !important;color:#e8eeff !important;border-color:#2f9fe0 !important;}
+#msgprev-wrap div[style*="dashed"]{border-top-color:#2b3760 !important;}
 </style>
 </head>
 
@@ -1360,14 +1384,17 @@ function runShow(done) {
       setTimeout(function () {
         g.remove();
         b.style.opacity = '';
-        b.style.transformOrigin = s.x + 'px ' + (s.burstY + 16) + 'px';
-        b.classList.add('breaker');
-        setTimeout(function () {
-          b.classList.remove('breaker');
-          // stage four: it turns while it burns
-          b.style.animation = 'spinhold 1.5s ease-in-out';
-          setTimeout(function () { b.style.animation = ''; }, 1550);
-        }, 1060);
+        // Four follow-up positions inside a small patch of sky, randomised per
+        // launch so the same shell never repeats the same pattern twice.
+        const art = b.querySelector('.burst-art') || b;
+        const jit = function () { return (Math.random() * 18 - 9).toFixed(1) + 'px'; };
+        for (let n = 1; n <= 4; n++) {
+          art.style.setProperty('--x' + n, jit());
+          art.style.setProperty('--y' + n, jit());
+        }
+        art.style.animation = 'none';
+        void art.offsetWidth;                       // restart the animation
+        art.style.animation = 'popspots 2400ms steps(1,end) forwards';
       }, RISE);
     }, t);
   });
@@ -2026,7 +2053,8 @@ function drawShow() {
     // The explosion in the sky is big and never stops moving: it breathes and
     // rocks so it reads as burning rather than as a sticker.
     const sp0 = sp(p.species), hex = colorHex(p.color), R = SHOW.r, cy = s.burstY + R;
-    const phase = (s.col * 0.37 + s.row * 0.9).toFixed(2);   // so they do not pulse in lockstep
+    // Bursts sit dark until a launch fires them. The show is the only time the
+    // sky has anything in it.
     out += `<g class="burst-g" data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" style="cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')">
       <!-- The line that makes the mapping unmistakable: this burst belongs to
            THAT tube, straight down, same axis. -->
@@ -2034,7 +2062,7 @@ function drawShow() {
       <circle cx="${s.x}" cy="${cy}" r="${R + 4}" fill="${hex}" opacity="0.09"/>
       ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${cy}" r="${R + 7}" fill="#fde68a" opacity="0.16"/>` : ''}
       ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${cy}" r="${R + 5}" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
-      <g style="transform-origin:${s.x}px ${cy}px;animation:burnloop 1.6s ${phase}s ease-in-out 3;">
+      <g class="burst-art" style="transform-origin:${s.x}px ${cy}px;opacity:0;">
         <use href="#${sp0.art}" x="${s.x - R}" y="${s.burstY}" width="${R * 2}" height="${R * 2}" style="color:${hex};"/>
       </g>
       ${p.traits && p.traits.gli ? `<text x="${s.x - 14}" y="${s.burstY + 9}" font-size="7" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
