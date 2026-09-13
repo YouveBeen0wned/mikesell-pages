@@ -835,9 +835,9 @@ const CONFIG = {
   // NAME becomes the relationship label, which reads as a salutation on its
   // own: Hi Mom, Hi Aunt Carol, Hi Marcus.
   msgFriendVariants: [
-    (link) => `Hi NAME, good news, I checked and you are registered to vote! I am playing a game Mike built to remind people to vote. Click the link and confirm you are voting in November! ${link}`,
+    (link) => `Hi NAME, thank you for being registered to vote! I am playing a game Mike built to remind people to vote. Click the link and confirm you are voting in November! ${link}`,
   ],
-  msgFriend: (first, link) => `Hi NAME, good news, I checked and you are registered to vote! I am playing a game Mike built to remind people to vote. Click the link and confirm you are voting in November! ${link}`,
+  msgFriend: (first, link) => `Hi NAME, thank you for being registered to vote! I am playing a game Mike built to remind people to vote. Click the link and confirm you are voting in November! ${link}`,
   msgFollowVariants: [
     (link) => `Hi NAME, still waiting on you. One tap tells me you are voting in November. ${link}`,
   ],
@@ -1797,7 +1797,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-1850';
+const BUILD = '20260913-1905';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
