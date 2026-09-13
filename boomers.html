@@ -887,13 +887,13 @@ const CONFIG = {
     { id: 'peony',   art: 'f-peony',   name: 'Peony',         shelf: 'g',  loc: 'the most common shell in any show, a clean round break with no trails' },
     { id: 'chrys',   art: 'f-chrys',   name: 'Chrysanthemum', shelf: 'g',  loc: 'a round break where every star drags a tail of sparks behind it' },
     { id: 'ring',    art: 'f-ring',    name: 'Ring',          shelf: 'g',  loc: 'stars thrown into a clean halo, hard to time and easy to love' },
-    { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'g',  loc: 'one bright star that runs across the sky and burns out behind it' },
+    { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'b',  loc: 'one bright star that runs across the sky and burns out behind it' },
     { id: 'falling', art: 'f-falling', name: 'Falling Star',  shelf: 'b',  loc: 'the one you are supposed to wish on, running the other way across the sky' },
-    { id: 'bell',    art: 'f-bell',    name: 'Liberty Bell',  shelf: 'b',  loc: 'cracked, imperfect, and still the sound everybody came to hear' },
+    { id: 'bell',    art: 'f-bell',    name: 'Liberty Bell',  shelf: 'p',  loc: 'cracked, imperfect, and still the sound everybody came to hear' },
     { id: 'brocade', art: 'f-brocade', name: 'Brocade',       shelf: 'b',  loc: 'fine silver lace, brighter and sharper than a willow' },
     { id: 'spider',  art: 'f-spider',  name: 'Spider',        shelf: 'b',  loc: 'stiff straight legs that shoot out and stop dead' },
     { id: 'cross',   art: 'f-cross',   name: 'Crossette',     shelf: 'p',  loc: 'every star splits again into four, a burst inside a burst' },
-    { id: 'star',    art: 'f-star',    name: 'Star Shell',    shelf: 'p',  loc: 'a five point star, the shape every kid draws when you say firework' },
+    { id: 'star',    art: 'f-star',    name: 'Star Shell',    shelf: 'au', loc: 'a five point star, the shape every kid draws when you say firework' },
     { id: 'ballot',  art: 'f-ballot',  name: 'The Ballot',    shelf: 'p',  loc: 'a box with a check in it, which is the whole reason for the show' },
     { id: 'salute',  art: 'f-salute',  name: 'Salute',        shelf: 'au', loc: 'almost no colour at all, just the flash and the bang you feel in your chest' },
   ],
@@ -1825,40 +1825,12 @@ function startPolling() {
   window.addEventListener('pageshow', pollNow);
 }
 
-/* ?stock=5  — testing only. Fills the racks with already-launched shells of
-   random patterns and colours so a show can be watched with a full sky
-   without texting anyone. Takes a count, defaults to 5, caps at capacity. */
-function stockShells(n) {
-  if (!S) return;
-  // Drop the welcome gift. Otherwise the only tube that looks "ready" is the
-  // gift, and a rack full of spent tubes reads as nothing having happened.
-  S.plants = S.plants.filter(function (p) { return !p.gift; });
-  S.pendingWelcome = false;
-  const want = Math.min(n || 5, showCapacity() - S.plants.length);
-  for (let i = 0; i < want; i++) {
-    const shelf = pick(['g', 'g', 'b', 'b', 'p', 'au']);
-    const sp0 = rollSpecies(shelf) || CONFIG.species[0];
-    const color = rollColor();
-    const traits = rollTraits('tap', false);
-    S.plants.push({
-      id: 'demo' + (S.nextId++), token: 'demo' + i, tag: 'TEST ' + (i + 1),
-      state: 'bloomed', species: sp0.id, color: color, traits: traits,
-      touches: 1, lastTouch: Date.now(), deadline: false, phone: '',
-    });
-    recordShell(sp0, traits, color);
-  }
-  S.pool = Math.max(S.pool, 12);
-  S.lastSpark = 0;                       // fuse ready immediately
-  S.showUntil = Date.now() + SKY_MS;
-  maybeUnlockRow();
-  save();
-}
 
 function boot() {
   if (/[?&]reset=1/.test(location.search)) {
     localStorage.removeItem(KEY);
     // Keep every other flag. Reloading on pathname alone silently dropped
-    // things like ?stock=, so a reset+stock combination did nothing.
+    // other flags like ?demo=1, so a combined reset did nothing.
     const rest = location.search.replace(/(^\?|&)reset=1/, '').replace(/^&/, '?');
     location.href = location.pathname + (rest && rest !== '?' ? rest : '');
     return;
@@ -1883,17 +1855,14 @@ function boot() {
   checkActive().then((ok) => { if (!ok) return; }); // [SERVER] deactivation gate
   migrateBeds();
   consumeBloomQueue();
-  const stock = location.search.match(/[?&]stock=(\d+)/);
-  if (stock) stockShells(parseInt(stock[1], 10));
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
-  if (stock) setTimeout(function () { try { sparkFuse(); } catch (e) {} }, 700);
   startPolling();
 }
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260914-0820';
+const BUILD = '20260914-1000';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1963,18 +1932,7 @@ function doSignup() {
   if (pin) { S.pin = pin; sessionStorage.setItem('bm_auth', '1'); }
   save();
   api('signup', { first, last, zip, contactsOptIn: S.contacts }); // [SERVER] account record
-  // A brand new account never passes through boot() again, so the test flag
-  // has to be honoured here too or it only works on the second load.
-  const st = location.search.match(/[?&]stock=(\d+)/);
-  if (st) stockShells(parseInt(st[1], 10));
   renderGarden();
-  // With the test flag, skip the welcome sheet and just run the show, which is
-  // the entire reason for loading it.
-  if (st) {
-    show('scr-garden'); startPolling();
-    setTimeout(function () { try { sparkFuse(); } catch (e) {} }, 700);
-    return;
-  }
   show('scr-garden');
   startPolling();
   // Intro order (Mike, 2026-08-30): comparison workflow FIRST, thank-you
