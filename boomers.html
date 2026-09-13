@@ -154,23 +154,26 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
    nothing ever slides from one position to the next. Ends hidden and stays
    hidden until the next launch. */
 @keyframes popspots{
-  0%   {opacity:1;transform:translate(0,0) rotate(0deg) scale(0.35);}
-  6%   {opacity:1;transform:translate(0,0) rotate(0deg) scale(1.06);}
-  17%  {opacity:1;transform:translate(0,0) rotate(0deg) scale(1);}
-  20%  {opacity:0;transform:translate(0,0) rotate(0deg) scale(1);}
-  24%  {opacity:1;transform:translate(var(--x1,6px),var(--y1,-5px)) rotate(14deg) scale(0.82);}
-  38%  {opacity:1;transform:translate(var(--x1,6px),var(--y1,-5px)) rotate(14deg) scale(0.86);}
-  41%  {opacity:0;transform:translate(var(--x1,6px),var(--y1,-5px)) rotate(14deg) scale(0.86);}
-  45%  {opacity:1;transform:translate(var(--x2,-7px),var(--y2,4px)) rotate(-11deg) scale(1.04);}
-  58%  {opacity:1;transform:translate(var(--x2,-7px),var(--y2,4px)) rotate(-11deg) scale(1.08);}
-  61%  {opacity:0;transform:translate(var(--x2,-7px),var(--y2,4px)) rotate(-11deg) scale(1.08);}
-  65%  {opacity:1;transform:translate(var(--x3,5px),var(--y3,6px)) rotate(26deg) scale(0.7);}
-  76%  {opacity:1;transform:translate(var(--x3,5px),var(--y3,6px)) rotate(26deg) scale(0.74);}
-  79%  {opacity:0;transform:translate(var(--x3,5px),var(--y3,6px)) rotate(26deg) scale(0.74);}
-  83%  {opacity:1;transform:translate(var(--x4,-4px),var(--y4,-7px)) rotate(-22deg) scale(0.55);}
-  93%  {opacity:1;transform:translate(var(--x4,-4px),var(--y4,-7px)) rotate(-22deg) scale(0.5);}
-  94%  {opacity:0;}
-  100% {opacity:0;}}
+  /* Four small breaks that climb and grow, each one a hard cut with real
+     darkness between, then one large centred break that holds a full second.
+     Vertical travel is fixed so the rise always reads; only the sideways
+     wander is randomised per launch. */
+  0%   {opacity:1;transform:translate(var(--x1,5px),14px)  rotate(-16deg) scale(0.38);}
+  9%   {opacity:1;transform:translate(var(--x1,5px),14px)  rotate(-16deg) scale(0.42);}
+  11%  {opacity:0;transform:translate(var(--x1,5px),14px)  rotate(-16deg) scale(0.42);}
+  15%  {opacity:1;transform:translate(var(--x2,-6px),8px)  rotate(19deg)  scale(0.56);}
+  24%  {opacity:1;transform:translate(var(--x2,-6px),8px)  rotate(19deg)  scale(0.60);}
+  26%  {opacity:0;transform:translate(var(--x2,-6px),8px)  rotate(19deg)  scale(0.60);}
+  30%  {opacity:1;transform:translate(var(--x3,6px),2px)   rotate(-24deg) scale(0.74);}
+  39%  {opacity:1;transform:translate(var(--x3,6px),2px)   rotate(-24deg) scale(0.78);}
+  41%  {opacity:0;transform:translate(var(--x3,6px),2px)   rotate(-24deg) scale(0.78);}
+  45%  {opacity:1;transform:translate(var(--x4,-5px),-5px) rotate(12deg)  scale(0.90);}
+  55%  {opacity:1;transform:translate(var(--x4,-5px),-5px) rotate(12deg)  scale(0.94);}
+  58%  {opacity:0;transform:translate(var(--x4,-5px),-5px) rotate(12deg)  scale(0.94);}
+  /* The finale: dead centre, biggest, and it stays put for a full second. */
+  62%  {opacity:1;transform:translate(0,-7px) rotate(0deg) scale(1.18);}
+  99%  {opacity:1;transform:translate(0,-7px) rotate(0deg) scale(1.18);}
+  100% {opacity:0;transform:translate(0,-7px) rotate(0deg) scale(1.18);}}
 /* Fourth reveal stage: the result turns, so it reads as still burning. */
 @keyframes spinhold{0%{transform:rotate(0deg) scale(1);}
   25%{transform:rotate(9deg) scale(1.04);}50%{transform:rotate(0deg) scale(1);}
@@ -303,6 +306,29 @@ html,body{background:var(--night-0);}
 #msgprev-body{color:#e8eeff !important;}
 #msgprev-ta{background:#080e22 !important;color:#e8eeff !important;border-color:#2f9fe0 !important;}
 #msgprev-wrap div[style*="dashed"]{border-top-color:#2b3760 !important;}
+
+/* ---- every remaining daytime surface ------------------------------------
+   The file paints light backgrounds inline in dozens of places, and once the
+   text went light every one of them became white-on-white. Rather than chase
+   them one at a time, these match the exact background declarations. */
+[style*="background:#fff;"],[style*="background:#ffffff"],[style*="background: #fff"]{
+  background:#141d3d !important;}
+[style*="background:#f4f9ff"],[style*="background:#f7fbff"],
+[style*="background:#eef6fd"],[style*="background:#e5f3ff"]{background:#101936 !important;}
+[style*="background:#fdf6e3"],[style*="background:#fffdf5"],
+[style*="background:#fdf3d9"]{background:#241d0c !important;}
+[style*="background:#f3f4f6"]{background:#111a38 !important;}
+[style*="background:#dcfce7"],[style*="background:#eafaf1"]{background:#0e2a1e !important;}
+/* Native select popups take their colours from the control itself, so the
+   relationship list was rendering as a white sheet with white text. */
+select,#plant-rel{background:#0c1430 !important;color:#e8eeff !important;}
+select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
+/* Anything still declaring the old navy ink on what is now a dark card. */
+[style*="color:var(--ink)"]{color:#e8eeff;}
+[style*="color:#1a2a4a"]{color:#e8eeff !important;}
+[style*="color:#0b4a33"],[style*="color:#047857"]{color:#6ee7b7 !important;}
+[style*="color:#b45309"]{color:#f0b429 !important;}
+[style*="color:#374151"]{color:#c8d3f5 !important;}
 </style>
 </head>
 
@@ -1387,14 +1413,14 @@ function runShow(done) {
         // Four follow-up positions inside a small patch of sky, randomised per
         // launch so the same shell never repeats the same pattern twice.
         const art = b.querySelector('.burst-art') || b;
-        const jit = function () { return (Math.random() * 18 - 9).toFixed(1) + 'px'; };
-        for (let n = 1; n <= 4; n++) {
-          art.style.setProperty('--x' + n, jit());
-          art.style.setProperty('--y' + n, jit());
-        }
+        // Only the sideways wander is random. The climb and the growth are
+        // fixed in the keyframes so the rise always reads the same way.
+        const jit = function () { return (Math.random() * 16 - 8).toFixed(1) + 'px'; };
+        for (let n = 1; n <= 4; n++) art.style.setProperty('--x' + n, jit());
         art.style.animation = 'none';
         void art.offsetWidth;                       // restart the animation
-        art.style.animation = 'popspots 2400ms steps(1,end) forwards';
+        // 2700ms total: four quick climbing breaks, then a full second held.
+        art.style.animation = 'popspots 2700ms steps(1,end) forwards';
       }, RISE);
     }, t);
   });
@@ -1711,7 +1737,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-1310';
+const BUILD = '20260913-1425';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1951,7 +1977,7 @@ function slotOf(i) {
   // Shells break at the TOP of the sky, not just above the racks. The furthest
   // back row takes the highest band and each nearer row sits one band below it,
   // so row 1 always pops beneath row 2.
-  const burstY = 6 + (rows - 1 - row) * 38;
+  const burstY = 2 + (rows - 1 - row) * 36;
   return { row, col, x, tubeY, burstY };
 }
 function colsPerRow() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch); }
