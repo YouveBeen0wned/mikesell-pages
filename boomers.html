@@ -579,7 +579,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 <section id="scr-signup" class="screen">
   <div class="bgdeco" id="deco-signup"></div>
   <div id="sg-wrap" style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:14px 0 8px;">
-    <svg id="sg-flowers" viewBox="0 0 238 56" width="238" height="56" style="display:block;flex-shrink:0;margin-bottom:6px;overflow:visible;"><defs><filter id="sg-glow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#fde68a"/></filter></defs><use href="#f-ring" x="0" y="32" width="22" height="22" style="color:#4cc9ff"/><use href="#f-willow" x="29" y="23" width="26" height="26" style="color:#ff7ac4"/><use href="#f-chrys" x="62" y="14" width="30" height="30" style="color:#4ade80"/><use href="#f-kamuro" x="99" y="2" width="40" height="40" filter="url(#sg-glow)" style="color:#ffc233"/><use href="#f-cross" x="146" y="14" width="30" height="30" style="color:#b18cff"/><use href="#f-palm" x="183" y="23" width="26" height="26" style="color:#ff9a3c"/><use href="#f-peony" x="216" y="32" width="22" height="22" style="color:#ff4d4d"/></svg>
+    <svg id="sg-flowers" viewBox="0 0 238 56" width="238" height="56" style="display:block;flex-shrink:0;margin-bottom:6px;overflow:visible;"><defs><filter id="sg-glow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#fde68a"/></filter></defs><use href="#f-ring" x="0" y="32" width="22" height="22" style="color:#4cc9ff"/><use href="#f-comet" x="29" y="23" width="26" height="26" style="color:#2fd4c4"/><use href="#f-bell" x="62" y="14" width="30" height="30" style="color:#f4f8ff"/><use href="#f-star" x="99" y="2" width="40" height="40" filter="url(#sg-glow)" style="color:#ffd447"/><use href="#f-ballot" x="146" y="14" width="30" height="30" style="color:#4cc9ff"/><use href="#f-falling" x="183" y="23" width="26" height="26" style="color:#b18cff"/><use href="#f-peony" x="216" y="32" width="22" height="22" style="color:#ff4d4d"/></svg>
     <div id="sg-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:29px;color:var(--blue);margin-top:0;line-height:1.1;">Boomers</div>
     <svg id="sg-swoosh" viewBox="0 0 220 26" style="width:205px;height:23px;margin-top:2px;">
       <path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/>
@@ -887,8 +887,8 @@ const CONFIG = {
     { id: 'peony',   art: 'f-peony',   name: 'Peony',         shelf: 'g',  loc: 'the most common shell in any show, a clean round break with no trails' },
     { id: 'chrys',   art: 'f-chrys',   name: 'Chrysanthemum', shelf: 'g',  loc: 'a round break where every star drags a tail of sparks behind it' },
     { id: 'ring',    art: 'f-ring',    name: 'Ring',          shelf: 'g',  loc: 'stars thrown into a clean halo, hard to time and easy to love' },
-    { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'g',  loc: 'one bright star that runs across the sky and burns out' },
-    { id: 'stripes', art: 'f-stripes', name: 'Stars and Stripes', shelf: 'b', loc: 'a banner unfurling across the sky, the hardest timing in any show' },
+    { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'g',  loc: 'one bright star that runs across the sky and burns out behind it' },
+    { id: 'falling', art: 'f-falling', name: 'Falling Star',  shelf: 'b',  loc: 'the one you are supposed to wish on, running the other way across the sky' },
     { id: 'bell',    art: 'f-bell',    name: 'Liberty Bell',  shelf: 'b',  loc: 'cracked, imperfect, and still the sound everybody came to hear' },
     { id: 'brocade', art: 'f-brocade', name: 'Brocade',       shelf: 'b',  loc: 'fine silver lace, brighter and sharper than a willow' },
     { id: 'spider',  art: 'f-spider',  name: 'Spider',        shelf: 'b',  loc: 'stiff straight legs that shoot out and stop dead' },
@@ -1090,6 +1090,12 @@ function Cells() {
       return api;
     },
     dotrow(y, x0, x1, step) { for (let x = x0; x <= x1; x += step) api.add(x, y); return api; },
+    disc(cx, cy, r) {
+      for (let y = -4; y <= 4; y++) for (let x = -4; x <= 4; x++) {
+        if (Math.hypot(x, y) <= r) api.add(cx + x, cy + y);
+      }
+      return api;
+    },
     pts(list) { for (const [x, y] of list) api.add(x, y); return api; },
     // Author one side, get the other free. Keeps every shell symmetric.
     mirrorX(list) { for (const [x, y] of list) { api.add(x, y); api.add(-x, y); } return api; },
@@ -1109,6 +1115,24 @@ function cellsToSvg(c) {
     const p = k.split(','), x = +p[0], y = +p[1];
     return `<rect x="${(PXORIGIN + x * PXCELL - PXCELL / 2).toFixed(2)}" y="${(PXORIGIN + y * PXCELL - PXCELL / 2).toFixed(2)}" width="${PXCELL}" height="${PXCELL}" fill="currentColor"/>`;
   }).join('');
+}
+/* A comet travelling along (dx,dy): a rounded head with a leading point, and a
+   dotted tail that thins and spreads as it falls behind. Direction is a
+   parameter so the mirrored version is the same drawing, not a second one. */
+function cometCells(dx, dy) {
+  const c = Cells();
+  const L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+  const hx = ux * 4.2, hy = uy * 4.2;
+  c.disc(hx, hy, 2.2);                       // rounded head
+  c.add(hx + ux * 2.6, hy + uy * 2.6);       // leading point, makes it a teardrop
+  for (let t = 1; t <= 9; t++) {
+    if (t % 3 === 0) continue;               // gaps, so the tail is dotted
+    const back = 2.4 + t * 1.45;
+    const px = hx - ux * back, py = hy - uy * back;
+    c.add(px, py);
+    if (t > 4 && t % 2 === 0) c.add(px - uy * 1.2, py + ux * 1.2);   // spread
+  }
+  return c;
 }
 function shellGeom(type){
   switch (type) {
@@ -1141,26 +1165,22 @@ function shellGeom(type){
        Real pyrotechnics come in shapes, so these are not a cheat. They are
        drawn row by row rather than from rings, because a recognisable symbol
        has to be authored, not generated. */
-    // Five rows of stars, offset row to row. Solid bars read as a barcode.
-    case 'stripes': { const c = Cells();
-      [-5, -3, -1, 1, 3].forEach(function (y, i) { c.dotrow(y, -7 + (i % 2), 7, 2); });
-      return cellsToSvg(c); }
-    // The Liberty Bell, traced not filled, crack included. The crack is the
-    // whole reason to pick this shape.
+    // The Liberty Bell, traced not filled, crack included. Fewer vertices than
+    // the first attempt, so the silhouette is smooth rather than lumpy.
     case 'bell': { const c = Cells();
-      c.poly([[0, -7], [2, -6], [3, -4], [4, -1], [5, 1], [6, 3], [7, 4],
-              [-7, 4], [-6, 3], [-5, 1], [-4, -1], [-3, -4], [-2, -6]], 1.5);
+      c.poly([[0, -7], [2, -6], [3, -4], [4, -1], [5, 2], [7, 4],
+              [-7, 4], [-5, 2], [-4, -1], [-3, -4], [-2, -6]], 1.35);
       c.add(0, 6).add(-1, 5).add(1, 5);                  // clapper
-      c.del(5, 1).del(6, 3);                             // the crack
+      c.del(4, -1).del(5, 2);                            // the crack
       return cellsToSvg(c); }
-    // A five point star, outlined in stars. Geometry rather than hand rows, so
-    // the points stay sharp and even.
+    // A five point star, outlined in stars. Tighter step and a slightly
+    // narrower waist so the five points stay sharp.
     case 'star': { const pts = [];
       for (let i = 0; i < 10; i++) {
-        const r = i % 2 ? 3.1 : 7.6, a = -Math.PI / 2 + i * Math.PI / 5;
+        const r = i % 2 ? 3.0 : 7.8, a = -Math.PI / 2 + i * Math.PI / 5;
         pts.push([Math.cos(a) * r, Math.sin(a) * r]);
       }
-      return cellsToSvg(Cells().poly(pts, 1.55)); }
+      return cellsToSvg(Cells().poly(pts, 1.35)); }
     // A ballot box with a check in it.
     case 'ballot': { const c = Cells();
       c.row(-5, -7, 7).row(5, -7, 7);
@@ -1169,9 +1189,8 @@ function shellGeom(type){
       for (let i = 0; i < 7; i++) c.add(-1 + i, 2 - i).add(-1 + i, 3 - i);
       return cellsToSvg(c); }
     // one star running across the sky
-    case 'comet': { const c = Cells();
-      for (let i = 0; i < 7; i++) c.add(-6 + i, 5 - i);
-      return cellsToSvg(c.block(1, -5, 3, 3).add(0, -2).add(4, -2)); }
+    case 'comet':   return cellsToSvg(cometCells(1, -1));    // up and to the right
+    case 'falling': return cellsToSvg(cometCells(-1, -1));   // and back the other way
     // almost no colour, just the flash and the shockwave
     case 'salute': return cellsToSvg(Cells().block(-1, -1, 3, 3).ring8(4).ring4(7));
   }
@@ -1874,7 +1893,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260914-0620';
+const BUILD = '20260914-0820';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -3910,7 +3929,7 @@ function buildDecos() {
     <svg style="position:absolute;left:-14%;top:34%;width:130%;opacity:0.08;" viewBox="0 0 220 26"><path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/><path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/><path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/></svg>
     <svg style="position:absolute;left:0;right:0;bottom:110px;width:100%;opacity:0.11;" viewBox="0 0 340 60" preserveAspectRatio="xMidYMax meet"><path d="M0 44 H340" stroke="#037ad8" stroke-width="3"/><path d="M40 44 Q95 6 150 44 M150 44 Q205 6 260 44" fill="none" stroke="#037ad8" stroke-width="3"/><g stroke="#037ad8" stroke-width="1.6"><line x1="65" y1="24" x2="65" y2="44"/><line x1="95" y1="15" x2="95" y2="44"/><line x1="125" y1="24" x2="125" y2="44"/><line x1="175" y1="24" x2="175" y2="44"/><line x1="205" y1="15" x2="205" y2="44"/><line x1="235" y1="24" x2="235" y2="44"/></g><path d="M0 52 q20 4 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#037ad8" stroke-width="2" opacity="0.7"/></svg>
     <div style="position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:space-around;align-items:flex-end;opacity:0.16;padding:0 10px;">
-      <svg style="width:20px;height:20px;color:#4cc9ff;"><use href="#f-ring"/></svg><svg style="width:24px;height:24px;color:#f4f8ff;"><use href="#f-chrys"/></svg><svg style="width:18px;height:18px;color:#ff4d4d;"><use href="#f-peony"/></svg><svg style="width:24px;height:24px;color:#b18cff;"><use href="#f-cross"/></svg><svg style="width:19px;height:19px;color:#4cc9ff;"><use href="#f-willow"/></svg><svg style="width:23px;height:23px;color:#ff4d4d;"><use href="#f-palm"/></svg><svg style="width:18px;height:18px;color:#f4f8ff;"><use href="#f-brocade"/></svg>
+      <svg style="width:20px;height:20px;color:#4cc9ff;"><use href="#f-ring"/></svg><svg style="width:24px;height:24px;color:#f4f8ff;"><use href="#f-chrys"/></svg><svg style="width:18px;height:18px;color:#ff4d4d;"><use href="#f-peony"/></svg><svg style="width:24px;height:24px;color:#b18cff;"><use href="#f-cross"/></svg><svg style="width:19px;height:19px;color:#ffd447;"><use href="#f-star"/></svg><svg style="width:23px;height:23px;color:#2fd4c4;"><use href="#f-falling"/></svg><svg style="width:18px;height:18px;color:#f4f8ff;"><use href="#f-brocade"/></svg>
     </div>
     <span class="petal" style="left:14%;animation-duration:7s;opacity:0.75;"><svg viewBox="0 0 6 6" style="width:5px;height:5px;"><rect width="6" height="6" fill="#fde68a"/></svg></span>
     <span class="petal" style="left:38%;animation-duration:9s;animation-delay:1.4s;opacity:0.6;"><svg viewBox="0 0 6 6" style="width:4px;height:4px;"><rect width="6" height="6" fill="#ff4d4d"/></svg></span>
