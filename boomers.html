@@ -533,7 +533,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 
 <div id="toast"></div>
 <div id="drag-ghost"></div>
-<div id="remove-hint">🗑 Drag outside the garden to remove</div>
+<div id="remove-hint">🗑 Drag off the field to move it to the Shed</div>
 <!-- ============ PERMISSION GATE ============
      Nothing in the app is reachable until this is tapped. Serious, short, and
      written so a parent reading over a shoulder is reassured rather than
@@ -1520,12 +1520,12 @@ function cellAtPoint(clientX, clientY) {
   const pt = svg.createSVGPoint();
   pt.x = clientX; pt.y = clientY;
   const u = pt.matrixTransform(ctm.inverse());
-  for (const b of S.beds) {
-    const cells = b.cells || [];
-    for (let i = 0; i < cells.length; i++) {
-      const o = cellXY(cells[i][0], cells[i][1]);
-      if (u.x >= o.x && u.x <= o.x + GRID.cw && u.y >= o.y && u.y <= o.y + GRID.ch) return { bedId: b.id, slot: i };
-    }
+  // Boomers has no beds. A position is just an index into S.plants, so the
+  // hit test walks the same slotOf() geometry the renderer uses.
+  const cap = showCapacity();
+  for (let i = 0; i < cap; i++) {
+    const s = slotOf(i);
+    if (u.x >= s.x - 11 && u.x <= s.x + 11 && u.y >= s.tubeY - 4 && u.y <= s.tubeY + 24) return { index: i };
   }
   return null;
 }
@@ -1533,20 +1533,17 @@ function cellAtPoint(clientX, clientY) {
 function showDropHi(cell) {
   const svg = $('gardensvg');
   let hi = document.getElementById('drop-hi');
-  if (!cell) { if (hi) hi.parentNode.removeChild(hi); return; }
-  const bed = S.beds.find(function(x) { return x.id === cell.bedId; });
-  const c = bed && (bed.cells || [])[cell.slot];
-  if (!c) { if (hi) hi.parentNode.removeChild(hi); return; }
-  const o = cellXY(c[0], c[1]);
+  if (!cell || cell.index == null) { if (hi) hi.parentNode.removeChild(hi); return; }
+  const s = slotOf(cell.index);
   if (!hi) {
     hi = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     hi.setAttribute('id', 'drop-hi'); hi.setAttribute('fill', 'none');
-    hi.setAttribute('stroke', '#ffffff'); hi.setAttribute('stroke-width', '2.5');
-    hi.setAttribute('rx', '12'); hi.setAttribute('pointer-events', 'none');
+    hi.setAttribute('stroke', '#fde68a'); hi.setAttribute('stroke-width', '2');
+    hi.setAttribute('rx', '4'); hi.setAttribute('pointer-events', 'none');
     svg.appendChild(hi);
   }
-  hi.setAttribute('x', o.x + 5); hi.setAttribute('y', o.y + 5);
-  hi.setAttribute('width', GRID.cw - 10); hi.setAttribute('height', GRID.ch - 10);
+  hi.setAttribute('x', s.x - 11); hi.setAttribute('y', s.tubeY - 3);
+  hi.setAttribute('width', 22); hi.setAttribute('height', 26);
 }
 function attachGardenDrag() {
   const svg = $('gardensvg');
@@ -1590,23 +1587,30 @@ function attachGardenDrag() {
       const gone = S.plants.find(function(p) { return p.id === _pressPid; });
       S.plants = S.plants.filter(function(p) { return p.id !== _pressPid; });
       if (gone && gone.state === 'bloomed') {
-        // A grown flower isn't destroyed — it goes back to the Shed to replant.
-        S.shed.push({ kind: 'grown', species: gone.species, traits: gone.traits, tag: gone.tag });
-        showToast('Flower moved to your Shed.');
+        // A launched shell isn't destroyed, it goes back to the Shed.
+        S.shed.push({ kind: 'grown', species: gone.species, traits: gone.traits, tag: gone.tag, color: gone.color });
+        showToast(gone.tag + ' moved to your Shed.');
       } else {
-        showToast('Seed removed.');
+        showToast('Shell removed.');
       }
       save(); renderGarden();
     } else {
-      // Dropped inside: move into the slot, or trade places with whatever is there.
+      // Dropped inside. Position is an index, so moving is an array move and
+      // swapping is a straight exchange of two entries.
       const t = cellAtPoint(e.clientX, e.clientY);
-      const me = S.plants.find(function(p) { return p.id === _pressPid; });
-      if (t && me && !(me.bedId === t.bedId && me.slot === t.slot)) {
-        const other = S.plants.find(function(p) { return p.bedId === t.bedId && p.slot === t.slot; });
-        const fb = me.bedId, fs = me.slot;
-        me.bedId = t.bedId; me.slot = t.slot;
-        if (other) { other.bedId = fb; other.slot = fs; showToast('Swapped places.'); }
-        else showToast('Moved.');
+      const from = S.plants.findIndex(function (p) { return p.id === _pressPid; });
+      if (t && from > -1 && t.index !== from) {
+        if (t.index < S.plants.length) {
+          const tmp = S.plants[t.index];
+          S.plants[t.index] = S.plants[from];
+          S.plants[from] = tmp;
+          showToast('Swapped places.');
+        } else {
+          // Dropped on an empty tube: pull it out and put it at the end.
+          const moved = S.plants.splice(from, 1)[0];
+          S.plants.push(moved);
+          showToast('Moved.');
+        }
         save(); renderGarden();
       }
     }
@@ -1809,7 +1813,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-2020';
+const BUILD = '20260913-2115';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
