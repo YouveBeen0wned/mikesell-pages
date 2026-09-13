@@ -349,7 +349,9 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <div id="lock-gname" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:18px;color:var(--ink);margin-top:4px;"></div>
     <div id="lock-seal" style="margin:14px 0 10px;"></div>
     <div style="font-size:12px;color:#5b6470;margin-bottom:16px;">Enter your PIN to continue</div>
-    <div style="display:flex;gap:12px;margin-bottom:6px;">
+    <!-- The row carries the width. Without it the inputs fall back to their
+         intrinsic size and run off the side of a phone. -->
+    <div style="display:flex;gap:12px;margin-bottom:6px;width:100%;max-width:330px;">
       <input class="pindot" placeholder="·" id="lock-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin0','lock-pin1')">
       <input class="pindot" placeholder="·" id="lock-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin1','lock-pin2')">
       <input class="pindot" placeholder="·" id="lock-pin2" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin2','lock-pin3')">
