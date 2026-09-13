@@ -146,10 +146,19 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
 @keyframes groundrun{from{transform:translateX(0);}to{transform:translateX(var(--dx,360px));}}
 /* Tube flashing as the fuse reaches it. */
 @keyframes tubeflash{0%,100%{stroke:#3b4a78;}35%{stroke:#fde68a;}}
-/* A burst that never settles: it breathes and rocks a few degrees forever. */
-@keyframes burnloop{0%,100%{transform:scale(1) rotate(0deg);}
-  25%{transform:scale(1.07) rotate(3deg);}50%{transform:scale(0.97) rotate(0deg);}
-  75%{transform:scale(1.05) rotate(-3deg);}}
+/* Flash and spin, not dance. The burst cuts out completely and cuts back in at
+   a new angle, so it strobes the way a real shell does instead of swaying.
+   Paired with steps(1,end) so nothing ever interpolates between angles. */
+@keyframes burnloop{
+  0%  {opacity:1;transform:rotate(0deg)   scale(1);}
+  20% {opacity:0;transform:rotate(0deg)   scale(1);}
+  25% {opacity:1;transform:rotate(15deg)  scale(1.05);}
+  45% {opacity:0;transform:rotate(15deg)  scale(1.05);}
+  50% {opacity:1;transform:rotate(30deg)  scale(0.97);}
+  70% {opacity:0;transform:rotate(30deg)  scale(0.97);}
+  75% {opacity:1;transform:rotate(45deg)  scale(1.04);}
+  95% {opacity:0;transform:rotate(45deg)  scale(1.04);}
+  100%{opacity:1;transform:rotate(60deg)  scale(1);}}
 /* Fourth reveal stage: the result turns, so it reads as still burning. */
 @keyframes spinhold{0%{transform:rotate(0deg) scale(1);}
   25%{transform:rotate(9deg) scale(1.04);}50%{transform:rotate(0deg) scale(1);}
@@ -446,9 +455,10 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
   <!-- flex:none matters. The screen is a flex column, so without it this panel
        shrinks below its own content and overflow:hidden then clips the sky. -->
   <div id="gardenwrap" style="position:relative;flex:none;background:linear-gradient(180deg,#070d22 0%,#0e1838 55%,#16224a 100%);border:3px solid #3b4a78;border-radius:22px;margin:0 12px;padding:6px;overflow:hidden;">
-    <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Shells load into the racks on the ground. Light the fuse and they go up in order.</b></div>
-    <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
+    <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Shells stage in the racks below the line. Light the fuse and they go up in order.</b></div>
+    <svg id="gardensvg" viewBox="0 0 364 206" style="width:100%;display:block;"></svg>
     <div id="fuseline"><i></i></div>
+    <div style="font-size:8.5px;color:#6f80ad;text-align:center;letter-spacing:0.03em;padding:4px 0 1px;line-height:1.4;">Hold and drag a shell to rearrange it, or drag it off the racks to remove it. Removed shells go to your Shed.</div>
   </div>
   <div class="toolbar">
     <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>SHED (<span id="hud-shed">0</span>)</span></div>
@@ -1467,7 +1477,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260912-2105';
+const BUILD = '20260912-2210';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1662,7 +1672,7 @@ function renderGarden() {
    the sky than the front row shell in the same column, so a stacked pair
    reads as two layers rather than one pile. Index order fills column by
    column, front row first, which is also the order the fuse lights them. */
-const SHOW = { w: 364, h: 228, ground: 176, pitch: 28, left: 20 };
+const SHOW = { w: 364, h: 206, ground: 128, pitch: 28, left: 20 };
 /* Where a shell sits, and where it breaks.
    The sky mirrors the ground. A shell breaks on the SAME vertical line as the
    tube that fired it, and its height mirrors how far back its rack sits: the
@@ -1673,11 +1683,27 @@ function slotOf(i) {
   const row = i % 2;                      // 0 front, 1 back
   const col = Math.floor(i / 2);
   const x = SHOW.left + col * SHOW.pitch; // identical for both rows: one axis
-  const tubeY = row ? SHOW.ground - 38 : SHOW.ground - 20;
-  const burstY = row ? 30 : 90;           // back row breaks higher
+  // Racks live BELOW the ground line, stacked in rows. Back row sits just
+  // under the line, front row below that.
+  const tubeY = row ? SHOW.ground + 6 : SHOW.ground + 34;
+  // Sky is everything above the line. Back row breaks high, front row below it,
+  // so a stacked pair keeps the same order it has on the ground.
+  const burstY = row ? 4 : 58;
   return { row, col, x, tubeY, burstY };
 }
 function showCapacity() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch) * 2; }
+// How long the sky stays lit after the fuse is sparked.
+const SKY_MS = 30000;
+let _skyTimer = null;
+function scheduleSkyClear() {
+  if (_skyTimer || !S || !S.showUntil) return;
+  const left = S.showUntil - Date.now();
+  if (left <= 0) return;
+  _skyTimer = setTimeout(function () {
+    _skyTimer = null;
+    if ($('scr-garden') && $('scr-garden').classList.contains('on')) drawShow();
+  }, left + 120);
+}
 
 function drawShow() {
   const el = $('gardensvg');
@@ -1688,8 +1714,8 @@ function drawShow() {
     const j = ((gx * 7 + gy * 13) % 11) / 11;
     out += `<circle cx="${(gx + j * 6).toFixed(1)}" cy="${(gy + j * 5).toFixed(1)}" r="${(0.5 + j * 0.9).toFixed(2)}" fill="#dbe7ff" opacity="${(0.16 + j * 0.38).toFixed(2)}"/>`;
   }
-  // The ground. Racks below it, sky above it.
-  out += `<rect x="0" y="${SHOW.ground}" width="${SHOW.w}" height="${SHOW.h - SHOW.ground}" fill="#0c142e"/>`;
+  // The ground. Racks are staged below it, the sky is everything above.
+  out += `<rect x="0" y="${SHOW.ground}" width="${SHOW.w}" height="${SHOW.h - SHOW.ground}" fill="#0a1128"/>`;
   out += `<line x1="4" y1="${SHOW.ground}" x2="${SHOW.w - 4}" y2="${SHOW.ground}" stroke="#4a5c8f" stroke-width="2.5" stroke-linecap="round"/>`;
   out += `<line x1="4" y1="${SHOW.ground + 3}" x2="${SHOW.w - 4}" y2="${SHOW.ground + 3}" stroke="#22305e" stroke-width="1.4" stroke-linecap="round"/>`;
 
@@ -1734,8 +1760,13 @@ function drawShow() {
       <path d="M${s.x} ${s.tubeY + 5} v10 M${s.x - 5} ${s.tubeY + 10} h10" stroke="#8fa0cc" stroke-width="2" stroke-linecap="round" opacity="${first ? 1 : 0.45}"${first ? ' style="animation:pulsehint 2.2s infinite;"' : ''}/></g>`;
   }
 
-  // 3. the sky. Bursts sit directly above the tube that fired them.
+  // 3. the sky. The show is an EVENT, not wallpaper: big bursts hang for 30
+  //    seconds after a claim and then the sky goes dark again. The record of
+  //    what you own lives in the spent tubes below, so nothing is lost.
+  const showLive = !!(S.showUntil && Date.now() < S.showUntil);
+  if (showLive) scheduleSkyClear();
   for (const { p, s } of order) {
+    if (p.state === 'bloomed' && !showLive) continue;
     if (p.state !== 'bloomed') {
       if (p.stage === 'climb') {
         out += `<g class="climber" data-col="${s.col}" data-row="${s.row}">
@@ -1753,7 +1784,7 @@ function drawShow() {
       <circle cx="${s.x}" cy="${cy}" r="${R + 4}" fill="${hex}" opacity="0.09"/>
       ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${cy}" r="${R + 7}" fill="#fde68a" opacity="0.16"/>` : ''}
       ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${cy}" r="${R + 5}" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
-      <g style="transform-origin:${s.x}px ${cy}px;animation:burnloop 3.4s ${phase}s ease-in-out infinite;">
+      <g style="transform-origin:${s.x}px ${cy}px;animation:burnloop 1.9s ${phase}s steps(1,end) infinite;">
         <use href="#${sp0.art}" x="${s.x - R}" y="${s.burstY}" width="${R * 2}" height="${R * 2}" style="color:${hex};"/>
       </g>
       ${p.traits && p.traits.gli ? `<text x="${s.x - 14}" y="${s.burstY + 9}" font-size="7" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
