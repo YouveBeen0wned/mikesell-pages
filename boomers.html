@@ -329,6 +329,40 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 [style*="color:#0b4a33"],[style*="color:#047857"]{color:#6ee7b7 !important;}
 [style*="color:#b45309"]{color:#f0b429 !important;}
 [style*="color:#374151"]{color:#c8d3f5 !important;}
+
+/* ---- one screen, no scrolling -------------------------------------------
+   Everything on My Show has to fit above the ribbon, including Mike's agenda.
+   Scoped to #scr-garden so the other screens keep their roomier spacing. */
+#scr-garden.screen{padding-bottom:70px;}
+#scr-garden .topbar{padding:8px 14px 4px;}
+#scr-garden .gametitle{font-size:16px;}
+#scr-garden .pill{font-size:12px;padding:3px 10px;}
+/* Rank bar */
+#scr-garden .card{margin:6px 12px 0;padding:7px 11px;}
+#scr-garden #hud-seal{width:32px !important;}
+#scr-garden #hud-seal svg{width:30px !important;height:33px !important;}
+#scr-garden .card div[style*="height:7px"]{height:5px !important;margin-top:4px !important;}
+/* Show name line */
+#scr-garden > div[style*="text-align:center"]{margin:5px 0 3px !important;}
+/* The field */
+#gardenwrap{margin:0 10px !important;padding:4px !important;}
+#gardenwrap > div:first-child{font-size:8px !important;padding:0 0 2px !important;}
+#gardenwrap > div:last-child{font-size:7.5px !important;padding:2px 0 0 !important;}
+/* Shed and praise */
+#scr-garden .toolbar{margin:6px 12px 0;gap:7px;}
+#scr-garden .tchip{padding:6px 10px;font-size:11.5px;}
+/* Mike's agenda, the thing that was falling off the bottom */
+#scr-garden .agenda{margin:7px 12px 0;padding:8px 12px;}
+#scr-garden #agenda-line{font-size:12px !important;line-height:1.35 !important;margin-top:3px !important;}
+#scr-garden #agenda-dots{margin-top:5px !important;}
+#scr-garden .tinytxt{padding:5px 12px 2px;font-size:7.5px;line-height:1.35;}
+/* Short phones: give back a few more pixels rather than start scrolling. */
+@media (max-height:720px){
+  #scr-garden .card{padding:5px 10px;}
+  #scr-garden .agenda{padding:6px 11px;}
+  #scr-garden #agenda-line{font-size:11px !important;}
+  #scr-garden .tinytxt{display:none;}
+}
 </style>
 </head>
 
@@ -628,13 +662,12 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
     <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>SHED (<span id="hud-shed">0</span>)</span></div>
     <!-- Praise: the number, the action, and when the next one lands. Stacked so
          nothing wraps into anything else on a narrow phone. -->
-    <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:6px;padding:9px 12px;">
-      <div style="display:flex;align-items:baseline;justify-content:space-between;white-space:nowrap;">
-        <span style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:17px;color:var(--ink);">👏 <span id="hud-pool">0</span></span>
-        <span style="font-size:9.5px;color:#9aa3ad;">of <span id="hud-cap">0</span></span>
+    <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;padding:6px 10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;white-space:nowrap;">
+        <span style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--ink);">👏 <span id="hud-pool">0</span><span style="font-size:9px;color:#9aa3ad;"> / <span id="hud-cap">0</span></span></span>
+        <button class="collectbtn" id="btn-collect" onclick="collectPraise()" style="padding:6px 10px;font-size:10px;">COLLECT</button>
       </div>
-      <button class="collectbtn" id="btn-collect" onclick="collectPraise()" style="width:100%;padding:8px 10px;font-size:11px;">COLLECT PRAISE</button>
-      <div style="font-size:9px;color:#9aa3ad;line-height:1.2;white-space:nowrap;">+<span id="hud-percycle">0</span> more in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
+      <div style="font-size:8.5px;color:#9aa3ad;line-height:1.1;white-space:nowrap;">+<span id="hud-percycle">0</span> in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
     </div>
   </div>
   <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
@@ -1708,6 +1741,31 @@ function startPolling() {
   window.addEventListener('pageshow', pollNow);
 }
 
+/* ?stock=5  — testing only. Fills the racks with already-launched shells of
+   random patterns and colours so a show can be watched with a full sky
+   without texting anyone. Takes a count, defaults to 5, caps at capacity. */
+function stockShells(n) {
+  if (!S) return;
+  const want = Math.min(n || 5, showCapacity() - S.plants.length);
+  for (let i = 0; i < want; i++) {
+    const shelf = pick(['g', 'g', 'b', 'b', 'p', 'au']);
+    const sp0 = rollSpecies(shelf) || CONFIG.species[0];
+    const color = rollColor();
+    const traits = rollTraits('tap', false);
+    S.plants.push({
+      id: 'demo' + (S.nextId++), token: 'demo' + i, tag: 'TEST ' + (i + 1),
+      state: 'bloomed', species: sp0.id, color: color, traits: traits,
+      touches: 1, lastTouch: Date.now(), deadline: false, phone: '',
+    });
+    recordShell(sp0, traits, color);
+  }
+  S.pool = Math.max(S.pool, 12);
+  S.lastSpark = 0;                       // fuse ready immediately
+  S.showUntil = Date.now() + SKY_MS;
+  maybeUnlockRow();
+  save();
+}
+
 function boot() {
   if (/[?&]reset=1/.test(location.search)) { localStorage.removeItem(KEY); location.href = location.pathname; return; }
   buildShellSymbols(); buildDecos(); buildNavs(); attachGardenDrag(); setupBackButton();
@@ -1730,6 +1788,8 @@ function boot() {
   checkActive().then((ok) => { if (!ok) return; }); // [SERVER] deactivation gate
   migrateBeds();
   consumeBloomQueue();
+  const stock = location.search.match(/[?&]stock=(\d+)/);
+  if (stock) stockShells(parseInt(stock[1], 10));
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
   startPolling();
@@ -1737,7 +1797,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-1605';
+const BUILD = '20260913-1850';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1835,7 +1895,7 @@ function showWelcomeGift() {
       </svg></span>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">Welcome to the show!</div>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
-      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 One shell on the house, already racked, plus applause for your first show</span>
+      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 One shell on the house, already racked, plus applause for your first show!</span>
       <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing shell to see what you got, then light the fuse and watch it fly. After that, add someone in your family.</span>
       <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#fdf6e3;border:2.5px solid #f0b429;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#b45309;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;color:#fde68a;overflow:visible;"><circle cx="17" cy="17" r="12" fill="#f59e0b" opacity="0.20"/><circle cx="17" cy="17" r="14" fill="none" stroke="#f0b429" stroke-width="2.4" style="animation:ringpulse 1.6s ease-out infinite;transform-origin:center;"/><use href="#f-shell" x="6" y="6" width="22" height="22"/></svg><span>Watch for this gold ring. It means somebody answered, and the shell is ready to go up.</span></span>
     </div>
@@ -1962,7 +2022,10 @@ function renderGarden() {
    the sky than the front row shell in the same column, so a stacked pair
    reads as two layers rather than one pile. Index order fills column by
    column, front row first, which is also the order the fuse lights them. */
-const SHOW = { w: 364, h: 220, ground: 128, pitch: 28, left: 34, r: 19 };
+const SHOW = { w: 364, ground: 142, pitch: 28, left: 34, r: 19 };
+// The field is exactly as tall as it needs to be. Two racks take less room
+// than three, so the panel shrinks and the agenda stays on screen.
+function showHeight() { return SHOW.ground + 6 + (rackRows() - 1) * 24 + 20 + 14; }
 // Where the igniter sits, and where the burning fuse starts from.
 const SPARK_X = 13;
 // Two rack rows to start. The third unlocks, and once it does it stays.
@@ -1985,7 +2048,7 @@ function slotOf(i) {
   // Shells break at the TOP of the sky, not just above the racks. The furthest
   // back row takes the highest band and each nearer row sits one band below it,
   // so row 1 always pops beneath row 2.
-  const burstY = 2 + (rows - 1 - row) * 36;
+  const burstY = 2 + (rows - 1 - row) * 34;
   return { row, col, x, tubeY, burstY };
 }
 function colsPerRow() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch); }
@@ -2015,7 +2078,8 @@ function scheduleSkyClear() {
 
 function drawShow() {
   const el = $('gardensvg');
-  el.setAttribute('viewBox', `0 0 ${SHOW.w} ${SHOW.h}`);
+  const H = showHeight();
+  el.setAttribute('viewBox', `0 0 ${SHOW.w} ${H}`);
   let out = '';
   // Star field, thinner near the ground.
   for (let gx = 8; gx < SHOW.w; gx += 21) for (let gy = 5; gy < SHOW.ground - 8; gy += 18) {
@@ -2023,7 +2087,7 @@ function drawShow() {
     out += `<circle cx="${(gx + j * 6).toFixed(1)}" cy="${(gy + j * 5).toFixed(1)}" r="${(0.5 + j * 0.9).toFixed(2)}" fill="#dbe7ff" opacity="${(0.16 + j * 0.38).toFixed(2)}"/>`;
   }
   // The ground. Racks are staged below it, the sky is everything above.
-  out += `<rect x="0" y="${SHOW.ground}" width="${SHOW.w}" height="${SHOW.h - SHOW.ground}" fill="#0a1128"/>`;
+  out += `<rect x="0" y="${SHOW.ground}" width="${SHOW.w}" height="${H - SHOW.ground}" fill="#0a1128"/>`;
   out += `<line x1="4" y1="${SHOW.ground}" x2="${SHOW.w - 4}" y2="${SHOW.ground}" stroke="#4a5c8f" stroke-width="2.5" stroke-linecap="round"/>`;
   out += `<line x1="4" y1="${SHOW.ground + 3}" x2="${SHOW.w - 4}" y2="${SHOW.ground + 3}" stroke="#22305e" stroke-width="1.4" stroke-linecap="round"/>`;
 
