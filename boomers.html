@@ -921,15 +921,15 @@ const CONFIG = {
   ],
   // The second axis. Eight colours across eight shells is 64 things to collect
   // out of eight drawings.
+  // Four colours, not eight. Halving the palette halves the number of
+  // combinations, which roughly doubles the chance of completing any given
+  // shell and of seeing the rarer patterns. Red, white and blue with the
+  // Forward Party purple.
   colors: [
     { id: 'red',    name: 'Red',    hex: '#ff4d4d' },
-    { id: 'gold',   name: 'Gold',   hex: '#ffc233' },
-    { id: 'green',  name: 'Green',  hex: '#4ade80' },
-    { id: 'blue',   name: 'Blue',   hex: '#4cc9ff' },
-    { id: 'purple', name: 'Purple', hex: '#b18cff' },
-    { id: 'pink',   name: 'Pink',   hex: '#ff7ac4' },
     { id: 'white',  name: 'White',  hex: '#f4f8ff' },
-    { id: 'orange', name: 'Orange', hex: '#ff9a3c' },
+    { id: 'purple', name: 'Purple', hex: '#b18cff' },
+    { id: 'blue',   name: 'Blue',   hex: '#4cc9ff' },
   ],
   agenda: [
     ['EDUCATION', 'Fully fund public education, and pay teachers like the professionals they are.'],
@@ -1105,10 +1105,15 @@ function shellGeom(type){
     case 'spider': { const c = Cells().add(0, 0);
       for (let r = 2; r <= 8; r++) { c.ring4(r); if (r % 2 === 0) c.ring8(r); }
       return cellsToSvg(c); }
-    // every star splits again into four
-    case 'cross': { const c = Cells().add(0, 0).ring8(2).ring8(4);
-      for (const [x, y] of [[6, 0], [-6, 0], [0, 6], [0, -6], [4, 4], [-4, 4], [4, -4], [-4, -4]]) {
-        c.add(x, y).add(x - 1, y).add(x + 1, y).add(x, y - 1).add(x, y + 1);
+    // Every star splits again into four. The arms are deliberately DOTTED and
+    // the tips sit far out, because the whole point of a crossette is that you
+    // can see each secondary break. A solid arm buries it.
+    case 'cross': { const c = Cells().add(0, 0);
+      const tips = [[7, 0], [-7, 0], [0, 7], [0, -7], [5, 5], [-5, 5], [5, -5], [-5, -5]];
+      for (const [tx, ty] of tips) {
+        const sx = Math.sign(tx), sy = Math.sign(ty);
+        c.add(sx * 2, sy * 2).add(sx * 4, sy * 4);            // gapped arm
+        c.add(tx, ty).add(tx - 1, ty).add(tx + 1, ty).add(tx, ty - 1).add(tx, ty + 1);
       }
       return cellsToSvg(c); }
     // a crown of sparks, then a widening curtain falling away from it
@@ -1120,16 +1125,26 @@ function shellGeom(type){
     // a half burst opening overhead on a short stem
     case 'palm':   return cellsToSvg(Cells().block(0, 2, 1, 5).ringTop(5).ringTop(3)
       .mirrorX([[2, -6], [5, -4], [6, -1]]));
-    // dense head with a heavy glitter trail
+    // A tight bright head with glitter falling from every side of it. The
+    // trails are dotted, which is what makes them read as sparks rather than
+    // as legs, and they hang from all eight stars rather than from a row of
+    // fixed columns, which is what made the old one look like a comb.
     case 'kamuro': { const c = Cells().add(0, 0).ring8(2).ring8(3).ring8(4);
-      for (const x of [-4, -2, 0, 2, 4]) for (let d = 1; d <= 8; d += 2) c.add(x, d);
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        const x = Math.round(Math.cos(a) * 4), y = Math.round(Math.sin(a) * 4);
+        for (let d = 2; d <= 6; d += 2) c.add(x, y + d);
+      }
       return cellsToSvg(c); }
-    // small heavy head that barely climbs, then pours straight back down
-    case 'horse':  return cellsToSvg(Cells().ring8(2).add(0, -4)
-      .mirrorX([[2, -3]])
-      .pts([[0, 0], [0, 2], [0, 4], [0, 6], [0, 8]])
-      .mirrorX([[2, 1], [2, 3], [2, 5], [2, 7]])
-      .mirrorX([[4, 2], [4, 4], [4, 6]]));
+    // A small heavy head sitting high, then thick curtains pouring straight
+    // down and thinning to dots as they fall. Solid full length columns read
+    // as a bar chart, which is what the old one looked like.
+    case 'horse': { const c = Cells().add(0, -7).add(-1, -6).add(1, -6).add(0, -5);
+      for (const x of [-4, -2, 0, 2, 4]) {
+        const len = 12 - Math.abs(x);
+        for (let d = 0; d < len; d++) { if (d > 6 && d % 2) continue; c.add(x, -4 + d); }
+      }
+      return cellsToSvg(c); }
     // one star running across the sky
     case 'comet': { const c = Cells();
       for (let i = 0; i < 7; i++) c.add(-6 + i, 5 - i);
@@ -1174,8 +1189,8 @@ function shellUse(speciesId, colorId, size, extra){
   const hex = colorHex(colorId);
   return `<svg style="width:${size}px;height:${size}px;color:${hex};${extra||''}"><use href="#${s.art}"/></svg>`;
 }
-function colorHex(id){ const c = CONFIG.colors.find(x=>x.id===id); return c ? c.hex : '#ffc233'; }
-function colorName(id){ const c = CONFIG.colors.find(x=>x.id===id); return c ? c.name : 'Gold'; }
+function colorHex(id){ const c = CONFIG.colors.find(x=>x.id===id); return c ? c.hex : '#f4f8ff'; }
+function colorName(id){ const c = CONFIG.colors.find(x=>x.id===id); return c ? c.name : 'White'; }
 
 /* ---------------- voter registration lookup -------------------------------- */
 const _voterCache = new Map(); // prefix → array of [first, last, city, age]
@@ -1836,7 +1851,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260914-0150';
+const BUILD = '20260914-0320';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -3872,12 +3887,12 @@ function buildDecos() {
     <svg style="position:absolute;left:-14%;top:34%;width:130%;opacity:0.08;" viewBox="0 0 220 26"><path d="M4 10 C60 2 160 2 216 12 C160 8 60 8 4 14 Z" fill="#037ad8"/><path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/><path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/></svg>
     <svg style="position:absolute;left:0;right:0;bottom:110px;width:100%;opacity:0.11;" viewBox="0 0 340 60" preserveAspectRatio="xMidYMax meet"><path d="M0 44 H340" stroke="#037ad8" stroke-width="3"/><path d="M40 44 Q95 6 150 44 M150 44 Q205 6 260 44" fill="none" stroke="#037ad8" stroke-width="3"/><g stroke="#037ad8" stroke-width="1.6"><line x1="65" y1="24" x2="65" y2="44"/><line x1="95" y1="15" x2="95" y2="44"/><line x1="125" y1="24" x2="125" y2="44"/><line x1="175" y1="24" x2="175" y2="44"/><line x1="205" y1="15" x2="205" y2="44"/><line x1="235" y1="24" x2="235" y2="44"/></g><path d="M0 52 q20 4 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#037ad8" stroke-width="2" opacity="0.7"/></svg>
     <div style="position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:space-around;align-items:flex-end;opacity:0.16;padding:0 10px;">
-      <svg style="width:20px;height:20px;color:#4cc9ff;"><use href="#f-ring"/></svg><svg style="width:24px;height:24px;color:#ffc233;"><use href="#f-chrys"/></svg><svg style="width:18px;height:18px;color:#ff7ac4;"><use href="#f-peony"/></svg><svg style="width:24px;height:24px;color:#b18cff;"><use href="#f-cross"/></svg><svg style="width:19px;height:19px;color:#4ade80;"><use href="#f-willow"/></svg><svg style="width:23px;height:23px;color:#ff9a3c;"><use href="#f-palm"/></svg><svg style="width:18px;height:18px;color:#ff4d4d;"><use href="#f-brocade"/></svg>
+      <svg style="width:20px;height:20px;color:#4cc9ff;"><use href="#f-ring"/></svg><svg style="width:24px;height:24px;color:#f4f8ff;"><use href="#f-chrys"/></svg><svg style="width:18px;height:18px;color:#ff4d4d;"><use href="#f-peony"/></svg><svg style="width:24px;height:24px;color:#b18cff;"><use href="#f-cross"/></svg><svg style="width:19px;height:19px;color:#4cc9ff;"><use href="#f-willow"/></svg><svg style="width:23px;height:23px;color:#ff4d4d;"><use href="#f-palm"/></svg><svg style="width:18px;height:18px;color:#f4f8ff;"><use href="#f-brocade"/></svg>
     </div>
     <span class="petal" style="left:14%;animation-duration:7s;opacity:0.75;"><svg viewBox="0 0 6 6" style="width:5px;height:5px;"><rect width="6" height="6" fill="#fde68a"/></svg></span>
-    <span class="petal" style="left:38%;animation-duration:9s;animation-delay:1.4s;opacity:0.6;"><svg viewBox="0 0 6 6" style="width:4px;height:4px;"><rect width="6" height="6" fill="#ff9a3c"/></svg></span>
+    <span class="petal" style="left:38%;animation-duration:9s;animation-delay:1.4s;opacity:0.6;"><svg viewBox="0 0 6 6" style="width:4px;height:4px;"><rect width="6" height="6" fill="#ff4d4d"/></svg></span>
     <span class="petal" style="left:62%;animation-duration:6.5s;animation-delay:3.2s;opacity:0.7;"><svg viewBox="0 0 6 6" style="width:4px;height:4px;"><rect width="6" height="6" fill="#4cc9ff"/></svg></span>
-    <span class="petal" style="left:80%;animation-duration:8.5s;animation-delay:2.5s;opacity:0.7;"><svg viewBox="0 0 6 6" style="width:5px;height:5px;"><rect width="6" height="6" fill="#ff7ac4"/></svg></span>`;
+    <span class="petal" style="left:80%;animation-duration:8.5s;animation-delay:2.5s;opacity:0.7;"><svg viewBox="0 0 6 6" style="width:5px;height:5px;"><rect width="6" height="6" fill="#b18cff"/></svg></span>`;
   for (const id of ['deco-signup', 'deco-lock', 'deco-garden', 'deco-plant', 'deco-collection', 'deco-champions', 'deco-friend']) { const el = $(id); if (el) el.innerHTML = deco; }
 }
 
