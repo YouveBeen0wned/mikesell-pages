@@ -1,0 +1,131 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=Noto+Emoji:wght@600&display=swap">
+<style>
+/* ---- Mike Sell volunteer thank-you popup ---------------------------------
+   Everything is scoped under .msp- so it cannot collide with your site CSS. */
+.msp-root{--msp-blue:#1668c8;--msp-blue-100:#eaf2fd;--msp-blue-300:#a6c8f4;--msp-blue-900:#0a2340;--msp-red:#e0402f;--msp-purple:#7b4fa8;--msp-ink:#14181f;--msp-paper:#fbfbfc;--msp-line:#c9ccd1;
+  position:fixed;inset:0;z-index:99999;display:none;font-family:'Barlow',system-ui,sans-serif;color:var(--msp-ink);}
+.msp-root.msp-open{display:block;}
+.msp-scrim{position:absolute;inset:0;background:rgba(10,35,64,.55);}
+.msp-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
+.msp-confetti i{position:absolute;top:-40px;display:block;}
+@keyframes msp-fall{0%{transform:translate3d(0,-40px,0) rotate(0);opacity:1}100%{transform:translate3d(var(--dx,0),110vh,0) rotate(680deg);opacity:.9}}
+@keyframes msp-sheet{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes msp-tricolor{0%,26%{background:var(--msp-blue)}33%,59%{background:var(--msp-purple)}66%,92%{background:var(--msp-red)}100%{background:var(--msp-blue)}}
+.msp-sheet{position:absolute;left:0;right:0;bottom:0;z-index:3;margin:0 auto;width:100%;max-width:440px;
+  background:var(--msp-paper);border:1px solid var(--msp-line);border-bottom:0;box-shadow:0 -12px 32px rgba(20,24,31,.28);
+  max-height:96vh;overflow-y:auto;animation:msp-sheet .5s cubic-bezier(.16,.84,.28,1) both;}
+.msp-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 16px;border-bottom:1px solid var(--msp-line);}
+.msp-flag{display:flex;align-items:center;gap:8px;}
+.msp-dot{width:7px;height:7px;background:var(--msp-blue);animation:msp-tricolor 2.4s linear infinite;}
+.msp-kicker{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#10488a;}
+.msp-x{appearance:none;background:none;border:1px solid var(--msp-line);color:var(--msp-ink);width:30px;height:30px;font-size:18px;line-height:1;cursor:pointer;}
+.msp-x:hover{background:var(--msp-blue-100);}
+.msp-x:focus-visible{outline:2px solid var(--msp-blue);outline-offset:2px;}
+.msp-body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:11px;}
+.msp-h1{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:36px;line-height:.92;text-transform:uppercase;}
+.msp-strips{display:flex;flex-direction:column;gap:3px;transform:rotate(-1deg);}
+.msp-strips b{display:block;height:6px;border-radius:999px;}
+.msp-strips b:nth-child(1){background:var(--msp-blue);width:100%}
+.msp-strips b:nth-child(2){background:var(--msp-purple);width:93%}
+.msp-strips b:nth-child(3){background:var(--msp-red);width:86%}
+.msp-stat{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--msp-blue-900);color:var(--msp-paper);}
+.msp-num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:54px;line-height:.8;flex:none;}
+.msp-stat p{margin:0;font-size:13px;line-height:1.4;color:var(--msp-blue-100);}
+.msp-src{display:inline-block;margin-top:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--msp-blue-300);}
+.msp-note{margin:0;font-size:14px;line-height:1.5;}
+.msp-games{display:flex;flex-direction:column;gap:10px;}
+.msp-game{display:flex;align-items:center;gap:14px;padding:12px 14px;text-decoration:none;color:inherit;border:1px solid var(--msp-line);transition:background .18s ease;}
+.msp-game:hover{background:var(--msp-blue-100);}
+.msp-game:focus-visible{outline:2px solid var(--msp-blue);outline-offset:2px;}
+.msp-glyph{flex:none;width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:var(--msp-blue-100);font-family:'Noto Emoji',sans-serif;font-weight:600;font-size:34px;line-height:1;}
+.msp-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:24px;line-height:1;letter-spacing:.05em;text-transform:uppercase;}
+.msp-desc{font-size:12px;line-height:1.3;color:#5b6068;}
+.msp-arrow{font-family:'Barlow Condensed',sans-serif;font-size:20px;}
+@media (min-width:560px){.msp-sheet{bottom:auto;top:50%;transform:translateY(-50%);animation:none;border-bottom:1px solid var(--msp-line);}}
+</style>
+<div class="msp-root" id="msp" role="dialog" aria-modal="true" aria-label="Thank you for volunteering">
+  <div class="msp-scrim" data-msp-close></div>
+  <div class="msp-confetti" id="msp-confetti"></div>
+  <div class="msp-sheet">
+    <div class="msp-bar">
+      <div class="msp-flag">
+        <span class="msp-dot"></span>
+        <span class="msp-kicker">Welcome to the team!</span>
+      </div>
+      <button type="button" class="msp-x" aria-label="Close" data-msp-close>&times;</button>
+    </div>
+    <div class="msp-body">
+      <h2 class="msp-h1">Thank you. Seriously.</h2>
+      <div class="msp-strips"><b></b><b></b><b></b></div>
+      <div class="msp-stat">
+        <div class="msp-num" id="msp-num">16&times;</div>
+        <div>
+          <p>Neighbors who get a text from a friend are <strong style="color:#fbfbfc">16 times more likely to vote</strong>.</p>
+          <a class="msp-src" href="https://news.columbia.edu/friend-friend-texting-election-voter-turnout-polls-canvassing" target="_blank" rel="noopener">Source: Columbia University News</a>
+        </div>
+      </div>
+      <p class="msp-note">Your time is the most generous thing you can give us, so we <em>attempted</em> to make civic engagement fun.</p>
+      <div class="msp-games">
+        <a class="msp-game" href="https://mikesell.org/bloomers" target="_blank" rel="noopener">
+          <span class="msp-glyph" style="color:#7b4fa8" aria-hidden="true">&#127804;</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px">
+            <span class="msp-name">Bloomers</span>
+            <span class="msp-desc">Grow your own community garden</span>
+          </span>
+          <span class="msp-arrow" style="color:#1668c8">&rarr;</span>
+        </a>
+        <a class="msp-game" href="https://mikesell.org/dragons" target="_blank" rel="noopener">
+          <span class="msp-glyph" style="color:#e0402f" aria-hidden="true">&#128009;</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px">
+            <span class="msp-name">Dragon Farmer</span>
+            <span class="msp-desc">Raise the most ferocious beasts</span>
+          </span>
+          <span class="msp-arrow" style="color:#e0402f">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var root=document.getElementById('msp'),num=document.getElementById('msp-num'),bin=document.getElementById('msp-confetti');
+  var shades=['#1668c8','#e0402f','#7b4fa8','#ffffff','#2f83dd'];
+  function confetti(){
+    bin.innerHTML='';
+    for(var i=0;i<45;i++){
+      var w=i%4===0?3:6+(i%4)*2,el=document.createElement('i');
+      el.style.cssText='left:'+((i*37)%100)+'%;width:'+w+'px;height:'+(i%4===0?14:w)+'px;background:'+shades[i%5]+
+        ';border-radius:'+(i%3===0?'50%':'0')+';--dx:'+(((i*53)%120)-60)+'px;animation:msp-fall '+(2.4+((i*13)%20)/10)+
+        's cubic-bezier(.31,.15,.62,.85) '+(((i*29)%22)/10)+'s both';
+      bin.appendChild(el);
+    }
+  }
+  function countUp(){
+    var t0=performance.now();
+    (function step(now){
+      var p=Math.min(1,(now-t0)/1000);
+      num.innerHTML=Math.round((1-Math.pow(1-p,3))*16)+'&times;';
+      if(p<1)requestAnimationFrame(step);
+    })(t0);
+  }
+  window.mikeVolunteerPopup={
+    open:function(){root.classList.add('msp-open');document.body.style.overflow='hidden';confetti();countUp();},
+    close:function(){root.classList.remove('msp-open');document.body.style.overflow='';bin.innerHTML='';}
+  };
+  root.addEventListener('click',function(e){if(e.target.hasAttribute('data-msp-close'))window.mikeVolunteerPopup.close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')window.mikeVolunteerPopup.close();});
+
+  /* Opens the popup when the Wix HTML-embed button posts a message up to this page. */
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.msp==='open')window.mikeVolunteerPopup.open();
+  });
+
+  /* Also opens from any normal link or element on the page, e.g.
+     a Wix button linked to  https://www.mikesell.org/yourpage#volunteer-thanks
+     or any element carrying  data-msp-open  */
+  document.addEventListener('click',function(e){
+    var t=e.target.closest&&e.target.closest('a[href*="#volunteer-thanks"],[data-msp-open]');
+    if(t){e.preventDefault();window.mikeVolunteerPopup.open();}
+  });
+})();
+</script>

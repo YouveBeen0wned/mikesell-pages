@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home to MÜV — Store Run Route</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --bg:#101418; --panel:#1a2129; --panel2:#232c37; --text:#e8edf2; --muted:#9aa7b4;
+    --green:#3fa46a; --orange:#d98e3a; --accent:#4a90d9; --border:#2e3a47;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column;}
+  header{padding:12px 20px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; gap:16px; align-items:center; flex-wrap:wrap;}
+  header h1{font-size:1.02rem; font-weight:600;}
+  header p{font-size:.74rem; color:var(--muted); margin-top:2px;}
+  .tile{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:6px 14px; text-align:center;}
+  .tile .num{font-size:1.2rem; font-weight:700; color:var(--green);}
+  .tile .lbl{font-size:.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;}
+  #app{flex:1; display:flex; min-height:0;}
+  #sidebar{width:350px; min-width:300px; background:var(--panel); border-right:1px solid var(--border); overflow-y:auto;}
+  #map{flex:1;}
+  .section{padding:12px 16px; border-bottom:1px solid var(--border);}
+  .section h2{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:8px;}
+  #status{font-size:.78rem; color:var(--muted); min-height:1.1em;}
+  label.toggle{display:flex; align-items:center; gap:7px; font-size:.8rem; cursor:pointer; margin-top:6px;}
+  #stopList{list-style:none;}
+  #stopList li{padding:6px 0; border-bottom:1px dashed var(--border); font-size:.78rem; cursor:pointer;}
+  #stopList .addr{color:var(--muted); font-size:.7rem;}
+  #stopList li.leg{border-bottom:none; padding:9px 0 3px; font-size:.7rem; text-transform:uppercase; letter-spacing:.07em; color:var(--accent); cursor:default;}
+  .badge{display:inline-block; font-size:.6rem; padding:1px 6px; border-radius:8px; margin-left:5px; vertical-align:middle;}
+  .badge.disp{background:rgba(63,164,106,.2); color:var(--green);}
+  .badge.sv{background:rgba(217,142,58,.2); color:var(--orange);}
+  .badge.opt{background:rgba(74,144,217,.22); color:#9cc4ec;}
+  footer{padding:7px 16px; font-size:.66rem; color:var(--muted); background:var(--panel); border-top:1px solid var(--border);}
+  .marker-pin{border-radius:50% 50% 50% 0; transform:rotate(-45deg); width:26px; height:26px; border:2px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,.4);}
+  .marker-pin span{transform:rotate(45deg); display:block; text-align:center; line-height:22px; font-size:10.5px; color:#fff; font-weight:700;}
+  @media(max-width:760px){ #app{flex-direction:column;} #sidebar{width:100%; max-height:48%;} }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Home &rarr; M&Uuml;V Orange Park store run</h1>
+    <p>Bareback Dr &amp; Normandy Blvd &rarr; Lane Ave &rarr; Wilson &rarr; 103rd &rarr; Blanding south</p>
+  </div>
+  <div class="tile"><div class="num" id="tileStops">24</div><div class="lbl">Stops</div></div>
+  <div class="tile"><div class="num" id="tileMiles">&mdash;</div><div class="lbl">Miles</div></div>
+  <div class="tile"><div class="num" id="tileMins">&mdash;</div><div class="lbl">Drive min</div></div>
+</header>
+<div id="app">
+  <div id="sidebar">
+    <div class="section">
+      <div id="status">Loading&hellip;</div>
+      <label class="toggle"><input type="checkbox" id="optJog" onchange="reroute()"> Include north-Blanding jog (Vapor Forest + The Smoking Club, +2 stops)</label>
+    </div>
+    <div class="section">
+      <h2>Stops in drive order</h2>
+      <ul id="stopList"></ul>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+<footer>
+  Route: OSRM. Pins geocoded from the master list addresses on load. M&Uuml;V and Curaleaf require a FL medical card; smoke/vape stock varies &mdash; call ahead.
+</footer>
+<script>
+const START = {name:"Home — Bareback Dr & Normandy Blvd", q:"Bareback Dr & Normandy Blvd, Jacksonville, FL", type:"home"};
+// leg: display grouping. opt:true = only routed when the jog toggle is on
+const STOPS = [
+ {leg:"Leg 1 — Normandy Blvd east"},
+ {name:"Smoker Empire", addr:"7749 Normandy Blvd #117, Jacksonville 32221", q:"7749 Normandy Blvd, Jacksonville, FL 32221", type:"sv"},
+ {name:"Havana Smoke Shop", addr:"7200 Normandy Blvd, Jacksonville 32205", q:"7200 Normandy Blvd, Jacksonville, FL 32205", type:"sv"},
+ {name:"Tobacco Galore", addr:"5340 Normandy Blvd, Jacksonville 32205", q:"5340 Normandy Blvd, Jacksonville, FL 32205", type:"sv"},
+ {name:"Big House of Vapors / Glass & Kratom", addr:"5318 Normandy Blvd, Jacksonville 32205", q:"5318 Normandy Blvd, Jacksonville, FL 32205", type:"sv"},
+ {leg:"Leg 2 — Lane Ave S south"},
+ {name:"The Glass Eye", addr:"1233 Lane Ave S #5, Jacksonville 32205", q:"1233 Lane Ave S, Jacksonville, FL 32205", type:"sv"},
+ {name:"The Smoke Station", addr:"1902 Lane Ave S, Jacksonville 32210", q:"1902 Lane Ave S, Jacksonville, FL 32210", type:"sv"},
+ {leg:"Leg 3 — Wilson Blvd & 103rd St"},
+ {name:"The HotBox Smoke Shop", addr:"6000 Wilson Blvd, Jacksonville 32210", q:"6000 Wilson Blvd, Jacksonville, FL 32210", type:"sv"},
+ {name:"Smoke-N-Vape (Wilson)", addr:"6855 Wilson Blvd Unit 23, Jacksonville 32210", q:"6855 Wilson Blvd, Jacksonville, FL 32210", type:"sv"},
+ {name:"Curaleaf 103rd St", addr:"6361 103rd St, Jacksonville 32210", q:"6361 103rd St, Jacksonville, FL 32210", type:"disp"},
+ {name:"Smoke-N-Vape (103rd)", addr:"6733 103rd St, Jacksonville 32210", q:"6733 103rd St, Jacksonville, FL 32210", type:"sv"},
+ {name:"Prime Smoke Shop", addr:"6814 103rd St, Jacksonville 32210", q:"6814 103rd St, Jacksonville, FL 32210", type:"sv"},
+ {name:"Smoker Friendly", addr:"7628 103rd St, Jacksonville 32210", q:"7628 103rd St, Jacksonville, FL 32210", type:"sv"},
+ {name:"The Smoke and Vape Studio", addr:"7900 103rd St, Jacksonville 32210", q:"7900 103rd St, Jacksonville, FL 32210", type:"sv"},
+ {name:"Sunset Novelties (103rd)", addr:"7945 103rd St, Jacksonville 32210", q:"7945 103rd St, Jacksonville, FL 32210", type:"sv"},
+ {name:"Duval Smoke & Ink", addr:"8282 103rd St, Jacksonville 32210", q:"8282 103rd St, Jacksonville, FL 32210", type:"sv"},
+ {leg:"Optional jog — north Blanding"},
+ {name:"Vapor Forest", addr:"3626 Blanding Blvd, Jacksonville 32210", q:"3626 Blanding Blvd, Jacksonville, FL 32210", type:"sv", opt:true},
+ {name:"The Smoking Club Smoke & Vape", addr:"3776 Blanding Blvd, Jacksonville 32210", q:"3776 Blanding Blvd, Jacksonville, FL 32210", type:"sv", opt:true},
+ {leg:"Leg 4 — Blanding Blvd south"},
+ {name:"New Perspective Network", addr:"5040 Blanding Blvd Suite 16, Jacksonville 32210", q:"5040 Blanding Blvd, Jacksonville, FL 32210", type:"sv"},
+ {name:"SmokeBucks", addr:"5044 Blanding Blvd, Jacksonville 32210", q:"5044 Blanding Blvd, Jacksonville, FL 32210", type:"sv"},
+ {name:"Touchdown Smoke Shop", addr:"6411 Blanding Blvd, Jacksonville 32244", q:"6411 Blanding Blvd, Jacksonville, FL 32244", type:"sv"},
+ {name:"Friendly Vape Smokers", addr:"7908 Blanding Blvd Ste 3, Jacksonville 32244", q:"7908 Blanding Blvd, Jacksonville, FL 32244", type:"sv"},
+ {name:"Dynasty Vapors", addr:"8102 Blanding Blvd Suite 16, Jacksonville 32244", q:"8102 Blanding Blvd, Jacksonville, FL 32244", type:"sv"},
+ {name:"Smokers Friendly Vape", addr:"8106 Blanding Blvd, Jacksonville 32244", q:"8106 Blanding Blvd, Jacksonville, FL 32244", type:"sv"},
+ {leg:"Arrival — first block in Orange Park"},
+ {name:"MÜV Dispensary (DESTINATION)", addr:"68 Blanding Blvd, Orange Park 32073", q:"68 Blanding Blvd, Orange Park, FL 32073", type:"dest"},
+ {name:"Surterra Wellness", addr:"80 Blanding Blvd #3, Orange Park 32073", q:"80 Blanding Blvd, Orange Park, FL 32073", type:"disp"},
+ {name:"Mr Smoke Shop", addr:"88 Blanding Blvd, Orange Park 32073", q:"88 Blanding Blvd, Orange Park, FL 32073", type:"sv"},
+];
+const COLOR = {home:"#4a90d9", disp:"#3fa46a", sv:"#d98e3a", dest:"#c9534f"};
+
+const map=L.map('map').setView([30.24,-81.77],12);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19, subdomains:'abcd', attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}).addTo(map);
+const markerLayer=L.layerGroup().addTo(map);
+const routeLayer=L.layerGroup().addTo(map);
+const statusEl=document.getElementById('status');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+function pin(color,label){
+  return L.divIcon({className:'',html:`<div class="marker-pin" style="background:${color}"><span>${label}</span></div>`,
+    iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-24]});
+}
+async function geocode(q){
+  try{
+    const js=await (await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&q='+encodeURIComponent(q))).json();
+    if(js&&js.length) return [parseFloat(js[0].lat),parseFloat(js[0].lon)];
+  }catch(e){}
+  return null;
+}
+
+const stores=STOPS.filter(s=>!s.leg);
+function renderList(){
+  const ul=document.getElementById('stopList'); ul.innerHTML='';
+  let n=0;
+  for(const s of STOPS){
+    const li=document.createElement('li');
+    if(s.leg){ li.className='leg'; li.textContent=s.leg; }
+    else{
+      n++;
+      const badge=s.type==='disp'||s.type==='dest'?'<span class="badge disp">Dispensary</span>':'<span class="badge sv">Smoke/Vape</span>';
+      const opt=s.opt?'<span class="badge opt">optional</span>':'';
+      li.innerHTML=`<b>${n}.</b> ${s.name}${badge}${opt}<div class="addr">${s.addr}</div>`;
+      li.onclick=()=>{ if(s.ll){ map.setView(s.ll,16); if(s.marker)s.marker.openPopup(); } };
+    }
+    ul.appendChild(li);
+  }
+}
+function activeStops(){
+  const jog=document.getElementById('optJog').checked;
+  return stores.filter(s=>(!s.opt||jog)&&s.ll);
+}
+async function reroute(){
+  if(!START.ll) return;
+  const seq=[{...START}].concat(activeStops());
+  document.getElementById('tileStops').textContent=seq.length-1;
+  routeLayer.clearLayers();
+  statusEl.textContent='Routing…';
+  const wp=seq.map(s=>s.ll[1]+','+s.ll[0]).join(';');
+  try{
+    const js=await (await fetch(`https://router.project-osrm.org/route/v1/driving/${wp}?overview=full&geometries=geojson`)).json();
+    if(js.code==='Ok'&&js.routes.length){
+      const r=js.routes[0];
+      L.polyline(r.geometry.coordinates.map(c=>[c[1],c[0]]),{color:'#3fa46a',weight:5,opacity:.95}).addTo(routeLayer);
+      document.getElementById('tileMiles').textContent=(r.distance/1609.34).toFixed(1);
+      document.getElementById('tileMins').textContent=Math.round(r.duration/60);
+      statusEl.textContent='Route ready — drive time excludes time in each store.';
+    } else throw 0;
+  }catch(e){ statusEl.textContent='Road routing busy — pins and order are still correct; retry the toggle in a minute.'; }
+}
+async function init(){
+  renderList();
+  statusEl.textContent='Locating home base…';
+  START.ll=await geocode(START.q); await sleep(1100);
+  if(START.ll) L.marker(START.ll,{icon:pin(COLOR.home,'H')}).addTo(markerLayer).bindPopup('<b>Start</b><br>Bareback Dr & Normandy Blvd');
+  let n=0, done=0;
+  for(const s of stores){
+    n++;
+    s.ll=await geocode(s.q); await sleep(1100);
+    if(s.ll){
+      done++;
+      s.marker=L.marker(s.ll,{icon:pin(COLOR[s.type], s.type==='dest'?'★':String(n))}).addTo(markerLayer)
+        .bindPopup(`<b>${s.name}</b><br>${s.addr}`);
+    }
+    statusEl.textContent=`Locating stops… ${n}/${stores.length}`;
+  }
+  const pts=[START.ll,...stores.filter(s=>s.ll).map(s=>s.ll)].filter(Boolean);
+  if(pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.12));
+  statusEl.textContent=done<stores.length?`Located ${done}/${stores.length} stops (rest not found by geocoder).`:'All stops located.';
+  reroute();
+}
+init();
+</script>
+</body>
+</html>

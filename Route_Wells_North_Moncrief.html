@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wells Rd North — Roosevelt to Moncrief</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --bg:#101418; --panel:#1a2129; --panel2:#232c37; --text:#e8edf2; --muted:#9aa7b4;
+    --green:#3fa46a; --orange:#d98e3a; --accent:#4a90d9; --red:#c9534f; --border:#2e3a47;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column;}
+  header{padding:12px 20px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; gap:16px; align-items:center; flex-wrap:wrap;}
+  header h1{font-size:1.02rem; font-weight:600;}
+  header p{font-size:.74rem; color:var(--muted); margin-top:2px;}
+  .tile{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:6px 14px; text-align:center;}
+  .tile .num{font-size:1.2rem; font-weight:700; color:var(--green);}
+  .tile .lbl{font-size:.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;}
+  #app{flex:1; display:flex; min-height:0;}
+  #sidebar{width:350px; min-width:300px; background:var(--panel); border-right:1px solid var(--border); overflow-y:auto;}
+  #map{flex:1; background:#181f27;}
+  .section{padding:12px 16px; border-bottom:1px solid var(--border);}
+  .section h2{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:8px;}
+  #status{font-size:.78rem; color:var(--muted); min-height:1.1em;}
+  label.toggle{display:flex; align-items:center; gap:7px; font-size:.8rem; cursor:pointer; margin-top:6px;}
+  #stopList{list-style:none;}
+  #stopList li{padding:6px 0; border-bottom:1px dashed var(--border); font-size:.78rem; cursor:pointer;}
+  #stopList .addr{color:var(--muted); font-size:.7rem;}
+  #stopList li.leg{border-bottom:none; padding:9px 0 3px; font-size:.7rem; text-transform:uppercase; letter-spacing:.07em; color:var(--accent); cursor:default;}
+  .badge{display:inline-block; font-size:.6rem; padding:1px 6px; border-radius:8px; margin-left:5px; vertical-align:middle;}
+  .badge.disp{background:rgba(63,164,106,.2); color:var(--green);}
+  .badge.sv{background:rgba(217,142,58,.2); color:var(--orange);}
+  .badge.opt{background:rgba(74,144,217,.22); color:#9cc4ec;}
+  .badge.apx{background:rgba(154,167,180,.2); color:var(--muted);}
+  .badge.ta{background:rgba(63,164,106,.35); color:#bfe8cf;}
+  footer{padding:7px 16px; font-size:.66rem; color:var(--muted); background:var(--panel); border-top:1px solid var(--border);}
+  .marker-pin{border-radius:50% 50% 50% 0; transform:rotate(-45deg); width:26px; height:26px; border:2px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,.4);}
+  .marker-pin span{transform:rotate(45deg); display:block; text-align:center; line-height:22px; font-size:10.5px; color:#fff; font-weight:700;}
+  @media(max-width:760px){ #app{flex-direction:column;} #sidebar{width:100%; max-height:48%;} }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Wells Rd &rarr; north: Roosevelt, Edgewood, Moncrief</h1>
+    <p>Picks up at Ayr (Wells Rd) &middot; US-17 north &rarr; St Johns Ave &rarr; Edgewood &rarr; Moncrief &rarr; Norwood &amp; Main</p>
+  </div>
+  <div class="tile"><div class="num" id="tileStops">&mdash;</div><div class="lbl">Stops</div></div>
+  <div class="tile"><div class="num" id="tileDisp">&mdash;</div><div class="lbl">Dispensaries</div></div>
+  <div class="tile"><div class="num" id="tileMiles">&mdash;</div><div class="lbl">Miles</div></div>
+  <div class="tile"><div class="num" id="tileMins">&mdash;</div><div class="lbl">Drive min</div></div>
+</header>
+<div id="app">
+  <div id="sidebar">
+    <div class="section">
+      <div id="status">Loading&hellip;</div>
+      <label class="toggle"><input type="checkbox" id="optOrtega" onchange="reroute()"> Add Ortega / Timuquana jog (Johny Jeno + San Juan Smoke Shop)</label>
+      <label class="toggle"><input type="checkbox" id="optRiverside" onchange="reroute()"> Add Riverside / Park St detour (6 stops, 2 dispensaries)</label>
+    </div>
+    <div class="section">
+      <h2>Stops in drive order</h2>
+      <ul id="stopList"></ul>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+<footer>
+  Continuation leg from the Blanding spine run. Positions from the CD-4 master list; Tier A tags from the Brand Display Priority List. Route: OSRM. Basemap &copy; OpenStreetMap contributors &copy; CARTO.
+</footer>
+<script>
+const START={n:"Start — Ayr Cannabis, 1907 Wells Rd", ll:[30.18526,-81.70245]};
+const STOPS=[
+ {leg:"Leg 1 — Roosevelt / US-17 north"},
+ {n:"Azure Towers Vape & Smoke", a:"6003 Roosevelt Blvd Unit 4, 32244", ll:[30.23986,-81.69566], t:"sv"},
+ {n:"Vape Hangar + Karma (same plaza)", a:"5917 Roosevelt Blvd, 32244", ll:[30.24391,-81.69661], t:"sv"},
+ {n:"Johny Jeno Smoke N Vape", a:"5675 Timuquana Rd, 32210", ll:[30.24729,-81.72991], t:"sv", opt:"ortega"},
+ {n:"Tobacco Cove West", a:"5393 Roosevelt Blvd #2, 32210", ll:[30.25251,-81.69903], t:"sv"},
+ {n:"VidaCann", a:"4339 Roosevelt Blvd Suite 200, 32210", ll:[30.28352,-81.72033], t:"disp", ta:1},
+ {leg:"Leg 2 — Ortega / St Johns Ave"},
+ {n:"San Juan Smoke Shop", a:"5850 San Juan Ave, 32210", ll:[30.28198,-81.74473], t:"sv", opt:"ortega"},
+ {n:"Smoke City (St Johns Ave)", a:"4530 St Johns Ave Ste 1, 32210", ll:[30.28846,-81.72268], t:"sv"},
+ {n:"Up In Smoke and Vape Shop", a:"3622 St Johns Ave, 32205", ll:[30.29572,-81.70445], t:"sv"},
+ {leg:"Optional — Riverside / Park St detour"},
+ {n:"Surterra Wellness (dispensary)", a:"537 Park St Suite A, 32204", ll:[30.32058,-81.67781], t:"disp", opt:"riverside"},
+ {n:"New Leaf Vapor Co (Park St)", a:"1010 Park St, 32204", ll:[30.31511,-81.68087], t:"sv", opt:"riverside"},
+ {n:"Sunburn Cannabis (dispensary)", a:"1059 Park St, 32204", ll:[30.31394,-81.68089], t:"disp", opt:"riverside"},
+ {n:"Sin City Smoke Shop", a:"819 Lomax St, 32204", ll:[30.31387,-81.68066], t:"sv", opt:"riverside"},
+ {n:"Smokey Beach Vape & Smoke Shop 2", a:"879 Stockton St, 32204", ll:[30.31523,-81.68922], t:"sv", opt:"riverside"},
+ {n:"Smoke Sultan", a:"1245 King St, 32204", ll:[30.31173,-81.69424], t:"sv", opt:"riverside"},
+ {leg:"Leg 3 — Edgewood Ave corridor"},
+ {n:"Fla Smoke Shop", a:"921 Edgewood Ave S, 32205", ll:[30.31325,-81.71898], t:"sv"},
+ {n:"Blackhat Vapor Shop", a:"1188 Edgewood Ave S, 32205", ll:[30.30816,-81.71402], t:"sv"},
+ {n:"Big House of Glass and Vape", a:"1200 Edgewood Ave S, 32205", ll:[30.3081,-81.71364], t:"sv"},
+ {n:"Big House of Hookah, Glass & Vape", a:"708 Edgewood Ave N, 32254", ll:[30.3303,-81.73144], t:"sv"},
+ {leg:"Leg 4 — Moncrief north"},
+ {n:"Dragon's Vape", a:"5966 Moncrief Rd Suite 3, 32209", ll:[30.3799,-81.69499], t:"sv"},
+ {n:"Vapor Store", a:"45th St & Moncrief Rd, 32208", ll:[30.37695,-81.67153], t:"sv", x:1},
+ {leg:"Leg 5 — Norwood & Main St (finish)"},
+ {n:"Miami Discount Tobacco", a:"5301 Norwood Ave, 32208", ll:[30.37226,-81.6646], t:"sv"},
+ {n:"ALDI Smoke Shop", a:"5872 Norwood Ave, 32208", ll:[30.37412,-81.66599], t:"sv"},
+ {n:"Big Smoke Store (FINISH)", a:"5751 N Main St, 32208", ll:[30.36055,-81.65355], t:"sv", dest:true},
+];
+const stores=STOPS.filter(s=>!s.leg);
+const map=L.map('map').setView([30.29,-81.70],11);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  {maxZoom:19, subdomains:'abcd', attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}).addTo(map);
+const markerLayer=L.layerGroup().addTo(map);
+const routeLayer=L.layerGroup().addTo(map);
+const statusEl=document.getElementById('status');
+
+function pin(color,label){
+  return L.divIcon({className:'',html:`<div class="marker-pin" style="background:${color}"><span>${label}</span></div>`,
+    iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-24]});
+}
+function optOn(s){
+  if(!s.opt) return true;
+  if(s.opt==='ortega') return document.getElementById('optOrtega').checked;
+  if(s.opt==='riverside') return document.getElementById('optRiverside').checked;
+  return true;
+}
+function renderList(){
+  const ul=document.getElementById('stopList'); ul.innerHTML='';
+  let n=0;
+  for(const s of STOPS){
+    const li=document.createElement('li');
+    if(s.leg){ li.className='leg'; li.textContent=s.leg; }
+    else{
+      n++;
+      const badges=(s.t==='disp'?'<span class="badge disp">Dispensary</span>':'<span class="badge sv">Smoke/Vape</span>')
+        +(s.ta?'<span class="badge ta">Tier A</span>':'')
+        +(s.opt?'<span class="badge opt">optional</span>':'')
+        +(s.x?'<span class="badge apx">approx</span>':'');
+      li.innerHTML=`<b>${n}.</b> ${s.n}${badges}<div class="addr">${s.a}</div>`;
+      li.onclick=()=>{ map.setView(s.ll,15); if(s.marker)s.marker.openPopup(); };
+    }
+    ul.appendChild(li);
+  }
+}
+function drawPins(){
+  markerLayer.clearLayers();
+  let n=0;
+  for(const s of stores){
+    n++;
+    const color=s.dest?'#c9534f':(s.t==='disp'?'#3fa46a':(s.opt?'#4a90d9':'#d98e3a'));
+    s.marker=L.marker(s.ll,{icon:pin(color, s.dest?'★':String(n))}).addTo(markerLayer)
+      .bindPopup(`<b>${s.n}</b><br>${s.a}${s.x?'<br><i>approximate corner, partial address</i>':''}`);
+  }
+  L.marker(START.ll,{icon:pin('#9aa7b4','S')}).addTo(markerLayer).bindPopup('<b>'+START.n+'</b>');
+}
+async function reroute(){
+  const act=stores.filter(optOn);
+  const seq=[{ll:START.ll}].concat(act);
+  document.getElementById('tileStops').textContent=act.length;
+  document.getElementById('tileDisp').textContent=act.filter(s=>s.t==='disp').length;
+  routeLayer.clearLayers();
+  statusEl.textContent='Routing…';
+  const wp=seq.map(s=>s.ll[1]+','+s.ll[0]).join(';');
+  try{
+    const js=await (await fetch(`https://router.project-osrm.org/route/v1/driving/${wp}?overview=full&geometries=geojson`)).json();
+    if(js.code==='Ok'&&js.routes.length){
+      const r=js.routes[0];
+      L.polyline(r.geometry.coordinates.map(c=>[c[1],c[0]]),{color:'#3fa46a',weight:5,opacity:.95}).addTo(routeLayer);
+      document.getElementById('tileMiles').textContent=(r.distance/1609.34).toFixed(1);
+      document.getElementById('tileMins').textContent=Math.round(r.duration/60);
+      map.fitBounds(L.latLngBounds(seq.map(s=>s.ll)).pad(0.1));
+      statusEl.textContent='Route ready. Drive time only; add your per-stop time.';
+    } else throw 0;
+  }catch(e){ statusEl.textContent='Road routing busy; pins and order are still correct. Flip a toggle to retry.'; }
+}
+renderList(); drawPins(); reroute();
+</script>
+</body>
+</html>

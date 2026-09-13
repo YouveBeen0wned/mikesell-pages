@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home to 45th &amp; Moncrief — Northside Store Run</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --bg:#101418; --panel:#1a2129; --panel2:#232c37; --text:#e8edf2; --muted:#9aa7b4;
+    --green:#3fa46a; --orange:#d98e3a; --accent:#4a90d9; --red:#c9534f; --border:#2e3a47;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column;}
+  header{padding:12px 20px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; gap:16px; align-items:center; flex-wrap:wrap;}
+  header h1{font-size:1.02rem; font-weight:600;}
+  header p{font-size:.74rem; color:var(--muted); margin-top:2px;}
+  .tile{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:6px 14px; text-align:center;}
+  .tile .num{font-size:1.2rem; font-weight:700; color:var(--green);}
+  .tile .lbl{font-size:.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;}
+  #app{flex:1; display:flex; min-height:0;}
+  #sidebar{width:350px; min-width:300px; background:var(--panel); border-right:1px solid var(--border); overflow-y:auto;}
+  #map{flex:1; background:#181f27;}
+  .section{padding:12px 16px; border-bottom:1px solid var(--border);}
+  .section h2{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:8px;}
+  #status{font-size:.78rem; color:var(--muted); min-height:1.1em;}
+  label.toggle{display:flex; align-items:center; gap:7px; font-size:.8rem; cursor:pointer; margin-top:6px;}
+  #stopList{list-style:none;}
+  #stopList li{padding:6px 0; border-bottom:1px dashed var(--border); font-size:.78rem; cursor:pointer;}
+  #stopList .addr{color:var(--muted); font-size:.7rem;}
+  #stopList li.leg{border-bottom:none; padding:9px 0 3px; font-size:.7rem; text-transform:uppercase; letter-spacing:.07em; color:var(--accent); cursor:default;}
+  .badge{display:inline-block; font-size:.6rem; padding:1px 6px; border-radius:8px; margin-left:5px; vertical-align:middle;}
+  .badge.sv{background:rgba(217,142,58,.2); color:var(--orange);}
+  .badge.opt{background:rgba(74,144,217,.22); color:#9cc4ec;}
+  .badge.apx{background:rgba(154,167,180,.2); color:var(--muted);}
+  footer{padding:7px 16px; font-size:.66rem; color:var(--muted); background:var(--panel); border-top:1px solid var(--border);}
+  .marker-pin{border-radius:50% 50% 50% 0; transform:rotate(-45deg); width:26px; height:26px; border:2px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,.4);}
+  .marker-pin span{transform:rotate(45deg); display:block; text-align:center; line-height:22px; font-size:10.5px; color:#fff; font-weight:700;}
+  @media(max-width:760px){ #app{flex-direction:column;} #sidebar{width:100%; max-height:48%;} }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Home &rarr; 45th &amp; Moncrief store run</h1>
+    <p>Normandy east &rarr; Edgewood Ave &rarr; Moncrief north &rarr; Norwood &amp; Main St</p>
+  </div>
+  <div class="tile"><div class="num" id="tileStops">&mdash;</div><div class="lbl">Stops</div></div>
+  <div class="tile"><div class="num" id="tileMiles">&mdash;</div><div class="lbl">Miles</div></div>
+  <div class="tile"><div class="num" id="tileMins">&mdash;</div><div class="lbl">Drive min</div></div>
+</header>
+<div id="app">
+  <div id="sidebar">
+    <div class="section">
+      <div id="status">Loading&hellip;</div>
+      <label class="toggle"><input type="checkbox" id="optExt" onchange="reroute()"> Extend to far Northside (Lem Turner, Dunn Ave, Oceanway, Duval Station: +8 stops)</label>
+    </div>
+    <div class="section">
+      <h2>Stops in drive order</h2>
+      <ul id="stopList"></ul>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+<footer>
+  Stop positions are built in from the CD-4 master list. Destination pin is approximate (partial address: 45th St &amp; Moncrief). Road route: OSRM. Basemap &copy; OpenStreetMap contributors &copy; CARTO.
+</footer>
+<script>
+const START={name:"Home", q:"15306 Bareback Dr, Jacksonville, FL", fb:[30.2705,-81.8280]};
+// x:1 = approximate position. opt:true = only when the extension toggle is on
+const STOPS=[
+ {leg:"Leg 1 — Normandy Blvd east"},
+ {n:"Crown Smoke Shop", a:"1523 Chaffee Rd S, 32221", ll:[30.2927,-81.84847]},
+ {n:"Smoker Empire", a:"7749 Normandy Blvd #117, 32221", ll:[30.29645,-81.7763]},
+ {n:"Havana Smoke Shop", a:"7200 Normandy Blvd, 32205", ll:[30.29962,-81.76514]},
+ {n:"Big House of Vapors and Glass at Ramona", a:"7059 Ramona Blvd, 32205", ll:[30.31429,-81.76466]},
+ {n:"Tobacco Galore", a:"5340 Normandy Blvd, 32205", ll:[30.30888,-81.73845]},
+ {n:"Big House of Vapors / Glass & Kratom", a:"5318 Normandy Blvd, 32205", ll:[30.30891,-81.73768]},
+ {leg:"Leg 2 — Edgewood Ave corridor"},
+ {n:"Fla Smoke Shop", a:"921 Edgewood Ave S, 32205", ll:[30.31325,-81.71898]},
+ {n:"Blackhat Vapor Shop", a:"1188 Edgewood Ave S, 32205", ll:[30.30816,-81.71402]},
+ {n:"Big House of Glass and Vape", a:"1200 Edgewood Ave S, 32205", ll:[30.3081,-81.71364]},
+ {n:"Big House of Hookah, Glass & Vape", a:"708 Edgewood Ave N, 32254", ll:[30.3303,-81.73144]},
+ {leg:"Leg 3 — Moncrief north to destination"},
+ {n:"Dragon's Vape", a:"5966 Moncrief Rd Suite 3, 32209", ll:[30.3799,-81.69499]},
+ {n:"Vapor Store (DESTINATION)", a:"45th St & Moncrief Rd, 32208", ll:[30.37695,-81.67153], dest:true, x:1},
+ {leg:"Leg 4 — surrounding Norwood & Main St"},
+ {n:"Miami Discount Tobacco", a:"5301 Norwood Ave, 32208", ll:[30.37226,-81.6646]},
+ {n:"ALDI Smoke Shop", a:"5872 Norwood Ave, 32208", ll:[30.37412,-81.66599]},
+ {n:"Big Smoke Store", a:"5751 N Main St, 32208", ll:[30.36055,-81.65355]},
+ {leg:"Optional — far Northside extension"},
+ {n:"Blow 1 Smoke & Vape Shop", a:"9429 Lem Turner Rd, 32208", ll:[30.41135,-81.68937], opt:true},
+ {n:"Smoke Shop (Blake Ave)", a:"3155 Blake Ave, 32218", ll:[30.4395,-81.70089], opt:true},
+ {n:"Smoke And Vape + RapSac Herb (two in one)", a:"1038 Dunn Ave, 32218", ll:[30.42822,-81.66322], opt:true},
+ {n:"Jax Smoke Shop", a:"12405 N Main St #4, 32218", ll:[30.4415,-81.6423], opt:true, x:1},
+ {n:"3 Miles High Smoke Shop", a:"12553 N Main St, 32218", ll:[30.4437,-81.6408], opt:true, x:1},
+ {n:"Smokers Workshop", a:"12961 N Main St Ste 204, 32218", ll:[30.449,-81.639], opt:true, x:1},
+ {n:"Ellusions 2", a:"614 Pecan Park Rd, 32218", ll:[30.51749,-81.63701], opt:true},
+ {n:"Smoker's Palace", a:"731 Duval Station Rd Ste 110, 32218", ll:[30.48557,-81.60494], opt:true},
+];
+const stores=STOPS.filter(s=>!s.leg);
+const map=L.map('map').setView([30.33,-81.74],11);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  {maxZoom:19, subdomains:'abcd', attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}).addTo(map);
+const markerLayer=L.layerGroup().addTo(map);
+const routeLayer=L.layerGroup().addTo(map);
+const statusEl=document.getElementById('status');
+
+function pin(color,label){
+  return L.divIcon({className:'',html:`<div class="marker-pin" style="background:${color}"><span>${label}</span></div>`,
+    iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-24]});
+}
+function renderList(){
+  const ul=document.getElementById('stopList'); ul.innerHTML='';
+  let n=0;
+  for(const s of STOPS){
+    const li=document.createElement('li');
+    if(s.leg){ li.className='leg'; li.textContent=s.leg; }
+    else{
+      n++;
+      const badges=(s.dest?'<span class="badge sv">Destination</span>':'<span class="badge sv">Smoke/Vape</span>')
+        +(s.opt?'<span class="badge opt">optional</span>':'')
+        +(s.x?'<span class="badge apx">approx</span>':'');
+      li.innerHTML=`<b>${n}.</b> ${s.n}${badges}<div class="addr">${s.a}</div>`;
+      li.onclick=()=>{ map.setView(s.ll,15); if(s.marker)s.marker.openPopup(); };
+    }
+    ul.appendChild(li);
+  }
+}
+function drawPins(){
+  markerLayer.clearLayers();
+  let n=0;
+  for(const s of stores){
+    n++;
+    const color=s.dest?'#c9534f':(s.opt?'#4a90d9':'#d98e3a');
+    s.marker=L.marker(s.ll,{icon:pin(color, s.dest?'★':String(n))}).addTo(markerLayer)
+      .bindPopup(`<b>${s.n}</b><br>${s.a}${s.x?'<br><i>approximate location</i>':''}`);
+  }
+  if(START.ll) L.marker(START.ll,{icon:pin('#3fa46a','H')}).addTo(markerLayer).bindPopup('<b>Home</b>');
+}
+function activeStops(){
+  const ext=document.getElementById('optExt').checked;
+  return stores.filter(s=>!s.opt||ext);
+}
+async function reroute(){
+  if(!START.ll) return;
+  const seq=[{ll:START.ll}].concat(activeStops());
+  document.getElementById('tileStops').textContent=seq.length-1;
+  routeLayer.clearLayers();
+  statusEl.textContent='Routing…';
+  const wp=seq.map(s=>s.ll[1]+','+s.ll[0]).join(';');
+  try{
+    const js=await (await fetch(`https://router.project-osrm.org/route/v1/driving/${wp}?overview=full&geometries=geojson`)).json();
+    if(js.code==='Ok'&&js.routes.length){
+      const r=js.routes[0];
+      L.polyline(r.geometry.coordinates.map(c=>[c[1],c[0]]),{color:'#3fa46a',weight:5,opacity:.95}).addTo(routeLayer);
+      document.getElementById('tileMiles').textContent=(r.distance/1609.34).toFixed(1);
+      document.getElementById('tileMins').textContent=Math.round(r.duration/60);
+      statusEl.textContent='Route ready. Drive time only; add your per-stop time.';
+    } else throw 0;
+  }catch(e){ statusEl.textContent='Road routing busy; pins and order are still correct. Toggle the extension to retry.'; }
+}
+async function init(){
+  renderList(); drawPins();
+  map.fitBounds(L.latLngBounds(stores.filter(s=>!s.opt).map(s=>s.ll)).pad(0.15));
+  statusEl.textContent='Locating home…';
+  try{
+    const js=await (await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&q='+encodeURIComponent(START.q))).json();
+    START.ll=(js&&js.length)?[parseFloat(js[0].lat),parseFloat(js[0].lon)]:START.fb;
+  }catch(e){ START.ll=START.fb; }
+  drawPins(); reroute();
+}
+init();
+</script>
+</body>
+</html>

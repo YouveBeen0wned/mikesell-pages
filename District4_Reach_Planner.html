@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>District 4 Reach Planner — Trips from Bareback Dr</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --bg:#101418; --panel:#1a2129; --panel2:#232c37; --text:#e8edf2; --muted:#9aa7b4;
+    --green:#3fa46a; --orange:#d98e3a; --purple:#9b6dd6; --accent:#4a90d9; --border:#2e3a47;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column;}
+  header{padding:12px 20px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
+  header h1{font-size:1.05rem; font-weight:600;}
+  header p{font-size:.74rem; color:var(--muted); margin-top:2px;}
+  .tile{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:6px 14px; text-align:center;}
+  .tile .num{font-size:1.25rem; font-weight:700; color:var(--green);}
+  .tile .lbl{font-size:.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em;}
+  #progressWrap{flex:1; min-width:180px;}
+  #progressBar{height:14px; background:var(--panel2); border:1px solid var(--border); border-radius:8px; overflow:hidden; display:flex;}
+  #progressBar div{height:100%;}
+  #progressLbl{font-size:.68rem; color:var(--muted); margin-top:3px;}
+  #app{flex:1; display:flex; min-height:0;}
+  #sidebar{width:370px; min-width:310px; background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow-y:auto;}
+  #map{flex:1;}
+  .section{padding:12px 16px; border-bottom:1px solid var(--border);}
+  .section h2{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:8px;}
+  #status{font-size:.78rem; color:var(--muted); min-height:1.1em;}
+  .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+  .controls .field{font-size:.72rem; color:var(--muted);}
+  .controls input{width:70px; padding:6px 8px; margin-top:3px; display:block; border-radius:6px; border:1px solid var(--border); background:var(--panel2); color:var(--text); font-size:.8rem;}
+  .controls button{padding:8px 12px; border:none; border-radius:6px; background:var(--accent); color:#fff; font-size:.78rem; font-weight:600; cursor:pointer;}
+  .filters label{display:inline-flex; align-items:center; gap:5px; font-size:.76rem; margin-right:10px; cursor:pointer;}
+  .dot{width:11px; height:11px; border-radius:50%; flex:none; border:2px solid rgba(255,255,255,.45);}
+  .trip{background:var(--panel2); border:1px solid var(--border); border-radius:6px; padding:8px 11px; margin-bottom:7px; cursor:pointer; display:flex; gap:10px; align-items:center;}
+  .trip:hover{filter:brightness(1.15);}
+  .trip.active{border-color:var(--green);}
+  .chip{width:14px; height:14px; border-radius:4px; flex:none;}
+  .trip h3{font-size:.83rem;}
+  .trip .meta{font-size:.71rem; color:var(--muted); margin-top:1px;}
+  .trip .cume{margin-left:auto; text-align:right; font-size:.7rem; color:var(--muted);}
+  .trip .cume b{display:block; font-size:.95rem; color:var(--green);}
+  #stopList{list-style:none;}
+  #stopList li{padding:6px 0; border-bottom:1px dashed var(--border); font-size:.77rem; cursor:pointer;}
+  #stopList .addr{color:var(--muted); font-size:.7rem;}
+  .badge{display:inline-block; font-size:.6rem; padding:1px 6px; border-radius:8px; margin-left:5px; vertical-align:middle;}
+  .badge.cannabis{background:rgba(63,164,106,.2); color:var(--green);}
+  .badge.vape{background:rgba(217,142,58,.2); color:var(--orange);}
+  .badge.tobacco{background:rgba(155,109,214,.22); color:var(--purple);}
+  footer{padding:7px 16px; font-size:.66rem; color:var(--muted); background:var(--panel); border-top:1px solid var(--border);}
+  @media(max-width:760px){ #app{flex-direction:column;} #sidebar{width:100%; max-height:48%;} }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>District 4 Reach Planner</h1>
+    <p>Home base: Bareback Dr off Normandy Blvd &middot; Duval + Clay + Nassau</p>
+  </div>
+  <div class="tile"><div class="num" id="tileFound">&mdash;</div><div class="lbl">Stores mapped</div></div>
+  <div class="tile"><div class="num" id="tileTrips">&mdash;</div><div class="lbl">Trips needed</div></div>
+  <div class="tile"><div class="num" id="tileHours">&mdash;</div><div class="lbl">Total hours</div></div>
+  <div id="progressWrap">
+    <div id="progressBar"></div>
+    <div id="progressLbl">Progress toward 350 reach goal</div>
+  </div>
+</header>
+<div id="app">
+  <div id="sidebar">
+    <div class="section"><div id="status">Loading&hellip;</div></div>
+    <div class="section">
+      <h2>Plan settings</h2>
+      <div class="controls">
+        <div class="field">Hours per trip<input id="cfgHours" type="number" min="1" max="12" step="0.5" value="4"></div>
+        <div class="field">Minutes per stop<input id="cfgStop" type="number" min="0" max="30" step="1" value="5"></div>
+        <button onclick="replan()">Rebuild plan</button>
+      </div>
+      <div class="filters" style="margin-top:10px">
+        <label><input type="checkbox" id="fCannabis" checked onchange="replan()"> <span class="dot" style="background:var(--green)"></span> Cannabis</label>
+        <label><input type="checkbox" id="fVape" checked onchange="replan()"> <span class="dot" style="background:var(--orange)"></span> Vape</label>
+        <label><input type="checkbox" id="fTobacco" checked onchange="replan()"> <span class="dot" style="background:var(--purple)"></span> Smoke/Tobacco</label>
+      </div>
+    </div>
+    <div class="section">
+      <h2>Trips &mdash; in the order that builds reach fastest</h2>
+      <div id="trips"></div>
+    </div>
+    <div class="section">
+      <h2 id="stopTitle">Stops</h2>
+      <div id="routeMeta" style="font-size:.75rem; color:var(--muted); margin-bottom:6px;"></div>
+      <ul id="stopList"></ul>
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+<footer>
+  Live store data from OpenStreetMap on each load (floor, not ceiling) plus hand-verified Orange Park listings. Drive times are estimates; the drawn road route per trip comes from OSRM. Trips start and end at home.
+</footer>
+<script>
+const GOAL = 350;
+const START_Q = "Bareback Dr & Normandy Blvd, Jacksonville, FL";
+const START_FALLBACK = [30.2705, -81.8280];
+const ROAD_FACTOR = 1.35;         // straight-line -> road distance
+const AVG_MPH = 28;               // city driving average
+const TRIP_COLORS = ["#3fa46a","#d98e3a","#4a90d9","#9b6dd6","#d96a8c","#5bbcb8","#c9b13f","#8a9a5b","#c97b4a","#7a86d9","#5aa85f","#b96ac9","#d9564a","#4a9ad9","#a3d95a"];
+const TYPE_COLOR = { cannabis:"#3fa46a", vape:"#d98e3a", tobacco:"#9b6dd6" };
+const TYPE_LABEL = { cannabis:"Cannabis", vape:"Vape/E-cig", tobacco:"Smoke/Tobacco" };
+
+const CURATED = [
+  {name:"MÜV Dispensary", street:"68 Blanding Blvd, Orange Park", type:"cannabis", q:"68 Blanding Blvd, Orange Park, FL 32073"},
+  {name:"Surterra Wellness", street:"80 Blanding Blvd, Orange Park", type:"cannabis", q:"80 Blanding Blvd, Orange Park, FL 32073"},
+  {name:"Trulieve", street:"342 Blanding Blvd, Orange Park", type:"cannabis", q:"342 Blanding Blvd, Orange Park, FL 32073"},
+  {name:"Curaleaf", street:"495 Blanding Blvd, Orange Park", type:"cannabis", q:"495 Blanding Blvd, Orange Park, FL 32073"},
+  {name:"Cookies", street:"859 Blanding Blvd, Orange Park", type:"cannabis", q:"859 Blanding Blvd, Orange Park, FL 32065"},
+  {name:"Planet 13", street:"921 Blanding Blvd, Orange Park", type:"cannabis", q:"921 Blanding Blvd, Orange Park, FL 32065"},
+  {name:"Green Dragon", street:"950 Blanding Blvd, Orange Park", type:"cannabis", q:"950 Blanding Blvd, Orange Park, FL 32065"},
+  {name:"Ayr Cannabis Dispensary", street:"1907 Wells Rd, Orange Park", type:"cannabis", q:"1907 Wells Rd, Orange Park, FL 32073"},
+  {name:"VidaCann", street:"4339 Roosevelt Blvd, Jacksonville", type:"cannabis", q:"4339 Roosevelt Blvd, Jacksonville, FL 32210"},
+  {name:"Mr Smoke Shop", street:"88 Blanding Blvd, Orange Park", type:"tobacco", q:"88 Blanding Blvd, Orange Park, FL 32073"},
+  {name:"Planet Vape & Smoke Shop", street:"195 Blanding Blvd, Orange Park", type:"vape", q:"195 Blanding Blvd, Orange Park, FL 32073"},
+  {name:"White Cloud Smoke Shop", street:"1635 Wells Rd, Orange Park", type:"tobacco", q:"1635 Wells Rd, Orange Park, FL 32073"},
+  {name:"Budzburn", street:"1871 Wells Rd, Orange Park", type:"vape", q:"1871 Wells Rd, Orange Park, FL 32073"},
+  {name:"Go Green CBD (Orange Park Mall)", street:"1910 Wells Rd, Orange Park", type:"vape", q:"1910 Wells Rd, Orange Park, FL 32073"},
+  {name:"The Smoking Club Smoke & Vape", street:"3776 Blanding Blvd, Jacksonville", type:"vape", q:"3776 Blanding Blvd, Jacksonville, FL 32210"},
+  {name:"Smoke Bucks", street:"5044 Blanding Blvd, Jacksonville", type:"vape", q:"5044 Blanding Blvd, Jacksonville, FL 32210"}
+];
+
+const map = L.map('map').setView([30.30, -81.75], 10);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19, subdomains:'abcd', attribution:'&copy; OpenStreetMap contributors &copy; CARTO'}).addTo(map);
+
+let START = START_FALLBACK.slice();
+let allStores = [];
+let trips = [];            // {stops:[], estMin, color, cume}
+let overviewLayer = L.layerGroup().addTo(map);
+let markerLayer = L.layerGroup().addTo(map);
+let routeLayer = L.layerGroup().addTo(map);
+let activeTrip = -1;
+const statusEl = document.getElementById('status');
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+function havDist(a,b){
+  const R=6371000,t=Math.PI/180;
+  const dLa=(b[0]-a[0])*t, dLo=(b[1]-a[1])*t;
+  const h=Math.sin(dLa/2)**2+Math.cos(a[0]*t)*Math.cos(b[0]*t)*Math.sin(dLo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+const driveMin = (a,b) => (havDist(a,b)*ROAD_FACTOR/1609.34)/AVG_MPH*60;
+
+function normType(shop){
+  if(shop==='cannabis') return 'cannabis';
+  if(shop==='e-cigarette'||shop==='vape') return 'vape';
+  return 'tobacco';
+}
+
+async function geocode(q){
+  try{
+    const url='https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&q='+encodeURIComponent(q);
+    const js=await (await fetch(url)).json();
+    if(js && js.length) return [parseFloat(js[0].lat), parseFloat(js[0].lon)];
+  }catch(e){}
+  return null;
+}
+
+const OVERPASS_QUERY = `[out:json][timeout:120];
+area["admin_level"="4"]["name"="Florida"]->.fl;
+rel(area.fl)["boundary"="administrative"]["admin_level"="6"]["name"~"^(Duval|Clay|Nassau) County$"];
+map_to_area->.c;
+nwr(area.c)["shop"~"^(cannabis|tobacco|e-cigarette|vape)$"];
+out center tags;`;
+
+async function fetchOverpass(){
+  const mirrors=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+  for(const m of mirrors){
+    try{
+      const res=await fetch(m,{method:'POST', body:'data='+encodeURIComponent(OVERPASS_QUERY), headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+      if(!res.ok) continue;
+      const js=await res.json();
+      if(js.elements) return js.elements;
+    }catch(e){}
+  }
+  return null;
+}
+
+function elementsToStores(elements){
+  const out=[];
+  for(const el of elements){
+    const t=el.tags||{};
+    const lat=el.lat ?? el.center?.lat, lon=el.lon ?? el.center?.lon;
+    if(lat==null) continue;
+    const street=[t['addr:housenumber'],t['addr:street']].filter(Boolean).join(' ')+(t['addr:city']?', '+t['addr:city']:'');
+    out.push({name:t.name||(TYPE_LABEL[normType(t.shop)]+' shop'), street:street||'address not tagged', type:normType(t.shop), ll:[lat,lon]});
+  }
+  return out;
+}
+
+function dedupe(stores){
+  const out=[];
+  for(const s of stores){
+    let dup=false;
+    for(const o of out){
+      if(havDist(s.ll,o.ll)<120 && (o.name.toLowerCase()===s.name.toLowerCase() || havDist(s.ll,o.ll)<40)){dup=true;break;}
+    }
+    if(!dup) out.push(s);
+  }
+  return out;
+}
+
+function activeTypes(){
+  const t=[];
+  if(document.getElementById('fCannabis').checked) t.push('cannabis');
+  if(document.getElementById('fVape').checked) t.push('vape');
+  if(document.getElementById('fTobacco').checked) t.push('tobacco');
+  return t;
+}
+
+// one grand tour: NN from home, then bounded 2-opt
+function grandTour(stores){
+  if(!stores.length) return [];
+  const rest=stores.slice();
+  let cur=START;
+  const route=[];
+  while(rest.length){
+    let bi=0,bd=Infinity;
+    rest.forEach((s,i)=>{const d=havDist(cur,s.ll); if(d<bd){bd=d;bi=i;}});
+    route.push(rest.splice(bi,1)[0]);
+    cur=route[route.length-1].ll;
+  }
+  const D=(a,b)=>havDist(a.ll,b.ll);
+  let improved=true, passes=0;
+  const maxPasses = stores.length>250 ? 8 : 25;
+  while(improved && passes++<maxPasses){
+    improved=false;
+    for(let i=0;i<route.length-2;i++){
+      for(let k=i+2;k<route.length-1;k++){
+        const delta=(D(route[i],route[k])+D(route[i+1],route[k+1]))-(D(route[i],route[i+1])+D(route[k],route[k+1]));
+        if(delta<-50){
+          const seg=route.slice(i+1,k+1).reverse();
+          route.splice(i+1,seg.length,...seg);
+          improved=true;
+        }
+      }
+    }
+  }
+  return route;
+}
+
+// slice tour into home-based trips within the time budget
+function sliceTrips(tour){
+  const budget = parseFloat(document.getElementById('cfgHours').value||4)*60;
+  const stopMin = parseFloat(document.getElementById('cfgStop').value||5);
+  const out=[];
+  let i=0;
+  while(i<tour.length){
+    const stops=[];
+    let t = 0;
+    let prev = START;
+    while(i<tour.length){
+      const s=tour[i];
+      const addT = driveMin(prev,s.ll) + stopMin;
+      const homeT = driveMin(s.ll,START);
+      if(stops.length && t + addT + homeT > budget) break;
+      stops.push(s); t += addT; prev=s.ll; i++;
+    }
+    t += driveMin(prev,START);
+    out.push({stops, estMin:Math.round(t)});
+  }
+  let cume=0;
+  out.forEach((tr,n)=>{ cume+=tr.stops.length; tr.cume=cume; tr.color=TRIP_COLORS[n%TRIP_COLORS.length]; });
+  return out;
+}
+
+function drawOverview(){
+  overviewLayer.clearLayers();
+  markerLayer.clearLayers();
+  for(const tr of trips){
+    const path=[START,...tr.stops.map(s=>s.ll),START];
+    L.polyline(path,{color:tr.color,weight:2.5,opacity:.55,dashArray:'4 6'}).addTo(overviewLayer);
+    for(const s of tr.stops){
+      L.circleMarker(s.ll,{radius:5.5, color:'#fff', weight:1.2, fillColor:tr.color, fillOpacity:.9})
+        .bindPopup(`<b>${s.name}</b><br>${s.street}<br><i>${TYPE_LABEL[s.type]}</i>`)
+        .addTo(markerLayer);
+    }
+  }
+  L.circleMarker(START,{radius:9, color:'#fff', weight:2, fillColor:'#4a90d9', fillOpacity:1})
+    .bindPopup('Home: Bareback Dr & Normandy Blvd').addTo(markerLayer);
+}
+
+function renderTrips(){
+  const div=document.getElementById('trips');
+  div.innerHTML='';
+  const total=trips.reduce((a,t)=>a+t.stops.length,0);
+  trips.forEach((tr,i)=>{
+    const card=document.createElement('div');
+    card.className='trip'+(i===activeTrip?' active':'');
+    const h=Math.floor(tr.estMin/60), m=tr.estMin%60;
+    card.innerHTML=`<span class="chip" style="background:${tr.color}"></span>
+      <div><h3>Trip ${i+1}</h3>
+      <div class="meta">${tr.stops.length} stores · ~${h}h ${m}m incl. stops</div></div>
+      <div class="cume"><b>${tr.cume}</b>reached · ${Math.round(tr.cume/GOAL*100)}% of goal</div>`;
+    card.onclick=()=>selectTrip(i);
+    div.appendChild(card);
+  });
+  // header tiles + progress bar
+  document.getElementById('tileFound').textContent=total;
+  document.getElementById('tileTrips').textContent=trips.length;
+  document.getElementById('tileHours').textContent=(trips.reduce((a,t)=>a+t.estMin,0)/60).toFixed(1);
+  const bar=document.getElementById('progressBar');
+  bar.innerHTML='';
+  trips.forEach(tr=>{
+    const seg=document.createElement('div');
+    seg.style.width=(tr.stops.length/GOAL*100)+'%';
+    seg.style.background=tr.color;
+    bar.appendChild(seg);
+  });
+  document.getElementById('progressLbl').textContent =
+    `${total} of ${GOAL} target reach (${Math.round(total/GOAL*100)}%) — each color band is one trip`;
+}
+
+async function selectTrip(i){
+  activeTrip=i;
+  renderTrips();
+  const tr=trips[i];
+  routeLayer.clearLayers();
+  document.getElementById('stopTitle').textContent=`Trip ${i+1} — ${tr.stops.length} stops in drive order`;
+  const ul=document.getElementById('stopList'); ul.innerHTML='';
+  tr.stops.forEach((s,n)=>{
+    const li=document.createElement('li');
+    li.innerHTML=`<b>${n+1}.</b> ${s.name}<span class="badge ${s.type}">${TYPE_LABEL[s.type]}</span><div class="addr">${s.street}</div>`;
+    li.onclick=()=>map.setView(s.ll,15);
+    ul.appendChild(li);
+  });
+  map.fitBounds(L.latLngBounds([START,...tr.stops.map(s=>s.ll)]).pad(0.2));
+  document.getElementById('routeMeta').textContent='Fetching road route…';
+  const wp=[START,...tr.stops.slice(0,78).map(s=>s.ll),START].map(p=>p[1]+','+p[0]).join(';');
+  try{
+    const js=await (await fetch(`https://router.project-osrm.org/route/v1/driving/${wp}?overview=full&geometries=geojson`)).json();
+    if(js.code==='Ok' && js.routes.length){
+      const r=js.routes[0];
+      L.polyline(r.geometry.coordinates.map(cc=>[cc[1],cc[0]]),{color:tr.color,weight:5,opacity:.95}).addTo(routeLayer);
+      const stopMin=parseFloat(document.getElementById('cfgStop').value||5);
+      const mins=Math.round(r.duration/60 + tr.stops.length*stopMin), miles=(r.distance/1609.34).toFixed(1);
+      document.getElementById('routeMeta').textContent=
+        `Road route: ${miles} mi · ~${Math.floor(mins/60)}h ${mins%60}m incl. ${stopMin} min/stop${tr.stops.length>78?' (line drawn for first 78 stops)':''}`;
+    } else throw 0;
+  }catch(e){
+    document.getElementById('routeMeta').textContent='Road routing busy — dashed overview path still shows the trip; estimates above stand.';
+  }
+}
+
+function replan(){
+  const types=activeTypes();
+  const filtered=allStores.filter(s=>types.includes(s.type));
+  statusEl.textContent='Optimizing pathways…';
+  setTimeout(()=>{
+    const tour=grandTour(filtered);
+    trips=sliceTrips(tour);
+    activeTrip=-1;
+    routeLayer.clearLayers();
+    drawOverview();
+    renderTrips();
+    document.getElementById('stopTitle').textContent='Stops';
+    document.getElementById('stopList').innerHTML='';
+    document.getElementById('routeMeta').textContent='';
+    statusEl.textContent=`${filtered.length} stores threaded into ${trips.length} home-based trips. Click a trip for its road route and stop list.`;
+    const pts=filtered.map(s=>s.ll);
+    if(pts.length) map.fitBounds(L.latLngBounds([START,...pts]).pad(0.1));
+  },30);
+}
+
+async function init(){
+  statusEl.textContent='Locating home base…';
+  const s=await geocode(START_Q);
+  if(s) START=s;
+  statusEl.textContent='Querying OpenStreetMap for stores across Duval, Clay, Nassau…';
+  const elements=await fetchOverpass();
+  let merged = elements ? elementsToStores(elements) : [];
+  statusEl.textContent=`OSM returned ${merged.length} stores. Adding hand-verified listings…`;
+  for(const cst of CURATED){
+    if(merged.some(m=>m.name.toLowerCase()===cst.name.toLowerCase())) continue;
+    const ll=await geocode(cst.q);
+    await sleep(1100);
+    if(ll) merged.push({name:cst.name, street:cst.street, type:cst.type, ll});
+  }
+  allStores=dedupe(merged);
+  replan();
+}
+
+init();
+</script>
+</body>
+</html>
