@@ -138,7 +138,18 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
 @keyframes embers{0%{transform:translateY(0);opacity:0.9;}100%{transform:translateY(16px);opacity:0;}}
 @keyframes fuserun{from{left:-6%;}to{left:104%;}}
 .riser{animation:climb 0.62s ease-in both;}
-.breaker{animation:breakout 0.72s cubic-bezier(.2,.9,.3,1) both;}
+.breaker{animation:breakout 1.05s cubic-bezier(.2,.9,.3,1) both;}
+/* A lifted pixel: the shell climbing out of its tube toward its break point. */
+@keyframes liftpx{0%{transform:translateY(0);opacity:1;}
+  70%{opacity:1;}100%{transform:translateY(var(--dy,-80px));opacity:0.15;}}
+/* The spark running the length of the ground before anything goes up. */
+@keyframes groundrun{from{transform:translateX(0);}to{transform:translateX(var(--dx,360px));}}
+/* Tube flashing as the fuse reaches it. */
+@keyframes tubeflash{0%,100%{stroke:#3b4a78;}35%{stroke:#fde68a;}}
+/* Fourth reveal stage: the result turns, so it reads as still burning. */
+@keyframes spinhold{0%{transform:rotate(0deg) scale(1);}
+  25%{transform:rotate(9deg) scale(1.04);}50%{transform:rotate(0deg) scale(1);}
+  75%{transform:rotate(-9deg) scale(1.04);}100%{transform:rotate(0deg) scale(1);}}
 #fuseline{position:absolute;left:0;right:0;bottom:6px;height:3px;z-index:6;pointer-events:none;display:none;}
 #fuseline i{position:absolute;top:-5px;width:12px;height:12px;border-radius:50%;background:#fde68a;
   box-shadow:0 0 16px 6px rgba(245,158,11,0.85);animation:fuserun 1.1s linear both;}
@@ -448,7 +459,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
   <!-- flex:none matters. The screen is a flex column, so without it this panel
        shrinks below its own content and overflow:hidden then clips the sky. -->
   <div id="gardenwrap" style="position:relative;flex:none;background:linear-gradient(180deg,#070d22 0%,#0e1838 55%,#16224a 100%);border:3px solid #3b4a78;border-radius:22px;margin:0 12px;padding:6px;overflow:hidden;">
-    <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Press and hold a shell to move it. Drag it off the field to put it back in the shed.</b></div>
+    <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Shells load into the racks on the ground. Light the fuse and they go up in order.</b></div>
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
     <div id="fuseline"><i></i></div>
   </div>
@@ -663,17 +674,21 @@ const CONFIG = {
     tap:    [['g', 0.60], ['b', 0.24], ['p', 0.12], ['au', 0.04]],
     earned: [['g', 0.78], ['b', 0.15], ['p', 0.06], ['au', 0.01]],
   },
-  // Eight real pyrotechnic shell types. Field names match the Bloomers species
-  // list exactly so every downstream code path keeps working untouched.
+  // Twelve shells across four tiers, all plotted as chunky pixels so they read
+  // at 24px in the rack and look like an old artillery game up close.
   species: [
     { id: 'peony',   art: 'f-peony',   name: 'Peony',         shelf: 'g',  loc: 'the most common shell in any show, a clean round break with no trails' },
     { id: 'chrys',   art: 'f-chrys',   name: 'Chrysanthemum', shelf: 'g',  loc: 'a round break where every star drags a tail of sparks behind it' },
     { id: 'ring',    art: 'f-ring',    name: 'Ring',          shelf: 'g',  loc: 'stars thrown into a clean halo, hard to time and easy to love' },
+    { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'g',  loc: 'one bright star that runs across the sky and burns out' },
     { id: 'willow',  art: 'f-willow',  name: 'Willow',        shelf: 'b',  loc: 'long gold stars that hang in the air and drift down like branches' },
     { id: 'palm',    art: 'f-palm',    name: 'Palm',          shelf: 'b',  loc: 'thick rising streams that open overhead like palm fronds' },
     { id: 'brocade', art: 'f-brocade', name: 'Brocade',       shelf: 'b',  loc: 'fine silver lace, brighter and sharper than a willow' },
+    { id: 'spider',  art: 'f-spider',  name: 'Spider',        shelf: 'b',  loc: 'stiff straight legs that shoot out and stop dead' },
     { id: 'cross',   art: 'f-cross',   name: 'Crossette',     shelf: 'p',  loc: 'every star splits again into four, a burst inside a burst' },
-    { id: 'kamuro',  art: 'f-kamuro',  name: 'Kamuro',        shelf: 'au', loc: 'a dense head with a heavy glitter trail, named for a Japanese haircut' },
+    { id: 'kamuro',  art: 'f-kamuro',  name: 'Kamuro',        shelf: 'p',  loc: 'a dense head with a heavy glitter trail, named for a Japanese haircut' },
+    { id: 'horse',   art: 'f-horse',   name: 'Horsetail',     shelf: 'p',  loc: 'heavy stars that barely climb, then pour straight back down' },
+    { id: 'salute',  art: 'f-salute',  name: 'Salute',        shelf: 'au', loc: 'almost no colour at all, just the flash and the bang you feel in your chest' },
   ],
   // Relatives only. Stepparents count, legal guardians do not, and there is no
   // neighbour, friend or coworker on purpose.
@@ -820,45 +835,95 @@ function rollTraits(kind, pity) {
    <defs> block. Everything downstream keeps using <use href="#f-peony"> exactly
    the way it used <use href="#f-camellia">, and colour is applied with CSS
    because every stroke and fill below is currentColor. */
+/* Everything is plotted on a 2 unit pixel grid inside the 40x40 box, the way an
+   old artillery game would have drawn it. No curves, no hairlines. Each star is
+   a square snapped to the grid, which is what makes these read at 24px in the
+   rack and animate like sprite frames rather than vector art. */
+const PXG = 2;                                     // grid pitch
 function shellGeom(type){
-  const C = 20;                                   // 40x40 box, same as the flowers
-  const P = (a,r) => [ (C+Math.cos(a)*r).toFixed(1), (C+Math.sin(a)*r).toFixed(1) ];
-  const rays = (n,r0,r1,w,op) => { let s='';
-    for (let i=0;i<n;i++){ const a=(i/n)*Math.PI*2, p0=P(a,r0), p1=P(a,r1);
-      s += `<line x1="${p0[0]}" y1="${p0[1]}" x2="${p1[0]}" y2="${p1[1]}" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" opacity="${op}"/>`; }
-    return s; };
-  const dots = (n,r,rad,op) => { let s='';
-    for (let i=0;i<n;i++){ const a=(i/n)*Math.PI*2, p=P(a,r);
-      s += `<circle cx="${p[0]}" cy="${p[1]}" r="${rad}" fill="currentColor" opacity="${op}"/>`; }
-    return s; };
+  const C = 20;
+  const snap = v => Math.round(v / PXG) * PXG;      // lock to the pixel grid
+  const seen = {};
+  let out = '';
+  // Plot one square. Duplicates on the same cell are dropped so dense patterns
+  // do not stack semi transparent pixels on top of each other.
+  const px = (x, y, size, op) => {
+    const sx = snap(x), sy = snap(y), s = size || PXG;
+    const k = sx + ',' + sy + ',' + s;
+    if (seen[k]) return;
+    seen[k] = 1;
+    out += `<rect x="${sx}" y="${sy}" width="${s}" height="${s}" fill="currentColor"${op ? ` opacity="${op}"` : ''}/>`;
+  };
+  // Walk a ray from r0 to r1 at angle a, dropping a pixel every step.
+  const ray = (a, r0, r1, size, op, step) => {
+    const st = step || PXG;
+    for (let r = r0; r <= r1; r += st) px(C + Math.cos(a) * r - size / 2, C + Math.sin(a) * r - size / 2, size, op);
+  };
+  const arc = (n, r, size, op) => {
+    for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2;
+      px(C + Math.cos(a) * r - size / 2, C + Math.sin(a) * r - size / 2, size, op); }
+  };
+  const fall = (a, r, len, size, op) => {          // pixels that drop straight down
+    const x = C + Math.cos(a) * r, y0 = C + Math.sin(a) * r;
+    for (let d = 0; d <= len; d += PXG) px(x - size / 2, y0 + d, size, d > len * 0.6 ? (op || 1) * 0.55 : op);
+  };
 
-  switch(type){
-    case 'peony':   return dots(22,15,1.15,1) + `<circle cx="20" cy="20" r="1.5" fill="currentColor" opacity=".9"/>`;
-    case 'chrys':   return rays(22,3.5,14,.65,.7) + dots(22,15,1,1);
-    case 'ring':    return dots(20,16.2,1.1,1);
-    case 'willow': { let g=''; const n=11;
-      for (let i=0;i<n;i++){ const a=(i/n)*Math.PI*2, p=P(a,11.5), y2=(+p[1]+6.5).toFixed(1);
-        g += `<path d="M20 20 Q ${p[0]} ${p[1]} ${p[0]} ${y2}" fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="round" opacity=".85"/>`;
-        g += `<circle cx="${p[0]}" cy="${y2}" r=".95" fill="currentColor"/>`; }
-      return g; }
-    case 'palm': { let g=''; const n=6;
-      for (let i=0;i<n;i++){ const a=(-Math.PI*0.93)+(i/(n-1))*(Math.PI*0.86), p=P(a,13.5);
-        g += `<path d="M20 22.5 Q ${(20+(p[0]-20)*.55).toFixed(1)} ${(20+(p[1]-20)*.8).toFixed(1)} ${p[0]} ${p[1]}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".92"/>`;
-        g += `<circle cx="${p[0]}" cy="${p[1]}" r="1.25" fill="currentColor"/>`; }
-      return g; }
-    case 'brocade': return rays(34,2.5,16.5,.38,.5) + dots(34,17,.55,.9);
-    case 'cross': { let g = rays(8,3.5,12,.8,.8);
-      for (let i=0;i<8;i++){ const a=(i/8)*Math.PI*2, p=P(a,13.2);
-        g += `<line x1="${(+p[0]-1.7).toFixed(1)}" y1="${p[1]}" x2="${(+p[0]+1.7).toFixed(1)}" y2="${p[1]}" stroke="currentColor" stroke-width=".8" stroke-linecap="round"/>`;
-        g += `<line x1="${p[0]}" y1="${(+p[1]-1.7).toFixed(1)}" x2="${p[0]}" y2="${(+p[1]+1.7).toFixed(1)}" stroke="currentColor" stroke-width=".8" stroke-linecap="round"/>`; }
-      return g; }
-    case 'kamuro': { let g = rays(16,2,11.5,.95,.9);
-      for (let i=0;i<16;i++){ const a=(i/16)*Math.PI*2, p=P(a,11.5), y2=(+p[1]+5.4).toFixed(1);
-        g += `<line x1="${p[0]}" y1="${p[1]}" x2="${p[0]}" y2="${y2}" stroke="currentColor" stroke-width=".6" stroke-linecap="round" opacity=".7"/>`;
-        g += `<circle cx="${p[0]}" cy="${y2}" r=".8" fill="currentColor" opacity=".95"/>`; }
-      return g; }
+  switch (type) {
+    case 'peony':                                   // solid round break, no tails
+      arc(16, 13, 3, 1); arc(10, 8, 2, 0.85); px(19, 19, 2, 1); break;
+
+    case 'chrys':                                   // same break, every star trails
+      for (let i = 0; i < 12; i++) ray((i / 12) * Math.PI * 2, 4, 14, 2, 0.8);
+      arc(12, 15, 3, 1); break;
+
+    case 'ring':                                    // hollow halo only
+      arc(20, 15, 3, 1); break;
+
+    case 'comet': {                                 // one star running across
+      for (let i = 0; i < 9; i++) px(8 + i * 2.6, 27 - i * 2.2, i > 6 ? 4 : (i > 3 ? 3 : 2), 0.35 + i * 0.08);
+      px(30, 8, 4, 1); px(28, 12, 2, 0.7); break; }
+
+    case 'willow':                                  // long drooping branches
+      for (let i = 0; i < 9; i++) { const a = (i / 9) * Math.PI * 2;
+        ray(a, 3, 10, 2, 0.9); fall(a, 10, 8, 2, 0.9); }
+      break;
+
+    case 'palm':                                    // thick fronds, upward fan
+      for (let i = 0; i < 6; i++) { const a = -Math.PI * 0.92 + (i / 5) * Math.PI * 0.84;
+        ray(a, 3, 13, 4, 0.95); px(C + Math.cos(a) * 14 - 2, C + Math.sin(a) * 14 - 2, 4, 1); }
+      px(19, 22, 3, 0.8); break;
+
+    case 'brocade':                                 // dense lace
+      for (let i = 0; i < 20; i++) ray((i / 20) * Math.PI * 2, 3, 16, 2, 0.55);
+      arc(20, 17, 2, 0.95); break;
+
+    case 'spider':                                  // stiff straight legs
+      for (let i = 0; i < 10; i++) ray((i / 10) * Math.PI * 2, 2, 16, 2, 0.95, 2.4);
+      px(19, 19, 3, 1); break;
+
+    case 'cross': {                                 // every star splits in four
+      for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2;
+        ray(a, 3, 11, 2, 0.85);
+        const x = C + Math.cos(a) * 13, y = C + Math.sin(a) * 13;
+        px(x - 1, y - 1, 2, 1); px(x - 4, y - 1, 2, 1); px(x + 2, y - 1, 2, 1);
+        px(x - 1, y - 4, 2, 1); px(x - 1, y + 2, 2, 1); }
+      break; }
+
+    case 'kamuro':                                  // dense head, heavy trails
+      // Trail length capped at 7 so the lowest pixels stay inside the 40 box.
+      for (let i = 0; i < 14; i++) { const a = (i / 14) * Math.PI * 2;
+        ray(a, 2, 9, 3, 0.95); fall(a, 9, 7, 2, 0.8); }
+      break;
+
+    case 'horse':                                   // barely climbs, pours down
+      for (let i = 0; i < 7; i++) { const a = -Math.PI * 0.85 + (i / 6) * Math.PI * 0.7;
+        ray(a, 3, 9, 3, 0.95); fall(a, 9, 16, 3, 0.9); }
+      px(19, 17, 3, 1); break;
+
+    case 'salute':                                  // flash and shockwave
+      px(16, 16, 8, 1); arc(8, 9, 3, 0.9); arc(16, 15, 2, 0.5); arc(20, 18, 2, 0.25); break;
   }
-  return '';
+  return out;
 }
 // Injected once, before anything renders.
 function buildShellSymbols(){
@@ -1044,25 +1109,72 @@ function collectPraise() {
     runShow(function () { _sparking = false; renderGarden(); maybeRankup(); });
   }, 1100);
 }
-// Every broken shell relaunches: it drops back to its tube, climbs, and opens.
+/* The show. A spark runs the ground, and as it passes each tube that tube
+   flashes, a pixel lifts out of it, and the shell breaks at its own height.
+   Order is column by column, front row before back row, so a stacked pair
+   fires low then high and you read the two layers. Deliberately slow: the
+   rise alone is three quarters of a second, matching the reveal. */
+const NSSVG = 'http://www.w3.org/2000/svg';
 function runShow(done) {
   const svg = $('gardensvg');
   if (!svg) { if (done) done(); return; }
-  const shells = Array.prototype.slice.call(svg.querySelectorAll('use')).filter(function (u) {
-    const h = u.getAttribute('href') || '';
-    return h !== '#f-shell' && h !== '#f-drop';
-  });
-  if (!shells.length) { if (done) done(); return; }
-  shells.forEach(function (u, i) {
-    u.style.opacity = '0';
+  const bursts = Array.prototype.slice.call(svg.querySelectorAll('.burst-g'))
+    .sort(function (a, b) {
+      const ca = +a.dataset.col, cb = +b.dataset.col;
+      return ca !== cb ? ca - cb : (+a.dataset.row) - (+b.dataset.row);
+    });
+  if (!bursts.length) { if (done) done(); return; }
+
+  const STEP = 430, RISE = 760;
+  bursts.forEach(function (b) { b.style.opacity = '0'; });
+
+  // The spark crossing the ground, timed to arrive with the last shell.
+  const spark = document.createElementNS(NSSVG, 'rect');
+  spark.setAttribute('x', 2); spark.setAttribute('y', SHOW.ground - 3);
+  spark.setAttribute('width', 5); spark.setAttribute('height', 5);
+  spark.setAttribute('rx', 1); spark.setAttribute('fill', '#fde68a');
+  const lastCol = +bursts[bursts.length - 1].dataset.col;
+  const runTo = SHOW.left + lastCol * SHOW.pitch;
+  spark.style.setProperty('--dx', runTo + 'px');
+  spark.style.animation = 'groundrun ' + ((bursts.length - 1) * STEP + RISE) + 'ms linear forwards';
+  svg.appendChild(spark);
+
+  let t = 0;
+  bursts.forEach(function (b) {
+    const col = +b.dataset.col, row = +b.dataset.row;
+    const s = slotOf(col * 2 + row);
     setTimeout(function () {
-      u.style.opacity = '';
-      u.style.transformOrigin = 'center';
-      u.classList.add('breaker');
-      setTimeout(function () { u.classList.remove('breaker'); }, 800);
-    }, 180 + i * 230);
+      // the tube it came out of lights up
+      const tube = svg.querySelector('.tube-g[data-col="' + col + '"][data-row="' + row + '"] rect');
+      if (tube) { tube.style.animation = 'tubeflash 0.5s ease-out'; setTimeout(function () { tube.style.animation = ''; }, 520); }
+      // three pixels lift out of it toward the break point
+      const g = document.createElementNS(NSSVG, 'g');
+      for (let k = 0; k < 3; k++) {
+        const r = document.createElementNS(NSSVG, 'rect');
+        r.setAttribute('x', s.x - 1.5); r.setAttribute('y', s.tubeY);
+        r.setAttribute('width', 3); r.setAttribute('height', 3);
+        r.setAttribute('fill', '#fde68a');
+        r.style.setProperty('--dy', (s.burstY + 16 - s.tubeY) + 'px');
+        r.style.animation = 'liftpx ' + RISE + 'ms ' + (k * 70) + 'ms cubic-bezier(.35,.05,.6,1) forwards';
+        g.appendChild(r);
+      }
+      svg.appendChild(g);
+      setTimeout(function () {
+        g.remove();
+        b.style.opacity = '';
+        b.style.transformOrigin = s.x + 'px ' + (s.burstY + 16) + 'px';
+        b.classList.add('breaker');
+        setTimeout(function () {
+          b.classList.remove('breaker');
+          // stage four: it turns while it burns
+          b.style.animation = 'spinhold 1.5s ease-in-out';
+          setTimeout(function () { b.style.animation = ''; }, 1550);
+        }, 1060);
+      }, RISE);
+    }, t);
+    t += STEP;
   });
-  setTimeout(function () { if (done) done(); }, 180 + shells.length * 230 + 800);
+  setTimeout(function () { spark.remove(); if (done) done(); }, t + RISE + 2700);
 }
 
 /* ---------------- backend adapter [SERVER] ---------------- */
@@ -1374,7 +1486,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260912-1710';
+const BUILD = '20260912-1840';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1560,15 +1672,100 @@ function renderGarden() {
       if (_starter) break;
     }
   }
-  const { placed, h } = layoutBeds();
+  drawShow();
+}
+
+/* ---------------- the field: two rows on the ground, bursts above ----------
+   Every shell lives in one of two rack rows along the bottom. The back row
+   sits behind and slightly higher; a shell in the back row breaks HIGHER in
+   the sky than the front row shell in the same column, so a stacked pair
+   reads as two layers rather than one pile. Index order fills column by
+   column, front row first, which is also the order the fuse lights them. */
+const SHOW = { w: 364, h: 214, ground: 158, pitch: 27, left: 16 };
+// Where does this plant sit, and where does its shell break?
+function slotOf(i) {
+  const row = i % 2;                      // 0 front, 1 back
+  const col = Math.floor(i / 2);
+  const x = SHOW.left + col * SHOW.pitch + (row ? 4 : 0);
+  const tubeY = row ? SHOW.ground - 22 : SHOW.ground - 6;
+  const burstY = row ? 44 : 100;          // back row breaks higher
+  return { row, col, x, tubeY, burstY };
+}
+function showCapacity() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch) * 2; }
+
+function drawShow() {
   const el = $('gardensvg');
-  el.setAttribute('viewBox', `0 0 364 ${h}`);
+  el.setAttribute('viewBox', `0 0 ${SHOW.w} ${SHOW.h}`);
   let out = '';
-  // Stars instead of soil dots. Same grid, different night.
-  for (let gx = 10; gx < 364; gx += 22) for (let gy = 6; gy < h; gy += 19) {
+  // Star field, thinner near the ground.
+  for (let gx = 8; gx < SHOW.w; gx += 21) for (let gy = 5; gy < SHOW.ground - 8; gy += 18) {
     const j = ((gx * 7 + gy * 13) % 11) / 11;
-    out += `<circle cx="${gx + j * 6}" cy="${gy + j * 5}" r="${(0.5 + j * 0.9).toFixed(2)}" fill="#dbe7ff" opacity="${(0.18 + j * 0.42).toFixed(2)}"/>`;
+    out += `<circle cx="${(gx + j * 6).toFixed(1)}" cy="${(gy + j * 5).toFixed(1)}" r="${(0.5 + j * 0.9).toFixed(2)}" fill="#dbe7ff" opacity="${(0.16 + j * 0.38).toFixed(2)}"/>`;
   }
+  // The ground. Racks below it, sky above it.
+  out += `<rect x="0" y="${SHOW.ground}" width="${SHOW.w}" height="${SHOW.h - SHOW.ground}" fill="#0c142e"/>`;
+  out += `<line x1="4" y1="${SHOW.ground}" x2="${SHOW.w - 4}" y2="${SHOW.ground}" stroke="#4a5c8f" stroke-width="2.5" stroke-linecap="round"/>`;
+  out += `<line x1="4" y1="${SHOW.ground + 3}" x2="${SHOW.w - 4}" y2="${SHOW.ground + 3}" stroke="#22305e" stroke-width="1.4" stroke-linecap="round"/>`;
+
+  const list = S.plants.slice();
+  const cap = showCapacity();
+
+  // 1. tubes and their contents, back row first so the front row overlaps it
+  const order = list.map((p, i) => ({ p, s: slotOf(i) }));
+  for (const layer of [1, 0]) {
+    for (const { p, s } of order) {
+      if (s.row !== layer) continue;
+      const lit = p.state === 'ready' || p.gift;
+      const climbing = p.stage === 'climb';
+      const done = p.state === 'bloomed';
+      const tubeFill = layer ? '#1b2745' : '#243357';
+      // the mortar tube
+      out += `<g data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" class="tube-g">
+        <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="${tubeFill}" stroke="${lit ? '#f0b429' : '#3b4a78'}" stroke-width="1.6"/>
+        <ellipse cx="${s.x}" cy="${s.tubeY + 1.5}" rx="8" ry="2.4" fill="#33456f"/>`;
+      if (!done) {
+        const col = p.gift ? '#fde68a' : (climbing ? '#b18cff' : (lit ? '#fde68a' : '#6b7aa8'));
+        if (lit) out += `<circle cx="${s.x}" cy="${s.tubeY + 9}" r="11" fill="#f59e0b" opacity="0.20" style="animation:ringpulse 1.6s ease-out infinite;"/>`;
+        out += `<use href="#f-shell" x="${s.x - 8}" y="${s.tubeY + 1}" width="16" height="16" style="cursor:pointer;color:${col};" onclick="seedTap('${p.id}')"/>`;
+      } else {
+        out += `<circle cx="${s.x}" cy="${s.tubeY + 10}" r="3" fill="${colorHex(p.color)}" opacity="0.35"/>`;
+      }
+      out += `<text x="${s.x}" y="${s.tubeY + 28}" text-anchor="middle" class="lbl">${esc(String(p.tag).toUpperCase())}</text></g>`;
+    }
+  }
+
+  // 2. one empty tube as the add button
+  if (list.length < cap) {
+    const s = slotOf(list.length);
+    out += `<g style="cursor:pointer;" onclick="goPlant()">
+      <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="none" stroke="#4a5c8f" stroke-width="1.6" stroke-dasharray="3 2"/>
+      <path d="M${s.x} ${s.tubeY + 5} v10 M${s.x - 5} ${s.tubeY + 10} h10" stroke="#8fa0cc" stroke-width="2" stroke-linecap="round" style="animation:pulsehint 2.2s infinite;"/></g>`;
+  }
+
+  // 3. the sky. Bursts sit directly above the tube that fired them.
+  for (const { p, s } of order) {
+    if (p.state !== 'bloomed') {
+      if (p.stage === 'climb') {
+        out += `<g class="climber" data-col="${s.col}" data-row="${s.row}">
+          <line x1="${s.x}" y1="${s.burstY + 26}" x2="${s.x}" y2="${SHOW.ground - 6}" stroke="#b18cff" stroke-width="1.1" opacity="0.35" style="animation:trailfade 1.8s infinite;"/>
+          <use href="#f-shell" x="${s.x - 7}" y="${s.burstY + 16}" width="14" height="14" style="color:#b18cff;"/>
+          <text x="${s.x}" y="${s.burstY + 12}" text-anchor="middle" font-size="5.5" fill="#c4a6ff" font-family="'avenir-heavy',Arial">IN THE AIR</text></g>`;
+      }
+      continue;
+    }
+    const sp0 = sp(p.species), hex = colorHex(p.color);
+    out += `<g class="burst-g" data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" style="cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')">
+      <circle cx="${s.x}" cy="${s.burstY + 16}" r="17" fill="${hex}" opacity="0.10"/>
+      ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${s.burstY + 16}" r="19" fill="#fde68a" opacity="0.18"/>` : ''}
+      ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${s.burstY + 16}" r="18" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
+      <use href="#${sp0.art}" x="${s.x - 16}" y="${s.burstY}" width="32" height="32" style="color:${hex};"/>
+      ${p.traits && p.traits.gli ? `<text x="${s.x - 11}" y="${s.burstY + 7}" font-size="6" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
+    </g>`;
+  }
+  el.innerHTML = out;
+}
+
+function _unusedBedDraw(placed, h, out) {
   for (const b of placed) {
     const gold = plantsInBed(b.id).some((p) => p.state === 'bloomed' && sp(p.species).shelf === 'au');
     const runs = bedRuns(b);
@@ -1853,8 +2050,8 @@ function plantNow(deadline, relId) {
     showToast(CONFIG.dailyTextCap + ' new people a day keeps this human. Come back tomorrow. You can still send follow ups.');
     return;
   }
-  const spot = openSpot();
-  if (!spot) { showToast('Your rack is full. Place another one from the Shed, or wait to earn one.'); return; }
+  // Capacity is the two ground rows now, not the old bed grid.
+  if (S.plants.length >= showCapacity()) { showToast('Every tube is loaded. Light the fuse and clear some room.'); return; }
   // The label comes from the relationship, never from a free text box.
   const tag = labelFor(relId, pendingPlant.first, pendingPlant.last || '');
   const _ph = (pendingPlant && pendingPlant.phone) ? String(pendingPlant.phone).replace(/\D/g, '') : '';
@@ -1891,15 +2088,11 @@ function commitPendingSeed() {
   const p = S.pendingSeed;
   if (!p) return;
   S.pendingSeed = null;
-  const spot = openSpot();
-  if (!spot) { save(); showToast('Your garden is full — place a bed from your Shed first, or wait for a bloom to earn one.'); return; }
-  S.plants.push({ id: 'p' + (S.nextId++), token: p.token, tag: p.tag, bedId: spot.bedId, slot: spot.slot,
+  if (S.plants.length >= showCapacity()) { save(); showToast('Every tube is loaded. Light the fuse and clear some room.'); return; }
+  // Position comes from order in the list now, so no bed or slot is needed.
+  S.plants.push({ id: 'p' + (S.nextId++), token: p.token, tag: p.tag,
     state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!p.deadline, phone: p.phone || '' });
   S.seedsPlanted++; S.textsToday++;
-  if (S.seedsPlanted % 3 === 0) {
-    S.bedsEarned = (S.bedsEarned || 0) + 1;
-    S.shed.push({ kind: 'bed', shape: S.bedsEarned === 3 ? 'L4' : (S.bedsEarned % 2 ? 'r2' : 'r3') });
-  }
   save();
   renderGarden(); showTab('garden');
   showToast('Shell loaded for ' + p.tag + ' 🎆');
@@ -2102,13 +2295,15 @@ function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
       <!-- ground line the shell sits on -->
       <span style="position:absolute;left:0;right:0;bottom:16px;height:3px;background:linear-gradient(#2a3a6b,#16224a);"></span>
       <!-- 1. the shell waits in its tube -->
-      <span style="position:absolute;left:50%;bottom:12px;transform:translateX(-50%);animation:cinebean 1.3s 0.9s ease forwards;"><svg style="width:30px;height:30px;display:block;color:${hex};"><use href="#f-shell"/></svg></span>
-      <!-- 2. it climbs. this is the rising stage -->
-      <span style="position:absolute;left:50%;bottom:40px;opacity:0;transform:translateX(-50%);animation:climb 1.05s 1.15s ease-in forwards;"><svg style="width:15px;height:15px;display:block;color:${hex};"><use href="#f-shell"/></svg></span>
-      <span style="position:absolute;left:50%;bottom:40px;width:2px;height:96px;margin-left:-1px;background:linear-gradient(${hex},transparent);opacity:0;animation:revealpop 0.3s 1.3s forwards,trailfade 1.1s 1.7s forwards;"></span>
+      <span style="position:absolute;left:50%;bottom:12px;transform:translateX(-50%);animation:cinebean 1.5s 1.1s ease forwards;"><svg style="width:30px;height:30px;display:block;color:${hex};"><use href="#f-shell"/></svg></span>
+      <!-- 2. it climbs. this is the rising stage, slowed to match the show -->
+      <span style="position:absolute;left:50%;bottom:40px;opacity:0;transform:translateX(-50%);animation:climb 1.3s 1.35s ease-in forwards;"><svg style="width:15px;height:15px;display:block;color:${hex};"><use href="#f-shell"/></svg></span>
+      <span style="position:absolute;left:50%;bottom:40px;width:2px;height:96px;margin-left:-1px;background:linear-gradient(${hex},transparent);opacity:0;animation:revealpop 0.3s 1.5s forwards,trailfade 1.3s 2s forwards;"></span>
       <!-- 3. it breaks -->
       ${traits.sun ? `<span style="position:absolute;left:calc(50% - 70px);top:48px;width:140px;height:140px;border-radius:50%;border:3.5px solid #f0b429;opacity:0;animation:revealpop 0.6s 3.4s forwards,goldshine 2.6s 4s infinite;"></span>` : ''}
-      <span style="position:absolute;left:50%;top:50px;opacity:0;transform:translateX(-50%);animation:cineflower 0.9s 2.25s ease forwards;"><svg style="width:140px;height:140px;display:block;color:${hex};filter:drop-shadow(0 0 16px ${hex});"><use href="#${s.art}"/></svg></span>
+      <!-- Stage 3 the break, then stage 4 turns it. The rotation runs three
+           times so it reads as still burning instead of a frozen sprite. -->
+      <span style="position:absolute;left:50%;top:50px;opacity:0;transform:translateX(-50%);animation:cineflower 1.15s 2.6s ease forwards;"><span style="display:block;animation:spinhold 1.5s 3.7s ease-in-out 3;"><svg style="width:140px;height:140px;display:block;color:${hex};filter:drop-shadow(0 0 16px ${hex});"><use href="#${s.art}"/></svg></span></span>
       ${traits.gli ? `<span style="position:absolute;left:30%;top:26%;font-size:18px;color:#fff;text-shadow:0 0 6px #f0b429;opacity:0;animation:revealpop 0.4s 3.6s forwards,glint 3s 4s infinite;">✦</span><span style="position:absolute;left:60%;top:34%;font-size:15px;color:#fffbe8;text-shadow:0 0 5px #f0b429;opacity:0;animation:revealpop 0.4s 3.8s forwards,glint 3s 4.2s infinite;">✦</span>` : ''}
       ${traits.pol ? `<span style="position:absolute;left:18%;top:62%;font-size:15px;color:${hex};opacity:0;animation:revealpop 0.4s 3.5s forwards,embers 1.6s 3.9s infinite;">✸</span><span style="position:absolute;right:20%;top:56%;font-size:13px;color:#fde68a;opacity:0;animation:revealpop 0.4s 3.7s forwards,embers 1.8s 4.1s infinite;">✸</span>` : ''}
     </div>
