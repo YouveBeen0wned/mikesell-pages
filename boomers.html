@@ -840,7 +840,16 @@ function buildShellSymbols(){
     <circle cx="18.2" cy="17.4" r="1.6" fill="#ffffff" opacity="0.45"/>
     <path d="M20 11 Q23.5 6.5 21 3" fill="none" stroke="#9aa3ad" stroke-width="1.5" stroke-linecap="round"/>
   </symbol>`;
-  defs.insertAdjacentHTML('beforeend', out);
+  // insertAdjacentHTML parses as HTML, which would build these in the HTML
+  // namespace and they would never render inside an SVG. Parse as SVG and
+  // import the nodes so they land in the right namespace.
+  try {
+    const doc = new DOMParser().parseFromString(
+      '<svg xmlns="http://www.w3.org/2000/svg">' + out + '</svg>', 'image/svg+xml');
+    if (doc.querySelector('parsererror')) return;
+    const kids = doc.documentElement.childNodes;
+    for (let i = 0; i < kids.length; i++) defs.appendChild(document.importNode(kids[i], true));
+  } catch (e) {}
 }
 // A shell is a pattern plus a colour. Both are needed to draw one.
 function shellUse(speciesId, colorId, size, extra){
@@ -1328,7 +1337,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260912-1400';
+const BUILD = '20260912-1520';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2029,8 +2038,6 @@ function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
   if (traits.gli) anns.push(['✦ Glitter tail!', '#b48908']);
   let t = 4.2;
   const annHtml = anns.map(([txt, col]) => { t += 0.6; return `<div class="chip-anim" style="animation-delay:${t}s;font-family:'clarendon-w01-medium',Georgia,serif;font-size:16px;color:${col};text-shadow:0 1px 0 #fff,0 0 12px #fde68a;">${txt}</div>`; }).join('');
-  el.innerHTML = `
-    <div style="height:${anns.length ? 70 : 12}px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;">${annHtml}</div>
   const hex = colorHex(p.color);
   el.innerHTML = `
     <div style="position:relative;width:250px;height:250px;margin:6px auto 0;border-radius:22px;overflow:hidden;border:3px solid #3b4a78;background:linear-gradient(180deg,#060a1c 0%,#0e1838 62%,#1a2750 100%);">
