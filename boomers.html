@@ -148,19 +148,13 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
 @keyframes groundrun{from{transform:translateX(0);}to{transform:translateX(var(--dx,360px));}}
 /* Tube flashing as the fuse reaches it. */
 @keyframes tubeflash{0%,100%{stroke:#3b4a78;}35%{stroke:#fde68a;}}
-/* Flash and spin, not dance. The burst cuts out completely and cuts back in at
-   a new angle, so it strobes the way a real shell does instead of swaying.
-   Paired with steps(1,end) so nothing ever interpolates between angles. */
+/* The burst does not travel and does not blink. It rotates on its own centre,
+   side to side, and then stops. Runs three times at 1.6s, so about 5 seconds
+   of motion and then it holds still. */
 @keyframes burnloop{
-  0%  {opacity:1;transform:rotate(0deg)   scale(1);}
-  20% {opacity:0;transform:rotate(0deg)   scale(1);}
-  25% {opacity:1;transform:rotate(15deg)  scale(1.05);}
-  45% {opacity:0;transform:rotate(15deg)  scale(1.05);}
-  50% {opacity:1;transform:rotate(30deg)  scale(0.97);}
-  70% {opacity:0;transform:rotate(30deg)  scale(0.97);}
-  75% {opacity:1;transform:rotate(45deg)  scale(1.04);}
-  95% {opacity:0;transform:rotate(45deg)  scale(1.04);}
-  100%{opacity:1;transform:rotate(60deg)  scale(1);}}
+  0%   {transform:rotate(-7deg);}
+  50%  {transform:rotate(7deg);}
+  100% {transform:rotate(-7deg);}}
 /* Fourth reveal stage: the result turns, so it reads as still burning. */
 @keyframes spinhold{0%{transform:rotate(0deg) scale(1);}
   25%{transform:rotate(9deg) scale(1.04);}50%{transform:rotate(0deg) scale(1);}
@@ -462,13 +456,6 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
     <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Shells stage in the racks below the line. Light the fuse and they go up in order.</b></div>
     <svg id="gardensvg" viewBox="0 0 364 206" style="width:100%;display:block;"></svg>
     <div id="fuseline"><i></i></div>
-    <!-- The fuse lives on the field, down at the end of the racks where you
-         would actually light one. Icon only; nothing else looks like this. -->
-    <button id="btn-spark" onclick="sparkFuse()" title="Light the fuse"
-      style="position:absolute;left:14px;bottom:34px;z-index:4;width:40px;height:40px;border-radius:50%;
-             border:2px solid #f0b429;background:#1b2745;color:#fde68a;font-size:19px;line-height:1;
-             cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;
-             box-shadow:0 0 12px rgba(245,158,11,0.45);transition:opacity .2s,border-color .2s,box-shadow .2s;">🔥</button>
     <div style="font-size:8.5px;color:#6f80ad;text-align:center;letter-spacing:0.03em;padding:4px 0 1px;line-height:1.4;">Hold and drag a shell to rearrange it, or drag it off the racks to remove it. Removed shells go to your Shed.</div>
   </div>
   <div class="toolbar">
@@ -1134,18 +1121,15 @@ setInterval(function () { try { renderCycleCountdown(); } catch (e) {} }, 1000);
    quiet when you cannot, and it repaints every second so the 30 second
    cooldown is visible without a label. */
 function paintSparkBtn() {
-  const sb = $('btn-spark');
+  const sb = $('sparkbtn');
   if (!sb || !S) return;
   const owned = S.plants.some(function (p) { return p.state === 'bloomed'; });
   const ready = owned && sparkCooldownLeft() === 0 && !_sparking;
-  sb.style.opacity      = ready ? '1' : '0.35';
-  sb.style.borderColor  = ready ? '#f0b429' : '#46557f';
-  sb.style.color        = ready ? '#fde68a' : '#6f80ad';
-  sb.style.boxShadow    = ready ? '0 0 12px rgba(245,158,11,0.45)' : 'none';
-  sb.style.filter       = ready ? 'none' : 'grayscale(1)';
-  sb.style.cursor       = ready ? 'pointer' : 'default';
-  sb.title = !owned ? 'Light a shell first'
-    : (ready ? 'Light the fuse' : 'Ready in ' + Math.ceil(sparkCooldownLeft() / 1000) + 's');
+  const ring = sb.querySelector('circle');
+  sb.style.opacity = ready ? '1' : '0.32';
+  sb.style.filter  = ready ? 'drop-shadow(0 0 5px rgba(245,158,11,0.6))' : 'grayscale(1)';
+  sb.style.cursor  = ready ? 'pointer' : 'default';
+  if (ring) ring.setAttribute('stroke', ready ? '#f0b429' : '#46557f');
 }
 setInterval(function () {
   try { if ($('scr-garden') && $('scr-garden').classList.contains('on')) paintSparkBtn(); } catch (e) {}
@@ -1212,23 +1196,25 @@ function runShow(done) {
      ground at a constant speed, and a column fires at the exact moment the
      spark reaches THAT column's x. Slowed right down so you can watch a shell
      leave its tube, climb, and open before the next one starts. */
-  const COLSTEP = 900;    // time the spark takes to cross one column
-  const LEAD = 700;       // spark travels in from the left before the first
-  const ROWGAP = 150;     // stacked shells in one column, front then back
-  const RISE = 950;       // tube to break point
+  /* The burning fuse runs the WHOLE ground, from the igniter to the far edge,
+     at one constant speed. It never pauses at a shell. Shells simply fire at
+     the moment it happens to be level with their column. */
+  const COLSTEP = 560;    // ms to cross one column, i.e. the fuse speed
+  const ROWGAP = 120;     // stacked shells in one column, front then back
+  const RISE = 780;       // tube to break point
+  const PXPMS = SHOW.pitch / COLSTEP;          // fuse speed in units per ms
   bursts.forEach(function (b) { b.style.opacity = '0'; });
 
-  const lastCol = Math.max.apply(null, bursts.map(function (b) { return +b.dataset.col; }));
-  const startX = SHOW.left - 16;
-  const endX = SHOW.left + lastCol * SHOW.pitch;
+  const startX = SPARK_X;
+  const endX = SHOW.w - 4;
+  const runMs = (endX - startX) / PXPMS;
   const spark = document.createElementNS(NSSVG, 'rect');
-  spark.setAttribute('x', startX); spark.setAttribute('y', SHOW.ground - 3);
+  spark.setAttribute('x', startX - 2); spark.setAttribute('y', SHOW.ground - 3);
   spark.setAttribute('width', 6); spark.setAttribute('height', 6);
   spark.setAttribute('rx', 1); spark.setAttribute('fill', '#fde68a');
-  spark.style.filter = 'drop-shadow(0 0 5px #f59e0b)';
+  spark.style.filter = 'drop-shadow(0 0 6px #f59e0b)';
   spark.style.setProperty('--dx', (endX - startX) + 'px');
-  // Constant speed: lead-in plus one COLSTEP per column it has to cross.
-  spark.style.animation = 'groundrun ' + (LEAD + lastCol * COLSTEP) + 'ms linear forwards';
+  spark.style.animation = 'groundrun ' + Math.round(runMs) + 'ms linear forwards';
   svg.appendChild(spark);
 
   const rows = rackRows();
@@ -1236,8 +1222,8 @@ function runShow(done) {
   bursts.forEach(function (b) {
     const col = +b.dataset.col, row = +b.dataset.row;
     const s = slotOf(col * rows + row);
-    // Fire when the spark is level with this column.
-    const t = LEAD + col * COLSTEP + row * ROWGAP;
+    // Fire at the instant the fuse is level with this column's own x.
+    const t = Math.round((s.x - startX) / PXPMS) + row * ROWGAP;
     if (t > lastFire) lastFire = t;
     setTimeout(function () {
       // the tube it came out of lights up
@@ -1269,7 +1255,9 @@ function runShow(done) {
       }, RISE);
     }, t);
   });
-  setTimeout(function () { spark.remove(); if (done) done(); }, lastFire + RISE + 2800);
+  // The fuse keeps burning to the end even after the last shell has gone up.
+  setTimeout(function () { spark.remove(); }, runMs + 200);
+  setTimeout(function () { if (done) done(); }, Math.max(runMs, lastFire + RISE) + 2600);
 }
 
 /* ---------------- backend adapter [SERVER] ---------------- */
@@ -1580,7 +1568,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-0625';
+const BUILD = '20260913-0750';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1797,7 +1785,9 @@ function renderGarden() {
    the sky than the front row shell in the same column, so a stacked pair
    reads as two layers rather than one pile. Index order fills column by
    column, front row first, which is also the order the fuse lights them. */
-const SHOW = { w: 364, h: 220, ground: 128, pitch: 28, left: 20, r: 19 };
+const SHOW = { w: 364, h: 220, ground: 128, pitch: 28, left: 34, r: 19 };
+// Where the igniter sits, and where the burning fuse starts from.
+const SPARK_X = 13;
 // Two rack rows to start. The third unlocks, and once it does it stays.
 function rackRows() { return (S && S.rows) ? S.rows : 2; }
 /* Where a shell sits, and where it breaks.
@@ -1854,6 +1844,12 @@ function drawShow() {
     const j = ((gx * 7 + gy * 13) % 11) / 11;
     out += `<circle cx="${(gx + j * 6).toFixed(1)}" cy="${(gy + j * 5).toFixed(1)}" r="${(0.5 + j * 0.9).toFixed(2)}" fill="#dbe7ff" opacity="${(0.16 + j * 0.38).toFixed(2)}"/>`;
   }
+  // The fuse igniter, drawn in the field so it scales with everything else and
+  // can never overlap the tubes. The burning fuse starts from exactly here.
+  out += `<g id="sparkbtn" style="cursor:pointer;" onclick="sparkFuse()">
+    <circle cx="${SPARK_X}" cy="${SHOW.ground}" r="9" fill="#1b2745" stroke="#f0b429" stroke-width="1.8"/>
+    <text x="${SPARK_X}" y="${SHOW.ground + 3.6}" text-anchor="middle" font-size="9.5">🔥</text></g>`;
+
   // The ground. Racks are staged below it, the sky is everything above.
   out += `<rect x="0" y="${SHOW.ground}" width="${SHOW.w}" height="${SHOW.h - SHOW.ground}" fill="#0a1128"/>`;
   out += `<line x1="4" y1="${SHOW.ground}" x2="${SHOW.w - 4}" y2="${SHOW.ground}" stroke="#4a5c8f" stroke-width="2.5" stroke-linecap="round"/>`;
@@ -1921,10 +1917,13 @@ function drawShow() {
     const sp0 = sp(p.species), hex = colorHex(p.color), R = SHOW.r, cy = s.burstY + R;
     const phase = (s.col * 0.37 + s.row * 0.9).toFixed(2);   // so they do not pulse in lockstep
     out += `<g class="burst-g" data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" style="cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')">
+      <!-- The line that makes the mapping unmistakable: this burst belongs to
+           THAT tube, straight down, same axis. -->
+      <line x1="${s.x}" y1="${cy + R - 2}" x2="${s.x}" y2="${s.tubeY}" stroke="${hex}" stroke-width="1" opacity="0.18" stroke-dasharray="2 4"/>
       <circle cx="${s.x}" cy="${cy}" r="${R + 4}" fill="${hex}" opacity="0.09"/>
       ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${cy}" r="${R + 7}" fill="#fde68a" opacity="0.16"/>` : ''}
       ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${cy}" r="${R + 5}" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
-      <g style="transform-origin:${s.x}px ${cy}px;animation:burnloop 1.9s ${phase}s steps(1,end) infinite;">
+      <g style="transform-origin:${s.x}px ${cy}px;animation:burnloop 1.6s ${phase}s ease-in-out 3;">
         <use href="#${sp0.art}" x="${s.x - R}" y="${s.burstY}" width="${R * 2}" height="${R * 2}" style="color:${hex};"/>
       </g>
       ${p.traits && p.traits.gli ? `<text x="${s.x - 14}" y="${s.burstY + 9}" font-size="7" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
