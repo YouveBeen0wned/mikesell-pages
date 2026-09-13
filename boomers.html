@@ -241,6 +241,44 @@ html,body{background:var(--night-0);}
 [style*="#6b7280"]{color:#8fa0cc !important;}
 [style*="#8a94a3"]{color:#8494c0 !important;}
 [style*="#c3ccd6"]{color:#66769f !important;}
+
+/* ---- corrections after looking at it on a real screen -------------------- */
+/* A filled PIN box was falling back to the daytime white fill, which made the
+   digits pale grey on white. This rule sits after the base one so it wins. */
+.field input.pindot:not(:placeholder-shown),.pindot:not(:placeholder-shown){
+  background:#101a3c;border-color:#2f9fe0;color:var(--ink);
+}
+/* Big buttons were a flat #4cc9ff fill, which is a fine accent colour and a
+   glaring 300px block. Deeper fill, white type, same shape. */
+.bigbtn{background:linear-gradient(180deg,#2f9fe0,#1c74b8);color:#fff;box-shadow:0 5px 0 #0e4f80;}
+.bigbtn:active{box-shadow:0 3px 0 #0e4f80;}
+@keyframes popglow{0%,100%{box-shadow:0 5px 0 #0e4f80;}
+  50%{box-shadow:0 5px 0 #0e4f80,0 0 20px rgba(47,159,224,0.55);}}
+/* Focus rings were the same electric blue as the buttons; calm them down. */
+.field.focus,.searchbox{border-color:#2f9fe0;}
+.field.focus{box-shadow:0 0 0 3px rgba(47,159,224,0.16);}
+/* Section headings read better slightly cooler than pure white. */
+.gametitle,.rlab{color:#dfe7ff;}
+
+/* ---- the reveal ----------------------------------------------------------
+   The bloom sheet and the plaque were still daytime panels: white card, navy
+   type, cream wells. A firework reveal on a white card is the one screen that
+   most needs to be dark, since the whole point is a bright thing against a
+   night sky. */
+#bloom-sheet,#plaque-sheet,#rankup-sheet,#shed-sheet,#plantpick-sheet,#ladder-sheet,#connect-opts{
+  background:var(--night-2);color:var(--ink);
+}
+#plaque-sheet{background:#121a38 !important;}
+/* The chips that name the shell you just won. */
+#bloom-sheet .chip-anim{background:var(--night-3) !important;border-color:var(--line-n) !important;color:var(--ink) !important;}
+/* The plaque's medallion well was a cream radial gradient. */
+#plaque-sheet div[style*="radial-gradient"]{background:radial-gradient(circle,#1b2547 30%,#0c1430 100%) !important;}
+/* Trait rows: discovered stays warm, undiscovered goes quiet instead of grey
+   on grey. */
+#plaque-sheet div[style*="#f3f4f6"]{background:#111a38 !important;border-color:#2b3760 !important;color:#6f80ad !important;}
+#plaque-sheet div[style*="#fdf6e3"]{background:#241d0c !important;border-color:#8a6a1f !important;color:#f0b429 !important;}
+/* Confirm dialog buttons. */
+#confirm-cancel{background:#222c4e !important;color:#c8d3f5 !important;}
 </style>
 </head>
 
@@ -476,8 +514,8 @@ html,body{background:var(--night-0);}
     </div>
     <!-- Age and permission. It lives in the form, not on a separate screen, so
          it reads as part of signing up rather than a wall in front of it. -->
-    <div class="field" id="agerow" style="display:flex;align-items:flex-start;gap:10px;background:#faf7fd;border:2px solid #cdb3e0;cursor:pointer;" onclick="toggleAge()">
-      <span id="agebox" data-on="0" style="width:22px;height:22px;flex-shrink:0;margin-top:2px;border:2.5px solid #8555ab;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;color:#8555ab;font-family:'avenir-heavy',Arial,sans-serif;"></span>
+    <div class="field" id="agerow" style="display:flex;align-items:flex-start;gap:10px;background:#17143a;border:2px solid #5b47a8;cursor:pointer;" onclick="toggleAge()">
+      <span id="agebox" data-on="0" style="width:22px;height:22px;flex-shrink:0;margin-top:2px;border:2.5px solid #b18cff;border-radius:6px;background:#0c1430;display:flex;align-items:center;justify-content:center;font-size:14px;color:#b18cff;font-family:'avenir-heavy',Arial,sans-serif;"></span>
       <div style="flex:1;">
         <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;color:var(--ink);line-height:1.4;">I am 16 or older and I have permission to play.</div>
         <div style="font-size:9.5px;color:#6b7280;margin-top:3px;line-height:1.45;"><b>If you are under 18:</b> talk to your parent or guardian first, and only add people you are actually related to and actually know.</div>
@@ -1646,7 +1684,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-1030';
+const BUILD = '20260913-1150';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1682,10 +1720,10 @@ function toggleAge() {
   const on = el.dataset.on !== '1';
   el.dataset.on = on ? '1' : '0';
   el.textContent = on ? '✓' : '';
-  el.style.background = on ? '#8555ab' : '#fff';
-  el.style.color = on ? '#fff' : '#8555ab';
+  el.style.background = on ? '#7b4fd0' : '#0c1430';
+  el.style.color = on ? '#fff' : '#b18cff';
   const row = $('agerow');
-  if (row) { row.style.borderColor = '#cdb3e0'; row.style.boxShadow = ''; }
+  if (row) { row.style.borderColor = '#5b47a8'; row.style.boxShadow = ''; }
 }
 function doSignup() {
   const first = $('f-first').value.trim(), last = $('f-last').value.trim();
