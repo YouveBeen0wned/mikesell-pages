@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Boomers · Light up the sky for the people who raised you</title>
+<title>Boomers · Light up the sky with the people who raised you</title>
 <meta name="description" content="Boomers is a fireworks game for ages 16 and up. Check whether the adults in your family are registered to vote, and every one who confirms puts a shell in your show. Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04.">
 <style>
 @font-face{font-family:'clarendon-w01-medium';src:url('https://static.parastorage.com/services/santa-resources/resources/viewer/user-site-fonts/fonts/e2ffff81-a48c-42fc-9b03-6a4a5d0d052e.woff2') format('woff2');font-display:swap;}
@@ -385,7 +385,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
       <path d="M4 15 C60 8 160 8 216 17 C160 13 60 13 4 19 Z" fill="#8555ab"/>
       <path d="M4 20 C60 14 160 14 216 22 C160 18 60 18 4 24 Z" fill="#ea504e"/>
     </svg>
-    <div id="sg-tag" style="font-size:11.5px;color:#5b6470;margin-top:3px;letter-spacing:0.02em;">Light up the sky for the people who raised you</div>
+    <div id="sg-tag" style="font-size:11.5px;color:#5b6470;margin-top:3px;letter-spacing:0.02em;">Light up the sky with the people who raised you</div>
     <div id="sg-names" style="display:flex;gap:10px;margin:14px 24px 0;align-self:stretch;">
       <div class="field" style="flex:1;margin:0;"><label>FIRST NAME</label><input id="f-first" autocomplete="given-name" placeholder="Engaged"></div>
       <div class="field" style="flex:1;margin:0;"><label>LAST NAME</label><input id="f-last" autocomplete="family-name" placeholder="Voter"></div>
@@ -454,39 +454,35 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
     </div>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:11.5px;color:var(--blue);white-space:nowrap;text-align:right;"><span id="hud-plots">0</span> tubes<br><small style="font-family:Arial;font-size:8.5px;color:#6b7280;">next: <span id="hud-next">100</span>👏</small></div>
   </div>
-  <!-- A fireworks stand instead of a garden arch: awning, counter, and a
-       shadow line of rockets and shells racked up behind it. -->
-  <div style="margin:8px 22px -6px;"><svg viewBox="0 0 300 52" style="width:100%;display:block;">
-    <path d="M10 34 H290" stroke="#3b4a78" stroke-width="2" stroke-linecap="round"/>
-    <path d="M18 34 V22 H282 V34" fill="none" stroke="#3b4a78" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M18 22 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0" fill="none" stroke="#ea504e" stroke-width="2.2" opacity="0.75"/>
-    <circle cx="150" cy="12" r="2.2" fill="#f59e0b"/>
-    <text id="arch-name" x="150" y="47" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#3b4a78">MY SHOW</text>
-  </svg></div>
+  <!-- Show name sits on its own. No banner, no stand. -->
+  <div style="text-align:center;margin:10px 0 6px;"><span id="arch-name" style="font-family:Georgia,serif;font-size:11px;letter-spacing:2.5px;color:#6f80ad;">MY SHOW</span></div>
   <!-- flex:none matters. The screen is a flex column, so without it this panel
        shrinks below its own content and overflow:hidden then clips the sky. -->
   <div id="gardenwrap" style="position:relative;flex:none;background:linear-gradient(180deg,#070d22 0%,#0e1838 55%,#16224a 100%);border:3px solid #3b4a78;border-radius:22px;margin:0 12px;padding:6px;overflow:hidden;">
     <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Shells stage in the racks below the line. Light the fuse and they go up in order.</b></div>
     <svg id="gardensvg" viewBox="0 0 364 206" style="width:100%;display:block;"></svg>
     <div id="fuseline"><i></i></div>
+    <!-- The fuse lives on the field, down at the end of the racks where you
+         would actually light one. Icon only; nothing else looks like this. -->
+    <button id="btn-spark" onclick="sparkFuse()" title="Light the fuse"
+      style="position:absolute;left:14px;bottom:34px;z-index:4;width:40px;height:40px;border-radius:50%;
+             border:2px solid #f0b429;background:#1b2745;color:#fde68a;font-size:19px;line-height:1;
+             cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;
+             box-shadow:0 0 12px rgba(245,158,11,0.45);transition:opacity .2s,border-color .2s,box-shadow .2s;">🔥</button>
     <div style="font-size:8.5px;color:#6f80ad;text-align:center;letter-spacing:0.03em;padding:4px 0 1px;line-height:1.4;">Hold and drag a shell to rearrange it, or drag it off the racks to remove it. Removed shells go to your Shed.</div>
   </div>
   <div class="toolbar">
     <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>SHED (<span id="hud-shed">0</span>)</span></div>
-    <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:3px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span>👏 <span id="hud-pool">0</span> / <span id="hud-cap">0</span></span>
-        <button class="collectbtn" id="btn-collect" onclick="collectPraise()">COLLECT PRAISE</button>
+    <!-- Praise: the number, the action, and when the next one lands. Stacked so
+         nothing wraps into anything else on a narrow phone. -->
+    <div class="tchip" style="flex:1;flex-direction:column;align-items:stretch;gap:6px;padding:9px 12px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;white-space:nowrap;">
+        <span style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:17px;color:var(--ink);">👏 <span id="hud-pool">0</span></span>
+        <span style="font-size:9.5px;color:#9aa3ad;">of <span id="hud-cap">0</span></span>
       </div>
-      <div style="font-size:9px;color:#9aa3ad;line-height:1;">Next praise: +<span id="hud-percycle">0</span> 👏 in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
+      <button class="collectbtn" id="btn-collect" onclick="collectPraise()" style="width:100%;padding:8px 10px;font-size:11px;">COLLECT PRAISE</button>
+      <div style="font-size:9px;color:#9aa3ad;line-height:1.2;white-space:nowrap;">+<span id="hud-percycle">0</span> more in <span id="hud-cyclecd" style="font-variant-numeric:tabular-nums;color:#059669;font-weight:700;">12:00</span></div>
     </div>
-    <!-- Lighting the fuse is free and separate from the economy. It replays the
-         show you already own, every 30 seconds, for the pleasure of it. -->
-    <button class="tchip" id="btn-spark" onclick="sparkFuse()" title="Light the fuse"
-      style="flex:0 0 auto;flex-direction:column;gap:1px;padding:6px 11px;cursor:pointer;border-color:#f0b429;background:#fffaf0;">
-      <span style="font-size:17px;line-height:1;">🔥</span>
-      <span id="spark-lab" style="font-size:7.5px;letter-spacing:0.05em;color:#b45309;">FUSE</span>
-    </button>
   </div>
   <div class="agenda" onclick="window.open(CONFIG.agendaUrl,'_blank')">
     <div style="display:flex;justify-content:space-between;align-items:baseline;">
@@ -1134,18 +1130,25 @@ function renderCycleCountdown() {
   el.title = 'Next praise payout';
 }
 setInterval(function () { try { renderCycleCountdown(); } catch (e) {} }, 1000);
-// The fuse cooldown counts down on the button itself.
+/* The fuse button is icon only. Lit gold when you can light it, grey and
+   quiet when you cannot, and it repaints every second so the 30 second
+   cooldown is visible without a label. */
+function paintSparkBtn() {
+  const sb = $('btn-spark');
+  if (!sb || !S) return;
+  const owned = S.plants.some(function (p) { return p.state === 'bloomed'; });
+  const ready = owned && sparkCooldownLeft() === 0 && !_sparking;
+  sb.style.opacity      = ready ? '1' : '0.35';
+  sb.style.borderColor  = ready ? '#f0b429' : '#46557f';
+  sb.style.color        = ready ? '#fde68a' : '#6f80ad';
+  sb.style.boxShadow    = ready ? '0 0 12px rgba(245,158,11,0.45)' : 'none';
+  sb.style.filter       = ready ? 'none' : 'grayscale(1)';
+  sb.style.cursor       = ready ? 'pointer' : 'default';
+  sb.title = !owned ? 'Light a shell first'
+    : (ready ? 'Light the fuse' : 'Ready in ' + Math.ceil(sparkCooldownLeft() / 1000) + 's');
+}
 setInterval(function () {
-  try {
-    const sb = $('btn-spark'), sl = $('spark-lab');
-    if (!sb || !sl || !S || !$('scr-garden').classList.contains('on')) return;
-    const owned = S.plants.some(function (p) { return p.state === 'bloomed'; });
-    const cd = Math.ceil(sparkCooldownLeft() / 1000);
-    const ready = owned && cd === 0 && !_sparking;
-    sb.style.opacity = ready ? '1' : '0.45';
-    sb.style.borderColor = ready ? '#f0b429' : '#d8dde5';
-    sl.textContent = !owned ? 'FUSE' : (cd > 0 ? cd + 's' : 'FUSE');
-  } catch (e) {}
+  try { if ($('scr-garden') && $('scr-garden').classList.contains('on')) paintSparkBtn(); } catch (e) {}
 }, 1000);
 
 function addPraise(n) {
@@ -1577,7 +1580,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-0540';
+const BUILD = '20260913-0625';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1769,16 +1772,7 @@ function renderGarden() {
   _sh.style.color = S.shed.length > 0 ? 'var(--blue)' : '';
   $('hud-pool').textContent = fmt(S.pool); $('hud-cap').textContent = fmt(poolCap()); const _pc = $('hud-percycle'); if (_pc) _pc.textContent = perCycle();
   $('btn-collect').disabled = S.pool <= 0;
-  // The fuse button lives on its own timer, not the praise cycle.
-  const sb = $('btn-spark'), sl = $('spark-lab');
-  if (sb && sl) {
-    const owned = S.plants.some(function (p) { return p.state === 'bloomed'; });
-    const cd = Math.ceil(sparkCooldownLeft() / 1000);
-    const ready = owned && cd === 0 && !_sparking;
-    sb.style.opacity = ready ? '1' : '0.45';
-    sb.style.borderColor = ready ? '#f0b429' : '#d8dde5';
-    sl.textContent = !owned ? 'FUSE' : (cd > 0 ? cd + 's' : 'FUSE');
-  }
+  paintSparkBtn();
   const ag = CONFIG.agenda[agendaIdx];
   $('agenda-topic').textContent = ag[0]; $('agenda-line').textContent = ag[1];
   $('agenda-dots').innerHTML = CONFIG.agenda.map((_, i) => `<span onclick="event.stopPropagation();setAgenda(${i})" style="width:8px;height:8px;border-radius:50%;background:${i === agendaIdx ? 'var(--blue)' : '#d4e2ef'};cursor:pointer;display:inline-block;padding:2px;"></span>`).join('');
