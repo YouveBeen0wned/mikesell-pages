@@ -1746,6 +1746,10 @@ function startPolling() {
    without texting anyone. Takes a count, defaults to 5, caps at capacity. */
 function stockShells(n) {
   if (!S) return;
+  // Drop the welcome gift. Otherwise the only tube that looks "ready" is the
+  // gift, and a rack full of spent tubes reads as nothing having happened.
+  S.plants = S.plants.filter(function (p) { return !p.gift; });
+  S.pendingWelcome = false;
   const want = Math.min(n || 5, showCapacity() - S.plants.length);
   for (let i = 0; i < want; i++) {
     const shelf = pick(['g', 'g', 'b', 'b', 'p', 'au']);
@@ -1799,12 +1803,13 @@ function boot() {
   if (stock) stockShells(parseInt(stock[1], 10));
   tickPraise(); save();
   renderGarden(); show('scr-garden'); maybeRankup();
+  if (stock) setTimeout(function () { try { sparkFuse(); } catch (e) {} }, 700);
   startPolling();
 }
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-1940';
+const BUILD = '20260913-2020';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1879,6 +1884,13 @@ function doSignup() {
   const st = location.search.match(/[?&]stock=(\d+)/);
   if (st) stockShells(parseInt(st[1], 10));
   renderGarden();
+  // With the test flag, skip the welcome sheet and just run the show, which is
+  // the entire reason for loading it.
+  if (st) {
+    show('scr-garden'); startPolling();
+    setTimeout(function () { try { sparkFuse(); } catch (e) {} }, 700);
+    return;
+  }
   show('scr-garden');
   startPolling();
   // Intro order (Mike, 2026-08-30): comparison workflow FIRST, thank-you
