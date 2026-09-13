@@ -1923,19 +1923,31 @@ function renderChampions() {
   const local = [{ n: S.garden, r: S.rank, l: S.lifetime, g: GAME_ID, me: true }];
   // Seeded scores always sit in the board, not just when it is empty.
   const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: c[1], l: c[2], g: c[3] }; });
+  const rowHtml = (row, pos) => {
+    const me = row.n === S.garden;
+    const badge = row.g === 'd' ? '🐉' : (row.g === 'k' ? '🎆' : '🌱');
+    return `<div class="rankrow ${me ? 'now' : ''}">
+      <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:14px;color:var(--purple);width:22px;text-align:center;">${pos}</div>
+      <span style="width:26px;">${sealSvg(Math.min(row.r, 6), 24)}</span>
+      <div class="rlab">${esc(row.n)}${me ? ' · YOU' : ''}<small>${badge} ${CONFIG.ranks[Math.min(row.r, 6)].name}</small></div>
+      <div class="rnum">${fmt(row.l)} 👏</div></div>`;
+  };
   const paint = (rows) => {
     rows = (rows && rows.length ? rows : []).concat(seeded);
     if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
-    rows = rows.slice().sort((a, b) => b.l - a.l).slice(0, 25);
-    $('champlist').innerHTML = rows.map((row, i) => {
-      const me = row.n === S.garden;
-      const badge = row.g === 'd' ? '🐉' : (row.g === 'k' ? '🎆' : '🌱');
-      return `<div class="rankrow ${me ? 'now' : ''}">
-        <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:14px;color:var(--purple);width:18px;text-align:center;">${i + 1}</div>
-        <span style="width:26px;">${sealSvg(Math.min(row.r, 6), 24)}</span>
-        <div class="rlab">${esc(row.n)}${me ? ' · YOU' : ''}<small>${badge} ${CONFIG.ranks[Math.min(row.r, 6)].name}</small></div>
-        <div class="rnum">${fmt(row.l)} 👏</div></div>`;
-    }).join('');
+    const all = rows.slice().sort((a, b) => b.l - a.l);
+    const myIdx = all.findIndex(x => x.n === S.garden);
+    // Nobody should open a leaderboard and fail to find themselves. If they
+    // are below the cut, show 24 and pin them at the bottom with their real
+    // position.
+    const pinned = myIdx >= 25;
+    const view = all.slice(0, pinned ? 24 : 25);
+    let html = view.map((row, i) => rowHtml(row, i + 1)).join('');
+    if (pinned) {
+      html += `<div style="text-align:center;color:#9aa3ad;font-size:13px;letter-spacing:0.3em;padding:2px 0 4px;">···</div>`
+            + rowHtml(all[myIdx], myIdx + 1);
+    }
+    $('champlist').innerHTML = html;
   };
   paint(_boardRows);
   pushScore();
