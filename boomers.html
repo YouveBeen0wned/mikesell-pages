@@ -1737,7 +1737,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-1425';
+const BUILD = '20260913-1605';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1824,12 +1824,20 @@ function maybeWelcome() {
 
 function showWelcomeGift() {
   $('rankup-sheet').innerHTML = `
-    <span style="display:inline-block;filter:drop-shadow(0 0 10px #fde68a);animation:grow 1.8s infinite;"><svg style="width:54px;height:54px;color:#f0b429;"><use href="#f-shell"/></svg></span>
+    <!-- Exactly what a ready tube looks like on the field: translucent gold
+         disc, pulsing gold ring, shell inside. The intro should teach the real
+         signal, not a different one. -->
+    <span style="display:inline-block;filter:drop-shadow(0 0 10px rgba(245,158,11,0.55));">
+      <svg viewBox="0 0 60 60" style="width:62px;height:62px;color:#fde68a;overflow:visible;">
+        <circle cx="30" cy="30" r="21" fill="#f59e0b" opacity="0.20"/>
+        <circle cx="30" cy="30" r="24" fill="none" stroke="#f0b429" stroke-width="2.4" style="animation:ringpulse 1.6s ease-out infinite;transform-origin:center;"/>
+        <use href="#f-shell" x="13" y="13" width="34" height="34"/>
+      </svg></span>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">Welcome to the show!</div>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
       <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 One shell on the house, already racked, plus applause for your first show</span>
       <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing shell to see what you got, then light the fuse and watch it fly. After that, add someone in your family.</span>
-      <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#fdf6e3;border:2.5px solid #f0b429;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#b45309;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;color:#f0b429;"><circle cx="17" cy="17" r="12" fill="#fdf3d9"/><circle cx="17" cy="17" r="14" fill="none" stroke="#f0b429" stroke-width="2.4" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-shell" x="6" y="6" width="22" height="22"/></svg><span>Watch for this gold ring. It means somebody answered, and the shell is ready to go up.</span></span>
+      <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#fdf6e3;border:2.5px solid #f0b429;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#b45309;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;color:#fde68a;overflow:visible;"><circle cx="17" cy="17" r="12" fill="#f59e0b" opacity="0.20"/><circle cx="17" cy="17" r="14" fill="none" stroke="#f0b429" stroke-width="2.4" style="animation:ringpulse 1.6s ease-out infinite;transform-origin:center;"/><use href="#f-shell" x="6" y="6" width="22" height="22"/></svg><span>Watch for this gold ring. It means somebody answered, and the shell is ready to go up.</span></span>
     </div>
     <button class="bigbtn" onclick="closeOv('ov-rankup');">See my show</button>`;
   openOv('ov-rankup');
@@ -2085,13 +2093,17 @@ function drawShow() {
       <!-- The line that makes the mapping unmistakable: this burst belongs to
            THAT tube, straight down, same axis. -->
       <line x1="${s.x}" y1="${cy + R - 2}" x2="${s.x}" y2="${s.tubeY}" stroke="${hex}" stroke-width="1" opacity="0.18" stroke-dasharray="2 4"/>
-      <circle cx="${s.x}" cy="${cy}" r="${R + 4}" fill="${hex}" opacity="0.09"/>
-      ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${cy}" r="${R + 7}" fill="#fde68a" opacity="0.16"/>` : ''}
-      ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${cy}" r="${R + 5}" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
+      <!-- Glow, rings and sparkle all live INSIDE the animated group so they
+           travel with the shell and die with it. Left outside, they stayed lit
+           in mid air after the firework had already gone out. -->
       <g class="burst-art" style="transform-origin:${s.x}px ${cy}px;opacity:0;">
+        <circle cx="${s.x}" cy="${cy}" r="${R + 2}" fill="${hex}" opacity="0.10"/>
+        <circle cx="${s.x}" cy="${cy}" r="${Math.round(R * 0.5)}" fill="${hex}" opacity="0.16"/>
+        ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${cy}" r="${R + 5}" fill="#fde68a" opacity="0.16"/>` : ''}
+        ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${cy}" r="${R + 5}" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
         <use href="#${sp0.art}" x="${s.x - R}" y="${s.burstY}" width="${R * 2}" height="${R * 2}" style="color:${hex};"/>
+        ${p.traits && p.traits.gli ? `<text x="${s.x - 14}" y="${s.burstY + 9}" font-size="7" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
       </g>
-      ${p.traits && p.traits.gli ? `<text x="${s.x - 14}" y="${s.burstY + 9}" font-size="7" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
     </g>`;
   }
 
