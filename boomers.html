@@ -888,13 +888,13 @@ const CONFIG = {
     { id: 'chrys',   art: 'f-chrys',   name: 'Chrysanthemum', shelf: 'g',  loc: 'a round break where every star drags a tail of sparks behind it' },
     { id: 'ring',    art: 'f-ring',    name: 'Ring',          shelf: 'g',  loc: 'stars thrown into a clean halo, hard to time and easy to love' },
     { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'g',  loc: 'one bright star that runs across the sky and burns out' },
-    { id: 'willow',  art: 'f-willow',  name: 'Willow',        shelf: 'b',  loc: 'long gold stars that hang in the air and drift down like branches' },
-    { id: 'palm',    art: 'f-palm',    name: 'Palm',          shelf: 'b',  loc: 'thick rising streams that open overhead like palm fronds' },
+    { id: 'stripes', art: 'f-stripes', name: 'Stars and Stripes', shelf: 'b', loc: 'a banner unfurling across the sky, the hardest timing in any show' },
+    { id: 'bell',    art: 'f-bell',    name: 'Liberty Bell',  shelf: 'b',  loc: 'cracked, imperfect, and still the sound everybody came to hear' },
     { id: 'brocade', art: 'f-brocade', name: 'Brocade',       shelf: 'b',  loc: 'fine silver lace, brighter and sharper than a willow' },
     { id: 'spider',  art: 'f-spider',  name: 'Spider',        shelf: 'b',  loc: 'stiff straight legs that shoot out and stop dead' },
     { id: 'cross',   art: 'f-cross',   name: 'Crossette',     shelf: 'p',  loc: 'every star splits again into four, a burst inside a burst' },
-    { id: 'kamuro',  art: 'f-kamuro',  name: 'Kamuro',        shelf: 'p',  loc: 'a dense head with a heavy glitter trail, named for a Japanese haircut' },
-    { id: 'horse',   art: 'f-horse',   name: 'Horsetail',     shelf: 'p',  loc: 'heavy stars that barely climb, then pour straight back down' },
+    { id: 'star',    art: 'f-star',    name: 'Star Shell',    shelf: 'p',  loc: 'a five point star, the shape every kid draws when you say firework' },
+    { id: 'ballot',  art: 'f-ballot',  name: 'The Ballot',    shelf: 'p',  loc: 'a box with a check in it, which is the whole reason for the show' },
     { id: 'salute',  art: 'f-salute',  name: 'Salute',        shelf: 'au', loc: 'almost no colour at all, just the flash and the bang you feel in your chest' },
   ],
   // Relatives only. Stepparents count, legal guardians do not, and there is no
@@ -930,6 +930,8 @@ const CONFIG = {
     { id: 'white',  name: 'White',  hex: '#f4f8ff' },
     { id: 'purple', name: 'Purple', hex: '#b18cff' },
     { id: 'blue',   name: 'Blue',   hex: '#4cc9ff' },
+    { id: 'yellow', name: 'Yellow', hex: '#ffd447' },
+    { id: 'teal',   name: 'Teal',   hex: '#2fd4c4' },
   ],
   agenda: [
     ['EDUCATION', 'Fully fund public education, and pay teachers like the professionals they are.'],
@@ -1007,7 +1009,9 @@ function dayKey() { const d = new Date(); return d.getFullYear() + '-' + d.getMo
 /* ---------------- helpers ---------------- */
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function sp(id) { return CONFIG.species.find((s) => s.id === id); }
+// Falls back rather than returning undefined, so a save made before a shell
+// was renamed or retired still renders instead of throwing.
+function sp(id) { return CONFIG.species.find((s) => s.id === id) || CONFIG.species[0]; }
 function shelfColor(sh) { return { g: '#059669', b: '#2563eb', p: '#7c3aed', au: '#f59e0b' }[sh]; }
 function shelfName(sh) { return { g: 'Standard', b: 'Aerial', p: 'Specialty', au: 'Finale' }[sh]; }
 // Rarity tier (how hard it is to get) as distinct from the shelf it lives on.
@@ -1069,6 +1073,10 @@ function Cells() {
   const m = Object.create(null);
   const api = {
     add(x, y) { m[Math.round(x) + ',' + Math.round(y)] = 1; return api; },
+    // Authored shapes are drawn row by row, and sometimes need a cell removed
+    // again, like the crack in the bell.
+    row(y, x0, x1) { for (let x = x0; x <= x1; x++) api.add(x, y); return api; },
+    del(x, y) { delete m[Math.round(x) + ',' + Math.round(y)]; return api; },
     pts(list) { for (const [x, y] of list) api.add(x, y); return api; },
     // Author one side, get the other free. Keeps every shell symmetric.
     mirrorX(list) { for (const [x, y] of list) { api.add(x, y); api.add(-x, y); } return api; },
@@ -1116,34 +1124,42 @@ function shellGeom(type){
         c.add(tx, ty).add(tx - 1, ty).add(tx + 1, ty).add(tx, ty - 1).add(tx, ty + 1);
       }
       return cellsToSvg(c); }
-    // a crown of sparks, then a widening curtain falling away from it
-    case 'willow': return cellsToSvg(Cells().add(0, 0).ring8(3)
-      .mirrorX([[2, -4], [4, -3], [5, -1]])
-      .mirrorX([[2, 1], [5, 2]])
-      .mirrorX([[3, 4], [6, 5]])
-      .pts([[0, -5], [0, 3], [0, 6]]));
-    // a half burst opening overhead on a short stem
-    case 'palm':   return cellsToSvg(Cells().block(0, 2, 1, 5).ringTop(5).ringTop(3)
-      .mirrorX([[2, -6], [5, -4], [6, -1]]));
-    // A tight bright head with glitter falling from every side of it. The
-    // trails are dotted, which is what makes them read as sparks rather than
-    // as legs, and they hang from all eight stars rather than from a row of
-    // fixed columns, which is what made the old one look like a comb.
-    case 'kamuro': { const c = Cells().add(0, 0).ring8(2).ring8(3).ring8(4);
-      for (let i = 0; i < 8; i++) {
-        const a = (i / 8) * Math.PI * 2;
-        const x = Math.round(Math.cos(a) * 4), y = Math.round(Math.sin(a) * 4);
-        for (let d = 2; d <= 6; d += 2) c.add(x, y + d);
-      }
+    /* ---- shaped shells ---------------------------------------------------
+       Real pyrotechnics come in shapes, so these are not a cheat. They are
+       drawn row by row rather than from rings, because a recognisable symbol
+       has to be authored, not generated. */
+    // A banner of stripes with stepped ends so it reads as cloth, not as bars.
+    case 'stripes': { const c = Cells();
+      c.row(-5, -7, 6).add(7, -4);
+      c.row(-3, -7, 7);
+      c.row(-1, -6, 7).add(-7, 0);
+      c.row(1, -7, 7);
+      c.row(3, -7, 6).add(7, 4);
       return cellsToSvg(c); }
-    // A small heavy head sitting high, then thick curtains pouring straight
-    // down and thinning to dots as they fall. Solid full length columns read
-    // as a bar chart, which is what the old one looked like.
-    case 'horse': { const c = Cells().add(0, -7).add(-1, -6).add(1, -6).add(0, -5);
-      for (const x of [-4, -2, 0, 2, 4]) {
-        const len = 12 - Math.abs(x);
-        for (let d = 0; d < len; d++) { if (d > 6 && d % 2) continue; c.add(x, -4 + d); }
-      }
+    // The Liberty Bell, crack included. The crack is the point.
+    case 'bell': { const c = Cells();
+      c.row(-7, 0, 0).row(-6, -1, 1);
+      c.row(-5, -2, 2).row(-4, -3, 3).row(-3, -3, 3).row(-2, -4, 4);
+      c.row(-1, -4, 4).row(0, -5, 5).row(1, -5, 5).row(2, -6, 6);
+      c.row(3, -7, 7).row(4, -7, 7);
+      c.row(6, -1, 1);                                   // clapper
+      c.del(1, 0).del(2, 1).del(2, 2).del(3, 3);         // the crack
+      return cellsToSvg(c); }
+    // A five point star.
+    case 'star': { const c = Cells();
+      c.row(-7, 0, 0).row(-6, -1, 1).row(-5, -1, 1).row(-4, -2, 2);
+      c.row(-3, -7, 7).row(-2, -6, 6).row(-1, -5, 5).row(0, -4, 4);
+      c.row(1, -5, 5);
+      c.row(2, -6, -3).row(2, -1, 1).row(2, 3, 6);
+      c.row(3, -6, -4).row(3, -1, 1).row(3, 4, 6);
+      c.row(4, -7, -5).row(4, 5, 7);
+      return cellsToSvg(c); }
+    // A ballot box with a check in it.
+    case 'ballot': { const c = Cells();
+      c.row(-5, -7, 7).row(5, -7, 7);
+      for (let y = -4; y <= 4; y++) { c.add(-7, y); c.add(7, y); }
+      for (let i = 0; i < 4; i++) c.add(-4 + i, -1 + i).add(-4 + i, i);
+      for (let i = 0; i < 7; i++) c.add(-1 + i, 2 - i).add(-1 + i, 3 - i);
       return cellsToSvg(c); }
     // one star running across the sky
     case 'comet': { const c = Cells();
@@ -1851,7 +1867,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260914-0320';
+const BUILD = '20260914-0505';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
