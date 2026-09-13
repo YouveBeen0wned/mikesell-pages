@@ -644,7 +644,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#5a432
   <div class="bgdeco" id="deco-champions"></div>
   <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Leaderboard<small>provided by Mike Sell</small></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
-  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BLOOMERS, DRAGON FARMER AND BOOMERS</div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME LEADERBOARD</div>
   <div id="champlist" style="padding:0 14px;"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-champions"></nav>
@@ -818,8 +818,13 @@ const CONFIG = {
     ['CLIMATE', 'Protect our coast and fix flooding before it reaches the front door.'],
   ],
   sides: ['Westside', 'Arlington', 'Mandarin', 'Northside', 'the Beaches', 'Orange Park'],
-  champs: [ // [SERVER] weekly board comes from the backend later
-    ['MandarinMary', 5, 940], ['DuvalDrake', 3, 610], ['AmeliaWyng', 2, 350], ['CoveKeeper', 1, 210], ['PalmValleyPete', 1, 180],
+  // Aspirational scores seeded into the shared board. Same list in all three
+  // games, so the leaderboard looks identical wherever you open it.
+  champs: [
+    ['MandarinMary', 5, 940, 'b'], ['SmaugMarco', 5, 880, 'd'], ['NorthsideNova', 4, 815, 'k'],
+    ['DuuuvalDaisy', 4, 705, 'b'], ['NassauNightwing', 4, 660, 'd'], ['WestsideWicks', 3, 590, 'k'],
+    ['BoldCityBloom', 3, 505, 'b'], ['AcostaAsh', 3, 470, 'd'], ['RiversideRockets', 2, 395, 'k'],
+    ['CoveKeeper', 2, 310, 'b'], ['OrtegaEmber', 2, 285, 'd'], ['BaldwinBangs', 1, 240, 'k'],
   ],
 };
 
@@ -1992,9 +1997,11 @@ async function fetchBoard() {
 function renderChampions() {
   const mine = boardId();
   const local = [{ n: S.garden, r: S.rank, l: S.lifetime, g: GAME_ID, me: true }];
+  // Seeded scores always sit in the board, not just when it is empty.
+  const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: c[1], l: c[2], g: c[3] }; });
   const paint = (rows) => {
-    if (!rows || !rows.length) rows = local;
-    else if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
+    rows = (rows && rows.length ? rows : []).concat(seeded);
+    if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
     rows = rows.slice().sort((a, b) => b.l - a.l).slice(0, 25);
     $('champlist').innerHTML = rows.map((row, i) => {
       const me = row.n === S.garden;

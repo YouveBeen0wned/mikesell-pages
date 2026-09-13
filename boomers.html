@@ -137,6 +137,10 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
 @keyframes breakout{0%{transform:scale(0.08);opacity:0;}
   45%{opacity:1;}72%{transform:scale(1.14);}100%{transform:scale(1);opacity:1;}}
 @keyframes trailfade{0%{opacity:0.85;}100%{opacity:0;}}
+/* The climb trail belongs to one launch. It shows as the shell leaves the
+   tube and dies with the last break, rather than hanging around afterwards
+   looking like leftover debris. */
+@keyframes trailshow{0%{opacity:0;}6%{opacity:0.22;}80%{opacity:0.18;}100%{opacity:0;}}
 @keyframes embers{0%{transform:translateY(0);opacity:0.9;}100%{transform:translateY(16px);opacity:0;}}
 @keyframes fuserun{from{left:-6%;}to{left:104%;}}
 .riser{animation:climb 0.62s ease-in both;}
@@ -727,7 +731,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
   <div class="bgdeco" id="deco-champions"></div>
   <div class="topbar"><div class="gametitle"><svg style="width:18px;height:18px;vertical-align:-2px;"><use href="#n-club"/></svg> Leaderboard<small>provided by Mike Sell</small></div></div>
   <div class="rule"><i></i><i></i><i></i></div>
-  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME · BLOOMERS, DRAGON FARMER AND BOOMERS</div>
+  <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;color:#9aa3ad;letter-spacing:0.12em;margin:12px 18px 8px;">ALL TIME LEADERBOARD</div>
   <div id="champlist" style="padding:0 14px;"></div>
   <div class="tinytxt" style="">Sponsored by Mike Sell, Forward Party candidate for U.S. Congress, FL-04<br>For entertainment purposes only · scoring runs on the honor system</div>
   <nav class="bottomnav" id="nav-champions"></nav>
@@ -942,6 +946,9 @@ const CONFIG = {
   // Shown only until the live board answers. Four per game so a new player
   // sees a real looking board instead of a single lonely row, and so the
   // three games visibly share one leaderboard.
+  // Aspirational scores seeded into the board. They give a new player a ladder
+  // to climb instead of an empty room, and they show the three games sharing
+  // one leaderboard from day one. Same list in all three games.
   champs: [
     ['MandarinMary', 5, 940, 'b'], ['SmaugMarco', 5, 880, 'd'], ['NorthsideNova', 4, 815, 'k'],
     ['DuuuvalDaisy', 4, 705, 'b'], ['NassauNightwing', 4, 660, 'd'], ['WestsideWicks', 3, 590, 'k'],
@@ -1463,6 +1470,13 @@ function runShow(done) {
         void art.offsetWidth;                       // restart the animation
         // 2700ms total: four quick climbing breaks, then a full second held.
         art.style.animation = 'popspots 2700ms steps(1,end) forwards';
+        // The climb trail lives and dies with this launch.
+        const tr = b.querySelector('.burst-trail');
+        if (tr) {
+          tr.style.animation = 'none';
+          void tr.getBoundingClientRect();
+          tr.style.animation = 'trailshow 2700ms linear forwards';
+        }
       }, RISE);
     }, t);
   });
@@ -1822,7 +1836,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-2230';
+const BUILD = '20260914-0105';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2192,7 +2206,7 @@ function drawShow() {
     out += `<g class="burst-g" data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" style="cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')">
       <!-- The line that makes the mapping unmistakable: this burst belongs to
            THAT tube, straight down, same axis. -->
-      <line x1="${s.x}" y1="${cy + R - 2}" x2="${s.x}" y2="${s.tubeY}" stroke="${hex}" stroke-width="1" opacity="0.18" stroke-dasharray="2 4"/>
+      <line class="burst-trail" x1="${s.x}" y1="${cy + R - 2}" x2="${s.x}" y2="${s.tubeY}" stroke="${hex}" stroke-width="1" opacity="0" stroke-dasharray="2 4"/>
       <!-- Glow, rings and sparkle all live INSIDE the animated group so they
            travel with the shell and die with it. Left outside, they stayed lit
            in mid air after the firework had already gone out. -->
@@ -2950,12 +2964,12 @@ async function fetchBoard() {
 function renderChampions() {
   const mine = boardId();
   const local = [{ n: S.garden, r: S.rank, l: S.lifetime, g: GAME_ID, me: true }];
-  // Until the live board answers, show the seeded names so the board reads as
-  // shared across all three games rather than as a single empty row.
+  // Seeded scores are always in the mix, not just a fallback, so the ladder is
+  // there whether or not the live board has answered.
   const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: c[1], l: c[2], g: c[3] }; });
   const paint = (rows) => {
-    if (!rows || !rows.length) rows = seeded.concat(local);
-    else if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
+    rows = (rows && rows.length ? rows : []).concat(seeded);
+    if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
     rows = rows.slice().sort((a, b) => b.l - a.l).slice(0, 25);
     $('champlist').innerHTML = rows.map((row, i) => {
       const me = row.n === S.garden;
