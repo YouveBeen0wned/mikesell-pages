@@ -331,11 +331,17 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
     </svg>
     <div class="card" style="margin-top:16px;align-self:stretch;">
       <div style="font-size:14px;line-height:1.65;color:var(--ink);">
-        <p style="margin:0 0 10px;">Boomers is for people 16 and older.</p>
-        <p style="margin:0 0 10px;">This game sends text messages from your phone to people in your family. They will see your number.</p>
-        <p style="margin:0 0 10px;">Talk to your parent or guardian first. Make sure they are okay with you playing.</p>
-        <p style="margin:0;">Only add people you are actually related to and actually know. Nobody else.</p>
+        <p style="margin:0;">This game sends text messages from your phone to people in your family. They will see your number.</p>
       </div>
+    </div>
+    <!-- Secondary disclaimer. Separated so a parent reading over a shoulder
+         finds the part meant for them immediately. -->
+    <div class="card" style="margin-top:10px;align-self:stretch;background:#faf7fd;border-color:#cdb3e0;">
+      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--purple);margin-bottom:7px;"><b>If you are under 18</b></div>
+      <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.6;color:var(--ink);">
+        <li style="margin-bottom:6px;">Talk to your parent or guardian first. Make sure they are okay with you playing.</li>
+        <li>Only add people you are actually related to and actually know. Nobody else.</li>
+      </ul>
     </div>
     <button class="bigbtn" style="animation:popglow 2.6s infinite;font-size:14.5px;padding:14px 20px;" onclick="attest()">I am 16 or older and I have permission</button>
     <div class="tinytxt" style="padding-top:12px;">In Florida you can preregister to vote at 16. If you turn 18 before the general election, you can vote in the primary at 17. <a href="https://registertovoteflorida.gov" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline;">Check your own status</a>.</div>
@@ -413,12 +419,31 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
     </div>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:11.5px;color:var(--blue);white-space:nowrap;text-align:right;"><span id="hud-plots">0</span> tubes<br><small style="font-family:Arial;font-size:8.5px;color:#6b7280;">next: <span id="hud-next">100</span>👏</small></div>
   </div>
-  <div style="margin:8px 30px -4px;"><svg viewBox="0 0 300 44" style="width:100%;display:block;">
-    <path d="M12 44 V26 Q150 -10 288 26 V44" fill="none" stroke="#3d4d3d" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M24 40 V27 Q150 -3 276 27 V40" fill="none" stroke="#3d4d3d" stroke-width="1.4" opacity="0.55"/>
-    <circle cx="12" cy="22" r="2.6" fill="#3d4d3d"/><circle cx="288" cy="22" r="2.6" fill="#3d4d3d"/>
-    <circle cx="150" cy="7" r="2.2" fill="#f59e0b"/>
-    <text id="arch-name" x="150" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#3d4d3d">MY GARDEN</text>
+  <!-- A fireworks stand instead of a garden arch: awning, counter, and a
+       shadow line of rockets and shells racked up behind it. -->
+  <div style="margin:8px 22px -6px;"><svg viewBox="0 0 300 52" style="width:100%;display:block;">
+    <g fill="#2b3558">
+      <rect x="34" y="30" width="6" height="3.5" rx="1.4"/><rect x="36" y="16" width="2" height="15"/>
+      <path d="M33 30 L37 21 L41 30 Z"/>
+      <rect x="52" y="27" width="9" height="7" rx="1.6"/><path d="M52 27 h9 l-4.5 -6 Z"/>
+      <rect x="72" y="30" width="5" height="3" rx="1.2"/><rect x="73.6" y="13" width="1.8" height="17"/>
+      <path d="M71 30 L74.5 18 L78 30 Z"/>
+      <rect x="88" y="24" width="11" height="10" rx="2"/><circle cx="93.5" cy="20" r="3.2"/>
+      <rect x="110" y="30" width="5" height="3" rx="1.2"/><rect x="111.6" y="18" width="1.8" height="12"/>
+      <path d="M109 30 L112.5 23 L116 30 Z"/>
+      <rect x="186" y="24" width="11" height="10" rx="2"/><circle cx="191.5" cy="20" r="3.2"/>
+      <rect x="210" y="30" width="5" height="3" rx="1.2"/><rect x="211.6" y="14" width="1.8" height="16"/>
+      <path d="M209 30 L212.5 20 L216 30 Z"/>
+      <rect x="228" y="27" width="9" height="7" rx="1.6"/><path d="M228 27 h9 l-4.5 -6 Z"/>
+      <rect x="248" y="30" width="6" height="3.5" rx="1.4"/><rect x="250" y="17" width="2" height="14"/>
+      <path d="M247 30 L251 22 L255 30 Z"/>
+      <rect x="266" y="25" width="10" height="9" rx="2"/><circle cx="271" cy="21" r="2.8"/>
+    </g>
+    <path d="M10 34 H290" stroke="#3b4a78" stroke-width="2" stroke-linecap="round"/>
+    <path d="M18 34 V22 H282 V34" fill="none" stroke="#3b4a78" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 22 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0 q13 7 26 0" fill="none" stroke="#ea504e" stroke-width="2.2" opacity="0.75"/>
+    <circle cx="150" cy="12" r="2.2" fill="#f59e0b"/>
+    <text id="arch-name" x="150" y="47" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#3b4a78">MY SHOW</text>
   </svg></div>
   <!-- flex:none matters. The screen is a flex column, so without it this panel
        shrinks below its own content and overflow:hidden then clips the sky. -->
@@ -453,12 +478,20 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
 <section id="scr-plant" class="screen">
   <div class="bgdeco" id="deco-plant"></div>
   <div style="padding-top:18px;"></div>
-  <div class="qtitle">Check a <b>relative</b> against the voter rolls 🎆</div>
-  <div style="font-size:10.5px;color:#9aa3ad;text-align:center;margin:2px 24px 0;line-height:1.5;">Family only. Type their name the way it would appear on a voter record.</div>
+  <div class="qtitle">Who should we check on?</div>
+  <div style="font-size:11px;color:#9aa3ad;text-align:center;margin:3px 24px 0;line-height:1.5;">You have to know their first and last name. Remember, family only.</div>
   <div id="plant-searchwrap">
     <div class="searchbox"><span style="font-size:16px;">🔎</span><input id="plant-q" placeholder="First and last name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();doSearch();}"></div>
+    <!-- The relationship is required BEFORE the rolls are checked, so the
+         message preview can be written in their real name from the start. -->
+    <div class="searchbox" style="padding:6px 12px;">
+      <span style="font-size:15px;">👪</span>
+      <select id="plant-rel" style="flex:1;border:none;outline:none;background:transparent;font-family:'avenir-heavy',Arial,sans-serif;font-size:15px;color:var(--ink);padding:5px 0;">
+        <option value="">How do you know them?</option>
+      </select>
+    </div>
     <div style="display:flex;gap:9px;justify-content:center;margin:12px 16px 0;">
-      <button id="plant-go" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;" onclick="doSearch()">Check Voter Rolls</button>
+      <button id="plant-go" class="bigbtn" style="margin:0;flex:1;padding:12px 10px;font-size:13.5px;" onclick="doSearch()">Check Voter Status</button>
     </div>
   </div>
   <div id="plant-result"></div>
@@ -593,15 +626,15 @@ const CONFIG = {
   // NAME becomes the relationship label, which reads as a salutation on its
   // own: Hi Mom, Hi Aunt Carol, Hi Marcus.
   msgFriendVariants: [
-    (link) => `Hi NAME, I am making sure everyone in my family is set to vote in November. You are registered. Tap here to tell me you are voting. ${link}`,
+    (link) => `Hi NAME, good news, I checked and you are registered to vote! I am playing a game Mike built to remind people to vote. Click the link and confirm you are voting in November! ${link}`,
   ],
-  msgFriend: (first, link) => `Hi NAME, I am making sure everyone in my family is set to vote in November. You are registered. Tap here to tell me you are voting. ${link}`,
+  msgFriend: (first, link) => `Hi NAME, good news, I checked and you are registered to vote! I am playing a game Mike built to remind people to vote. Click the link and confirm you are voting in November! ${link}`,
   msgFollowVariants: [
     (link) => `Hi NAME, still waiting on you. One tap tells me you are voting in November. ${link}`,
   ],
   msgFollow: (first, link) => `Hi NAME, still waiting on you. One tap tells me you are voting in November. ${link}`,
   // Not on the rolls. Stage one of two: register first, confirm the vote after.
-  msgDeadline: (first, link) => `Hi NAME, I could not find you on the voter rolls. It takes about two minutes to sign up at registertovoteflorida.gov. Tap here once you are registered. ${link}`,
+  msgDeadline: (first, link) => `Hi NAME, are you registered to vote? I am playing a game Mike built to help remind people that it only takes two minutes to register at registertovoteflorida.gov. Click the link and confirm when you are done! ${link}`,
   // Stage two, sent after they say they registered.
   msgStage2: (link) => `Hi NAME, you are registered now. One more tap tells me you are voting in November. ${link}`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
@@ -646,21 +679,23 @@ const CONFIG = {
   // neighbour, friend or coworker on purpose.
   // label: 'title' = title alone | 'last' = title + last name
   //        'first' = title + first name | 'bare' = first name alone
+  // Alphabetical, because it is a dropdown now and people scan it that way.
+  // There is no "Other" on purpose: if they cannot name the relationship,
+  // they should not be texting that person.
   rels: [
-    { id: 'mom',   label: 'title', title: 'Mom' },
+    { id: 'aunt',  label: 'first', title: 'Aunt' },
+    { id: 'bro',   label: 'bare',  title: 'Brother' },
+    { id: 'cuz',   label: 'bare',  title: 'Cousin' },
     { id: 'dad',   label: 'title', title: 'Dad' },
-    { id: 'smom',  label: 'title', title: 'Stepmom' },
-    { id: 'sdad',  label: 'title', title: 'Stepdad' },
     { id: 'gma',   label: 'last',  title: 'Grandma' },
     { id: 'gpa',   label: 'last',  title: 'Grandpa' },
     { id: 'ggma',  label: 'last',  title: 'Great-grandma' },
     { id: 'ggpa',  label: 'last',  title: 'Great-grandpa' },
-    { id: 'aunt',  label: 'first', title: 'Aunt' },
-    { id: 'uncle', label: 'first', title: 'Uncle' },
-    { id: 'bro',   label: 'bare',  title: 'Brother' },
+    { id: 'mom',   label: 'title', title: 'Mom' },
     { id: 'sis',   label: 'bare',  title: 'Sister' },
-    { id: 'cuz',   label: 'bare',  title: 'Cousin' },
-    { id: 'other', label: 'bare',  title: 'Other relative' },
+    { id: 'sdad',  label: 'title', title: 'Stepdad' },
+    { id: 'smom',  label: 'title', title: 'Stepmom' },
+    { id: 'uncle', label: 'first', title: 'Uncle' },
   ],
   // The second axis. Eight colours across eight shells is 64 things to collect
   // out of eight drawings.
@@ -904,12 +939,11 @@ function availCardVoter(first, last, city, age) {
    a real relationship before a text can go out, which is the guardrail, and the
    answer becomes the label on the shell in the same tap. */
 function relBlock(first, last, deadline) {
+  const rel = (pendingPlant && pendingPlant.rel) || '';
+  const label = labelFor(rel, first, last);
   const col = deadline ? 'var(--purple)' : 'var(--blue)';
-  return `<div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:16px;color:${col};margin-top:14px;">How do you know ${esc(cap(first))}?</div>
-    <div style="font-size:10.5px;color:#9aa3ad;margin-top:3px;line-height:1.45;">Family only. Tapping one sends the text.</div>
-    <div class="pickrow" style="margin-top:9px;">${CONFIG.rels.map(r =>
-      `<button class="pick" style="color:${col};border-color:#c9def2;" onclick="plantNow(${deadline ? 'true' : 'false'},'${r.id}')">${esc(r.title)}</button>`
-    ).join('')}</div>`;
+  const sh = deadline ? '0 5px 0 #5f3a7e' : '0 5px 0 #045ea6';
+  return `<button class="plantbtn" style="background:${col};box-shadow:${sh};" onclick="plantNow(${deadline ? 'true' : 'false'},'${rel}')">Send it to ${esc(label)}</button>`;
 }
 // Title case that leaves an all caps roll entry looking human.
 function cap(s) {
@@ -1340,7 +1374,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260912-1605';
+const BUILD = '20260912-1710';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1624,10 +1658,30 @@ function sealSvg(rank, size) {
 /* ---------------- plant flow ---------------- */
 function goPlant() { showTab('plant'); }
 let pendingPlant = null;
+// Fill the relationship dropdown once, in the order CONFIG defines.
+function buildRelPicker() {
+  const sel = $('plant-rel');
+  if (!sel || sel.options.length > 1) return;
+  for (const r of CONFIG.rels) {
+    const o = document.createElement('option');
+    o.value = r.id; o.textContent = r.title;
+    sel.appendChild(o);
+  }
+}
 async function doSearch() {
   const q = $('plant-q').value.trim();
   if (!q) return;
   const box = $('plant-result');
+  // The relationship is required BEFORE the check, so the preview can address
+  // them properly the moment the result comes back.
+  const rel = $('plant-rel') ? $('plant-rel').value : '';
+  if (!rel) {
+    box.innerHTML = `<div class="statecard nomatch" style="padding:16px;">
+      <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:var(--purple);">Tell us how you know them first.</div>
+      <div style="font-size:11px;color:#5b6470;margin-top:6px;">Pick a relationship from the list. Family only.</div>
+    </div>`;
+    return;
+  }
   const nameParts = q.split(/\s+/).filter(w => /^[a-zA-Z'\u2019-]{2,}$/.test(w));
   if (nameParts.length < 2) {
     box.innerHTML = `<div class="statecard" style="text-align:center;padding:16px;">
@@ -1638,7 +1692,7 @@ async function doSearch() {
   }
   const first = nameParts[0];
   const last = nameParts[nameParts.length - 1];
-  pendingPlant = { name: q, first, last };
+  pendingPlant = { name: q, first, last, rel };
   box.innerHTML = `<div class="statecard" style="text-align:center;padding:20px;">
     <div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#5b6470;">Checking voter rolls for ${esc(first)}…</div>
     <div style="font-size:10px;color:#9aa3ad;margin-top:5px;">Searching 570,000+ FL-CD4 registrations</div>
@@ -1666,8 +1720,8 @@ function availCard(first) {
 function nomatchCard(first) {
   return `<div class="statecard nomatch">
     <svg style="width:34px;height:34px;color:#b18cff;filter:drop-shadow(0 0 9px #c9b3dd);"><use href="#f-shell"/></svg>
-    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">We couldn't confirm ${esc(first)} in the voter rolls — a registration reminder is always welcome.</div>
-    <div style="font-size:11.5px;color:#5b6470;margin:7px 8px 0;line-height:1.5;">They may have moved, married, or not registered yet. A nudge to check still counts.</div>
+    <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--purple);margin-top:6px;">We did not find ${esc(cap(first))} on the voter rolls.</div>
+    <div style="font-size:11.5px;color:#5b6470;margin:7px 8px 0;line-height:1.5;">That happens a lot. People move, change their name, or never signed up. Ask them to check. It takes two minutes.</div>
     ${relBlock(first, (pendingPlant && pendingPlant.last) || '', true)}
     ${msgPreviewBlock('deadline', '#8555ab')}
   </div>`;
@@ -1696,11 +1750,12 @@ function msgIsCustom(kind) {
 }
 // The nickname currently typed on the seed chip, title-cased the same way
 // plantNow() does it, so the preview and the sent message always agree.
+// The preview is addressed with the relationship label, which is exactly what
+// the sent text will say: Hi Mom, Hi Aunt Carol, Hi Marcus.
 function msgNick() {
-  const el = $('tagname');
-  const raw = (el ? el.value.trim() : '') || (pendingPlant && pendingPlant.first) || '';
-  if (!raw) return 'NAME'; // nothing typed yet — leave the placeholder visible
-  return raw.split(/\s+/).map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ');
+  if (!pendingPlant) return 'NAME';
+  if (pendingPlant.rel) return labelFor(pendingPlant.rel, pendingPlant.first, pendingPlant.last || '');
+  return cap(pendingPlant.first || '') || 'NAME';
 }
 function msgPreviewBlock(kind, accent) {
   const a = accent || '#037ad8';
@@ -3097,7 +3152,7 @@ function selectContact(idx) {
 /* ---------------- nav + decos ---------------- */
 function showTab(tab) {
   if (tab === 'garden') { tickPraise(); renderGarden(); show('scr-garden'); }
-  if (tab === 'plant') { $('plant-result').innerHTML = ''; show('scr-plant'); renderRegisteredFriends(); }
+  if (tab === 'plant') { $('plant-result').innerHTML = ''; buildRelPicker(); show('scr-plant'); renderRegisteredFriends(); }
   if (tab === 'collection') { renderCollection(); show('scr-collection'); }
   if (tab === 'champions') { renderChampions(); show('scr-champions'); }
   document.querySelectorAll('.bottomnav').forEach((nav) => {
@@ -3107,7 +3162,7 @@ function showTab(tab) {
 function buildNavs() {
   const html = `
     <button class="bn" data-tab="garden" onclick="showTab('garden')"><svg class="navic"><use href="#n-farm"/></svg><small>MY SHOW</small></button>
-    <button class="bn" data-tab="collection" onclick="showTab('collection')"><svg class="navic"><use href="#n-almanac"/></svg><small>SHELLS</small></button>
+    <button class="bn" data-tab="collection" onclick="showTab('collection')"><svg class="navic"><use href="#n-almanac"/></svg><small>COLLECTION</small></button>
     <button class="bn" data-tab="champions" onclick="showTab('champions')"><svg class="navic"><use href="#n-club"/></svg><small>CHAMPIONS</small></button>`;
   for (const id of ['nav-garden', 'nav-plant', 'nav-collection', 'nav-champions']) { $(id).innerHTML = html; }
   showTabMark();
