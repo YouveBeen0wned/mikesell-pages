@@ -164,6 +164,84 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
   box-shadow:0 0 16px 6px rgba(245,158,11,0.85);animation:fuserun 1.1s linear both;}
 .popring{position:absolute;border-radius:50%;border:3px solid #fcd34d;opacity:0;pointer-events:none;}
 </style>
+<style id="night">
+/* ============================================================
+   NIGHT THEME
+   Boomers happens after dark, so the whole app is after dark, not just the
+   field. This is an override layer on top of the shared Bloomers design
+   system rather than a rewrite of it: same Clarendon and Avenir, same card
+   and button shapes, same spacing. Only the light level changes, which keeps
+   the three games recognisably one family.
+   ============================================================ */
+:root{
+  --ink:#e8eeff;            /* flipping this alone relights most of the text */
+  --blue:#4cc9ff;           /* brighter, so it still reads on a dark card */
+  --purple:#b18cff;
+  --red:#ff6b69;
+  --gold:#f0b429;
+  --night-0:#05080f;        /* page behind the shell */
+  --night-1:#0a1128;        /* shell */
+  --night-2:#141d3d;        /* cards */
+  --night-3:#0c1430;        /* inputs and wells */
+  --line-n:#2b3760;
+  --dim:#8fa0cc;
+}
+html,body{background:var(--night-0);}
+#shell{background:var(--night-1);box-shadow:0 0 40px rgba(0,0,0,0.55);}
+.card,.sheet,.rankrow,.tchip,.agenda{background:var(--night-2);border-color:var(--line-n);box-shadow:none;}
+.rankrow.now{background:#16234d;border-color:var(--blue);}
+.pill{background:var(--night-2);border-color:var(--line-n);color:var(--ink);box-shadow:0 2px 0 #1b2547;}
+.gametitle{color:var(--ink);}
+.rule{opacity:0.9;}
+.overlay{background:rgba(2,5,14,0.78);}
+.bottomnav{background:var(--night-1);border-top-color:var(--line-n);}
+.bn small{color:var(--dim);}
+/* Nav glyphs are hardcoded navy inside <symbol>, which CSS cannot reach
+   through <use>, so they get relit with a filter instead. */
+.navic{filter:brightness(0) invert(0.72);}
+.bn.on .navic{filter:brightness(0) invert(0.82) sepia(1) saturate(5) hue-rotate(352deg);}
+/* Fields and wells */
+.field,.searchbox{background:var(--night-3);border-color:var(--line-n);box-shadow:none;}
+.field.focus,.searchbox{border-color:var(--blue);}
+.field label{color:var(--dim);}
+.field input,.searchbox input,.field select,.searchbox select{color:var(--ink);background:transparent;}
+.field input::placeholder,.searchbox input::placeholder{color:#55659a;}
+.field input.pindot,.pindot{background:var(--night-3);border-color:var(--line-n);color:var(--ink);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.35);}
+.pindot::placeholder{color:#3c4a78;}
+.field input.pindot:focus,.pindot:focus{background:#101a3c;border-color:var(--blue);
+  box-shadow:0 0 0 4px rgba(76,201,255,0.18);}
+.fieldnote em{color:#6f80ad;}
+.smsnote{background:var(--night-3);border-color:var(--line-n);color:var(--dim);}
+/* State cards */
+.statecard.avail{background:#0f1a3a;border-color:var(--blue);box-shadow:0 6px 18px rgba(0,0,0,0.45);}
+.statecard.nomatch{background:#17143a;border-color:var(--purple);box-shadow:0 6px 18px rgba(0,0,0,0.45);}
+.qtitle{color:#7cd4ff;text-shadow:none;}
+.qtitle b{color:var(--purple);}
+/* Chips and picks */
+.pick{background:var(--night-3);border-color:var(--line-n);color:var(--dim);}
+.pick.on{background:#12244c;border-color:var(--blue);color:#7cd4ff;}
+.rlab{color:var(--ink);} .rlab small{color:var(--dim);}
+.rnum{color:var(--blue);}
+.almcell{background:var(--night-3);border-color:var(--line-n);}
+.almgrid{background:transparent;}
+.tinytxt{color:#5d6c9c;}
+.collectbtn:disabled{background:#222c4e;color:#5d6c9c;box-shadow:none;}
+#toast{background:#f0b429;color:#141d3d;}
+#drag-ghost{background:#3a1620;border-color:#ff6b69;}
+/* Buttons keep their shape, they just sit on a darker page. */
+.bigbtn{box-shadow:0 5px 0 #0b5c8e;}
+.bigbtn:active{box-shadow:0 3px 0 #0b5c8e;}
+@keyframes popglow{0%,100%{box-shadow:0 5px 0 #0b5c8e;}50%{box-shadow:0 5px 0 #0b5c8e,0 0 20px rgba(76,201,255,0.55);}}
+/* The file is heavily inline styled, so these lift the hardcoded daytime
+   greys that CSS classes cannot reach. Substring matching on the style
+   attribute is blunt, but it is the only thing that reaches them. */
+[style*="#5b6470"]{color:#9fb0d8 !important;}
+[style*="#9aa3ad"]{color:#7e8dba !important;}
+[style*="#6b7280"]{color:#8fa0cc !important;}
+[style*="#8a94a3"]{color:#8494c0 !important;}
+[style*="#c3ccd6"]{color:#66769f !important;}
+</style>
 </head>
 
 <body>
@@ -1568,7 +1646,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-0905';
+const BUILD = '20260913-1030';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
