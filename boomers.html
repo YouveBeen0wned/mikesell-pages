@@ -146,6 +146,10 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#e6edf
 @keyframes groundrun{from{transform:translateX(0);}to{transform:translateX(var(--dx,360px));}}
 /* Tube flashing as the fuse reaches it. */
 @keyframes tubeflash{0%,100%{stroke:#3b4a78;}35%{stroke:#fde68a;}}
+/* A burst that never settles: it breathes and rocks a few degrees forever. */
+@keyframes burnloop{0%,100%{transform:scale(1) rotate(0deg);}
+  25%{transform:scale(1.07) rotate(3deg);}50%{transform:scale(0.97) rotate(0deg);}
+  75%{transform:scale(1.05) rotate(-3deg);}}
 /* Fourth reveal stage: the result turns, so it reads as still burning. */
 @keyframes spinhold{0%{transform:rotate(0deg) scale(1);}
   25%{transform:rotate(9deg) scale(1.04);}50%{transform:rotate(0deg) scale(1);}
@@ -1463,7 +1467,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260912-2015';
+const BUILD = '20260912-2105';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1710,7 +1714,10 @@ function drawShow() {
         if (lit) out += `<circle cx="${s.x}" cy="${s.tubeY + 9}" r="11" fill="#f59e0b" opacity="0.20" style="animation:ringpulse 1.6s ease-out infinite;"/>`;
         out += `<use href="#f-shell" x="${s.x - 8}" y="${s.tubeY + 1}" width="16" height="16" style="cursor:pointer;color:${col};" onclick="seedTap('${p.id}')"/>`;
       } else {
-        out += `<circle cx="${s.x}" cy="${s.tubeY + 10}" r="3" fill="${colorHex(p.color)}" opacity="0.35"/>`;
+        // Spent tube. It keeps a small copy of whatever came out of it, so the
+        // rack doubles as a record of the show.
+        const sp1 = sp(p.species);
+        out += `<use href="#${sp1.art}" x="${s.x - 7}" y="${s.tubeY + 4}" width="14" height="14" style="color:${colorHex(p.color)};opacity:0.9;"/>`;
       }
       out += `<text x="${s.x}" y="${s.tubeY + 28}" text-anchor="middle" class="lbl">${esc(String(p.tag).toUpperCase())}</text></g>`;
     }
@@ -1738,13 +1745,18 @@ function drawShow() {
       }
       continue;
     }
-    const sp0 = sp(p.species), hex = colorHex(p.color);
+    // The explosion in the sky is big and never stops moving: it breathes and
+    // rocks so it reads as burning rather than as a sticker.
+    const sp0 = sp(p.species), hex = colorHex(p.color), R = 24, cy = s.burstY + R;
+    const phase = (s.col * 0.37 + s.row * 0.9).toFixed(2);   // so they do not pulse in lockstep
     out += `<g class="burst-g" data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" style="cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')">
-      <circle cx="${s.x}" cy="${s.burstY + 16}" r="17" fill="${hex}" opacity="0.10"/>
-      ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${s.burstY + 16}" r="19" fill="#fde68a" opacity="0.18"/>` : ''}
-      ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${s.burstY + 16}" r="18" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
-      <use href="#${sp0.art}" x="${s.x - 16}" y="${s.burstY}" width="32" height="32" style="color:${hex};"/>
-      ${p.traits && p.traits.gli ? `<text x="${s.x - 11}" y="${s.burstY + 7}" font-size="6" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
+      <circle cx="${s.x}" cy="${cy}" r="${R + 4}" fill="${hex}" opacity="0.09"/>
+      ${sp0.shelf === 'au' ? `<circle cx="${s.x}" cy="${cy}" r="${R + 7}" fill="#fde68a" opacity="0.16"/>` : ''}
+      ${p.traits && p.traits.sun ? `<circle cx="${s.x}" cy="${cy}" r="${R + 5}" fill="none" stroke="#f0b429" stroke-width="1.4" style="animation:goldshine 2.6s infinite;"/>` : ''}
+      <g style="transform-origin:${s.x}px ${cy}px;animation:burnloop 3.4s ${phase}s ease-in-out infinite;">
+        <use href="#${sp0.art}" x="${s.x - R}" y="${s.burstY}" width="${R * 2}" height="${R * 2}" style="color:${hex};"/>
+      </g>
+      ${p.traits && p.traits.gli ? `<text x="${s.x - 14}" y="${s.burstY + 9}" font-size="7" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
     </g>`;
   }
   el.innerHTML = out;
