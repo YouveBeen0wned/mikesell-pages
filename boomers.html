@@ -651,14 +651,16 @@ const CONFIG = {
   waterGapH: 24, praiseCycleH: 0.2, maxTouches: 3, dailyTextCap: 5, dailyNudgeCap: 3,
   poolBaseCycles: 3, // + 1 per rank
   yields: { g: 1, b: 2, p: 4, au: 5 },
+  // A pyrotechnician's ladder, from the kid holding a sparkler to the person
+  // who calls the whole show.
   ranks: [
-    { name: 'Good Neighbor',       at: 0 },
-    { name: 'Block Captain',       at: 100, },
-    { name: 'Community Organizer', at: 250,  unlock: 'Bed editing',   teach: 'Hold and drag any bed to rearrange your garden.' },
-    { name: 'Civic Leader',        at: 600 },
-    { name: 'Council Member',      at: 1400 },
-    { name: 'Mayor',               at: 3000 },
-    { name: 'Governor',            at: 6500 },
+    { name: 'Sparkler',       at: 0 },
+    { name: 'Fuse Runner',    at: 100 },
+    { name: 'Shell Loader',   at: 250,  unlock: 'Rack editing', teach: 'Hold and drag any shell to rearrange your racks.' },
+    { name: 'Rack Boss',      at: 600 },
+    { name: 'Pyrotechnician', at: 1400 },
+    { name: 'Display Chief',  at: 3000 },
+    { name: 'Sky Master',     at: 6500 },
   ],
   // [SERVER] internal gift schedule: shelf of the gift seed per rank reached (index 1..6)
   giftShelf: { 1: 'b', 2: 'b', 3: 'p', 4: 'p', 5: 'au', 6: 'au' },
@@ -749,7 +751,11 @@ let _contactsCache = null; // loaded once per session; never saved
 function freshState(first, last, garden, contacts) {
   return {
     first, last, garden, contacts,
-    created: Date.now(), lifetime: 0, weekly: 0, pool: 0, poolTick: Date.now(),
+    // A starting pool so the very first thing a new player can do is light the
+    // fuse and watch a show, instead of waiting twelve minutes to find out
+    // what the button does.
+    created: Date.now(), lifetime: 0, weekly: 0, pool: 10, poolTick: Date.now(),
+    rows: 2,
     rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, nudgesToday: 0, textsDay: dayKey(),
     visits: 0,
     // The welcome thank-you seed plants itself in the first spot — new gardeners
@@ -1477,7 +1483,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260912-2210';
+const BUILD = '20260913-0015';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1546,8 +1552,8 @@ function showWelcomeGift() {
     <span style="display:inline-block;filter:drop-shadow(0 0 10px #fde68a);animation:grow 1.8s infinite;"><svg style="width:54px;height:54px;color:#f0b429;"><use href="#f-shell"/></svg></span>
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:var(--blue);margin-top:8px;">Welcome to the show!</div>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;align-items:center;">
-      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 One shell on the house, already loaded in your rack</span>
-      <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing shell and see what you got. Then add someone in your family.</span>
+      <span class="chip-anim" style="animation-delay:0.6s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">🎁 One shell on the house, already racked, plus applause for your first show</span>
+      <span class="chip-anim" style="animation-delay:1.2s;font-size:11px;color:#5b6470;">Tap the glowing shell to see what you got, then light the fuse and watch it fly. After that, add someone in your family.</span>
       <span class="chip-anim" style="animation-delay:1.8s;display:flex;align-items:center;gap:9px;background:#fdf6e3;border:2.5px solid #f0b429;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#b45309;text-align:left;"><svg viewBox="0 0 34 34" style="width:30px;height:30px;flex:none;color:#f0b429;"><circle cx="17" cy="17" r="12" fill="#fdf3d9"/><circle cx="17" cy="17" r="14" fill="none" stroke="#f0b429" stroke-width="2.4" style="animation:ringpulse 1.8s ease-out infinite;"/><use href="#f-shell" x="6" y="6" width="22" height="22"/></svg><span>Watch for this gold ring. It means somebody answered, and the shell is ready to go up.</span></span>
     </div>
     <button class="bigbtn" onclick="closeOv('ov-rankup');">See my show</button>`;
@@ -1672,7 +1678,9 @@ function renderGarden() {
    the sky than the front row shell in the same column, so a stacked pair
    reads as two layers rather than one pile. Index order fills column by
    column, front row first, which is also the order the fuse lights them. */
-const SHOW = { w: 364, h: 206, ground: 128, pitch: 28, left: 20 };
+const SHOW = { w: 364, h: 220, ground: 128, pitch: 28, left: 20, r: 19 };
+// Two rack rows to start. The third unlocks, and once it does it stays.
+function rackRows() { return (S && S.rows) ? S.rows : 2; }
 /* Where a shell sits, and where it breaks.
    The sky mirrors the ground. A shell breaks on the SAME vertical line as the
    tube that fired it, and its height mirrors how far back its rack sits: the
@@ -1680,18 +1688,31 @@ const SHOW = { w: 364, h: 206, ground: 128, pitch: 28, left: 20 };
    on the ground so it breaks high. A stacked pair therefore shares one axis
    and reads as two layers, never as one pile. */
 function slotOf(i) {
-  const row = i % 2;                      // 0 front, 1 back
-  const col = Math.floor(i / 2);
-  const x = SHOW.left + col * SHOW.pitch; // identical for both rows: one axis
-  // Racks live BELOW the ground line, stacked in rows. Back row sits just
-  // under the line, front row below that.
-  const tubeY = row ? SHOW.ground + 6 : SHOW.ground + 34;
-  // Sky is everything above the line. Back row breaks high, front row below it,
-  // so a stacked pair keeps the same order it has on the ground.
-  const burstY = row ? 4 : 58;
+  const rows = rackRows();
+  const row = i % rows;                   // 0 front, 1 middle, 2 back
+  const col = Math.floor(i / rows);
+  // Every other row is offset half a pitch, so the racks interlock instead of
+  // lining up in a plain grid. A shell still breaks on ITS OWN axis.
+  const x = SHOW.left + col * SHOW.pitch + (row % 2 ? SHOW.pitch / 2 : 0);
+  // Racks live BELOW the ground line. Back rows sit nearer the line.
+  const tubeY = SHOW.ground + 6 + (rows - 1 - row) * 24;
+  // Sky is everything above. Back rows break higher, so the order in the air
+  // matches the order on the ground.
+  const burstY = 84 - row * 40;
   return { row, col, x, tubeY, burstY };
 }
-function showCapacity() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch) * 2; }
+function colsPerRow() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch); }
+function showCapacity() { return colsPerRow() * rackRows(); }
+// The third row is earned by filling three quarters of the first two.
+function maybeUnlockRow() {
+  if (!S || (S.rows || 2) >= 3) return false;
+  if (S.plants.length >= Math.ceil(colsPerRow() * 2 * 0.75)) {
+    S.rows = 3; save();
+    showToast('Third rack unlocked. More tubes, bigger finale 🎆');
+    return true;
+  }
+  return false;
+}
 // How long the sky stays lit after the fuse is sparked.
 const SKY_MS = 30000;
 let _skyTimer = null;
@@ -1721,10 +1742,11 @@ function drawShow() {
 
   const list = S.plants.slice();
   const cap = showCapacity();
+  const rows = rackRows();
 
-  // 1. tubes and their contents, back row first so the front row overlaps it
+  // 1. tubes and their contents, back rows first so nearer rows overlap them
   const order = list.map((p, i) => ({ p, s: slotOf(i) }));
-  for (const layer of [1, 0]) {
+  for (const layer of [2, 1, 0].slice(3 - rows)) {
     for (const { p, s } of order) {
       if (s.row !== layer) continue;
       const lit = p.state === 'ready' || p.gift;
@@ -1749,11 +1771,10 @@ function drawShow() {
     }
   }
 
-  // 2. every empty spot in the FRONT row gets its own plus, spaced a full
-  //    pitch apart so none of them touch.
+  // 2. every empty tube in every unlocked row shows a plus, a full pitch apart
+  //    within its row so none of them touch.
   for (let i = list.length; i < cap; i++) {
     const s = slotOf(i);
-    if (s.row !== 0) continue;            // bottom row only
     const first = i === list.length;
     out += `<g style="cursor:pointer;" onclick="goPlant()">
       <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="none" stroke="#4a5c8f" stroke-width="1.5" stroke-dasharray="3 2" opacity="${first ? 1 : 0.5}"/>
@@ -1778,7 +1799,7 @@ function drawShow() {
     }
     // The explosion in the sky is big and never stops moving: it breathes and
     // rocks so it reads as burning rather than as a sticker.
-    const sp0 = sp(p.species), hex = colorHex(p.color), R = 24, cy = s.burstY + R;
+    const sp0 = sp(p.species), hex = colorHex(p.color), R = SHOW.r, cy = s.burstY + R;
     const phase = (s.col * 0.37 + s.row * 0.9).toFixed(2);   // so they do not pulse in lockstep
     out += `<g class="burst-g" data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" style="cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')">
       <circle cx="${s.x}" cy="${cy}" r="${R + 4}" fill="${hex}" opacity="0.09"/>
@@ -2121,6 +2142,7 @@ function commitPendingSeed() {
   S.plants.push({ id: 'p' + (S.nextId++), token: p.token, tag: p.tag,
     state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!p.deadline, phone: p.phone || '' });
   S.seedsPlanted++; S.textsToday++;
+  maybeUnlockRow();   // three quarters of the first two rows earns the third
   save();
   renderGarden(); showTab('garden');
   showToast('Shell loaded for ' + p.tag + ' 🎆');
@@ -2300,10 +2322,11 @@ function doBloom(p, kind) {
   p.state = 'bloomed'; p.species = s.id; p.traits = traits; p.color = color;
   const firstEver = !S.coll[s.id];
   recordShell(s, traits, color);
+  // Beds are gone. The reward is the third rack row, and once that is unlocked
+  // the reward becomes another shell for the Shed instead.
   let bed = null;
-  if (kind === 'tap') bed = { kind: 'bed', n: 3 };
-  else if (kind === 'earned') bed = { kind: 'bed', n: 2 };
-  if (bed) S.shed.push(bed);
+  if ((S.rows || 2) < 3) { S.rows = 3; bed = true; }
+  else S.shed.push({ kind: 'gift', shelf: kind === 'tap' ? 'p' : 'b' });
   addPraise(kind === 'tap' ? 50 : 25);
   save();
   api('bloom', { seedId: p.id, kind, species: s.id }); // [SERVER] species code + kind, per the one-record rule
@@ -2339,7 +2362,7 @@ function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
     <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:21px;color:#0468b8;margin-top:8px;animation:grow 1.8s infinite;">${p.gift ? 'YOUR WELCOME SHELL' : esc(p.tag.toUpperCase()) + ' IS VOTING!'}</div>
     <div style="margin-top:10px;display:flex;flex-direction:column;gap:7px;align-items:center;">
       <span class="chip-anim" style="animation-delay:3s;background:#fff;border:2px solid #c9def2;border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;">${firstEver ? '<b style="background:#d97706;color:#fff;border-radius:8px;padding:2px 7px;font-size:9px;margin-right:6px;letter-spacing:0.05em;">NEW</b>' : ''}<svg style="width:15px;height:15px;vertical-align:-3px;margin-right:3px;color:${hex};"><use href="#${s.art}"/></svg>${esc(colorName(p.color).toUpperCase())} ${esc(s.name.toUpperCase())} · ${shelfName(s.shelf).toUpperCase()}</span>
-      ${gotBed ? `<span class="chip-anim" style="animation-delay:${t + 0.8}s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">New rack unlocked!</span>` : ''}
+      ${gotBed ? `<span class="chip-anim" style="animation-delay:${t + 0.8}s;background:#fdf3d9;border:2.5px solid #f59e0b;border-radius:14px;padding:8px 16px;font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#b45309;box-shadow:0 3px 0 #e8c877;">Third rack row unlocked!</span>` : ''}
     </div>
     <button class="bigbtn" onclick="closeOv('ov-bloom');renderGarden();maybeRankup();">Back to my show</button>`;
   openOv('ov-bloom');
