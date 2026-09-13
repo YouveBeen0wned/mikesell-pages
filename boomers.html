@@ -1568,7 +1568,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260913-0750';
+const BUILD = '20260913-0905';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1805,9 +1805,10 @@ function slotOf(i) {
   const x = SHOW.left + col * SHOW.pitch + (row % 2 ? SHOW.pitch / 2 : 0);
   // Racks live BELOW the ground line. Back rows sit nearer the line.
   const tubeY = SHOW.ground + 6 + (rows - 1 - row) * 24;
-  // Sky is everything above. Back rows break higher, so the order in the air
-  // matches the order on the ground.
-  const burstY = 84 - row * 40;
+  // Shells break at the TOP of the sky, not just above the racks. The furthest
+  // back row takes the highest band and each nearer row sits one band below it,
+  // so row 1 always pops beneath row 2.
+  const burstY = 6 + (rows - 1 - row) * 38;
   return { row, col, x, tubeY, burstY };
 }
 function colsPerRow() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch); }
@@ -1844,12 +1845,6 @@ function drawShow() {
     const j = ((gx * 7 + gy * 13) % 11) / 11;
     out += `<circle cx="${(gx + j * 6).toFixed(1)}" cy="${(gy + j * 5).toFixed(1)}" r="${(0.5 + j * 0.9).toFixed(2)}" fill="#dbe7ff" opacity="${(0.16 + j * 0.38).toFixed(2)}"/>`;
   }
-  // The fuse igniter, drawn in the field so it scales with everything else and
-  // can never overlap the tubes. The burning fuse starts from exactly here.
-  out += `<g id="sparkbtn" style="cursor:pointer;" onclick="sparkFuse()">
-    <circle cx="${SPARK_X}" cy="${SHOW.ground}" r="9" fill="#1b2745" stroke="#f0b429" stroke-width="1.8"/>
-    <text x="${SPARK_X}" y="${SHOW.ground + 3.6}" text-anchor="middle" font-size="9.5">🔥</text></g>`;
-
   // The ground. Racks are staged below it, the sky is everything above.
   out += `<rect x="0" y="${SHOW.ground}" width="${SHOW.w}" height="${SHOW.h - SHOW.ground}" fill="#0a1128"/>`;
   out += `<line x1="4" y1="${SHOW.ground}" x2="${SHOW.w - 4}" y2="${SHOW.ground}" stroke="#4a5c8f" stroke-width="2.5" stroke-linecap="round"/>`;
@@ -1929,6 +1924,13 @@ function drawShow() {
       ${p.traits && p.traits.gli ? `<text x="${s.x - 14}" y="${s.burstY + 9}" font-size="7" fill="#fffbe8" style="animation:glint 3s infinite;">✦</text>` : ''}
     </g>`;
   }
+
+  // 4. The igniter goes LAST so it paints on top of the ground and the racks.
+  //    Drawn last, hidden by nothing.
+  out += `<g id="sparkbtn" style="cursor:pointer;" onclick="sparkFuse()">
+    <circle cx="${SPARK_X}" cy="${SHOW.ground}" r="10" fill="#0c142e" stroke="#f0b429" stroke-width="1.8"/>
+    <text x="${SPARK_X}" y="${SHOW.ground + 4}" text-anchor="middle" font-size="11">🔥</text></g>`;
+
   el.innerHTML = out;
 }
 
