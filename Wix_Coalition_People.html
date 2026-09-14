@@ -87,6 +87,61 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 .form-note{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#9ca3af;}
 .form-actions{display:flex;align-items:center;gap:12px;margin-top:12px;}
 
+/* ===== REVOLVING DOOR ===== */
+.rd-band{margin-top:40px;background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;}
+.rd-topbar{height:3px;background:linear-gradient(90deg,#b91c1c,#002d5b);}
+.rd-head{padding:20px 22px 16px;}
+.rd-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
+.rd-head h2{font-family:'clarendon-w01-medium',serif;font-size:20px;color:#002d5b;line-height:1.25;margin-bottom:8px;}
+.rd-head p{font-family:'avenir-light',Arial,sans-serif;font-size:12px;color:#6b7280;line-height:1.7;max-width:640px;margin-bottom:8px;}
+.rd-head p:last-child{margin-bottom:0;}
+.rd-note{background:#f9fafb;border-left:3px solid #002d5b;padding:12px 14px;margin:14px 0 0;}
+.rd-note strong{font-family:'avenir-heavy',Arial,sans-serif;color:#1a1a18;}
+.rd-stats{display:flex;gap:10px;flex-wrap:wrap;padding:0 22px 18px;}
+.rd-stat{background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:9px;padding:9px 13px;min-width:96px;}
+.rd-stat b{display:block;font-family:'clarendon-w01-medium',serif;font-size:19px;color:#002d5b;line-height:1.1;}
+.rd-stat span{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.07em;text-transform:uppercase;color:#9ca3af;}
+.rd-key{padding:0 22px 20px;display:flex;flex-wrap:wrap;gap:8px;}
+.rd-keyitem{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#6b7280;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:5px 9px;}
+.rd-keyitem b{font-family:'avenir-heavy',Arial,sans-serif;color:#374151;}
+
+.rd-filters{padding:12px 22px;border-top:1.5px solid #f3f4f6;border-bottom:1.5px solid #f3f4f6;background:#fdfdfe;}
+.rd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 22px 22px;}
+@media(max-width:860px){.rd-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.rd-grid{grid-template-columns:1fr;}}
+
+.rd-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s;}
+.rd-card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.08);}
+.rd-card.cf-DIRECT{border-top:3px solid #b91c1c;}
+.rd-card.cf-SECTOR{border-top:3px solid #d97706;}
+.rd-card.cf-INDIRECT{border-top:3px solid #64748b;}
+.rd-hd{padding:12px 14px 0;display:flex;align-items:flex-start;gap:10px;}
+.rd-mono{width:36px;height:36px;min-width:36px;border-radius:7px;background:linear-gradient(135deg,#7f1d1d,#002d5b);display:flex;align-items:center;justify-content:center;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:#fff;text-transform:uppercase;}
+.rd-name{font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#1a1a18;line-height:1.3;margin-bottom:2px;}
+.rd-role{font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#6b7280;line-height:1.45;margin-bottom:4px;}
+.rd-agency{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.05em;text-transform:uppercase;color:#9ca3af;line-height:1.4;}
+.rd-badges{padding:9px 14px 0;display:flex;flex-wrap:wrap;gap:4px;}
+.rd-badge{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:2px 7px;border-radius:3px;letter-spacing:0.06em;text-transform:uppercase;}
+.cb-DIRECT{background:rgba(185,28,28,0.10);color:#b91c1c;}
+.cb-SECTOR{background:rgba(217,119,6,0.12);color:#b45309;}
+.cb-INDIRECT{background:rgba(100,116,139,0.12);color:#475569;}
+.qb-SUBSTANTIAL{background:rgba(124,58,237,0.10);color:#7C3AED;}
+.qb-PARTIAL{background:rgba(37,99,235,0.10);color:#2563EB;}
+.qb-NONE{background:rgba(5,150,105,0.10);color:#047857;}
+.rd-conf{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb;}
+.rd-field{padding:9px 14px 0;}
+.rd-flabel{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px;}
+.rd-ftext{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#4b5563;line-height:1.6;}
+.rd-more{display:none;}
+.rd-card.open .rd-more{display:block;}
+.rd-foot{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:11px 14px 12px;border-top:1.5px solid #f3f4f6;margin-top:auto;}
+.rd-toggle{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.05em;text-transform:uppercase;padding:5px 12px;border-radius:50px;background:#002d5b;color:#fff;border:none;cursor:pointer;}
+.rd-toggle:hover{background:#013e7d;}
+.rd-src{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.05em;text-transform:uppercase;padding:5px 10px;border-radius:50px;background:#f3f4f6;border:1.5px solid #e2e8f0;color:#6b7280;text-decoration:none;}
+.rd-srclist{padding:0 14px 4px;}
+.rd-srclist a{display:block;font-family:'avenir-light',Arial,sans-serif;font-size:10px;color:#2563EB;text-decoration:none;line-height:1.7;word-break:break-all;}
+.rd-srclist a:hover{text-decoration:underline;}
+
 .footer{background:#002d5b;padding:20px 24px;text-align:center;}
 .footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
 .footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
@@ -138,6 +193,62 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 
 <div class="main">
   <div class="org-grid" id="org-grid"></div>
+
+  <div class="rd-band">
+    <div class="rd-topbar"></div>
+    <div class="rd-head">
+      <div class="rd-eye">The other half of the job</div>
+      <h2>The Revolving Door: Who Regulates the Industry They Came From</h2>
+      <p>Backing the groups above is one half of the work. The other half is replacing officials who walked from an industry into the government office with authority over that same industry.</p>
+      <p>Every entry below records four checkable facts: the office, what it controls, where the person worked before, and where those two overlap. Read them and draw your own conclusion.</p>
+      <div class="rd-note">
+        <p><strong>What this is not.</strong> Nothing here says anyone took a job in order to help a former employer, or that anyone is corrupt, or that anyone intends anything. That is not a softening. It is what makes the file usable. A claim about someone's motive is an opinion that invites a denial. A documented career path is a fact that invites an answer.</p>
+      </div>
+      <div class="rd-note">
+        <p><strong>Two questions, kept separate.</strong> A conflict asks whether a person has authority over a company or sector they recently worked for. A qualification gap asks what the role normally requires and what this person brings to it. They are different questions, and someone can score high on one and low on the other. Of the 39 people here, 24 have no qualification gap at all. Many are genuinely credentialed and also carry a real conflict. Both facts are recorded.</p>
+      </div>
+    </div>
+    <div class="rd-stats">
+      <div class="rd-stat"><b>39</b><span>Verified</span></div>
+      <div class="rd-stat"><b>28</b><span>Direct conflict</span></div>
+      <div class="rd-stat"><b>8</b><span>Sector conflict</span></div>
+      <div class="rd-stat"><b>24</b><span>No qual. gap</span></div>
+      <div class="rd-stat"><b>16</b><span>Corrections made</span></div>
+    </div>
+    <div class="rd-key">
+      <div class="rd-keyitem"><b>DIRECT</b> — authority over a named former employer or its direct competitors</div>
+      <div class="rd-keyitem"><b>SECTOR</b> — authority over the industry they came from, no named former employer in scope</div>
+      <div class="rd-keyitem"><b>INDIRECT</b> — a looser connection</div>
+      <div class="rd-keyitem"><b>SUBSTANTIAL / PARTIAL / NONE</b> — how the background compares to what the role normally requires</div>
+      <div class="rd-keyitem"><b>HIGH / MEDIUM</b> — confidence in the entry as written</div>
+    </div>
+    <div class="rd-filters">
+      <div class="search-bar">
+        <input class="srch" id="rd-search" placeholder="Search a name, agency or employer…" oninput="renderRDoor()">
+        <select class="dd-filter" id="rd-conflict" onchange="renderRDoor()">
+          <option value="all">All conflict types</option>
+          <option value="DIRECT">Direct</option>
+          <option value="SECTOR">Sector</option>
+          <option value="INDIRECT">Indirect</option>
+        </select>
+        <select class="dd-filter" id="rd-qual" onchange="renderRDoor()">
+          <option value="all">All qualification findings</option>
+          <option value="SUBSTANTIAL">Substantial gap</option>
+          <option value="PARTIAL">Partial gap</option>
+          <option value="NONE">No gap</option>
+        </select>
+      </div>
+      <div class="res-count" id="rd-count"></div>
+    </div>
+    <div class="rd-grid" id="rd-grid"></div>
+    <div class="rd-head" style="border-top:1.5px solid #f3f4f6;">
+      <div class="rd-eye">The standard we would apply</div>
+      <p>A five year cooling off period for all senior federal officials. Real time public disclosure of executive branch conflicts of interest. An independent ethics office with real subpoena power. Ethics leadership chosen for enforcement records, not connections. Current federal cooling off periods run one to two years for most officials.</p>
+      <div class="rd-note">
+        <p><strong>How this was checked.</strong> A published advocacy tracker supplied the starting names. Each was then checked one at a time against Senate confirmation records, federal ethics filings, agency biographies and reporting. Roughly a third of the tracker entries had the wrong prior employer, one person had no connection to the industry claimed, and one had left the role. Sixteen claims failed the check or needed correction and are not published here. Where an ethics agreement, recusal or waiver could not be located, the entry says so rather than implying none exists. Every entry was current on September 13, 2026. Appointments move, so recheck before quoting one.</p>
+      </div>
+    </div>
+  </div>
 
   <div class="submit-section">
     <div class="submit-top-bar"></div>
@@ -325,6 +436,453 @@ function copyIG(idx){
 }
 
 renderOrgs();
+
+/* ===== REVOLVING DOOR =====
+   Source: Revolving_Door_Roster.xlsx, "Current Appointees, Verified" tab.
+   Thirty nine people, each checked individually. The internal notes column is
+   deliberately not published here; it is fact-check guidance, not copy. */
+var RDOOR=[
+{n:"Kyle Kunkler",p:"Deputy Assistant Administrator for Pesticide Programs, Office of Chemical Safety and Pollution Prevention",a:"U.S. Environmental Protection Agency",c:"DIRECT",q:"SUBSTANTIAL",cf:"HIGH",
+ctl:"Oversees EPA's pesticide office, which decides which pesticides may be sold and used in the United States and on what terms.",
+frm:"American Soybean Association",pr:"registered lobbyist",
+did:"He was director of government affairs at the American Soybean Association from 2020 until June 2025 and was the group's top federal lobbyist on crop chemicals, including dicamba, glyphosate, glufosinate, and 2,4-D. A Senate letter states he lobbied EPA officials on dicamba in March 2025.",
+ov:"The American Soybean Association and the pesticide sector, including dicamba, the herbicide he lobbied EPA about months before he joined the agency.",
+req:"This office is normally led by someone with a science background such as toxicology, entomology, plant science, or chemistry, or by someone with long experience managing pesticide registration and risk review.",
+bg:"His background is agricultural trade association government affairs, not pesticide science or registration review. Public records reviewed do not show a science degree or prior pesticide regulatory service. In fairness, the office has career scientists who perform the reviews, and farm sector policy knowledge is relevant, but that is not the background this post has usually required.",
+eth:"He was under a recusal from matters involving the American Soybean Association that ran until June 27, 2026. E&E News reported that he served as the lead from his office on the dicamba question without an impartiality determination on file for it. Senators Schiff and Merkley wrote to EPA in March 2026 about recusals expiring and waivers granted to appointees in this office, including him.",
+s:["https://www.epa.gov/aboutepa/about-office-chemical-safety-and-pollution-prevention","https://www.eenews.net/articles/fundamental-conflict-ethics-holds-on-trump-epa-chemicals-officials-lift/","https://www.schiff.senate.gov/wp-content/uploads/2026/03/EPA-letter-on-OCSPP-recusals.pdf"]},
+
+{n:"Ronald (Ron) Schindler",p:"Counselor, Office of the Director",a:"U.S. Fish and Wildlife Service, Department of the Interior",c:"DIRECT",q:"SUBSTANTIAL",cf:"HIGH",
+ctl:"The Fish and Wildlife Service enforces the Endangered Species Act and the Migratory Bird Treaty Act, lists and protects species and habitat, runs the national wildlife refuge system, and issues the permits industry needs to operate lawfully where protected species and birds are present.",
+frm:"Pioneer Natural Resources USA Inc.",pr:"executive",
+did:"He was Vice President Legal and Chief Compliance Officer at Pioneer Natural Resources from February 2005 until April 2025, a 20 year run that ended the month before he joined the government.",
+ov:"Exxon Mobil and the Permian Basin oil and gas sector. Exxon Mobil bought Pioneer, and Permian operators are the regulated parties in Fish and Wildlife Service decisions such as the 2024 endangered listing of the dunes sagebrush lizard, whose habitat sits in the Permian oil patch.",
+req:"Counselor in the Director's Office is a discretionary senior adviser post with no statutory requirement. It has usually gone to people with wildlife management, conservation, or wildlife law experience, since the office advises on species listings and refuge policy.",
+bg:"He is an experienced corporate lawyer and compliance officer, which is real preparation for advising on regulatory compliance and legal risk. His public record does not show wildlife biology, refuge management, or Endangered Species Act practice, which is the background that has usually filled adviser roles in this office.",
+eth:"Not found. His public financial disclosure was filed and is posted, and it reported Exxon Mobil stock valued between $1 million and $5 million, converted from his Pioneer holdings when Exxon Mobil acquired Pioneer, plus a Pioneer 401(k) worth $250,000 to $500,000 and a change of control fund worth $1 million to $5 million. No ethics agreement, recusal, or waiver for him was found.",
+s:["https://projects.propublica.org/trump-team-financial-disclosures/appointees/schindler-ronald/","https://www.fws.gov/about/directorate","https://www.fws.gov/press-release/2024-05/service-lists-dunes-sagebrush-lizard"]},
+
+{n:"William (Bill) Groffy",p:"Principal Deputy Director (served as Acting Director from June 2025 until May 2026)",a:"Bureau of Land Management, Department of the Interior",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"The BLM manages about 245 million surface acres of public land and about 700 million acres of federal underground mineral rights, including oil, gas, coal, and hardrock leasing and drilling permits.",
+frm:"Colorado Oil and Gas Association",pr:"trade association officer",
+did:"He was Senior Director of Legislative and Regulatory Affairs for the state oil and gas trade group in Denver, where he led energy policy work and testified before state lawmakers.",
+ov:"Colorado Oil and Gas Association member companies, plus Ovintiv and Marathon Oil, all of which operate in states where the BLM leases federal oil and gas.",
+req:"The number two job at the BLM has usually gone to people with federal public land management experience, often career BLM or Interior managers, or to senior natural resource policy staff.",
+bg:"He has more than 15 years in natural resource policy, including state level regulatory affairs work and service as district director for two Colorado congressional offices. He does not have a record of managing federal public lands, which many prior holders of this post had.",
+eth:"Not found.",
+s:["https://www.blm.gov/bio/bill-groffy","https://www.blm.gov/leadership","https://www.eenews.net/articles/colorado-oil-and-gas-official-picked-for-top-blm-post/"]},
+
+{n:"Mehmet Oz",p:"Administrator of the Centers for Medicare and Medicaid Services",a:"Centers for Medicare and Medicaid Services, Department of Health and Human Services",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"He runs the agency that sets payment rates and program rules for Medicare, Medicaid, the Children's Health Insurance Program, and the health insurance marketplaces, which together decide how insurers, hospitals, and drug suppliers get paid.",
+frm:"His own media and product companies, including Oz Media LLC and iHerb Oz Partners LLC",pr:"investor",
+did:"He is a cardiothoracic surgeon and former Columbia University professor who hosted a syndicated daytime health show from 2009 to 2022, promoted consumer health and supplement products, and held equity stakes plus managing member roles in his own media and product companies.",
+ov:"Health insurers, hospital chains, drug distributors, and supplement sellers that the agency he runs either pays or regulates. His disclosure and ethics agreement listed holdings in UnitedHealth Group, HCA Healthcare, McKesson, Cencora, AbbVie, Eli Lilly, iHerb, EKO Health, Housey Pharma, and Cardiology Partners. UnitedHealth Group is the largest Medicare Advantage insurer, and Medicare Advantage payment policy is set by his agency.",
+req:"The job normally goes to someone with health policy, health insurance, hospital management, or state Medicaid leadership experience. A medical degree is common but the core of the work is payment rules and program management.",
+bg:"His clinical credentials are real and worth stating plainly. He holds a doctor of medicine and a master of business administration from the University of Pennsylvania, completed a cardiothoracic surgery fellowship, served as a professor of surgery at Columbia University, and helped develop cardiac devices including the MitraClip. What he had not done is run a health insurance plan, a state Medicaid agency, or a payer operation, and that is the main work of this office.",
+eth:"He signed an Office of Government Ethics agreement dated February 16, 2025 and amended February 26, 2025. He agreed to divest UnitedHealth Group, HCA Healthcare, McKesson, Cencora, iHerb, EKO Health, Housey Pharma, Cardiology Partners, and roughly 40 to 60 other holdings within 90 days of confirmation, to resign management positions at four companies while keeping financial interests in some of them, and to step aside for one year from particular matters involving parties he had recent ties to.",
+s:["https://www.cms.gov/about-cms/who-we-are/leadership/office-administrator-0","https://rollcall.com/2025/03/13/ozs-ties-to-insurers-may-loom-over-his-cms-confirmation-hearing/","https://npr.org/sections/shots-health-news/2025/02/20/nx-s1-5304170/dr-oz-bhattacharya-cms-nih-ethics-disclosures"]},
+
+{n:"Stephen A. Feinberg",p:"Deputy Secretary of Defense",a:"Department of Defense",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"He is second in command at the Pentagon and acts as its chief operating officer over the department's budget, buying decisions, and major weapons programs, including the Golden Dome missile defense effort.",
+frm:"Cerberus Capital Management",pr:"investor",
+did:"He co founded Cerberus Capital Management in 1992 and ran the private equity firm until 2025. Cerberus has owned or backed defense and government services companies including DynCorp, Navistar Defense, Tier 1 Group, North Wind, Stratolaunch, Red River Technology, NetCentrics, and the satellite company Ligado Networks. His disclosed assets were at least $2 billion when he was nominated.",
+ov:"Cerberus Capital Management and its portfolio companies. ProPublica reported that at least four companies receiving Golden Dome work are owned by or majority backed by Cerberus. That four company list comes from ProPublica alone, so quote ProPublica by name if the claim is used. Ligado Networks, another Cerberus backed company, has pressed a $40 billion claim against the Defense Department since 2023.",
+req:"Deputy Secretary of Defense has almost always gone to people with prior senior Defense Department or national security service, such as a former service secretary, comptroller, undersecretary, or career defense official. Recent deputies under both parties came in with that record.",
+bg:"He has no prior Defense Department service. He did chair the President's Intelligence Advisory Board and the Intelligence Oversight Board from 2018 to 2021, and he has decades of experience running a large firm with defense holdings, which is relevant to the business side of the job. He does not have the acquisition, budget, or defense policy record that recent holders of this office brought to it.",
+eth:"He signed an ethics agreement and filed paperwork stating he divested from Cerberus. Reporting says his holdings were moved into irrevocable trusts that benefit his adult children and that Cerberus staff help manage, and ethics specialists quoted by ProPublica said that structure weakens what divestiture is for. His agreement allows him to keep buying tax compliance, accounting, and health coverage services from Cerberus, a permission extended in 2026 with no end date. A written recusal from Golden Dome contract decisions was not found.",
+s:["https://www.propublica.org/article/trump-administration-financial-disclosures-steve-feinberg","https://www.warren.senate.gov/imo/media/doc/warren_letter_to_feinberg_on_golden_dome_contracts.pdf","https://prospect.org/2026/07/17/top-defense-official-could-reap-windfall-from-dod-settlement/"]},
+
+{n:"Kara Moriarty",p:"Senior Advisor for Alaska Affairs",a:"Department of the Interior",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"This adviser coordinates Interior policy across the bureaus that manage more than 200 million acres of federal land in Alaska, including national parks, wildlife refuges, wilderness, and the National Petroleum Reserve in Alaska.",
+frm:"Alaska Oil and Gas Association",pr:"trade association officer",
+did:"She was President and Chief Executive Officer of the Alaska Oil and Gas Association, the state's oil and gas trade group, for about 20 years of association leadership before joining Interior.",
+ov:"The Alaska Oil and Gas Association and its member companies. Reporting has placed her in the review of an AOGA petition seeking faster permitting in the National Petroleum Reserve in Alaska, meaning her former employer's filing came before the office she now advises.",
+req:"This adviser job is a political appointment that needs no Senate confirmation. It has gone to people with deep Alaska policy experience from different starting points, including a former state legislator and state natural resources official under President Obama and a former Air Force officer and Interior staffer under President Trump's first term.",
+bg:"She has about two decades of Alaska resource policy experience and knows the state's permitting and land questions well, which fits the job's core demand. The post also covers parks, refuges, subsistence, and tribal consultation. A former holder of the job said publicly that the role requires work with tribes and other groups beyond the oil and gas sector, and her public record is concentrated in that one sector.",
+eth:"Not found. She was a trade association chief executive, not a registered federal lobbyist. This office is not a Senate confirmed post, so no confirmation file exists to check.",
+s:["https://alaskapublic.org/news/politics/washington-d-c/2025-05-23/alaskas-drue-pearce-and-kara-moriarty-join-interior-to-work-on-unleashing-states-energy","https://www.eenews.net/articles/trump-to-appoint-oil-and-gas-industry-veteran-as-alaska-adviser/","https://www.adn.com/business-economy/energy/2026/08/27/drilling-in-npr-a-wont-get-environmental-review-under-new-interior-proposal/"]},
+
+{n:"Benjamin (Ben) Kochman",p:"Deputy Administrator",a:"Pipeline and Hazardous Materials Safety Administration (PHMSA), U.S. Department of Transportation",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"PHMSA sets and enforces the federal safety standards for the nation's oil and gas pipelines and for hazardous materials in transport, decides when operators must report accidents, and grants safety waivers.",
+frm:"Interstate Natural Gas Association of America (INGAA)",pr:"trade association officer",
+did:"He was Director of Pipeline Safety Policy at INGAA for close to four years until January 2025, a job INGAA describes as advocating on federal safety policy for the interstate natural gas pipeline and storage industry.",
+ov:"INGAA and its member companies, which own and operate the interstate natural gas pipelines PHMSA regulates. Senate Commerce Committee correspondence states that Kochman signed proposed PHMSA rules that cite INGAA comments he had personally signed and submitted while working for INGAA.",
+req:"PHMSA Deputy Administrator is a political appointment that does not require Senate confirmation. It has gone to both lawyers and policy managers, and prior occupants have included people with pipeline safety law or state regulatory backgrounds as well as people from legislative and political staff careers.",
+bg:"He has federal experience, but his earlier PHMSA service was in governmental, international, and public affairs and in congressional affairs rather than in safety standards or engineering. His substantive pipeline safety policy experience comes from the industry side. He holds a bachelor's degree from American University and is not an engineer or a lawyer.",
+eth:"No recusal statement or ethics waiver for him has been made public. PHMSA told ProPublica that its officials are in full compliance with federal ethics requirements. In December 2025, Senator Maria Cantwell wrote to PHMSA asking for all recusal documentation and all waivers covering INGAA related matters. No public response producing such documents was found.",
+s:["https://www.phmsa.dot.gov/about-phmsa/leadership/deputy-administrator","https://www.commerce.senate.gov/2025/12/phmsa-officials-weakening-federal-safety-protections-amid-conflict-of-interest-allegations","https://www.propublica.org/article/trump-dot-oil-gas-pipeline-ethics-questions-senator-cantwell"]},
+
+{n:"Frank J. Bisignano",p:"Commissioner of Social Security, and also Chief Executive Officer of the Internal Revenue Service",a:"Social Security Administration; Internal Revenue Service (Department of the Treasury)",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"He runs the agency that sends Social Security retirement, survivor, and disability payments to tens of millions of people, and since October 2025 he also runs daily operations at the federal tax agency, which collected about $5.1 trillion in fiscal year 2024.",
+frm:"Fiserv, Inc.",pr:"executive",
+did:"He was chairman and chief executive officer of Fiserv, a payment processing and financial technology company, and he resigned all Fiserv positions in May 2025 after the Senate confirmed him.",
+ov:"Fiserv and its Money Network business. In September 2025 the Treasury Department's Bureau of the Fiscal Service picked Fifth Third Bank to run the Direct Express program, which delivers Social Security and veterans benefits to about 3.4 million people, with Money Network Financial, a Fiserv business, as program manager.",
+req:"The Social Security commissioner job has usually gone to people with a record in public administration, social insurance policy, or running large government programs.",
+bg:"He has run very large payment and technology operations, including Fiserv, First Data, and senior roles at JPMorgan Chase, so he has real experience moving money at scale and managing big back office systems. He had not held a senior federal government post before 2025. The IRS chief executive officer title was created in October 2025 and he is the first person to hold it.",
+eth:"He divested his Fiserv stock after confirmation, selling roughly $530 million to $560 million in shares between May and August 2025. Senators Ron Wyden and Elizabeth Warren opened a probe on November 7, 2025. Representatives John Larson and Jim Himes referred him to the Securities and Exchange Commission on November 20, 2025, over the timing of the stock sale. A written recusal covering Fiserv matters was not found. A probe and a referral are questions, not findings.",
+s:["https://www.ssa.gov/agency/commissioner/","https://www.irs.gov/about-irs/ceo-frank-bisignano","https://www.warren.senate.gov/newsroom/press-releases/warren-wyden-probe-social-security-chief-bisignano-amid-new-questions-about-his-tenure-as-ceo-at-fiserv"]},
+
+{n:"Robert P. Kadlec",p:"Assistant Secretary of Defense for Nuclear Deterrence, Chemical, and Biological Defense Policy and Programs",a:"U.S. Department of Defense",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"Serves as the chief civilian adviser to the Secretary of Defense on nuclear deterrence policy and programs and on chemical and biological defense, including medical and non medical countermeasures and countering weapons of mass destruction.",
+frm:"RPK Consulting Firm LLC, his own consulting business",pr:"executive",
+did:"He was sole proprietor of RPK Consulting Firm LLC from April 2023, reporting about $340,000 in consulting fees from clients including ApiJect Systems, Walker Digital Management and Flagship Pioneering. He was also chief executive of Vanguard Public Benefit Utility Corporation, an ApiJect Systems subsidiary, from May 2023 to February 2025, and joined the board of MiNK Therapeutics in October 2024.",
+ov:"ApiJect Systems, whose prefilled injector manufacturing received a $138 million joint Health and Human Services and Defense Department contract under the Defense Production Act in May 2020, and the biodefense medical countermeasure industry that his office now helps direct.",
+req:"This post normally goes to people with senior defense policy experience, a background running nuclear or chemical and biological defense programs, or national security management experience at a department or in the military.",
+bg:"He is an Air Force Academy graduate, holds an M.D. from the Uniformed Services University, served 26 years as an Air Force officer and physician retiring as a colonel, received a Bronze Star for service in Iraq, was White House director for biodefense from 2007 to 2009, and served as the Senate confirmed HHS Assistant Secretary for Preparedness and Response from 2017 to 2021. On the chemical and biological half of this job his credentials are deep and directly on point. The nuclear deterrence half is further from his documented record.",
+eth:"In his Senate Armed Services advance policy questions he agreed to comply with all conflict of interest disclosure requirements and with recusal requirements under 18 U.S.C. section 208, and stated that he ceased all outside for profit consulting beginning in March 2025. His financial disclosure states that his consulting business will be inactive during his appointment. Senator Warren wrote to him on November 2, 2025 asking whether he would recuse himself from matters involving companies he had advised; a published answer was not found.",
+s:["https://www.armed-services.senate.gov/imo/media/doc/kadlec_apq.pdf","https://projects.propublica.org/trump-team-financial-disclosures/appointees/kadlec-robert","https://www.defense.gov/Newsroom/Releases/Release/Article/2184808/dod-awards-138-million-contract-enabling-prefilled-syringes-for-future-covid-19/source/GovDelivery/"]},
+
+{n:"Audrey Robertson",p:"Assistant Secretary, Office of Critical Minerals and Energy Innovation",a:"U.S. Department of Energy",c:"DIRECT",q:"PARTIAL",cf:"MEDIUM",
+ctl:"Leads the department office that funds energy efficiency standards work, renewable power, geothermal, hydrogen, and critical minerals programs, and awards grants to companies in those sectors.",
+frm:"Franklin Mountain Energy, with a seat on the board of Liberty Energy, Inc.",pr:"executive",
+did:"She co-founded Franklin Mountain Energy in 2018 and served as its Chief Financial Officer and Executive Vice President until its assets were sold in January 2025, and she sat on the Liberty Energy board from 2021 until resigning in August 2025.",
+ov:"Liberty Energy, an oilfield services company whose chief executive resigned in January 2025 to become Secretary of Energy and is now her department head. Also the oil and gas sector generally, and the geothermal and critical minerals sectors her office now funds, where Liberty has investments.",
+req:"This office, before its 2026 renaming, was the Office of Energy Efficiency and Renewable Energy. It has usually gone to people with clean energy technology, engineering, science, or efficiency program backgrounds. Prior holders under both parties have come from renewable energy technology, national laboratories, or efficiency policy work.",
+bg:"Her credentials are in energy finance and company building rather than in efficiency or renewable technology. Her record does include work that touches the office's current portfolio: she served on boards of companies working on sodium ion batteries, small modular nuclear reactors, and next generation geothermal, she developed a 250 megawatt solar facility in Colorado, and she oversaw pipeline and rural microgrid build out at Franklin Mountain. Calling her background purely fossil fuel would be inaccurate.",
+eth:"Her public financial disclosure shows she will receive a fixed severance from Franklin Mountain Operating equal to one year of base salary, and that her unvested Liberty Energy restricted stock units are forfeited on separation. A signed Office of Government Ethics agreement dated May 28, 2025 is indexed on the agency's site, but the file link returned an error when checked, so its specific recusal terms could not be read and are recorded as unconfirmed.",
+s:["https://www.energy.gov/cmei/person/audrey-robertson","https://projects.propublica.org/trump-team-financial-disclosures/appointees/robertson-audrey/","https://www.eenews.net/articles/how-an-oil-exec-got-picked-to-lead-the-doe-renewables-office/"]},
+
+{n:"Alex Dominguez",p:"Deputy Assistant Administrator for Mobile Sources, Office of Air and Radiation",a:"U.S. Environmental Protection Agency",c:"DIRECT",q:"PARTIAL",cf:"MEDIUM",
+ctl:"Helps set EPA rules limiting emissions from cars, trucks, engines, and fuels, including the Renewable Fuel Standard and tailpipe standards.",
+frm:"Jim Massie and Partners",pr:"registered lobbyist",
+did:"He was a registered lobbyist at the firm Jim Massie and Partners, with 11 former clients including the National Corn Growers Association, the Texas power producer NRG, and the Oklahoma oil and gas services company Oneok. Before that he was a director of federal relations at the American Petroleum Institute starting in June 2021.",
+ov:"The fuels and vehicle industries covered by the mobile sources program, including the National Corn Growers Association on the Renewable Fuel Standard and the oil and gas sector he represented at the American Petroleum Institute.",
+req:"This post usually goes to someone with engineering, transportation, or fuels policy experience, or prior service inside the mobile sources program.",
+bg:"He worked in this same EPA air office as a policy adviser in the first Trump term and has years of fuels and vehicle policy work on Capitol Hill and in government relations, so part of the usual background is there. Public records reviewed do not show a science or engineering degree, which some prior holders of this post have had.",
+eth:"E&E News reported in June 2025 that he signed an amended recusal statement in April 2025 covering particular matters involving 11 former lobbying clients, with the coverage running no later than January 2026. The same reporting noted that the recusal covered specific matters such as contracts, court cases, and investigations, and did not cover broad rulemakings that could affect those clients. His reported recusal appears to have lapsed by January 2026.",
+s:["https://www.eenews.net/articles/epa-appointee-agrees-to-bow-out-of-work-tied-to-ex-lobbying-clients/","https://www.api.org/news-policy-and-issues/news/2021/06/11/api-strengthens-advocacy-team-with-new-federal-relations-hires","https://www.legistorm.com/person/bio/233192/Alexander_J_Dominguez.html"]},
+
+{n:"Tom Schultz",p:"Chief of the Forest Service",a:"U.S. Forest Service, U.S. Department of Agriculture",c:"DIRECT",q:"PARTIAL",cf:"HIGH",
+ctl:"Runs the agency that manages about 193 million acres of national forests and grasslands, including the federal timber sale program, wildfire prevention and suppression, grazing and recreation permits, and forest planning.",
+frm:"Idaho Forest Group",pr:"executive",
+did:"He was vice president of resources and government affairs at Idaho Forest Group, a lumber company, from 2018 until his appointment. He separately served as president of the Federal Forest Resource Coalition, a trade group for companies that buy and harvest timber from federal land, and testified for that group before the House Agriculture Committee in July 2022.",
+ov:"Idaho Forest Group and the member companies of the Federal Forest Resource Coalition, which buy timber from the national forests he now manages. Public Citizen reports Idaho Forest Group spent about $955,000 on federal lobbying since 2020. In December 2025 he signed an agreement with the State of Idaho aimed at roughly doubling timber sales from Idaho's national forests.",
+req:"Forest Service chiefs have nearly always been career agency employees promoted from within, typically foresters or land managers with decades of Forest Service service. The position is appointed by the Secretary of Agriculture and does not require Senate confirmation.",
+bg:"He holds a master of science in forestry from the University of Montana and served in the Air Force from 1991 to 1996. He directed the Idaho Department of Lands from 2011 to 2018, managing state endowment timber lands, so he brings real public land management experience. He has never worked inside the Forest Service, which is the background this job has almost always gone to.",
+eth:"Not found. Because the Chief is appointed by the Secretary of Agriculture without Senate confirmation, there is no confirmation record where recusal commitments would normally appear, and no ethics agreement, recusal statement, or waiver was located.",
+s:["https://www.fs.usda.gov/inside-fs/leadership/meet-tom-schultz-21st-chief-forest-service","https://www.citizen.org/article/uprooting-the-forest-service-a-trump-official-with-deep-timber-industry-ties-is-putting-public-lands-and-the-climate-at-risk/","https://idahocapitalsun.com/2025/12/05/idaho-partners-with-us-forest-service-with-goal-to-double-timber-sales/"]},
+
+{n:"Katharine (Kate) MacGregor",p:"Deputy Secretary of the Interior",a:"Department of the Interior",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"The Deputy Secretary is the second ranking official at Interior and helps run all its bureaus, including the BLM, the Fish and Wildlife Service, the National Park Service, and offshore and onshore energy permitting on federal land and water.",
+frm:"NextEra Energy, Inc.",pr:"executive",
+did:"She was Vice President of Environmental Services at NextEra Energy from February 2023 to 2025, handling environmental permitting, development, compliance, and mergers and acquisitions for energy infrastructure projects, and before that held the same title at Florida Power and Light from May 2021 to February 2023.",
+ov:"NextEra Energy and its utility Florida Power and Light. NextEra builds wind and solar projects that need federal right of way grants and permits from Interior bureaus, including BLM land approvals and Fish and Wildlife Service eagle take permits. One detail complicates the simple story: the BLM canceled the Esmeralda 7 solar project that NextEra was helping develop, an outcome against her former employer's interest.",
+req:"Deputy Secretary is normally filled by someone with senior Interior or congressional natural resource experience, and the post requires Senate confirmation.",
+bg:"She meets that standard by the usual measure. She spent about 10 years as House Natural Resources Committee staff, joined Interior in 2017, served as Principal Deputy Assistant Secretary for Land and Minerals Management and Deputy Chief of Staff, and was already Senate confirmed to this same job in February 2020. She has one of the strongest resumes on this list for the job she holds, and she also came directly from a company with business before her department.",
+eth:"She signed an ethics agreement in March 2025 and divested her NextEra holdings, reported as worth between $750,000 and $1.6 million, in July 2025. Her financial disclosure included a written promise to sell all her company equity within 90 days of confirmation. A separate written recusal from NextEra matters was not found. Her divestiture appears complete and was reported by an outside outlet, not just by the department.",
+s:["https://www.doi.gov/deputy-secretary-kate-macgregor","https://projects.propublica.org/trump-team-financial-disclosures/appointees/macgregor-katharine/","https://www.publicdomain.media/p/katharine-macgregor-interior-trump-wind-solar-nextera"]},
+
+{n:"Laura V. Swett",p:"Chairman and Commissioner",a:"Federal Energy Regulatory Commission",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Sets wholesale electricity and natural gas rates, approves interstate natural gas pipelines and liquefied natural gas terminals, oversees regional power market rules, and enforces grid reliability standards.",
+frm:"Vinson and Elkins LLP",pr:"outside counsel",
+did:"She spent about fifteen years as an energy litigation lawyer at Vinson and Elkins, representing utilities, transmission owners, and pipeline companies in matters before the commission she now chairs.",
+ov:"Vinson and Elkins clients with business before the commission, including Talen Energy in the data center co-location docket and its lawsuit against the commission, and Invenergy in a regional transmission planning case, plus the utility and pipeline sector generally.",
+req:"Commissioners normally come from energy regulatory law practice, state utility commissions, congressional energy staff, or the commission's own staff. This is not an entry level energy law job.",
+bg:"Her background is a strong match. She holds a law degree with honors from Georgetown University Law Center. Before private practice she worked inside the commission as a lead attorney in its Office of Enforcement and as an advisor to a former chairman, and she then practiced energy regulatory law for about fifteen years. There is no qualification gap at all.",
+eth:"The commission's ethics official signed a formal waiver in October 2025 allowing her to take part in the PJM data center co-location proceeding even though Vinson and Elkins filed briefs there for clients including Talen Energy. She has said publicly she will not recuse herself from data center cases, and she voted in the December decision approving the co-location rules. The conflict question here rests on a documented, signed ethics waiver rather than on inference, which is the sort of record a five year cooling off period would speak to directly.",
+s:["https://www.ferc.gov/about/commission-members/chairman-laura-v-swett","https://www.eenews.net/articles/ferc-chair-cleared-for-data-centers-case/","https://www.eenews.net/articles/conflicts-of-interest-cloud-fercs-data-center-cases/"]},
+
+{n:"David Armstrong Fink",p:"Administrator",a:"Federal Railroad Administration, U.S. Department of Transportation",c:"DIRECT",q:"NONE",cf:"MEDIUM",
+ctl:"Writes and enforces federal railroad safety rules, inspects track, equipment and operating practices, oversees safety at Amtrak, and runs federal rail grant programs.",
+frm:"Pan Am Group LLC, and before that Pan Am Railways",pr:"executive",
+did:"He joined Guilford Rail System as executive vice president and became president of the railroad, which was renamed Pan Am Railways in 2006. After CSX bought the rail operation in 2022 he served as president of Pan Am Group LLC from June 2022.",
+ov:"CSX Transportation, which bought Pan Am Railways in 2022 and is one of the largest railroads the FRA regulates, plus the freight rail industry generally. His public financial disclosure lists CSX Corp. stock valued at $1 million to $5 million with $50,001 to $100,000 in dividend income, a $9,073 CSX Transportation severance payment tied to the merger, and holdings in Norfolk Southern, Union Pacific and Canadian Pacific. That holding figure rests on a single source and should be checked against the filing itself.",
+req:"FRA administrators normally come from railroad operations, rail labor, a state rail agency, or federal transportation policy, and hands on railroad experience is the usual expectation.",
+bg:"He is a fifth generation railroader who started as a teenage track worker and ran a Class II freight railroad for years, including its rollout of positive train control. This is squarely the background the job normally calls for, and the Association of American Railroads and Amtrak's president both welcomed his confirmation.",
+eth:"His disclosure says he will receive no further Railroad Retirement Board pension payments until his federal service ends. No reported divestiture of, or recusal covering, his CSX stock was found. At his May 2025 confirmation hearing senators questioned Pan Am's safety record, citing a 2022 FRA audit and derailment rates, but the published hearing accounts record no discussion of conflicts of interest, recusal, or an ethics agreement.",
+s:["https://railroads.dot.gov/about-fra/organization/david-armstrong-fink-administrator","https://projects.propublica.org/trump-team-financial-disclosures/appointees/fink-david-armstrong","https://enotrans.org/article/senate-holds-hearing-for-fra-and-amtrak-nominees/"]},
+
+{n:"Wayne D. Palmer",p:"Assistant Secretary of Labor for Mine Safety and Health",a:"Mine Safety and Health Administration (MSHA), U.S. Department of Labor",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"MSHA writes and enforces the health and safety rules for every coal, metal, and nonmetal mine in the country, inspects those mines on a schedule set by law, and investigates accidents and miner complaints.",
+frm:"Essential Minerals Association",pr:"trade association officer",
+did:"He was Executive Vice President of the Essential Minerals Association, a Washington trade group for the industrial minerals industry, from 2021 to 2025, where the association says he led its safety and health work.",
+ov:"Essential Minerals Association and its industrial minerals member companies, which are nonmetal mining operations MSHA inspects and cites. While he was an officer there, the association filed comments opposing stricter parts of MSHA's 2024 silica dust rule, the same rule he now decides how to enforce. Since he took office MSHA has delayed enforcement of that rule and discussed settling a court challenge brought by industry groups.",
+req:"The job normally goes to someone with mine safety experience, either a former MSHA official, a mine safety engineer or inspector, or a mine workers union safety representative. Both parties have drawn from that pool.",
+bg:"He meets that standard on paper. He was Principal Deputy Assistant Secretary at MSHA in the first Trump administration and briefly acting Assistant Secretary in 2017, and earlier served as chief of staff to the Secretary of Labor. He is not an engineer or a former inspector, but prior agency leadership is a recognized path to this job. Mining trade groups backed his nomination in writing, and he describes himself as descended from miners.",
+eth:"Not found. No ethics agreement, recusal statement, or waiver turned up in agency records, Senate confirmation coverage, or watchdog reporting. That does not mean none exists, since Senate confirmed appointees normally file one with the Office of Government Ethics.",
+s:["https://www.msha.gov/about/leadership/office-assistant-secretary/wayne-d-palmer","https://www.wvgazettemail.com/news/energy_and_environment/miner-allies-pan-msha-head-over-resource-cuts-not-enforcing-black-lung-focused-rule/article_e37402a4-22da-48ed-bb7f-c9954be560bb.html","https://www.fisherphillips.com/en/insights/insights/trump-nominates-wayne-palmer-to-lead-msha"]},
+
+{n:"Jonathan Morrison",p:"Administrator",a:"National Highway Traffic Safety Administration, U.S. Department of Transportation",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Sets and enforces federal motor vehicle safety standards, runs defect investigations and recalls, oversees fuel economy rules, and decides exemption requests for vehicles built without human driving controls.",
+frm:"Apple Inc.",pr:"employee",
+did:"He was an attorney in Apple's Special Projects Group from March 2021 until he left the company in April 2025, and he separately served on the board of directors of the Autonomous Vehicle Industry Association from February 2022 to February 2024.",
+ov:"Apple Inc., the Autonomous Vehicle Industry Association trade group, and the automated vehicle and auto industry that NHTSA regulates. His financial disclosure listed unvested Apple restricted stock units worth $500,000 to $1 million at the time of filing. The trade group's members petition NHTSA for the automated vehicle exemptions his agency now grants.",
+req:"NHTSA administrators are normally lawyers, engineers, or safety officials with experience regulating vehicles, often gained inside the agency, at a state highway safety office, or in transportation safety research.",
+bg:"The qualification question cuts strongly in his favor. He served as NHTSA chief counsel from 2017 to 2021, so he has already run the agency's legal office and knows its rulemaking and enforcement work from the inside. Safety groups including the National Safety Council and the Governors Highway Safety Association publicly welcomed his confirmation.",
+eth:"His public disclosure shows he left Apple on April 28, 2025 with a retention bonus, final vesting of restricted stock units, and severance under company policy. Reporting says he signed a nondisclosure agreement with Apple covering his work there. A signed ethics agreement or recusal statement was not found in the public records reachable here.",
+s:["https://www.nhtsa.gov/nhtsa-leadership/jonathan-morrison","https://projects.propublica.org/trump-team-financial-disclosures/appointees/morrison-jonathan","https://www.ghsa.org/news/senate-jonathan-morrison-nhtsa-administrator"]},
+
+{n:"Peter Simshauser",p:"Chief Counsel",a:"National Highway Traffic Safety Administration, U.S. Department of Transportation",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Runs NHTSA's legal office, which handles enforcement of vehicle safety standards, defect investigations and litigation, and builds the legal framework for automated vehicles and fuel economy rules.",
+frm:"Motional AD Inc.",pr:"executive",
+did:"He was chief legal officer and chief compliance officer at Motional, a self driving vehicle developer, from March 2020 to August 2024, leading its legal compliance and government affairs work on deploying driverless vehicles.",
+ov:"Motional AD Inc. and the automated vehicle industry. His financial disclosure lists Motional restricted stock units worth $100,000 to $250,000 and $192,000 in Motional severance paid through February 2025. NHTSA decides the exemption petitions and writes the rules that automated vehicle developers operate under, and in 2025 the agency moved to streamline that exemption process.",
+req:"The NHTSA chief counsel job normally goes to a lawyer with regulatory, enforcement, or litigation experience, often from prior federal service or a large law firm practice.",
+bg:"He is a Harvard Law School graduate and a former partner at Skadden, Arps, Slate, Meagher and Flom, where he handled business disputes and government enforcement matters. He also holds undergraduate degrees in civil engineering and mathematics. That matches what the role normally requires.",
+eth:"Not found. His public financial disclosure is posted, but no recusal statement, ethics agreement, or waiver was located. Chief Counsel is not a Senate confirmed position, so there is no confirmation hearing record where recusal commitments would ordinarily appear.",
+s:["https://www.nhtsa.gov/nhtsa-leadership/peter-simshauser","https://projects.propublica.org/trump-team-financial-disclosures/appointees/simshauser-peter","https://www.nhtsa.gov/press-releases/streamline-exemption-process-noncompliant"]},
+
+{n:"Keith Coyle",p:"Chief Counsel",a:"Pipeline and Hazardous Materials Safety Administration (PHMSA), U.S. Department of Transportation",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"PHMSA's Chief Counsel is the agency's top lawyer, advising on the pipeline and hazardous materials safety rules the agency writes, on how those rules are read and applied, and on the enforcement cases the agency brings against pipeline and hazardous materials operators.",
+frm:"Babst Calland",pr:"outside counsel",
+did:"He was a shareholder in the Washington, D.C. office of Babst Calland and part of the firm's Pipeline and HazMat Safety practice, where he represented pipeline clients before PHMSA and state commissions and handled appeals in the federal courts of appeals. He was outside counsel to INGAA, not an INGAA employee and not a registered lobbyist.",
+ov:"The Interstate Natural Gas Association of America (INGAA), plus more than twenty other pipeline, oil, and gas companies that his financial disclosure lists as clients. All of them are regulated by PHMSA. While at the firm he filed court challenges to two Biden era pipeline safety rules, and E&E News reported those challenges led to one rule being delayed and another being narrowed. The client count rests on one source and the individual company names are not in the reporting, so no specific companies are named here.",
+req:"This job normally goes to a lawyer with administrative law experience and a working knowledge of pipeline and hazardous materials regulation. Administrations of both parties have filled it from inside the Department of Transportation and from private practice that handles this same body of rules.",
+bg:"He meets that standard. He was an attorney advisor at PHMSA earlier in his career, clerked for the U.S. Court of Appeals for Veterans Claims, and served as legislative counsel to a member of Congress. He spent years practicing pipeline safety law. E&E News reported that safety advocates acknowledge he had a solid safety record during his earlier service as a PHMSA staff attorney. The qualification question and the conflict question point in different directions here, and both can be true.",
+eth:"A PHMSA spokesperson told ProPublica that he and Deputy Administrator Ben Kochman are in full compliance with federal ethics requirements. No specific recusal list, signed ethics agreement, or ethics waiver has been made public. Senate Commerce Ranking Member Maria Cantwell asked him on December 12, 2025 for all matters from which he had sought to recuse himself and for copies of any waivers covering INGAA matters. No public response was found. The Chief Counsel position is not Senate confirmed.",
+s:["https://www.phmsa.dot.gov/about-phmsa/leadership/chief-counsel-0","https://www.commerce.senate.gov/wp-content/uploads/media/doc/25.12.12%20Cantwell%20to%20Coyle.pdf","https://www.eenews.net/articles/trumps-phmsa-chief-counsel-spent-years-fighting-regulations/"]},
+
+{n:"Kyle Haustveit",p:"Under Secretary of Energy",a:"U.S. Department of Energy",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Oversees the department's applied energy programs, which fund and set direction for oil, natural gas, coal, geothermal, nuclear, renewable, and grid work, and for the national laboratories tied to them.",
+frm:"Devon Energy Corporation",pr:"employee",
+did:"He held technical and leadership roles at Devon Energy, led teams that developed hydraulic fracturing diagnostic methods now used worldwide, and later ran Devon's Energy Ventures group investing in geothermal, carbon use, lithium extraction, and produced water treatment. He was an employee and manager, not a registered lobbyist.",
+ov:"Devon Energy, named in his ethics agreement, and the oil, natural gas, and coal industries whose federal programs he now oversees, along with the geothermal and carbon management sectors Devon's venture arm invested in.",
+req:"The Under Secretary of Energy post normally goes to someone with senior technical, scientific, or senior energy management experience. Prior holders under both parties have included research scientists, engineers, lawyers, and utility executives.",
+bg:"His technical credentials are genuine. He has a bachelor's degree in petroleum engineering from Montana Tech and an MBA in energy from the University of Oklahoma, and his hydraulic fracturing diagnostic work is cited as being adopted globally. He had already served, with Senate confirmation, as Assistant Secretary for Fossil Energy and Carbon Management from September 2025 before moving up.",
+eth:"His signed Office of Government Ethics agreement required him to resign from Devon Energy on confirmation and to divest any stock received from accelerated restricted stock units no later than ninety days after confirmation. For two years after any payment from Devon Energy he will not take part personally and substantially in matters involving specific parties where Devon is a party, unless he receives a written waiver. That is a stronger paper trail than most entries here. The agreement was written for the Assistant Secretary post; whether its terms were restated for the higher office was not found.",
+s:["https://www.energy.gov/person/kyle-haustveit","https://extapps2.oge.gov/201/Presiden.nsf/PAS+Index/1812D46147F5156085258C68002C8D73/$FILE/Haustveit,%20Kyle%20%20finalEA.pdf","https://jpt.spe.org/kyle-haustveit-confirmed-as-us-doe-under-secretary-of-energy"]},
+
+{n:"Theodore J. Garrish",p:"Assistant Secretary for Nuclear Energy",a:"U.S. Department of Energy, Office of Nuclear Energy",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Runs the federal office that funds and directs nuclear energy research, reactor demonstration projects, and nuclear fuel supply programs, including grants and cost sharing awards to nuclear companies.",
+frm:"United Coalition for Advanced Nuclear Power, LLC, and Goose International, LLC",pr:"trade association officer",
+did:"He was president of the United Coalition for Advanced Nuclear Power, an industry group, and sole owner of a private energy consulting firm that took nuclear sector clients.",
+ov:"The United Coalition for Advanced Nuclear Power and its member companies, plus the broader commercial nuclear industry that receives Office of Nuclear Energy funding. Earlier in his career he was a vice president at the Nuclear Energy Institute, the industry trade group, working on the nuclear fuel cycle.",
+req:"The job normally goes to someone with senior nuclear policy, nuclear engineering, or senior Department of Energy management experience. Prior holders under both parties have included nuclear engineers and career energy officials.",
+bg:"His background is a strong match. He held this same office from 1987 to 1989, served as the department's General Counsel, and served as Assistant Secretary for International Affairs from April 2018 to January 2021. His qualifications are unusually deep for this office, including four decades of federal energy service and a prior term in the same job. He is a lawyer and policy official rather than an engineer.",
+eth:"His signed ethics agreement required him to resign as president of the United Coalition for Advanced Nuclear Power and to recuse for one year from matters where that group is a party. His consulting company stays dormant during his service, and he recuses for one year from matters involving former consulting clients. The agreement does not name the Nuclear Energy Institute.",
+s:["https://www.energy.gov/ne/person/theodore-j-garrish","https://extapps2.oge.gov/201/Presiden.nsf/PAS+Index/B646F934376A520B85258C68002C8D3D/$FILE/Garrish,%20Theodore%20J.%20%20finalEA.pdf","https://www.ans.org/news/2025-09-19/article-7382/garrish-is-ne1-and-williams-leads-the-nnsa-following-senate-vote/"]},
+
+{n:"Keith E. Sonderling",p:"Deputy Secretary of Labor, serving as Acting Secretary of Labor since April 2026 and nominated for Secretary of Labor",a:"U.S. Department of Labor",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"The Department of Labor writes and enforces the nation's wage, hour, workplace safety, benefits, and antidiscrimination rules for federal contractors, covering nearly every private employer in the country.",
+frm:"Constangy, Brooks, Smith & Prophete, LLP, and his own consulting practice",pr:"outside counsel",
+did:"After leaving the Equal Employment Opportunity Commission in August 2024 he provided expert consulting services paid for by the law firm Constangy, Brooks, Smith & Prophete, and ran a sole proprietorship consulting practice. He was never a Walmart employee.",
+ov:"Walmart, named in his own financial disclosure as a client of the firm that paid him, is subject to Department of Labor wage and hour and workplace safety enforcement. His filing reports about $50,490 in consulting fees. Two fairness points: the department's authority is economy wide rather than one industry, so this overlap differs in kind from a sector regulator drawn from the sector it polices, and his own disclosure is the source of the Walmart tie.",
+req:"Deputy Secretary is the department's chief operating officer and normally goes to someone with senior federal management experience or deep labor and employment policy experience. Appointees of both parties have come from prior sub-agency leadership, Capitol Hill, or senior employment law practice.",
+bg:"He is well matched to the role by the usual standard. He was Deputy Administrator and then Acting Administrator of the Wage and Hour Division from 2017 to 2020, an EEOC Commissioner from 2020 to 2024 and its Vice Chair, and an adjunct professor teaching employment law at George Washington University Law School.",
+eth:"His public financial disclosure lists the consulting income and Walmart as the client, and records his sole proprietorship as inactive during his appointment. No separate recusal statement or ethics waiver was located. Since June 2026 he has also served as Acting Director of the U.S. Office of Government Ethics, the office that reviews the disclosures and ethics agreements of other appointees. That is stated as a fact of record, with no claim about how he has run that office.",
+s:["https://www.dol.gov/agencies/osec/keith-sonderling","https://extapps2.oge.gov/201/Presiden.nsf/PAS+Index/6F88686B89E42DAE85258C2B0032160B/$FILE/Sonderling,%20Keith%20%20final278.pdf","https://news.bloomberglaw.com/daily-labor-report/labor-secretary-nominee-sonderling-advances-to-full-senate-vote"]},
+
+{n:"Aaron Szabo",p:"Assistant Administrator, Office of Air and Radiation",a:"U.S. Environmental Protection Agency",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Runs the EPA office that sets national limits on air pollution, greenhouse gases, vehicle and engine emissions, and radiation exposure.",
+frm:"CGCN Group",pr:"registered lobbyist",
+did:"He lobbied at CGCN Group and earlier at the law firm Faegre Drinker Biddle and Reath, representing energy and petrochemical clients. Reported clients include Duke Energy and the American Fuel and Petrochemical Manufacturers. He joined EPA as a senior adviser in January 2025, was confirmed July 24, 2025, and started as Assistant Administrator August 25, 2025.",
+ov:"Duke Energy and other electric utilities, plus refiners and petrochemical makers represented by the American Fuel and Petrochemical Manufacturers, all covered by the air rules his office writes. The Duke Energy client detail rests mainly on one outlet, so treat that single item as weaker than the rest.",
+req:"This Senate confirmed post usually goes to a lawyer or policy expert with years of Clean Air Act and federal regulatory experience, often including prior federal service.",
+bg:"He has roughly a decade of federal service at the Office of Information and Regulatory Affairs, the Nuclear Regulatory Commission, and the White House Council on Environmental Quality, plus a law degree from George Washington University. That matches what the role normally requires.",
+eth:"Not found. No ethics agreement text, recusal statement, or impartiality determination turned up in the sources reviewed. Senators raised his lobbying clients at his March 5, 2025 confirmation hearing. Status needs care: EPA announced in July 2026 that he was leaving, then E&E News reported on July 28, 2026 that he stayed. Recheck his status before quoting this entry.",
+s:["https://www.epa.gov/aboutepa/about-office-air-and-radiation","https://www.epa.gov/ocir/aaron-l-szabos-march-5-2025-testimony-nomination-aaron-l-szabo-assistant-administrator-office","https://www.eenews.net/articles/epa-air-chief-szabo-wont-leave-agency-as-previously-planned/"]},
+
+{n:"Abigale Tardif",p:"Principal Deputy Assistant Administrator, Office of Air and Radiation",a:"U.S. Environmental Protection Agency",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Second in command of the office that writes and enforces national air pollution, greenhouse gas, and vehicle emission rules under the Clean Air Act.",
+frm:"Marathon Petroleum Corporation",pr:"registered lobbyist",
+did:"She was Manager of Federal Government Affairs at Marathon Petroleum from May 2023 to January 2025, and before that Manager of Government Relations and Policy at the American Fuel and Petrochemical Manufacturers from May 2022 to April 2023. Her reported lobbying issues included the Renewable Fuel Standard, tailpipe emission standards, air rules for refineries and petrochemical plants, and fuel economy standards.",
+ov:"Marathon Petroleum, refineries, and the fuels and petrochemical sector represented by the American Fuel and Petrochemical Manufacturers, all regulated by the office she helps lead. The Renewable Fuel Standard and tailpipe rules she lobbied on sit inside that office. Because the fuels sector is broad, the DIRECT rating rests on Marathon Petroleum being a named former employer whose refineries her office regulates.",
+req:"This is a senior policy post. It usually goes to someone with years of Clean Air Act policy experience, often from EPA career staff, a Senate or House committee, a state air agency, or environmental law practice.",
+bg:"She served in this same EPA office in the first Trump term, worked for the Senate Environment and Public Works Committee, and worked at the White House. That is the kind of Clean Air Act policy background the job normally draws on, so the qualification question is not where this entry is strongest.",
+eth:"Not found. Her public financial disclosure lists her Marathon Petroleum salary and bonus of about $309,000 and her retirement plans at both former employers, and states that neither plan sponsor will make further contributions after she left. No recusal statement, ethics agreement text, or impartiality determination turned up in the sources reviewed.",
+s:["https://www.epa.gov/aboutepa/about-office-air-and-radiation","https://projects.propublica.org/trump-team-financial-disclosures/appointees/tardif-abigale/","https://www.eenews.net/articles/ex-oil-lobbyists-land-top-epa-air-office-jobs/"]},
+
+{n:"Jessica Kramer",p:"Assistant Administrator for Water",a:"U.S. Environmental Protection Agency",c:"DIRECT",q:"NONE",cf:"MEDIUM",
+ctl:"Runs the EPA office that sets drinking water, wastewater, and surface water rules and permits under the Clean Water Act and the Safe Drinking Water Act.",
+frm:"Brownstein Hyatt Farber Schreck",pr:"registered lobbyist",
+did:"Her title at the law and lobbying firm Brownstein Hyatt Farber Schreck was senior policy advisor. After the firm she was Deputy Secretary of Regulatory Programs at the Florida Department of Environmental Protection, and then senior adviser to the EPA Administrator from January 2025 until her confirmation.",
+ov:"Water utilities and their trade groups, plus Talos Energy, Duke Energy, and LG Chem, all subject to Clean Water Act discharge permits and water quality rules set by her office. Those three client names trace back to one original outlet, so mark them as single source. Whether she filed as a registered lobbyist for each named client was not confirmed.",
+req:"This Senate confirmed post usually goes to a lawyer or water policy expert with state or federal water program experience.",
+bg:"Her background fits the role closely. She was water counsel on the Senate Environment and Public Works Committee, senior policy counsel in EPA's Office of Water in the first Trump term, Deputy Secretary at Florida's environmental agency, an Assistant Attorney General in the Wisconsin Department of Justice environmental unit, and an enforcement attorney at the Wisconsin Department of Natural Resources. This is one of the best matched backgrounds on this list and should be reported that way.",
+eth:"Not found. She was Senate confirmed on September 18, 2025 and would ordinarily have filed an ethics agreement, but no agreement text, recusal statement, or waiver turned up in the sources reviewed.",
+s:["https://www.epa.gov/aboutepa/about-office-water","https://www.epa.gov/newsreleases/senate-confirms-jess-kramer-epas-assistant-administrator-water","https://thehill.com/policy/energy-environment/5109157-trump-epa-appointments-chemical-oil-industry-ties/"]},
+
+{n:"Lynn Ann Dekleva",p:"Deputy Assistant Administrator, Office of Chemical Safety and Pollution Prevention",a:"U.S. Environmental Protection Agency",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Helps run the office that reviews and clears new industrial chemicals before companies may sell them, under the Toxic Substances Control Act.",
+frm:"American Chemistry Council",pr:"trade association officer",
+did:"She was a senior director at the American Chemistry Council, the main trade group for chemical makers, and worked there on formaldehyde policy. Before that she spent a long career at DuPont as an engineer who handled premanufacture notices and Toxic Substances Control Act compliance.",
+ov:"American Chemistry Council member companies and the industrial chemical sector whose new chemical filings her office reviews, including formaldehyde and asbestos matters.",
+req:"This job normally goes to someone with a science or engineering degree and hands on experience with new chemical review under the Toxic Substances Control Act.",
+bg:"She holds a doctorate in environmental engineering and has more than 30 years of industry experience, including running DuPont's premanufacture notice work. She held the same EPA job in the first Trump administration. Her technical credentials for this office are real, and this entry should not be read as saying she is unqualified.",
+eth:"She was under a recusal covering the American Chemistry Council that ended January 16, 2026. EPA granted her seven impartiality determinations letting her take part in matters including methylene chloride, trichloroethylene, the Toxics Release Inventory, perchloroethylene and carbon tetrachloride, asbestos, and 1,3-butadiene. In March 2026 Senators Schiff and Merkley asked EPA to extend the guardrails.",
+s:["https://www.epa.gov/aboutepa/about-office-chemical-safety-and-pollution-prevention","https://www.eenews.net/articles/fundamental-conflict-ethics-holds-on-trump-epa-chemicals-officials-lift/","https://www.merkley.senate.gov/sens-schiff-and-merkley-demand-extension-of-ethics-guardrails-on-trump-epa-chemical-appointees-end-to-conflicts-of-interest/"]},
+
+{n:"Steven D. Cook",p:"Principal Deputy Assistant Administrator, Office of Land and Emergency Management",a:"U.S. Environmental Protection Agency",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Helps run EPA's cleanup and waste programs, including Superfund site cleanups, hazardous waste rules, underground storage tanks, and chemical accident response.",
+frm:"Bracewell LLP",pr:"outside counsel",
+did:"He was of counsel at Bracewell LLP in Houston beginning August 2022, handling Superfund sites, major incident response, and permitting for energy and mining clients. Before Bracewell he spent more than 23 years at LyondellBasell as lead counsel for health, safety, environmental, and security matters.",
+ov:"Chemical and refining companies, including his former employer LyondellBasell, and the PFAS cleanup rule that his law firm clients challenged in court and that his EPA office has since proposed to change. The New York Times reported that earlier in 2025 he represented chemical companies that sued to block the PFAS cleanup rule. That specific client detail originates with one outlet.",
+req:"This post normally goes to a lawyer or program manager with deep Superfund and hazardous waste experience.",
+bg:"He is both a chemical engineer and a lawyer with an MBA, has more than two decades of in house environmental counsel work, and held the deputy post in this same office from 2018 to 2021 where he chaired the Superfund Task Force. He teaches Clean Air Act and enforcement at the University of Houston Law Center. His technical and legal fit for this job is strong.",
+eth:"Not found. No recusal statement, ethics agreement text, or waiver turned up in the sources reviewed. The New York Times reported that after a meeting with industry groups still challenging the PFAS cleanup rule, his office changed its recommendation from keeping the rule to recommending repeal within one business day.",
+s:["https://www.epa.gov/aboutepa/about-office-land-and-emergency-management-olem","https://www.nytimes.com/2025/08/28/climate/steven-cook-epa-pfas-forever-chemicals.html","https://www.prnewswire.com/news-releases/former-senior-epa-official-steven-cook-joins-bracewells-environment-lands-and-resources-practice-301599141.html"]},
+
+{n:"Ho K. Nieh",p:"Chairman and Commissioner",a:"U.S. Nuclear Regulatory Commission",c:"DIRECT",q:"NONE",cf:"HIGH",
+ctl:"Licenses and inspects commercial nuclear power plants and nuclear materials in the United States, and can order plants to shut down or fix safety problems. As chairman he also sets the agency's agenda and manages its staff.",
+frm:"Southern Nuclear Operating Company, a subsidiary of Southern Company",pr:"executive",
+did:"He joined Southern Nuclear in March 2021 as Vice President of Regulatory Affairs, the job of managing the company's dealings with the agency he now chairs, and at the time of his confirmation he was serving as an officer on loan to the Institute of Nuclear Power Operations.",
+ov:"Southern Nuclear and its parent Southern Company, which operate the Vogtle reactors in Georgia and hold licenses the commission issues and enforces, plus the rest of the commercial nuclear fleet.",
+req:"Commissioners are expected to bring nuclear engineering, nuclear safety, or nuclear regulatory experience. Seats have gone to engineers, former agency staff, congressional energy staff, and state regulators under both parties.",
+bg:"His technical credentials are real and strong. He has a bachelor of engineering in marine engineering, graduate work in nuclear engineering at Rensselaer Polytechnic Institute, and is a graduate of the U.S. Naval Nuclear Power School. He spent about two decades at the commission, including as a resident inspector and Director of the Office of Nuclear Reactor Regulation. He is the first former agency resident inspector to become a commissioner. The Senate confirmed him 66 to 32 with support from fifteen Democrats and one Independent.",
+eth:"His ethics agreement required him to resign from both Southern Nuclear and the Institute of Nuclear Power Operations by confirmation or December 29, 2025. He forfeits all unvested Southern Company stock units. If he receives a severance payment he recuses for two years from matters where Southern Nuclear or Southern Company is a party; if he forfeits severance, the recusal is one year. This is the clearest example in the file of a real conflict question and a real qualification sitting side by side.",
+s:["https://www.nrc.gov/about-nrc/organization/commission/nieh","https://extapps2.oge.gov/201/Presiden.nsf/PAS+Index/AD503AE52A13AF0385258D17002C1F9E/$FILE/Nieh,%20Ho%20K.%20%20finalEA.pdf","https://www.ans.org/news/2025-11-19/article-7566/nieh-confirmed-for-the-nrc/"]},
+
+{n:"David A. LaCerte",p:"Commissioner",a:"Federal Energy Regulatory Commission",c:"SECTOR",q:"SUBSTANTIAL",cf:"MEDIUM",
+ctl:"Votes on wholesale electricity and natural gas rates, interstate natural gas pipeline approvals, regional power market rules, and grid reliability enforcement.",
+frm:"U.S. Office of Personnel Management, and before that Baker Botts LLP",pr:"outside counsel",
+did:"He was special counsel at Baker Botts for about two years starting in January 2023, handling energy litigation and environmental, safety, and incident response matters. He came to the commission from the Office of Personnel Management, where he was White House liaison and senior advisor to the director, not directly from the law firm.",
+ov:"Energy company clients of Baker Botts, a firm with a large oil, gas, and utility practice, in a sector the commission regulates. Scored SECTOR rather than DIRECT because no specific Baker Botts client of his has been identified in a matter now before him.",
+req:"Commissioners normally come from energy regulatory law practice, state utility commissions, congressional energy staff, or the commission's own staff. The job involves wholesale power markets, pipeline permitting, transmission rate setting, and reliability rules, which are technical subjects.",
+bg:"His energy specific record is short compared with most people who have held this seat, at about two years of energy and environmental litigation practice. The rest of his record is in federal personnel management, service at the U.S. Chemical Safety and Hazard Investigation Board, and state government service as Louisiana's Secretary of Veterans Affairs. He is a Marine Corps infantry veteran who deployed to Afghanistan. Two things cut the other way: the Senate confirmed him a second time in May 2026 after he had served roughly seven months, and the commission describes his first term work on permitting reform and grid reliability.",
+eth:"Not found. No ethics agreement, recusal, or waiver was found for him in public Office of Government Ethics postings, so ethics is recorded as not found rather than as none existing.",
+s:["https://www.ferc.gov/about/commission-members/commissioner-david-lacerte","https://www.ferc.gov/news-events/news/ferc-commissioner-david-lacerte-confirmed-second-term","https://www.utilitydive.com/news/senate-confirms-ferc-swett-lacerte/802321/"]},
+
+{n:"John Figueroa",p:"Acting Under Secretary for Health, Veterans Health Administration. Senior Advisor to the Secretary since March 2025",a:"Department of Veterans Affairs",c:"SECTOR",q:"PARTIAL",cf:"MEDIUM",
+ctl:"He leads the Veterans Health Administration, the largest integrated health system in the country, with more than 1,400 sites of care, including its pharmacy operations, its purchasing of care from outside providers, and the federal electronic health record rollout.",
+frm:"CarepathRx",pr:"executive",
+did:"He founded CarepathRx and served as its chairman and chief executive, selling pharmacy services to hospital health systems. He was also executive chairman of AnewHealth and ExactCare Pharmacy. Earlier he was chief executive of Genoa Healthcare, chairman and chief executive of Apria Healthcare and Coram, chief executive of Omnicare, and president of McKesson's United States Pharmaceutical Group.",
+ov:"Hospital and health system pharmacy services, specialty and infusion pharmacy, long term care pharmacy, and home based care. These are lines of business the Veterans Health Administration both buys from outside vendors and runs itself. His financial disclosure reports holdings of $5 million to $25 million tied to CarepathRx companies and incentive unit agreements giving him a share of future profits. No contract between any of his former companies and the department was confirmed, which is why this is scored SECTOR.",
+req:"Since a 2004 change in law, 38 U.S.C. 305 requires demonstrated ability in the medical profession, in health care administration and policy, or in health care fiscal management, plus substantial experience with programs like those serving veterans. In practice every Senate confirmed holder of this office has been a physician.",
+bg:"He is not a clinician. He is a former Army infantry officer and Ranger, which is directly relevant to serving veterans, and he has about 36 years running large health care companies, most of it in pharmacy services and home based care, which squarely meets the health care administration test written into the statute. Measured against the practice of this particular office, which has gone to physicians, his background is different. He is acting, not Senate confirmed.",
+eth:"Not found. His public financial disclosure, filed for his senior advisor appointment, lists the CarepathRx and AnewHealth incentive unit agreements and total assets of roughly $57 million to more than $195 million. Acting officials placed without Senate confirmation are not put through the same public ethics agreement process as nominees, which is part of why no document was found.",
+s:["https://department.va.gov/vha/under-secretary-for-health/","https://projects.propublica.org/trump-team-financial-disclosures/appointees/figueroa-john/","https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title38-section305&num=0&edition=prelim"]},
+
+{n:"W. Noah Hoggatt",p:"Deputy Solicitor for Parks and Wildlife, and acting Principal Deputy Solicitor",a:"Office of the Solicitor, Department of the Interior",c:"SECTOR",q:"PARTIAL",cf:"MEDIUM",
+ctl:"This office gives Interior its legal advice on the national parks and on wildlife law, including how the Endangered Species Act and the Migratory Bird Treaty Act are applied and enforced, and it handles natural resource damage claims from oil spills and hazardous releases.",
+frm:"Louisiana Department of Environmental Quality",pr:"employee",
+did:"He was Executive Counsel at the Louisiana Department of Environmental Quality starting April 24, 2024, and before that he worked at the Louisiana Public Service Commission, at a private law firm handling energy disputes, and as in house counsel at what his state agency biography called a major integrated energy corporation, working on land use and offshore and inshore production matters.",
+ov:"The oil and gas sector. Endangered Species Act and Migratory Bird Treaty Act compliance and enforcement, which this office advises on, fall on oil and gas operators, including the offshore and coastal Gulf operations he worked on as in house counsel. His former energy employer is not named in public sources, which keeps this entry at medium confidence.",
+req:"This post has gone to lawyers with public lands, wildlife, or natural resources law experience. The prior holder was a natural resources law professor at the University of Colorado.",
+bg:"He is a licensed attorney with an LSU law degree, energy and environmental law practice, and two years as the top lawyer at a state environmental agency, which is relevant regulatory legal experience. Public records do not show a practice record in Endangered Species Act, Migratory Bird Treaty Act, or national park law, which is the core of this portfolio. He served in the Marine Corps as an infantryman with two combat deployments to Iraq.",
+eth:"Not found. Searches of federal lobbying filings, Louisiana lobbyist records, and press coverage turned up no lobbying registration for him. His documented path is in house energy lawyer, then private firm, then two state government legal jobs, then Interior.",
+s:["https://www.doi.gov/solicitor/organization-structure","https://www.doi.gov/solicitor/division-parks-and-wildlife","https://www.deq.louisiana.gov/news/ldeq-welcomes-noah-hoggatt-as-executive-counsel"]},
+
+{n:"Daniel Aronowitz",p:"Assistant Secretary of Labor for Employee Benefits Security",a:"Employee Benefits Security Administration (EBSA), U.S. Department of Labor",c:"SECTOR",q:"NONE",cf:"HIGH",
+ctl:"EBSA enforces the Employee Retirement Income Security Act, which sets the duties that employers and plan managers owe to workers and retirees in retirement plans, health plans, and other benefit plans.",
+frm:"Encore Fiduciary",pr:"executive",
+did:"He was President of Encore Fiduciary, a fiduciary liability insurance underwriter that sells coverage to employers and plan managers against claims that they breached their duties to benefit plan participants.",
+ov:"The fiduciary liability insurance business and the employers and plan managers it covers. EBSA's enforcement decisions and its rules on fiduciary duty shape the claims that Encore's policies pay out on. Scored SECTOR rather than DIRECT because EBSA does not regulate Encore Fiduciary itself, it regulates the plan fiduciaries Encore insures.",
+req:"The job normally goes to an ERISA specialist. Recent appointees under both parties have included benefits lawyers from union side and management side practices, congressional tax and benefits counsel, and benefits law academics.",
+bg:"He fits the professional norm, with roughly thirty years in ERISA related insurance and compliance as a coverage lawyer and underwriter. The fair caveat is that his experience comes from the side that insures and defends fiduciaries rather than from advising plan participants or from government enforcement, so he knows the statute well but from one vantage point.",
+eth:"Not found. No ethics agreement, recusal commitment, or waiver was reported in confirmation coverage or trade press. One checkable point needs no guess at motive: before taking office he wrote publicly that lawsuits brought on behalf of plan participants were often unfounded, and since taking office he has said EBSA will move to limit such litigation and has filed agency briefs against ERISA class actions. That is a consistent stated view rather than a reversal, which is a point in his favor on candor.",
+s:["https://www.plansponsor.com/daniel-aronowitz-confirmed-as-head-of-dols-ebsa/","https://www.hklaw.com/en/insights/publications/2025/09/a-new-chapter-at-ebsa-dan-aronowitz-cleared-by-senate","https://www.planadviser.com/ebsa-head-aronowitz-says-dol-ended-fiduciary-rule-madness/"]},
+
+{n:"Paul J. Roberti",p:"Administrator",a:"Pipeline and Hazardous Materials Safety Administration (PHMSA), U.S. Department of Transportation",c:"SECTOR",q:"NONE",cf:"MEDIUM",
+ctl:"PHMSA sets and enforces the federal safety standards for the nation's oil and gas pipelines and for hazardous materials in transport, and the Administrator runs the agency and signs its rules and enforcement policy.",
+frm:"Ernst & Young LLP",pr:"executive",
+did:"He was Managing Director of Risk Consulting in Ernst & Young's Providence, Rhode Island office, advising public utilities on regulatory compliance.",
+ov:"The public utility sector. Gas distribution utilities of the kind EY's utility practice advises are directly regulated by PHMSA. No individual former client of his has been named in any public record found, so the overlap is at the sector level rather than a named company.",
+req:"The Administrator is Senate confirmed and normally has pipeline or hazardous materials safety experience, energy regulatory experience, or senior agency legal or engineering experience. Appointees of both parties have come from state utility regulation, the agency itself, or the transportation bar.",
+bg:"He clears this standard comfortably and is the clearest counterexample in this file. He was PHMSA's Chief Counsel in the first Trump administration, a commissioner on the Rhode Island Public Utilities Commission confirmed unanimously by that state's senate, and an Assistant Attorney General who ran Rhode Island's Regulatory Division representing ratepayer and citizen interests. That last role is the opposite of the pattern this roster documents.",
+eth:"Not found. Senate confirmed nominees normally file an ethics agreement with the Office of Government Ethics, so one likely exists, but it could not be retrieved. If the roster needs a line showing the review was not a foregone conclusion, this is it.",
+s:["https://www.transportation.gov/mission/paul-j-roberti","https://www.phmsa.dot.gov/about-phmsa/leadership/administrator","https://www.eenews.net/articles/phsma-gets-first-confirmed-head-since-2021/"]},
+
+{n:"Scott H. Hutchins",p:"Under Secretary for Research, Education, and Economics, who also holds the title of Chief Scientist of the Department",a:"U.S. Department of Agriculture",c:"SECTOR",q:"NONE",cf:"MEDIUM",
+ctl:"Oversees USDA's science agencies, including the Agricultural Research Service, the Economic Research Service, the National Agricultural Statistics Service and the National Institute of Food and Agriculture, which set the department's research direction and award competitive research grants.",
+frm:"Self employed agricultural consultant, after a career at Dow AgroSciences, now Corteva Agriscience",pr:"executive",
+did:"He spent more than 31 years at Dow AgroSciences, now Corteva Agriscience, ending as global research and development leader over the seed and crop protection portfolio. From 2023 to 2025 he consulted for the Indiana Soybean Alliance, the Indiana Corn Marketing Council, a law firm, and a Texas A&M task team.",
+ov:"The crop protection and seed industry, including his former employer's successor Corteva Agriscience, and the commodity groups he consulted for. USDA research funding shapes pest management, pesticide and seed research that those businesses rely on, though pesticide registration itself sits with the EPA rather than USDA. His disclosure lists Dow Chemical retirement assets; no Corteva holdings are listed.",
+req:"Federal law, 7 U.S.C. 6971, requires this Under Secretary to be appointed from among distinguished scientists with specialized training or significant experience in agricultural research, education and economics, and to hold the title of Chief Scientist. The post has gone to senior researchers, university administrators and career science agency leaders.",
+bg:"The qualification question cuts clearly in his favor. He holds a Ph.D. in entomology from Iowa State, is a past president and elected fellow of the Entomological Society of America, is an adjunct professor of entomology at the University of Nebraska, and served as Deputy Under Secretary for this same mission group from 2019 to 2021. He meets the scientific credential the statute calls for. His research career was built mostly in industry rather than in academia or a public science agency.",
+eth:"Not found. His disclosure states he will continue to participate in his Dow retirement plans, and no recusal statement, ethics agreement, or waiver was located. Friends of the Earth publicly opposed his earlier 2018 nomination to this post over his pesticide industry record.",
+s:["https://www.usda.gov/about-usda/general-information/staff-offices/office-chief-scientist/ocs-leadership/under-secretary-ree","https://projects.propublica.org/trump-team-financial-disclosures/appointees/hutchins-scott","https://www.law.cornell.edu/uscode/text/7/6971"]},
+
+{n:"Catherine (Katie) Jereza",p:"Assistant Secretary, Office of Electricity",a:"U.S. Department of Energy",c:"SECTOR",q:"NONE",cf:"MEDIUM",
+ctl:"Leads federal research, development, and demonstration programs for the electric power grid, including energy storage, grid components, and grid security work that utilities draw on.",
+frm:"Electric Power Research Institute",pr:"executive",
+did:"She was Corporate Vice President for Corporate Affairs at the Electric Power Research Institute, a research organization funded largely by electric utilities, where she led outside stakeholder relations. Earlier she was Director of Infrastructure Resilience at the Edison Electric Institute. Neither role was as a registered lobbyist on the records reviewed.",
+ov:"Electric utilities and grid equipment suppliers, including members and funders of the Electric Power Research Institute and of the Edison Electric Institute. Her office funds grid research rather than setting utility rates or approving projects, which is why this is scored as a sector overlap and not a direct one.",
+req:"The job normally goes to someone with grid engineering, utility operations, or senior federal energy program management experience. Prior holders under both parties have had engineering or utility technology backgrounds.",
+bg:"Her background matches the job well. She has a bachelor of science in chemical engineering from Virginia Tech and an MBA, plus about thirty years in energy, water, and manufacturing. She already served in this same office as Deputy Assistant Secretary for Transmission Permitting and Technical Assistance from 2017 to 2019.",
+eth:"Not found. No ethics agreement, recusal, or waiver was found for her in public Office of Government Ethics postings, so ethics is recorded as not found rather than as none existing. The employment and appointment facts are solid and confirmed on the agency's own leadership page.",
+s:["https://www.energy.gov/oe/person/catherine-jereza","https://www.energy.gov/oe/oe-leadership","https://www.congress.gov/nomination/119th-congress/26/21"]},
+
+{n:"Ned Mamula",p:"Director, 19th Director of the U.S. Geological Survey",a:"U.S. Geological Survey, Department of the Interior",c:"SECTOR",q:"NONE",cf:"HIGH",
+ctl:"The USGS is a science agency. It maps the nation's geology, assesses energy and mineral resources, and produces the data behind the federal critical minerals list. It does not issue permits or write rules.",
+frm:"GreenMet",pr:"executive",
+did:"He was Chief Geologist and a board member at GreenMet, a company that finances and builds minerals supply chain projects, from 2023 to 2025, and he was also an adjunct scholar at the Cato Institute.",
+ov:"The minerals sector, including GreenMet by name. USGS resource assessments and the critical minerals list shape which minerals get faster federal treatment at other agencies, and he has publicly pushed to add uranium, copper, and potash to that list. Scored SECTOR rather than DIRECT because the USGS has no permitting, licensing, or enforcement power over GreenMet or any company.",
+req:"By long practice under both parties, the USGS Director is a working earth scientist, usually with an advanced degree in geology or a related science and senior research or agency experience.",
+bg:"He meets that standard. He holds a Ph.D. in geology and geophysics from Texas A&M and two master's degrees. He worked at the USGS earlier in his career, served as an intelligence analyst and geoscientist at the CIA, and ran the Critical Minerals Program at the Department of Energy from 2019 to 2023, where he set up its Mineral Sustainability Division. He is well credentialed for this job by the usual test.",
+eth:"His ethics agreement, signed with the Interior designated agency ethics official and dated April 30, 2025, commits him to recuse for one year from matters involving GreenMet, and to recuse from matters involving his own LLC, a family trust, and his spouse's firms. It also required him to sell his EnCore Energy, Berkshire Hathaway, and I-On Digital holdings within 90 days.",
+s:["https://extapps2.oge.gov/201/Presiden.nsf/PAS+Index/AF95264459AE408485258C84002C897D/$FILE/Mamula,%20Ned%20%20finalEA.pdf","https://www.usgs.gov/staff-profiles/ned-mamula","https://www.doi.gov/ocl/mamula-nomination"]},
+
+{n:"Paul R. Lawrence",p:"Deputy Secretary of Veterans Affairs, and since November 2025 also acting Chief Information Officer",a:"Department of Veterans Affairs",c:"INDIRECT",q:"NONE",cf:"MEDIUM",
+ctl:"He is second in command at the Department of Veterans Affairs and acts as its chief operating officer over the department's budget, workforce, and the electronic health record modernization program, and since November 2025 he also oversees department information technology.",
+frm:"Independent author and management consultant",pr:"employee",
+did:"He spent about 30 years as a management consultant serving federal agencies, including partner level work at PricewaterhouseCoopers and vice president of the public sector practice at Kaiser Associates, then served as Senate confirmed Under Secretary for Benefits at this same department from 2018 to 2021, then wrote books about veterans benefits and worked on his own until his 2025 appointment.",
+ov:"Federal professional services consulting, a sector in which several of his former firms hold government contracts. No former employer of his was confirmed as a current department vendor under his direct authority. This entry is kept as a verified counterexample rather than dropped.",
+req:"This job normally goes to someone with senior Department of Veterans Affairs or federal management experience, and often to a veteran.",
+bg:"He meets it. He is a Senate confirmed former Under Secretary for Benefits at the same department, an Army veteran who served as a captain in the Finance Corps and completed Airborne School, and he holds a doctorate in economics from Virginia Tech. Senators who voted against him said in public statements that their objection was to administration workforce plans, not to his qualifications.",
+eth:"Not found. No ethics agreement, recusal list, or waiver for this appointment was located in public sources. His public financial disclosure reports about $2.3 million in assets, which is modest compared with the other appointees on this list, and that figure comes from a single index source, so verify it before publishing.",
+s:["https://www.congress.gov/nomination/119th-congress/13/9","https://www.govinfo.gov/content/pkg/CHRG-119shrg59383/html/CHRG-119shrg59383.htm","https://www.militarytimes.com/veterans/2025/03/27/senate-confirms-former-va-benefits-chief-as-new-deputy-secretary/"]},
+
+{n:"Kelly Loeffler",p:"Administrator of the Small Business Administration",a:"Small Business Administration",c:"INDIRECT",q:"NONE",cf:"MEDIUM",
+ctl:"She runs the agency that guarantees small business loans, licenses and supervises the lenders in those programs, makes disaster loans, and sets rules for federal contracting programs reserved for small firms.",
+frm:"Bakkt Holdings and Intercontinental Exchange",pr:"executive",
+did:"She spent about two decades at Intercontinental Exchange, the company that owns the New York Stock Exchange, rising to senior vice president of investor relations and chief communications and marketing officer, and in 2018 she became the founding chief executive and first employee of Bakkt, a crypto venture that Intercontinental Exchange created.",
+ov:"Financial services and financial technology in general. The Small Business Administration licenses nonbank small business lending companies and sets the terms on which fintech lenders take part in its 7(a) loan program. Her former employers, a securities exchange operator and a crypto trading and custody platform, are not themselves supervised by the Small Business Administration. This is the weakest conflict case in the file and the entry should say so plainly.",
+req:"The job has gone to business executives, investors, bankers, and small business advocates under presidents of both parties. Recent holders include a media company co founder, a venture investor, a commercial banker, and a state small business advocate.",
+bg:"She fits that pattern closely. She was a senior executive at a Fortune 500 financial markets company, the founding chief executive of a startup, and a United States senator. Nothing in her background falls outside what this office normally asks for.",
+eth:"Her public financial disclosure lists paired interests tied to Bakkt Holdings valued at $1 million to $5 million, a retirement account from Intercontinental Exchange worth about $1.7 million to $2.5 million, and spouse holdings of more than $50 million in Intercontinental Exchange common stock plus unvested options. Her husband leads Intercontinental Exchange. A signed ethics agreement, recusal list, or waiver for this role was not found, which is an absence of a record rather than evidence that none exists. A 2020 Senate inquiry into her stock trading was dismissed by the Senate Ethics Committee.",
+s:["https://www.sba.gov/person/kelly-loeffler","https://projects.propublica.org/trump-team-financial-disclosures/appointees/loeffler-kelly/","https://www.cbsnews.com/amp/news/senate-ethics-committee-kelly-loeffler-insider-trading-investigation-dismissed"]},
+
+{n:"Gary Andres",p:"Assistant Secretary for Legislation",a:"U.S. Department of Health and Human Services",c:"INDIRECT",q:"NONE",cf:"MEDIUM",
+ctl:"Runs the department's relationship with Congress, carrying HHS positions on health legislation to lawmakers and handling congressional requests and oversight.",
+frm:"U.S. House Committee on the Budget",pr:"employee",
+did:"He was Republican staff director of the House Budget Committee from early 2023 until his 2025 confirmation, after serving as staff director of the House Energy and Commerce Committee from 2011 to 2017 and of the House Ways and Means Committee from 2018 to 2023.",
+ov:"Thin, and the entry says so. He was senior executive vice president of public affairs at the Biotechnology Innovation Organization from February 2017 until April 2018, roughly seven years before this appointment, and earlier an executive at the lobbying firm Dutko Worldwide. HHS legislative affairs does touch drug pricing, FDA and biotech policy that BIO members care about, but he moved into this job from a congressional committee, not from industry, and his public financial disclosure shows no BIO income or holdings.",
+req:"This job normally goes to someone with long congressional or executive branch legislative affairs experience, usually a senior committee or leadership staffer or a former White House legislative aide.",
+bg:"He was staff director of three different House committees, served two tours in the White House Office of Legislative Affairs, and holds a doctorate in public policy from the University of Illinois at Chicago. That is the standard background for this role and then some.",
+eth:"Not found. No recusal statement, ethics agreement, or waiver was located. His public financial disclosure lists no biotech trade group income or holdings. Whether he was personally registered as a lobbyist for BIO could not be verified, so this entry describes him as a trade association officer there rather than a registered lobbyist.",
+s:["https://www.hhs.gov/about/leadership/gary-andres.html","https://www.bio.org/press-release/bio-announces-gary-andres-new-senior-executive-vice-president-public-affairs","https://projects.propublica.org/trump-team-financial-disclosures/appointees/andres-gary"]}
+];
+
+function renderRDoor(){
+  var q=(document.getElementById('rd-search').value||'').toLowerCase();
+  var cfl=document.getElementById('rd-conflict').value;
+  var qfl=document.getElementById('rd-qual').value;
+  var filtered=RDOOR.filter(function(r){
+    if(cfl!=='all'&&r.c!==cfl)return false;
+    if(qfl!=='all'&&r.q!==qfl)return false;
+    if(q){
+      var hay=(r.n+' '+r.p+' '+r.a+' '+r.frm+' '+r.ov).toLowerCase();
+      if(hay.indexOf(q)<0)return false;
+    }
+    return true;
+  });
+  document.getElementById('rd-count').textContent='Showing '+filtered.length+' of '+RDOOR.length+' verified appointees';
+  var html='';
+  for(var i=0;i<filtered.length;i++){
+    var r=filtered[i];
+    var parts=r.n.replace(/\(.*?\)/g,' ').replace(/[^a-zA-Z\s]/g,' ').split(/\s+/).filter(Boolean);
+    var ini=(parts.length>1?(parts[0][0]+parts[parts.length-1][0]):r.n.slice(0,2)).toUpperCase();
+    var qlabel=r.q==='NONE'?'No qualification gap':(r.q==='PARTIAL'?'Partial qualification gap':'Substantial qualification gap');
+    var srcs='';
+    for(var j=0;j<r.s.length;j++){srcs+='<a href="'+r.s[j]+'" target="_blank" rel="noopener">'+r.s[j]+'</a>';}
+    html+='<div class="rd-card cf-'+r.c+'" id="rdc-'+i+'">';
+    html+='<div class="rd-hd"><div class="rd-mono">'+ini+'</div><div><div class="rd-name">'+r.n+'</div><div class="rd-role">'+r.p+'</div><div class="rd-agency">'+r.a+'</div></div></div>';
+    html+='<div class="rd-badges"><span class="rd-badge cb-'+r.c+'">'+r.c+' conflict</span><span class="rd-badge qb-'+r.q+'">'+qlabel+'</span><span class="rd-badge rd-conf">'+r.cf+' confidence</span></div>';
+    html+='<div class="rd-field"><div class="rd-flabel">What the office controls</div><div class="rd-ftext">'+r.ctl+'</div></div>';
+    html+='<div class="rd-field"><div class="rd-flabel">Came from</div><div class="rd-ftext"><b>'+r.frm+'</b> — '+r.pr+'</div></div>';
+    html+='<div class="rd-field"><div class="rd-flabel">The overlap</div><div class="rd-ftext">'+r.ov+'</div></div>';
+    html+='<div class="rd-more">';
+    html+='<div class="rd-field"><div class="rd-flabel">What they did there</div><div class="rd-ftext">'+r.did+'</div></div>';
+    html+='<div class="rd-field"><div class="rd-flabel">What the role normally requires</div><div class="rd-ftext">'+r.req+'</div></div>';
+    html+='<div class="rd-field"><div class="rd-flabel">Their background against that</div><div class="rd-ftext">'+r.bg+'</div></div>';
+    html+='<div class="rd-field"><div class="rd-flabel">Ethics record</div><div class="rd-ftext">'+r.eth+'</div></div>';
+    html+='<div class="rd-field"><div class="rd-flabel">Sources</div></div><div class="rd-srclist">'+srcs+'</div>';
+    html+='</div>';
+    html+='<div class="rd-foot"><button class="rd-toggle" onclick="rdToggle('+i+',this)">Full record</button></div>';
+    html+='</div>';
+  }
+  document.getElementById('rd-grid').innerHTML=html;
+}
+
+function rdToggle(i,btn){
+  var el=document.getElementById('rdc-'+i);
+  if(!el)return;
+  var open=el.className.indexOf(' open')>=0;
+  el.className=open?el.className.replace(' open',''):el.className+' open';
+  btn.textContent=open?'Full record':'Hide record';
+}
+
+renderRDoor();
 
 function sendHeight(){var h=document.documentElement.scrollHeight||document.body.scrollHeight;try{window.parent.postMessage({type:'iwResizeHeight',data:{height:h}},'*');}catch(e){}}
 window.addEventListener('load',sendHeight);

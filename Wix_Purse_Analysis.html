@@ -95,7 +95,14 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 .src-tier{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;padding:1px 7px;border-radius:4px;flex-shrink:0;}
 .tier-p{background:rgba(5,150,105,0.10);color:#065f46;}
 .tier-s{background:#f3f4f6;color:#6b7280;border:1px solid #e2e8f0;}
-.card-sh-row{display:flex;gap:5px;align-items:center;padding:9px 16px 10px;border-top:1.5px solid #f3f4f6;margin-top:2px;}
+.card-sh-row{display:flex;gap:5px;align-items:center;flex-wrap:wrap;padding:9px 16px 10px;border-top:1.5px solid #f3f4f6;margin-top:2px;}
+/* On a narrow screen the share row is a third flex item in .cut-row and gets
+   pushed past the right edge. Let the row wrap and give the icons their own line. */
+@media(max-width:640px){
+  .cut-row{flex-wrap:wrap;}
+  .cut-row .cut-text{flex:1 1 auto;min-width:0;}
+  .cut-row .card-sh-row{flex:1 0 100%;width:100%;padding-left:0;padding-right:0;margin-top:8px;}
+}
 .opp-card .card-sh-row{padding:8px 0 0;border-top:1.5px solid #f3f4f6;margin-top:auto;}
 .share-strip{background:#fff;border-top:1.5px solid #e2e8f0;padding:12px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .share-strip-lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;white-space:nowrap;}
