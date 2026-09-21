@@ -773,7 +773,7 @@ const CONFIG = {
     { name: 'Egg Tender',       at: 0 },
     { name: 'Hatchling Keeper',       at: 100, },
     { name: 'Dragon Wrangler', at: 250,  unlock: 'Nest editing',   teach: 'Hold and drag any nest to rearrange your roost.' },
-    { name: 'Beast Master',        at: 600 },
+    { name: 'Beast Master',        at: 420 },
     { name: 'Dragon Rider',      at: 1400 },
     { name: 'Elder Keeper',               at: 3000 },
     { name: 'Dragonlord',            at: 6500 },
@@ -821,10 +821,21 @@ const CONFIG = {
   // Aspirational scores seeded into the shared board. Same list in all three
   // games, so the leaderboard looks identical wherever you open it.
   champs: [
-    ['MandarinMary', 5, 940, 'b'], ['SmaugMarco', 5, 880, 'd'], ['NorthsideNova', 4, 815, 'k'],
-    ['DuuuvalDaisy', 4, 705, 'b'], ['NassauNightwing', 4, 660, 'd'], ['WestsideWicks', 3, 590, 'k'],
-    ['BoldCityBloom', 3, 505, 'b'], ['AcostaAsh', 3, 470, 'd'], ['RiversideRockets', 2, 395, 'k'],
-    ['CoveKeeper', 2, 310, 'b'], ['OrtegaEmber', 2, 285, 'd'], ['BaldwinBangs', 1, 240, 'k'],
+    // Seeded pacers. Shared across all three games, names distinct from anything
+    // on the live board. Rank is DERIVED from the score at render time, never
+    // stored, so a threshold change cannot leave a seal disagreeing with a total.
+    ['SparkPlugSasha',  1520, 'k'],
+    ['MossyOakMarcus',  1180, 'd'],
+    ['PetalPusher07',    905, 'b'],
+    ['BigTalkBrianna',   720, 'k'],
+    ['KudzuKing',        540, 'd'],
+    ['TidewaterTess',    468, 'b'],
+    ['FuseBoxFelix',     392, 'k'],
+    ['DragonBreathDee',  331, 'd'],
+    ['SunnySideSyd',     276, 'b'],
+    ['RocketRoyale',     214, 'k'],
+    ['ScaleAndTail',     163, 'd'],
+    ['GreenThumbGabe',   118, 'b'],
   ],
 };
 
@@ -1329,7 +1340,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260917-1630';
+const BUILD = '20260920-1100';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1538,7 +1549,7 @@ function renderGarden() {
         const glow = _isStarter
           ? `<circle cx="${cx}" cy="${b.y + 20}" r="11" fill="#059669" opacity="0.25"/><circle cx="${cx}" cy="${b.y + 20}" r="13" fill="none" stroke="#059669" stroke-width="2.5" style="animation:ringpulse 1.6s ease-out infinite;"/>`
           : '';
-        out += `<g style="cursor:pointer;" onclick="goPlant()">${glow}<circle cx="${cx}" cy="${b.y + 20}" r="8" fill="${_isStarter ? '#059669' : '#8555ab'}" opacity="0.5" style="animation:pulsehint 2.2s infinite;"/><path d="M${cx} ${b.y + 15} v10 M${cx - 5} ${b.y + 20} h10" stroke="#1a2a4a" stroke-width="2.2" stroke-linecap="round"/></g>`;
+        out += `<g style="cursor:pointer;" onclick="goPlant()">${glow}<circle cx="${cx}" cy="${b.y + 20}" r="8" fill="${_isStarter ? '#059669' : '#8555ab'}" opacity="${_isStarter ? 0.85 : 0.4}"${_isStarter ? ' style="animation:pulsehint 2.2s infinite;"' : ''}/><path d="M${cx} ${b.y + 15} v10 M${cx - 5} ${b.y + 20} h10" stroke="#1a2a4a" stroke-width="2.2" stroke-linecap="round"/></g>`;
         continue;
       }
       const lbl = `<text x="${cx}" y="${b.y + 36}" text-anchor="middle" class="lbl">${esc(p.tag.toUpperCase())}</text>`;
@@ -2003,7 +2014,12 @@ function renderChampions() {
   const mine = boardId();
   const local = [{ n: S.garden, r: S.rank, l: S.lifetime, g: GAME_ID, me: true }];
   // Seeded scores always sit in the board, not just when it is empty.
-  const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: c[1], l: c[2], g: c[3] }; });
+  const rankFor = function (total) {
+    let r = 0;
+    for (let i = 0; i < CONFIG.ranks.length; i++) if (total >= CONFIG.ranks[i].at) r = i;
+    return r;
+  };
+  const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: rankFor(c[1]), l: c[1], g: c[2] }; });
   const rowHtml = (row, pos) => {
     const me = row.n === S.garden;
     const badge = row.g === 'd' ? '🐉' : (row.g === 'k' ? '🎆' : '🌱');
@@ -2014,7 +2030,13 @@ function renderChampions() {
       <div class="rnum">${fmt(row.l)} 🔥</div></div>`;
   };
   const paint = (rows) => {
-    rows = (rows && rows.length ? rows : []).concat(seeded);
+    // Live rows first, then seeded pacers, dropping any seeded name the live
+    // board already carries. Without this the same handle appears twice with two
+    // different scores.
+    const live = (rows && rows.length ? rows : []).slice();
+    const taken = {};
+    live.forEach(function (x) { taken[String(x.n).toLowerCase()] = 1; });
+    rows = live.concat(seeded.filter(function (x) { return !taken[String(x.n).toLowerCase()]; }));
     if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
     const all = rows.slice().sort((a, b) => b.l - a.l);
     const myIdx = all.findIndex(x => x.n === S.garden);

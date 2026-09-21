@@ -594,7 +594,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
     <div class="field focus"><div class="fieldnote"><label style="color:var(--blue);">SHOW NAME</label><em>the only name anyone else sees</em></div><input id="f-garden" placeholder="Riverside Skies" maxlength="20"></div>
     <div class="field"><div class="fieldnote"><label>ZIP CODE</label><em>keeps your show local</em></div><input id="f-zip" inputmode="numeric" autocomplete="postal-code" placeholder="32234" maxlength="5"></div>
     <div class="field" style="margin-left:16px;margin-right:16px;">
-      <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your garden</em></div>
+      <div class="fieldnote"><label>CREATE A PIN</label><em>to re-enter your show</em></div>
       <div style="display:flex;gap:9px;margin-top:6px;">
         <input class="pindot" placeholder="·" id="s-pin0" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin0','s-pin1')">
         <input class="pindot" placeholder="·" id="s-pin1" inputmode="numeric" maxlength="1" oninput="pinAdv('s-pin1','s-pin2')">
@@ -637,7 +637,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
       <input class="pindot" placeholder="·" id="lock-pin3" inputmode="numeric" maxlength="1" oninput="pinAdv('lock-pin3',null)" onkeydown="if(event.key==='Enter')doUnlock()">
     </div>
     <div id="lock-err" style="display:none;font-size:11px;color:var(--red);margin:4px 0 8px;text-align:center;"></div>
-    <button class="bigbtn" style="margin-top:10px;" onclick="doUnlock()">Unlock my garden</button>
+    <button class="bigbtn" style="margin-top:10px;" onclick="doUnlock()">Unlock my show</button>
     <div style="margin-top:22px;"><span onclick="confirmReset()" style="font-size:11px;color:#9aa3ad;cursor:pointer;text-decoration:underline;">Forgot PIN · start fresh</span></div>
   </div>
 </section>
@@ -661,6 +661,12 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
        shrinks below its own content and overflow:hidden then clips the sky. -->
   <div id="gardenwrap" style="position:relative;flex:none;background:linear-gradient(180deg,#070d22 0%,#0e1838 55%,#16224a 100%);border:3px solid #3b4a78;border-radius:22px;margin:0 12px;padding:6px;overflow:hidden;">
     <div style="font-size:9px;color:#8fa0cc;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Shells stage in the racks below the line. Light the fuse and they go up in order.</b></div>
+    <!-- Sound and share sit on the sky itself, top-right, so they are near what
+         they act on and never compete with the toolbar below. -->
+    <div style="position:absolute;top:6px;right:8px;display:flex;gap:6px;z-index:4;">
+      <button id="mutebtn" onclick="toggleMute()" title="Sound on or off" style="width:28px;height:28px;border-radius:9px;border:1.5px solid #3b4a78;background:rgba(11,20,48,0.72);color:#dfe7ff;font-size:13px;line-height:1;cursor:pointer;padding:0;">🔊</button>
+      <button id="sharebtn" onclick="shareShow()" title="Save a picture of your show" style="display:none;width:28px;height:28px;border-radius:9px;border:1.5px solid #f0b429;background:rgba(11,20,48,0.72);color:#fde68a;font-size:13px;line-height:1;cursor:pointer;padding:0;">⤓</button>
+    </div>
     <svg id="gardensvg" viewBox="0 0 364 206" style="width:100%;display:block;"></svg>
     <div id="fuseline"><i></i></div>
     <div style="font-size:8.5px;color:#6f80ad;text-align:center;letter-spacing:0.03em;padding:4px 0 1px;line-height:1.4;">Hold and drag a shell to rearrange it, or drag it off the racks to remove it. Removed shells go to your Shed.</div>
@@ -743,8 +749,9 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:20px 0;">
     <div id="friend-title" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;color:var(--ink);text-align:center;line-height:1.4;padding:0 16px;"><span id="friend-sender" style="color:var(--blue);">Someone in your family</span> loaded a shell<br><span style="color:#d97706;">with your name on it</span></div>
     <div style="margin:16px 0 0;filter:drop-shadow(0 4px 14px rgba(240,180,41,0.45));animation:grow 1.8s infinite;"><svg style="width:66px;height:66px;display:block;color:#f0b429;"><use href="#f-shell"/></svg></div>
-    <div id="friend-lead" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap sends it up.</div>
+    <div id="friend-lead" style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:15px;color:var(--blue);margin-top:12px;">One tap sets it up.</div>
     <button id="friend-go" class="bigbtn" style="animation:popglow 2.6s infinite;" onclick="friendTap()">I'm voting in November!</button>
+    <div id="friend-notreg" style="display:none;margin-top:10px;"><a href="https://registertovoteflorida.gov" target="_blank" rel="noopener" style="font-family:'avenir-heavy',Arial,sans-serif;font-size:12px;color:#4cc9ff;text-decoration:underline;">Not yet? Register or preregister here</a></div>
     <div id="friend-done" style="display:none;font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#059669;margin-top:10px;">🎆 Their shell just went up. See you at the polls!</div>
     <button class="bigbtn" style="background:var(--purple);box-shadow:0 5px 0 #5f3a7e;margin-top:16px;font-size:17px;font-weight:700;animation:popglow 2.6s infinite;" onclick="window.open('https://www.mikesell.org/?volunteer=1','_blank')">Play Along!</button>
     <div class="card" style="align-self:stretch;background:linear-gradient(135deg,#002d5b,#037ad8);border:none;padding:18px 20px;margin-top:14px;">
@@ -776,14 +783,14 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
 <div class="overlay" id="ov-popstart" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
   <div style="font-size:44px;">📇</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;line-height:1.35;">Ready when you are</div>
-  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Pick the contacts you'd like to check. Your phone requires this tap. Nothing is uploaded, and results go straight back to your garden.</div>
+  <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;">Pick the contacts you'd like to check. Your phone requires this tap. Nothing is uploaded, and results go straight back to your show.</div>
   <button class="bigbtn" onclick="closeOv('ov-popstart');runContactMatch(true);">Choose Contacts</button>
 </div></div>
 <div class="overlay" id="ov-matchdone" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 24px 24px;">
   <div style="font-size:46px;">🌷</div>
   <div style="font-family:'clarendon-w01-medium',Georgia,serif;font-size:20px;color:var(--blue);margin-top:8px;" id="matchdone-title">All set!</div>
   <div style="font-size:12.5px;color:#5b6470;margin-top:10px;line-height:1.6;" id="matchdone-sub"></div>
-  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my garden</button>
+  <button class="bigbtn" onclick="window.close();" style="margin-top:16px;">Back to my show</button>
 </div></div>
 <div class="overlay" id="ov-matching" style="z-index:400;"><div class="sheet" style="max-width:320px;text-align:center;padding:30px 26px 26px;">
   <div style="font-size:44px;margin-bottom:6px;" id="match-emoji">🌱</div>
@@ -852,6 +859,9 @@ const CONFIG = {
   // Not on the rolls. Stage one of two: register first, confirm the vote after.
   msgDeadline: (first, link) => `Hi NAME, are you registered to vote? I am playing a game Mike built to help remind people that it only takes two minutes to register at registertovoteflorida.gov. Click the link and confirm when you are done! ${link}`,
   // Stage two, sent after they say they registered.
+  // Peer message. Asks the question first, tells them 16 and 17 year olds can
+  // preregister, then invites them into the game.
+  msgPeer: (link) => `Hey NAME, quick one. Are you registered to vote? If you are 16 or 17 you can preregister now at registertovoteflorida.gov and it counts the day you turn 18. Tap here when you are set, then come play this with me. ${link}`,
   msgStage2: (link) => `Hi NAME, you are registered now. One more tap tells me you are voting in November. ${link}`,
   // Timing (hours). ?demo=1 turns hours into minutes for testing.
   // Follow ups open after 24 hours, not 48. Two separate daily caps: five new
@@ -865,7 +875,7 @@ const CONFIG = {
     { name: 'Sparkler',       at: 0 },
     { name: 'Fuse Runner',    at: 100 },
     { name: 'Shell Loader',   at: 250,  unlock: 'Rack editing', teach: 'Hold and drag any shell to rearrange your racks.' },
-    { name: 'Rack Boss',      at: 600 },
+    { name: 'Rack Boss',      at: 420 },
     { name: 'Pyrotechnician', at: 1400 },
     { name: 'Display Chief',  at: 3000 },
     { name: 'Sky Master',     at: 6500 },
@@ -906,6 +916,10 @@ const CONFIG = {
   // they should not be texting that person.
   rels: [
     { id: 'aunt',  label: 'first', title: 'Aunt' },
+    // The one non-relative, added deliberately. A best friend is the person a
+    // 16 or 17 year old is most likely to actually text, and the message that
+    // goes with it is the only one that leads with preregistration.
+    { id: 'bff',   label: 'bare',  title: 'Best friend', peer: true },
     { id: 'bro',   label: 'bare',  title: 'Brother' },
     { id: 'cuz',   label: 'bare',  title: 'Cousin' },
     { id: 'dad',   label: 'title', title: 'Dad' },
@@ -952,10 +966,22 @@ const CONFIG = {
   // to climb instead of an empty room, and they show the three games sharing
   // one leaderboard from day one. Same list in all three games.
   champs: [
-    ['MandarinMary', 5, 940, 'b'], ['SmaugMarco', 5, 880, 'd'], ['NorthsideNova', 4, 815, 'k'],
-    ['DuuuvalDaisy', 4, 705, 'b'], ['NassauNightwing', 4, 660, 'd'], ['WestsideWicks', 3, 590, 'k'],
-    ['BoldCityBloom', 3, 505, 'b'], ['AcostaAsh', 3, 470, 'd'], ['RiversideRockets', 2, 395, 'k'],
-    ['CoveKeeper', 2, 310, 'b'], ['OrtegaEmber', 2, 285, 'd'], ['BaldwinBangs', 1, 240, 'k'],
+    // Seeded pacers. Names deliberately varied in shape so they do not read as a
+    // generated list, and distinct from anything already on the live board.
+    // Rank is DERIVED from the score at render time, never stored here, so a
+    // threshold change can never leave a seal disagreeing with a total.
+    ['SparkPlugSasha',  1520, 'k'],
+    ['MossyOakMarcus',  1180, 'd'],
+    ['PetalPusher07',    905, 'b'],
+    ['BigTalkBrianna',   720, 'k'],
+    ['KudzuKing',        540, 'd'],
+    ['TidewaterTess',    468, 'b'],
+    ['FuseBoxFelix',     392, 'k'],
+    ['DragonBreathDee',  331, 'd'],
+    ['SunnySideSyd',     276, 'b'],
+    ['RocketRoyale',     214, 'k'],
+    ['ScaleAndTail',     163, 'd'],
+    ['GreenThumbGabe',   118, 'b'],
   ],
 };
 
@@ -976,6 +1002,7 @@ function freshState(first, last, garden, contacts) {
     created: Date.now(), lifetime: 0, weekly: 0, pool: 10, poolTick: Date.now(),
     rows: 2,
     rank: 0, blooms: 0, seedsPlanted: 0, textsToday: 0, nudgesToday: 0, textsDay: dayKey(),
+    muted: false,
     visits: 0,
     // The welcome thank-you seed plants itself in the first spot — new gardeners
     // have no placing or moving powers yet, so nothing should sit in the Shed.
@@ -1446,7 +1473,11 @@ function sparkFuse() {
   S.showUntil = Date.now() + SKY_MS;   // the sky stays lit for 30 seconds
   save();
   renderGarden();
-  runShow(function () { _sparking = false; renderGarden(); });
+  runShow(function () {
+    _sparking = false; renderGarden();
+    // The picture is only worth offering while the sky still holds the show.
+    const sb = $('sharebtn'); if (sb) sb.style.display = 'block';
+  });
 }
 /* The show. A spark runs the ground, and as it passes each tube that tube
    flashes, a pixel lifts out of it, and the shell breaks at its own height.
@@ -1488,6 +1519,7 @@ function runShow(done) {
   spark.style.setProperty('--dx', (endX - startX) + 'px');
   spark.style.animation = 'groundrun ' + Math.round(runMs) + 'ms linear forwards';
   svg.appendChild(spark);
+  sfxSpark();
 
   const rows = rackRows();
   let lastFire = 0;
@@ -1513,9 +1545,11 @@ function runShow(done) {
         g.appendChild(r);
       }
       svg.appendChild(g);
+      sfxWhistle(0);                    // the climb
       setTimeout(function () {
         g.remove();
         b.style.opacity = '';
+        sfxBoom(0);                     // the break, plus crackle tails
         // Four follow-up positions inside a small patch of sky, randomised per
         // launch so the same shell never repeats the same pattern twice.
         const art = b.querySelector('.burst-art') || b;
@@ -1862,7 +1896,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260917-1630';
+const BUILD = '20260920-1705';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1949,9 +1983,10 @@ function maybeWelcome() {
 
 function showWelcomeGift() {
   $('rankup-sheet').innerHTML = `
-    <!-- Exactly what a ready tube looks like on the field: translucent gold
-         disc, pulsing gold ring, shell inside. The intro should teach the real
-         signal, not a different one. -->
+    <!-- The gift shell as it appears on a first run: translucent gold disc,
+         pulsing ring, shell inside. This is a teaching highlight, not a status
+         badge. Racked shells carry no ready-ring, because every shell in the
+         rack goes up when the flame reaches it. -->
     <span style="display:inline-block;filter:drop-shadow(0 0 10px rgba(245,158,11,0.55));">
       <svg viewBox="0 0 60 60" style="width:62px;height:62px;color:#fde68a;overflow:visible;">
         <circle cx="30" cy="30" r="21" fill="#f59e0b" opacity="0.20"/>
@@ -2137,11 +2172,14 @@ function scheduleSkyClear() {
   if (left <= 0) return;
   _skyTimer = setTimeout(function () {
     _skyTimer = null;
+    // Sky is dark again, so there is nothing left worth a picture.
+    const sb = $('sharebtn'); if (sb) sb.style.display = 'none';
     if ($('scr-garden') && $('scr-garden').classList.contains('on')) drawShow();
   }, left + 120);
 }
 
 function drawShow() {
+  const mb = $('mutebtn'); if (mb) mb.innerHTML = (S && S.muted) ? '🔇' : '🔊';
   const el = $('gardensvg');
   const H = showHeight();
   el.setAttribute('viewBox', `0 0 ${SHOW.w} ${H}`);
@@ -2175,13 +2213,24 @@ function drawShow() {
         <ellipse cx="${s.x}" cy="${s.tubeY + 1.5}" rx="8" ry="2.4" fill="#33456f"/>`;
       if (!done) {
         const col = p.gift ? '#fde68a' : (climbing ? '#b18cff' : (lit ? '#fde68a' : '#6b7aa8'));
-        if (lit) out += `<circle cx="${s.x}" cy="${s.tubeY + 9}" r="11" fill="#f59e0b" opacity="0.20" style="animation:ringpulse 1.6s ease-out infinite;"/>`;
+        // The freebie is the whole tutorial. Before anything has been sent it gets
+        // a bigger halo, a second ring and a label, so there is exactly one
+        // obvious thing to touch on a first run.
+        const firstRun = p.gift && p.state === 'seed' && (S.seedsPlanted || 0) === 0;
+        if (firstRun) {
+          out += `<circle cx="${s.x}" cy="${s.tubeY + 9}" r="17" fill="#f59e0b" opacity="0.16"/>
+            <circle cx="${s.x}" cy="${s.tubeY + 9}" r="15" fill="none" stroke="#f0b429" stroke-width="2.2" style="animation:ringpulse 1.5s ease-out infinite;transform-origin:center;"/>
+            <circle cx="${s.x}" cy="${s.tubeY + 9}" r="15" fill="none" stroke="#fde68a" stroke-width="1.4" opacity="0.7" style="animation:ringpulse 1.5s ease-out 0.75s infinite;transform-origin:center;"/>
+            <text x="${s.x}" y="${s.tubeY - 5}" text-anchor="middle" font-size="6" fill="#fde68a" font-family="'avenir-heavy',Arial" style="letter-spacing:0.6px;animation:pulsehint 1.6s infinite;">START HERE</text>`;
+        }
         out += `<use href="#f-shell" x="${s.x - 8}" y="${s.tubeY + 1}" width="16" height="16" style="cursor:pointer;color:${col};" onclick="seedTap('${p.id}')"/>`;
       } else {
         // Spent tube. It keeps a small copy of whatever came out of it, so the
         // rack doubles as a record of the show.
         const sp1 = sp(p.species);
-        out += `<use href="#${sp1.art}" x="${s.x - 7}" y="${s.tubeY + 4}" width="14" height="14" style="color:${colorHex(p.color)};opacity:0.9;"/>`;
+        // Tapping a spent tube opens the same detail card the Collection uses,
+        // so the rack is browsable and not just a record.
+        out += `<use href="#${sp1.art}" x="${s.x - 7}" y="${s.tubeY + 4}" width="14" height="14" style="color:${colorHex(p.color)};opacity:0.9;cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')"/>`;
       }
       out += `<text x="${s.x}" y="${s.tubeY + 28}" text-anchor="middle" class="lbl">${esc(String(p.tag).toUpperCase())}</text></g>`;
     }
@@ -2189,12 +2238,19 @@ function drawShow() {
 
   // 2. every empty tube in every unlocked row shows a plus, a full pitch apart
   //    within its row so none of them touch.
+  // The teaching emphasis on the first empty tube is for people who have not
+  // sent anything yet. Once they have, a permanently pulsing plus reads as an
+  // unfinished task rather than a hint, so it goes quiet and stays quiet.
+  const teaching = (S.seedsPlanted || 0) === 0;
   for (let i = list.length; i < cap; i++) {
     const s = slotOf(i);
     const first = i === list.length;
+    const hint = first && teaching;
     out += `<g style="cursor:pointer;" onclick="goPlant()">
-      <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="none" stroke="#4a5c8f" stroke-width="1.5" stroke-dasharray="3 2" opacity="${first ? 1 : 0.5}"/>
-      <path d="M${s.x} ${s.tubeY + 5} v10 M${s.x - 5} ${s.tubeY + 10} h10" stroke="#8fa0cc" stroke-width="2" stroke-linecap="round" opacity="${first ? 1 : 0.45}"${first ? ' style="animation:pulsehint 2.2s infinite;"' : ''}/></g>`;
+      ${hint ? `<circle cx="${s.x}" cy="${s.tubeY + 10}" r="15" fill="#4cc9ff" opacity="0.13"/><circle cx="${s.x}" cy="${s.tubeY + 10}" r="16" fill="none" stroke="#4cc9ff" stroke-width="1.8" style="animation:ringpulse 1.9s ease-out infinite;transform-origin:center;"/>` : ''}
+      <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="none" stroke="${hint ? '#4cc9ff' : '#4a5c8f'}" stroke-width="1.5" stroke-dasharray="3 2" opacity="${first ? 1 : 0.5}"/>
+      <path d="M${s.x} ${s.tubeY + 5} v10 M${s.x - 5} ${s.tubeY + 10} h10" stroke="${hint ? '#9be3ff' : '#8fa0cc'}" stroke-width="2" stroke-linecap="round" opacity="${first ? 1 : 0.45}"${hint ? ' style="animation:pulsehint 2.2s infinite;"' : ''}/>
+      ${hint ? `<text x="${s.x}" y="${s.tubeY + 30}" text-anchor="middle" font-size="5.5" fill="#9be3ff" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">ADD SOMEONE</text>` : ''}</g>`;
   }
 
   // 3. the sky. The show is an EVENT, not wallpaper: big bursts hang for 30
@@ -2326,7 +2382,13 @@ function sealSvg(rank, size) {
   const strokes = ['#8fae62', '#8a6238', '#9ca3af', '#d97706', '#d97706', '#64748b', '#b45309'];
   const starfill = ['#8fae62', '#8a6238', '#6b7280', '#b45309', '#b45309', '#475569', '#b45309'];
   let g = `<svg width="${size}" height="${size * 1.1}" viewBox="0 0 34 40"><circle cx="17" cy="16" r="12" fill="${fills[rank]}" stroke="${strokes[rank]}" stroke-width="2.5"/>`;
-  if (rank === 0) g += `<use href="#f-sproutling" x="11" y="10" width="12" height="12"/>`;
+  // Rank 0 is Sparkler. Stick, lit tip, three sparks. Drawn inline rather than
+  // reusing a symbol so the seal never depends on the shell defs being built.
+  if (rank === 0) g += `<g stroke-linecap="round">
+    <path d="M14 22 L20 13" stroke="#8a6238" stroke-width="1.7"/>
+    <circle cx="20.6" cy="12.2" r="2.1" fill="#f0b429"/>
+    <path d="M20.6 8.4 v-2.1 M24.2 10.4 l1.8 -1.1 M17 10.4 l-1.8 -1.1" stroke="#f0b429" stroke-width="1.3"/>
+  </g>`;
   g += stars.map(([x, y]) => `<text x="${x}" y="${y}" font-size="${rank >= 4 ? 5 : 6.5}" text-anchor="middle" fill="${starfill[rank]}">★</text>`).join('');
   if (rank >= 1) g += `<path d="M12 27 l-3 9 l5 -3 Z" fill="#037ad8"/><path d="M22 27 l3 9 l-5 -3 Z" fill="#037ad8"/>`;
   return g + '</svg>';
@@ -2340,6 +2402,14 @@ let pendingPlant = null;
 function relPicked() {
   const rb = $('relbox');
   if (rb) { rb.style.borderColor = ''; rb.style.boxShadow = ''; }
+  // A peer ask sends a different message, so the preview has to follow the
+  // relationship rather than stay pinned to the one the card was built with.
+  const sel = $('plant-rel'), wrap = $('msgprev-wrap');
+  if (sel && wrap && wrap.dataset.kind !== 'deadline') {
+    const r = CONFIG.rels.find(function (x) { return x.id === sel.value; });
+    wrap.dataset.kind = (r && r.peer) ? 'peer' : 'friend';
+    renderMsgPreview();
+  }
   const q = $('plant-q');
   if (q && !q.value.trim()) q.focus();
 }
@@ -2432,6 +2502,7 @@ function msgDefaultTpl(kind) {
   const raw = (kind === 'deadline') ? CONFIG.msgDeadline(S && S.first ? S.first : '', '')
             : (kind === 'follow')   ? CONFIG.msgFollowVariants[0]('')
             : (kind === 'stage2')   ? CONFIG.msgStage2('')
+            : (kind === 'peer')     ? CONFIG.msgPeer('')
             : CONFIG.msgFriendVariants[0]('');
   return raw.replace(/\s+$/, '');
 }
@@ -2562,9 +2633,12 @@ function plantNow(deadline, relId) {
 
   // Stage one of the unregistered branch carries &r=1 so the landing page asks
   // them to register first and the confirmation lands on a separate token.
-  const link = friendLink(token) + (deadline ? '&r=1' : '');
+  // A peer ask carries &p=1 so the landing page asks about registration and
+  // labels its button "I'm registered!" instead of the voting pledge.
+  const isPeer = !!(CONFIG.rels.find(function (r) { return r.id === relId; }) || {}).peer;
+  const link = friendLink(token) + (deadline ? '&r=1' : (isPeer ? '&p=1' : ''));
   // The label doubles as the salutation: Hi Mom, Hi Aunt Carol, Hi Marcus.
-  const body = msgTpl(deadline ? 'deadline' : 'friend').replace(/NAME/g, tag) + ' ' + link;
+  const body = msgTpl(deadline ? 'deadline' : (isPeer ? 'peer' : 'friend')).replace(/NAME/g, tag) + ' ' + link;
   launchSms(smsHref(body, _ph));
   setTimeout(() => { $('plant-result').innerHTML = ''; $('plant-q').value = ''; showTab('garden'); }, 600);
 }
@@ -2589,6 +2663,7 @@ function commitPendingSeed() {
   // Position comes from order in the list now, so no bed or slot is needed.
   S.plants.push({ id: 'p' + (S.nextId++), token: p.token, tag: p.tag,
     state: 'seed', touches: 1, lastTouch: Date.now(), deadline: !!p.deadline, phone: p.phone || '' });
+  sfxClick();
   S.seedsPlanted++; S.textsToday++;
   maybeUnlockRow();   // three quarters of the first two rows earns the third
   save();
@@ -2658,6 +2733,15 @@ function initFriend(id, fname) {
   let f = fname || (location.search.match(/[?&]f=([^&]+)/) || [])[1] || '';
   try { f = decodeURIComponent(f); } catch(_) {}
   $('friend-sender').textContent = f || 'Someone in your family';
+  // Peer ask. The question is registration, not a voting pledge, so the button
+  // says what they would actually be confirming.
+  if (/[?&]p=1/.test(location.search) && !$('scr-friend').dataset.stage2) {
+    $('friend-title').innerHTML = `<span id="friend-sender" style="color:var(--blue);">${esc(f || 'A friend')}</span> wants to know<br><span style="color:#f0b429;">if you're registered</span>`;
+    $('friend-lead').textContent = '16 and 17 year olds can preregister. It counts the day you turn 18.';
+    $('friend-go').textContent = "I'm registered!";
+    const nr = $('friend-notreg');
+    if (nr) nr.style.display = 'block';
+  }
   // Stage one: they are not on the rolls, so register comes before anything.
   if (/[?&]r=1/.test(location.search) && !$('scr-friend').dataset.stage2) {
     $('friend-title').innerHTML = `<span id="friend-sender" style="color:var(--blue);">Someone in your family</span> could not find you<br><span style="color:#d97706;">on the voter rolls</span>`;
@@ -2819,6 +2903,11 @@ function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
     </div>
     <button class="bigbtn" onclick="closeOv('ov-bloom');renderGarden();maybeRankup();">Back to my show</button>`;
   openOv('ov-bloom');
+  // Cue times track the animation delays above: climb at 1.35s, break at 2.6s,
+  // and the unlock chime just behind the break so it lands on the reveal.
+  sfxWhistle(1.35);
+  sfxBoom(2.6);
+  if (firstEver) sfxReveal(2.95);
 }
 
 /* ---------------- plaque / collection ---------------- */
@@ -2865,6 +2954,211 @@ function renderCollection() {
   $('coll-container').innerHTML = html;
 }
 
+
+/* ---------------- sound ------------------------------------------------
+   Synthesised with WebAudio, not sample files, because the whole game is one
+   HTML file and an audio asset would break that. Every cue is a few oscillators
+   and a noise burst.
+
+   Browsers block audio until a real gesture, so the context is created lazily
+   on the first tap and never at load. Muted state persists in S.muted.        */
+let _actx = null;
+function actx() {
+  if (_actx) return _actx;
+  try { _actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { _actx = null; }
+  return _actx;
+}
+function muted() { return !!(S && S.muted); }
+function toggleMute() {
+  if (!S) return;
+  S.muted = !S.muted; save();
+  const b = $('mutebtn');
+  if (b) b.innerHTML = S.muted ? '🔇' : '🔊';
+  if (!S.muted) { sfxClick(); }
+  showToast(S.muted ? 'Sound off' : 'Sound on');
+}
+function _noise(dur) {
+  const a = actx(); if (!a) return null;
+  const n = Math.max(1, Math.floor(a.sampleRate * dur));
+  const buf = a.createBuffer(1, n, a.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+  const src = a.createBufferSource(); src.buffer = buf; return src;
+}
+function _env(node, peak, attack, decay) {
+  const a = actx(); if (!a) return null;
+  const g = a.createGain();
+  const t = a.currentTime;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(peak, t + attack);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
+  node.connect(g); g.connect(a.destination);
+  return g;
+}
+/* Ignition: a short filtered noise scrape. */
+function sfxSpark() {
+  if (muted()) return; const a = actx(); if (!a) return;
+  const src = _noise(0.22); if (!src) return;
+  const bp = a.createBiquadFilter(); bp.type = 'bandpass';
+  bp.frequency.setValueAtTime(1800, a.currentTime);
+  bp.frequency.exponentialRampToValueAtTime(4200, a.currentTime + 0.2);
+  bp.Q.value = 1.2;
+  src.connect(bp); _env(bp, 0.22, 0.01, 0.2);
+  src.start(); src.stop(a.currentTime + 0.24);
+}
+/* Launch: rising whistle. */
+function sfxWhistle(delay) {
+  if (muted()) return; const a = actx(); if (!a) return;
+  const t = a.currentTime + (delay || 0);
+  const o = a.createOscillator(); o.type = 'sine';
+  o.frequency.setValueAtTime(420, t);
+  o.frequency.exponentialRampToValueAtTime(1500, t + 0.62);
+  const g = a.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.10, t + 0.06);
+  g.gain.exponentialRampToValueAtTime(0.055, t + 0.5);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.68);
+  o.connect(g); g.connect(a.destination);
+  o.start(t); o.stop(t + 0.7);
+}
+/* Break: low thump plus a noise burst, then crackle tails. */
+function sfxBoom(delay) {
+  if (muted()) return; const a = actx(); if (!a) return;
+  const t = a.currentTime + (delay || 0);
+  const o = a.createOscillator(); o.type = 'sine';
+  o.frequency.setValueAtTime(160, t);
+  o.frequency.exponentialRampToValueAtTime(42, t + 0.34);
+  const og = a.createGain();
+  og.gain.setValueAtTime(0.0001, t);
+  og.gain.exponentialRampToValueAtTime(0.34, t + 0.012);
+  og.gain.exponentialRampToValueAtTime(0.0001, t + 0.42);
+  o.connect(og); og.connect(a.destination);
+  o.start(t); o.stop(t + 0.44);
+
+  const src = _noise(0.5); if (src) {
+    const lp = a.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(5200, t);
+    lp.frequency.exponentialRampToValueAtTime(700, t + 0.42);
+    const g = a.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.30, t + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.48);
+    src.connect(lp); lp.connect(g); g.connect(a.destination);
+    src.start(t); src.stop(t + 0.5);
+  }
+  sfxCrackle((delay || 0) + 0.18);
+}
+/* Crackle: a scatter of tiny pops after the break. */
+function sfxCrackle(delay) {
+  if (muted()) return; const a = actx(); if (!a) return;
+  const base = a.currentTime + (delay || 0);
+  for (let i = 0; i < 14; i++) {
+    const t = base + Math.random() * 0.75;
+    const src = _noise(0.035); if (!src) continue;
+    const hp = a.createBiquadFilter(); hp.type = 'highpass';
+    hp.frequency.value = 2600 + Math.random() * 2600;
+    const g = a.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.055 + Math.random() * 0.05, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+    src.connect(hp); hp.connect(g); g.connect(a.destination);
+    src.start(t); src.stop(t + 0.06);
+  }
+}
+/* Pattern unlocked. A rising major arpeggio over a soft shimmer, clearly
+   different from the break so "new" is audible without reading the tag. */
+function sfxReveal(delay) {
+  if (muted()) return; const a = actx(); if (!a) return;
+  const t0 = a.currentTime + (delay || 0);
+  [0, 4, 7, 12].forEach(function (semi, i) {
+    const t = t0 + i * 0.085;
+    const o = a.createOscillator(); o.type = 'triangle';
+    o.frequency.setValueAtTime(523.25 * Math.pow(2, semi / 12), t);
+    const g = a.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.13, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+    o.connect(g); g.connect(a.destination);
+    o.start(t); o.stop(t + 0.6);
+  });
+  const src = _noise(0.5);
+  if (src) {
+    const hp = a.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 5200;
+    const g = a.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.05, t0 + 0.09);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.5);
+    src.connect(hp); hp.connect(g); g.connect(a.destination);
+    src.start(t0); src.stop(t0 + 0.52);
+  }
+}
+
+/* Confirmation tick when a new ask goes out. */
+function sfxClick() {
+  if (muted()) return; const a = actx(); if (!a) return;
+  const t = a.currentTime;
+  const o = a.createOscillator(); o.type = 'triangle';
+  o.frequency.setValueAtTime(880, t);
+  o.frequency.exponentialRampToValueAtTime(1500, t + 0.05);
+  const g = a.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.16, t + 0.006);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+  o.connect(g); g.connect(a.destination);
+  o.start(t); o.stop(t + 0.1);
+}
+
+/* ---------------- share the finished show ------------------------------
+   The sky lives in #gardensvg but the shell symbols live in a separate global
+   <defs>, so a naive serialize renders an empty frame. Clone both, inline the
+   defs, rasterise, then hand off to the share sheet or fall back to download. */
+function shareShow() {
+  const svg = $('gardensvg'); if (!svg) return;
+  const clone = svg.cloneNode(true);
+  const defs = document.querySelector('svg defs');
+  if (defs) clone.insertBefore(defs.cloneNode(true), clone.firstChild);
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  const vb = (svg.getAttribute('viewBox') || '0 0 364 206').split(/\s+/).map(Number);
+  const W = vb[2], H = vb[3], SC = 3;
+  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  bg.setAttribute('x', 0); bg.setAttribute('y', 0);
+  bg.setAttribute('width', W); bg.setAttribute('height', H);
+  bg.setAttribute('fill', '#0b1430');
+  clone.insertBefore(bg, clone.firstChild.nextSibling);
+  const xml = new XMLSerializer().serializeToString(clone);
+  const img = new Image();
+  img.onload = function () {
+    const c = document.createElement('canvas');
+    c.width = W * SC; c.height = (H + 26) * SC;
+    const x = c.getContext('2d');
+    x.fillStyle = '#0b1430'; x.fillRect(0, 0, c.width, c.height);
+    x.drawImage(img, 0, 0, W * SC, H * SC);
+    x.fillStyle = '#dfe7ff';
+    x.font = 'bold ' + (10 * SC) + 'px Arial';
+    x.textAlign = 'left';
+    x.fillText((S.garden || 'My') + "'s show", 10 * SC, (H + 17) * SC);
+    x.fillStyle = '#8fa0cc';
+    x.textAlign = 'right';
+    x.fillText('Boomers · mike4us.org', (W - 10) * SC, (H + 17) * SC);
+    c.toBlob(function (blob) {
+      if (!blob) { showToast('Could not build the image'); return; }
+      const file = new File([blob], 'my-fireworks.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'My firework show' }).catch(function () {});
+      } else {
+        const a2 = document.createElement('a');
+        a2.href = URL.createObjectURL(blob);
+        a2.download = 'my-fireworks.png';
+        a2.click();
+        setTimeout(function () { URL.revokeObjectURL(a2.href); }, 4000);
+        showToast('Saved to your downloads');
+      }
+    }, 'image/png');
+  };
+  img.onerror = function () { showToast('Could not build the image'); };
+  img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(xml)));
+}
+
 /* ---------------- shed / ladder / rankup / champs ---------------- */
 function bedIcon(key) {
   const cells = BED_SHAPES[key] || BED_SHAPES.r2;
@@ -2879,10 +3173,10 @@ function openShed() {
   else {
     sheet.innerHTML = `<div style="font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;text-align:center;margin-bottom:10px;">The Shed</div>` + S.shed.map((it, i) =>
       it.kind === 'bed'
-        ? `<div class="rankrow">${bedIcon(it.shape || (it.n === 3 ? 'r3' : 'r2'))}<div class="rlab"><strong>${shapeLabel(it.shape || (it.n === 3 ? 'r3' : 'r2'))}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLACE to add to your garden</small></div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
+        ? `<div class="rankrow">${bedIcon(it.shape || (it.n === 3 ? 'r3' : 'r2'))}<div class="rlab"><strong>${shapeLabel(it.shape || (it.n === 3 ? 'r3' : 'r2'))}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap PLACE to add to your show</small></div><button class="collectbtn" onclick="placeBed(${i})">PLACE</button></div>`
         : it.kind === 'grown'
 
-          ? `<div class="rankrow"><svg width="26" height="26"><use href="#${sp(it.species).art}"/></svg><div class="rlab"><strong>${esc(sp(it.species).name)}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Lifted from ${esc(it.tag || 'your garden')} · tap PLANT to put it back.</small></div><button class="collectbtn" onclick="replantGrown(${i})">PLANT</button></div>`
+          ? `<div class="rankrow"><svg width="26" height="26"><use href="#${sp(it.species).art}"/></svg><div class="rlab"><strong>${esc(sp(it.species).name)}</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Lifted from ${esc(it.tag || 'your show')} · tap PLANT to put it back.</small></div><button class="collectbtn" onclick="replantGrown(${i})">PLANT</button></div>`
 
         : `<div class="rankrow"><svg width="26" height="26" style="color:#f0b429;"><use href="#f-shell"/></svg><div class="rlab"><strong>🎁 Mystery Shell</strong><small style="display:block;font-size:9px;color:#8a94a3;margin-top:1px;">Tap LOAD to find out what is inside.</small></div><button class="collectbtn" onclick="plantGift(${i})">LOAD</button></div>`
     ).join('');
@@ -2892,7 +3186,7 @@ function openShed() {
 function placeBed(i) {
   const key = S.shed[i].shape || (S.shed[i].n === 3 ? 'r3' : 'r2');
   const cells = findFit(BED_SHAPES[key] || BED_SHAPES.r2);
-  if (!cells) { showToast('No room left in the garden for that bed.'); return; }
+  if (!cells) { showToast('No room left in the racks for that.'); return; }
   const before = gridRows();
   S.shed.splice(i, 1);
   S.beds.push({ id: S.nextId++, cells });
@@ -2953,7 +3247,7 @@ function maybeRankup() {
       <span class="chip-anim" style="animation-delay:2.3s;font-size:11px;color:#5b6470;">Drop the gift seed on any open spot to see what blooms.</span>
       ${offerContacts ? `<span class="chip-anim" style="animation-delay:2.8s;background:#f4f9ff;border:2px dashed var(--blue);border-radius:14px;padding:7px 14px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;color:var(--blue);">🔎 Compare contacts again? New friends may match now.</span>` : ''}
     </div>
-    <button class="bigbtn" onclick="S.pendingRankup=null;save();closeOv('ov-rankup');renderGarden();">Back to my garden</button>`;
+    <button class="bigbtn" onclick="S.pendingRankup=null;save();closeOv('ov-rankup');renderGarden();">Back to my show</button>`;
   openOv('ov-rankup');
 }
 
@@ -2986,7 +3280,12 @@ function renderChampions() {
   const local = [{ n: S.garden, r: S.rank, l: S.lifetime, g: GAME_ID, me: true }];
   // Seeded scores are always in the mix, not just a fallback, so the ladder is
   // there whether or not the live board has answered.
-  const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: c[1], l: c[2], g: c[3] }; });
+  const rankFor = function (total) {
+    let r = 0;
+    for (let i = 0; i < CONFIG.ranks.length; i++) if (total >= CONFIG.ranks[i].at) r = i;
+    return r;
+  };
+  const seeded = CONFIG.champs.map(function (c) { return { n: c[0], r: rankFor(c[1]), l: c[1], g: c[2] }; });
   const rowHtml = (row, pos) => {
     const me = row.n === S.garden;
     const badge = row.g === 'd' ? '🐉' : (row.g === 'k' ? '🎆' : '🌱');
@@ -2997,7 +3296,13 @@ function renderChampions() {
       <div class="rnum">${fmt(row.l)} 👏</div></div>`;
   };
   const paint = (rows) => {
-    rows = (rows && rows.length ? rows : []).concat(seeded);
+    // Live rows first, then seeded pacers, dropping any seeded name the live
+    // board already carries. Without this the same handle appears twice with two
+    // different scores, which is what players reported.
+    const live = (rows && rows.length ? rows : []).slice();
+    const taken = {};
+    live.forEach(function (x) { taken[String(x.n).toLowerCase()] = 1; });
+    rows = live.concat(seeded.filter(function (x) { return !taken[String(x.n).toLowerCase()]; }));
     if (!rows.some(x => x.n === S.garden)) rows = rows.concat(local);
     const all = rows.slice().sort((a, b) => b.l - a.l);
     const myIdx = all.findIndex(x => x.n === S.garden);
@@ -3461,7 +3766,7 @@ async function matchContactList(contacts, opts) {
     $('matchdone-title').textContent = n + (n === 1 ? ' friend matched!' : ' friends matched!');
     $('matchdone-sub').textContent = !n
       ? 'No numbers matched the FL-04 voter rolls. You can still search any name by hand.'
-      : (delivered ? 'Sent back to your garden. You can close this tab.'
+      : (delivered ? 'Sent back to your show. You can close this tab.'
                    : 'Keep this tab open and return to the game, then tap Find Friends again.');
     openOv('ov-matchdone');
     return n;
