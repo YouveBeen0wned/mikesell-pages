@@ -568,8 +568,8 @@ const CONFIG = {
   yields: { g: 1, b: 2, p: 4, au: 5 },
   ranks: [
     { name: 'Good Neighbor',       at: 0 },
-    { name: 'Block Captain',       at: 100, },
-    { name: 'Community Organizer', at: 250,  unlock: 'Bed editing',   teach: 'Hold and drag any bed to rearrange your garden.' },
+    { name: 'Block Captain',       at: 100,  unlock: 'Bed editing',   teach: 'Hold and drag any bed to rearrange your garden.' },
+    { name: 'Community Organizer', at: 250, },
     { name: 'Civic Leader',        at: 420 },
     { name: 'Council Member',      at: 1400 },
     { name: 'Mayor',               at: 3000 },
@@ -1138,7 +1138,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260921-1040';
+const BUILD = '20260921-1315';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);

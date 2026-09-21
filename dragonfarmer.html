@@ -771,8 +771,8 @@ const CONFIG = {
   yields: { g: 1, b: 2, p: 4, au: 5 },
   ranks: [
     { name: 'Egg Tender',       at: 0 },
-    { name: 'Hatchling Keeper',       at: 100, },
-    { name: 'Dragon Wrangler', at: 250,  unlock: 'Nest editing',   teach: 'Hold and drag any nest to rearrange your roost.' },
+    { name: 'Hatchling Keeper',       at: 100,  unlock: 'Nest editing',   teach: 'Hold and drag any nest to rearrange your roost.' },
+    { name: 'Dragon Wrangler', at: 250, },
     { name: 'Beast Master',        at: 420 },
     { name: 'Dragon Rider',      at: 1400 },
     { name: 'Elder Keeper',               at: 3000 },
@@ -1340,7 +1340,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260921-1040';
+const BUILD = '20260921-1315';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
