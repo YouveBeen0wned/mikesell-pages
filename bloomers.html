@@ -386,7 +386,7 @@ svg .lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:6.3px;fill:#0b4a3
     <text id="arch-name" x="150" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="11" letter-spacing="2.5" fill="#3d4d3d">MY GARDEN</text>
   </svg></div>
   <div id="gardenwrap" style="background:linear-gradient(180deg,#cfe6a8,#b9d68a);border:3px solid #8fae62;border-radius:22px;margin:0 12px;padding:6px;">
-    <div style="font-size:9px;color:#5c6b4f;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Press and hold a flower to rearrange placement. Move outside of the yard to put it in the shed.</b></div>
+    <div id="draghint" data-open="Press and hold a flower to rearrange placement. Move outside of the yard to put it in the shed." data-lock="Plant seeds in your beds. Rearranging them unlocks at Block Captain." style="font-size:9px;color:#5c6b4f;text-align:center;letter-spacing:0.04em;padding:1px 0 3px;"><b>Press and hold a flower to rearrange placement. Move outside of the yard to put it in the shed.</b></div>
     <svg id="gardensvg" viewBox="0 0 364 154" style="width:100%;display:block;"></svg>
   </div>
   <div class="toolbar">
@@ -918,12 +918,27 @@ function showDropHi(cell) {
   hi.setAttribute('x', o.x + 5); hi.setAttribute('y', o.y + 5);
   hi.setAttribute('width', GRID.cw - 10); hi.setAttribute('height', GRID.ch - 10);
 }
+
+// Level 2 on the ladder is where editing turns on.
+const EDIT_LOCK_MSG = 'Rearranging unlocks at Block Captain. Keep planting.';
+let _lastLockToast = -1e9;
+function editUnlocked() { return !!S && (S.rank || 0) >= 1; }
+
 function attachGardenDrag() {
   const svg = $('gardensvg');
   if (!svg) return;
   svg.addEventListener('pointerdown', function(e) {
     const pid = findSeedPid(e.target);
     if (!pid) return;
+    // Rearranging is a level-2 unlock. Advertised on the ladder, so it has to be
+    // real, and a blocked gesture has to explain itself instead of dying quietly.
+    if (!editUnlocked()) {
+      if (Date.now() - _lastLockToast > 2500) {
+        _lastLockToast = Date.now();
+        showToast(EDIT_LOCK_MSG);
+      }
+      return;
+    }
     e.preventDefault(); // stop iOS context menu / scroll from stealing the touch
     _pressPid = pid; _isDragging = false; _pressPointerId = e.pointerId;
     _startX = e.clientX; _startY = e.clientY;
@@ -1138,7 +1153,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260921-1315';
+const BUILD = '20260921-1600';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1283,6 +1298,10 @@ function waterReady(p) { return p.state === 'seed' && p.touches < CONFIG.maxTouc
 function hoursLeft(p) { return Math.max(0, Math.ceil((CONFIG.waterGapH * HOUR - (Date.now() - p.lastTouch)) / HOUR)); }
 
 function renderGarden() {
+  // Only promise the drag once the player actually has it.
+  const _dh = $('draghint');
+  if (_dh && _dh.dataset.open) _dh.innerHTML = editUnlocked() ? ('<b>' + _dh.dataset.open + '</b>') : ('<b>' + _dh.dataset.lock + '</b>');
+
   tickPraise();
   $('hud-gname').textContent = S.garden; $('arch-name').textContent = (S.garden + "'S GARDEN").toUpperCase();
   $('hud-lifetime').textContent = fmt(S.lifetime);

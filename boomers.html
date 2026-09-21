@@ -669,7 +669,7 @@ select option,#plant-rel option{background:#0c1430;color:#e8eeff;}
     </div>
     <svg id="gardensvg" viewBox="0 0 364 206" style="width:100%;display:block;"></svg>
     <div id="fuseline"><i></i></div>
-    <div style="font-size:8.5px;color:#6f80ad;text-align:center;letter-spacing:0.03em;padding:4px 0 1px;line-height:1.4;">Hold and drag a shell to rearrange it, or drag it off the racks to remove it. Removed shells go to your Shed.</div>
+    <div style="font-size:8.5px;color:#6f80ad;text-align:center;letter-spacing:0.03em;padding:4px 0 1px;line-height:1.4;" id="draghint" data-open="Hold and drag a shell to rearrange it, or drag it off the racks to remove it. Removed shells go to your Shed." data-lock="Load shells into the racks. Rearranging them unlocks at Fuse Runner.">Hold and drag a shell to rearrange it, or drag it off the racks to remove it. Removed shells go to your Shed.</div>
   </div>
   <div class="toolbar">
     <div class="tchip" onclick="openShed()"><svg style="width:20px;height:20px;"><use href="#n-shed"/></svg> <span>SHED (<span id="hud-shed">0</span>)</span></div>
@@ -1663,12 +1663,27 @@ function showDropHi(cell) {
   hi.setAttribute('x', s.x - 11); hi.setAttribute('y', s.tubeY - 3);
   hi.setAttribute('width', 22); hi.setAttribute('height', 26);
 }
+
+// Level 2 on the ladder is where editing turns on.
+const EDIT_LOCK_MSG = 'Rearranging unlocks at Fuse Runner. Keep loading shells.';
+let _lastLockToast = -1e9;
+function editUnlocked() { return !!S && (S.rank || 0) >= 1; }
+
 function attachGardenDrag() {
   const svg = $('gardensvg');
   if (!svg) return;
   svg.addEventListener('pointerdown', function(e) {
     const pid = findSeedPid(e.target);
     if (!pid) return;
+    // Rearranging is a level-2 unlock. Advertised on the ladder, so it has to be
+    // real, and a blocked gesture has to explain itself instead of dying quietly.
+    if (!editUnlocked()) {
+      if (Date.now() - _lastLockToast > 2500) {
+        _lastLockToast = Date.now();
+        showToast(EDIT_LOCK_MSG);
+      }
+      return;
+    }
     e.preventDefault(); // stop iOS context menu / scroll from stealing the touch
     _pressPid = pid; _isDragging = false; _pressPointerId = e.pointerId;
     _startX = e.clientX; _startY = e.clientY;
@@ -1900,7 +1915,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260921-1315';
+const BUILD = '20260921-1600';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2194,6 +2209,10 @@ function scheduleSkyClear() {
 }
 
 function drawShow() {
+  // Only promise the drag once the player actually has it.
+  const _dh = $('draghint');
+  if (_dh && _dh.dataset.open) _dh.innerHTML = editUnlocked() ? ('<b>' + _dh.dataset.open + '</b>') : ('<b>' + _dh.dataset.lock + '</b>');
+
   const mb = $('mutebtn'); if (mb) mb.innerHTML = (S && S.muted) ? '🔇' : '🔊';
   const el = $('gardensvg');
   const H = showHeight();
