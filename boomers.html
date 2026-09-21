@@ -1540,7 +1540,12 @@ function runShow(done) {
         r.setAttribute('x', s.x - 1.5); r.setAttribute('y', s.tubeY);
         r.setAttribute('width', 3); r.setAttribute('height', 3);
         r.setAttribute('fill', '#fde68a');
-        r.style.setProperty('--dy', (s.burstY + 16 - s.tubeY) + 'px');
+        // Land the climb exactly where the first break appears. The burst group
+        // is centred at burstY + SHOW.r and its first popspots frame sits 14px
+        // below that centre, so the trail has to reach burstY + SHOW.r + 14.
+        // Ending at burstY + 16 left the dots overshooting and the burst then
+        // opened below them, which is what read as wrong.
+        r.style.setProperty('--dy', (s.burstY + SHOW.r + 14 - s.tubeY) + 'px');
         r.style.animation = 'liftpx ' + RISE + 'ms ' + (k * 70) + 'ms cubic-bezier(.35,.05,.6,1) forwards';
         g.appendChild(r);
       }
@@ -1896,7 +1901,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260920-1705';
+const BUILD = '20260920-1905';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2122,12 +2127,15 @@ function renderGarden() {
    the sky than the front row shell in the same column, so a stacked pair
    reads as two layers rather than one pile. Index order fills column by
    column, front row first, which is also the order the fuse lights them. */
-const SHOW = { w: 364, ground: 142, pitch: 28, left: 34, r: 19 };
+// pitch widened so ten columns span the whole panel instead of stopping
+// two thirds across. COLS is fixed rather than derived from pitch, because
+// deriving it meant a wider pitch silently cost the player tubes.
+const SHOW = { w: 364, ground: 142, pitch: 33.2, left: 32, r: 19, cols: 10 };
 // The field is exactly as tall as it needs to be. Two racks take less room
 // than three, so the panel shrinks and the agenda stays on screen.
-function showHeight() { return SHOW.ground + 6 + (rackRows() - 1) * 24 + 20 + 14; }
+function showHeight() { return SHOW.ground + 6 + (rackRows() - 1) * 26 + 22 + 14; }
 // Where the igniter sits, and where the burning fuse starts from.
-const SPARK_X = 13;
+const SPARK_X = 12;
 // Two rack rows to start. The third unlocks, and once it does it stays.
 function rackRows() { return (S && S.rows) ? S.rows : 2; }
 /* Where a shell sits, and where it breaks.
@@ -2144,14 +2152,14 @@ function slotOf(i) {
   // lining up in a plain grid. A shell still breaks on ITS OWN axis.
   const x = SHOW.left + col * SHOW.pitch + (row % 2 ? SHOW.pitch / 2 : 0);
   // Racks live BELOW the ground line. Back rows sit nearer the line.
-  const tubeY = SHOW.ground + 6 + (rows - 1 - row) * 24;
+  const tubeY = SHOW.ground + 6 + (rows - 1 - row) * 26;
   // Shells break at the TOP of the sky, not just above the racks. The furthest
   // back row takes the highest band and each nearer row sits one band below it,
   // so row 1 always pops beneath row 2.
   const burstY = 2 + (rows - 1 - row) * 34;
   return { row, col, x, tubeY, burstY };
 }
-function colsPerRow() { return Math.floor((SHOW.w - SHOW.left * 2) / SHOW.pitch); }
+function colsPerRow() { return SHOW.cols; }
 function showCapacity() { return colsPerRow() * rackRows(); }
 // The third row is earned by filling three quarters of the first two.
 function maybeUnlockRow() {
@@ -2209,8 +2217,8 @@ function drawShow() {
       const tubeFill = layer ? '#1b2745' : '#243357';
       // the mortar tube
       out += `<g data-col="${s.col}" data-row="${s.row}" data-pid="${p.id}" class="tube-g">
-        <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="${tubeFill}" stroke="${lit ? '#f0b429' : '#3b4a78'}" stroke-width="1.6"/>
-        <ellipse cx="${s.x}" cy="${s.tubeY + 1.5}" rx="8" ry="2.4" fill="#33456f"/>`;
+        <rect x="${s.x - 10}" y="${s.tubeY}" width="20" height="22" rx="3.5" fill="${tubeFill}" stroke="${lit ? '#f0b429' : '#3b4a78'}" stroke-width="1.6"/>
+        <ellipse cx="${s.x}" cy="${s.tubeY + 1.5}" rx="9" ry="2.6" fill="#33456f"/>`;
       if (!done) {
         const col = p.gift ? '#fde68a' : (climbing ? '#b18cff' : (lit ? '#fde68a' : '#6b7aa8'));
         // The freebie is the whole tutorial. Before anything has been sent it gets
@@ -2223,16 +2231,16 @@ function drawShow() {
             <circle cx="${s.x}" cy="${s.tubeY + 9}" r="15" fill="none" stroke="#fde68a" stroke-width="1.4" opacity="0.7" style="animation:ringpulse 1.5s ease-out 0.75s infinite;transform-origin:center;"/>
             <text x="${s.x}" y="${s.tubeY - 5}" text-anchor="middle" font-size="6" fill="#fde68a" font-family="'avenir-heavy',Arial" style="letter-spacing:0.6px;animation:pulsehint 1.6s infinite;">START HERE</text>`;
         }
-        out += `<use href="#f-shell" x="${s.x - 8}" y="${s.tubeY + 1}" width="16" height="16" style="cursor:pointer;color:${col};" onclick="seedTap('${p.id}')"/>`;
+        out += `<use href="#f-shell" x="${s.x - 9}" y="${s.tubeY + 2}" width="18" height="18" style="cursor:pointer;color:${col};" onclick="seedTap('${p.id}')"/>`;
       } else {
         // Spent tube. It keeps a small copy of whatever came out of it, so the
         // rack doubles as a record of the show.
         const sp1 = sp(p.species);
         // Tapping a spent tube opens the same detail card the Collection uses,
         // so the rack is browsable and not just a record.
-        out += `<use href="#${sp1.art}" x="${s.x - 7}" y="${s.tubeY + 4}" width="14" height="14" style="color:${colorHex(p.color)};opacity:0.9;cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')"/>`;
+        out += `<use href="#${sp1.art}" x="${s.x - 8}" y="${s.tubeY + 4}" width="16" height="16" style="color:${colorHex(p.color)};opacity:0.9;cursor:pointer;" onclick="showPlaque('${p.species}','${p.id}')"/>`;
       }
-      out += `<text x="${s.x}" y="${s.tubeY + 28}" text-anchor="middle" class="lbl">${esc(String(p.tag).toUpperCase())}</text></g>`;
+      out += `<text x="${s.x}" y="${s.tubeY + 30}" text-anchor="middle" class="lbl">${esc(String(p.tag).toUpperCase())}</text></g>`;
     }
   }
 
@@ -2248,9 +2256,9 @@ function drawShow() {
     const hint = first && teaching;
     out += `<g style="cursor:pointer;" onclick="goPlant()">
       ${hint ? `<circle cx="${s.x}" cy="${s.tubeY + 10}" r="15" fill="#4cc9ff" opacity="0.13"/><circle cx="${s.x}" cy="${s.tubeY + 10}" r="16" fill="none" stroke="#4cc9ff" stroke-width="1.8" style="animation:ringpulse 1.9s ease-out infinite;transform-origin:center;"/>` : ''}
-      <rect x="${s.x - 9}" y="${s.tubeY}" width="18" height="20" rx="3" fill="none" stroke="${hint ? '#4cc9ff' : '#4a5c8f'}" stroke-width="1.5" stroke-dasharray="3 2" opacity="${first ? 1 : 0.5}"/>
-      <path d="M${s.x} ${s.tubeY + 5} v10 M${s.x - 5} ${s.tubeY + 10} h10" stroke="${hint ? '#9be3ff' : '#8fa0cc'}" stroke-width="2" stroke-linecap="round" opacity="${first ? 1 : 0.45}"${hint ? ' style="animation:pulsehint 2.2s infinite;"' : ''}/>
-      ${hint ? `<text x="${s.x}" y="${s.tubeY + 30}" text-anchor="middle" font-size="5.5" fill="#9be3ff" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">ADD SOMEONE</text>` : ''}</g>`;
+      <rect x="${s.x - 10}" y="${s.tubeY}" width="20" height="22" rx="3.5" fill="none" stroke="${hint ? '#4cc9ff' : '#4a5c8f'}" stroke-width="1.6" stroke-dasharray="3 2" opacity="${first ? 1 : 0.5}"/>
+      <path d="M${s.x} ${s.tubeY + 5} v12 M${s.x - 6} ${s.tubeY + 11} h12" stroke="${hint ? '#9be3ff' : '#8fa0cc'}" stroke-width="2.4" stroke-linecap="round" opacity="${first ? 1 : 0.5}"${hint ? ' style="animation:pulsehint 2.2s infinite;"' : ''}/>
+      ${hint ? `<text x="${s.x}" y="${s.tubeY + 32}" text-anchor="middle" font-size="5.5" fill="#9be3ff" font-family="'avenir-heavy',Arial" style="letter-spacing:0.5px;">ADD SOMEONE</text>` : ''}</g>`;
   }
 
   // 3. the sky. The show is an EVENT, not wallpaper: big bursts hang for 30
@@ -2295,7 +2303,7 @@ function drawShow() {
   // 4. The igniter goes LAST so it paints on top of the ground and the racks.
   //    Drawn last, hidden by nothing.
   out += `<g id="sparkbtn" style="cursor:pointer;" onclick="sparkFuse()">
-    <circle cx="${SPARK_X}" cy="${SHOW.ground}" r="10" fill="#0c142e" stroke="#f0b429" stroke-width="1.8"/>
+    <circle cx="${SPARK_X}" cy="${SHOW.ground}" r="9" fill="#0c142e" stroke="#f0b429" stroke-width="1.8"/>
     <text x="${SPARK_X}" y="${SHOW.ground + 4}" text-anchor="middle" font-size="11">🔥</text></g>`;
 
   el.innerHTML = out;
