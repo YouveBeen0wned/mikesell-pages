@@ -894,18 +894,18 @@ const CONFIG = {
   // Twelve shells across four tiers, all plotted as chunky pixels so they read
   // at 24px in the rack and look like an old artillery game up close.
   species: [
-    { id: 'peony',   art: 'f-peony',   name: 'Peony',         shelf: 'g',  loc: 'the most common shell in any show, a clean round break with no trails' },
-    { id: 'chrys',   art: 'f-chrys',   name: 'Chrysanthemum', shelf: 'g',  loc: 'a round break where every star drags a tail of sparks behind it' },
-    { id: 'ring',    art: 'f-ring',    name: 'Ring',          shelf: 'g',  loc: 'stars thrown into a clean halo, hard to time and easy to love' },
-    { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'b',  loc: 'one bright star that runs across the sky and burns out behind it' },
-    { id: 'falling', art: 'f-falling', name: 'Falling Star',  shelf: 'b',  loc: 'the one you are supposed to wish on, running the other way across the sky' },
-    { id: 'bell',    art: 'f-bell',    name: 'Liberty Bell',  shelf: 'p',  loc: 'cracked, imperfect, and still the sound everybody came to hear' },
-    { id: 'brocade', art: 'f-brocade', name: 'Brocade',       shelf: 'b',  loc: 'fine silver lace, brighter and sharper than a willow' },
-    { id: 'spider',  art: 'f-spider',  name: 'Spider',        shelf: 'b',  loc: 'stiff straight legs that shoot out and stop dead' },
-    { id: 'cross',   art: 'f-cross',   name: 'Crossette',     shelf: 'p',  loc: 'every star splits again into four, a burst inside a burst' },
-    { id: 'star',    art: 'f-star',    name: 'Star Shell',    shelf: 'au', loc: 'a five point star, the shape every kid draws when you say firework' },
-    { id: 'ballot',  art: 'f-ballot',  name: 'The Ballot',    shelf: 'p',  loc: 'a box with a check in it, which is the whole reason for the show' },
-    { id: 'salute',  art: 'f-salute',  name: 'Salute',        shelf: 'au', loc: 'almost no colour at all, just the flash and the bang you feel in your chest' },
+    { id: 'peony',   art: 'f-peony',   name: 'Peony',         shelf: 'g',  loc: 'the most common shell in any show, a clean round break with no trails' , semi: -7 },
+    { id: 'chrys',   art: 'f-chrys',   name: 'Chrysanthemum', shelf: 'g',  loc: 'a round break where every star drags a tail of sparks behind it' , semi: -5 },
+    { id: 'ring',    art: 'f-ring',    name: 'Ring',          shelf: 'g',  loc: 'stars thrown into a clean halo, hard to time and easy to love' , semi: -3 },
+    { id: 'comet',   art: 'f-comet',   name: 'Comet',         shelf: 'b',  loc: 'one bright star that runs across the sky and burns out behind it' , semi: 0 },
+    { id: 'falling', art: 'f-falling', name: 'Falling Star',  shelf: 'b',  loc: 'the one you are supposed to wish on, running the other way across the sky' , semi: 2 },
+    { id: 'bell',    art: 'f-bell',    name: 'Liberty Bell',  shelf: 'p',  loc: 'cracked, imperfect, and still the sound everybody came to hear' , semi: 7 },
+    { id: 'brocade', art: 'f-brocade', name: 'Brocade',       shelf: 'b',  loc: 'fine silver lace, brighter and sharper than a willow' , semi: 4 },
+    { id: 'spider',  art: 'f-spider',  name: 'Spider',        shelf: 'b',  loc: 'stiff straight legs that shoot out and stop dead' , semi: 5 },
+    { id: 'cross',   art: 'f-cross',   name: 'Crossette',     shelf: 'p',  loc: 'every star splits again into four, a burst inside a burst' , semi: 9 },
+    { id: 'star',    art: 'f-star',    name: 'Star Shell',    shelf: 'au', loc: 'a five point star, the shape every kid draws when you say firework' , semi: 14 },
+    { id: 'ballot',  art: 'f-ballot',  name: 'The Ballot',    shelf: 'p',  loc: 'a box with a check in it, which is the whole reason for the show' , semi: 11 },
+    { id: 'salute',  art: 'f-salute',  name: 'Salute',        shelf: 'au', loc: 'almost no colour at all, just the flash and the bang you feel in your chest' , semi: 16 },
   ],
   // Relatives only. Stepparents count, legal guardians do not, and there is no
   // neighbour, friend or coworker on purpose.
@@ -1549,7 +1549,9 @@ function runShow(done) {
         g.appendChild(r);
       }
       svg.appendChild(g);
-      sfxWhistle(0);                    // the climb
+      // Pitch belongs to the shell in THIS tube, not to the launch order.
+      const _wp = S.plants.find(function (q) { return q.id === b.dataset.pid; });
+      sfxWhistle(0, _wp && _wp.species ? (sp(_wp.species).semi || 0) : 0);   // the climb
       setTimeout(function () {
         g.remove();
         b.style.opacity = '';
@@ -1915,7 +1917,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260921-1600';
+const BUILD = '20260922-1015';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2939,7 +2941,7 @@ function showBloomCinematic(p, s, traits, firstEver, gotBed, kind) {
   openOv('ov-bloom');
   // Cue times track the animation delays above: climb at 1.35s, break at 2.6s,
   // and the unlock chime just behind the break so it lands on the reveal.
-  sfxWhistle(1.35);
+  sfxWhistle(1.35, s.semi || 0);
   sfxBoom(2.6);
   if (firstEver) sfxReveal(2.95);
 }
@@ -3045,13 +3047,19 @@ function sfxSpark() {
    pitch climbs, and a lowpass closes over the top so the bright edge goes out
    of the sound the way it does over a field. A slight detune between the two
    oscillators keeps it from sounding like a test tone. */
-function sfxWhistle(delay) {
+function sfxWhistle(delay, semi) {
   if (muted()) return; const a = actx(); if (!a) return;
   const t = a.currentTime + (delay || 0), D = 0.95;
+  // Each shell type carries its own pitch, laid out by rarity, so a run of
+  // launches reads as a phrase and a gold is audible before it opens. Capped at
+  // the top because the high end of the sweep turns shrill before it turns
+  // impressive.
+  const k = Math.pow(2, (semi || 0) / 12);
+  const F0 = 380 * k, F1 = Math.min(2400 * k, 5200);
 
   const lp = a.createBiquadFilter(); lp.type = 'lowpass';
-  lp.frequency.setValueAtTime(7000, t);
-  lp.frequency.exponentialRampToValueAtTime(1300, t + D);   // the air eats the top
+  lp.frequency.setValueAtTime(Math.max(7000, F1 * 1.6), t);
+  lp.frequency.exponentialRampToValueAtTime(Math.max(1300, F0 * 1.4), t + D);   // the air eats the top
   lp.Q.value = 0.6;
 
   const g = a.createGain();
@@ -3073,8 +3081,8 @@ function sfxWhistle(delay) {
     const o = a.createOscillator();
     o.type = i ? 'triangle' : 'sine';
     o.detune.value = cents;
-    o.frequency.setValueAtTime(380, t);
-    o.frequency.exponentialRampToValueAtTime(2400, t + D);
+    o.frequency.setValueAtTime(F0, t);
+    o.frequency.exponentialRampToValueAtTime(F1, t + D);
     lfoAmt.connect(o.frequency);
     o.connect(lp);
     o.start(t); o.stop(t + D + 0.05);
