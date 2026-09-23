@@ -1733,17 +1733,17 @@ function attachGardenDrag() {
       // Dropped inside. Position is an index, so moving is an array move and
       // swapping is a straight exchange of two entries.
       const t = cellAtPoint(e.clientX, e.clientY);
-      const from = S.plants.findIndex(function (p) { return p.id === _pressPid; });
-      if (t && from > -1 && t.index !== from) {
-        if (t.index < S.plants.length) {
-          const tmp = S.plants[t.index];
-          S.plants[t.index] = S.plants[from];
-          S.plants[from] = tmp;
+      const me = S.plants.find(function (p) { return p.id === _pressPid; });
+      if (t && me && t.index !== me.slot) {
+        // Any tube on the ground is a valid target. Occupied means trade places,
+        // empty means go there and leave a gap behind.
+        const occupant = S.plants.find(function (p) { return p.slot === t.index; });
+        if (occupant) {
+          occupant.slot = me.slot;
+          me.slot = t.index;
           showToast('Swapped places.');
         } else {
-          // Dropped on an empty tube: pull it out and put it at the end.
-          const moved = S.plants.splice(from, 1)[0];
-          S.plants.push(moved);
+          me.slot = t.index;
           showToast('Moved.');
         }
         save(); renderGarden();
@@ -1917,7 +1917,7 @@ function boot() {
 
 
 /* ---------------- contact-match capability ---------------- */
-const BUILD = '20260922-1015';
+const BUILD = '20260922-1340';
 let MATCH_MODE = false;
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -2109,6 +2109,7 @@ function waterReady(p) { return p.state === 'seed' && p.touches < CONFIG.maxTouc
 function hoursLeft(p) { return Math.max(0, Math.ceil((CONFIG.waterGapH * HOUR - (Date.now() - p.lastTouch)) / HOUR)); }
 
 function renderGarden() {
+  migrateSlots();   // older saves placed shells by array order, not by slot
   tickPraise();
   $('hud-gname').textContent = S.garden; $('arch-name').textContent = (S.garden + "'S SHOW").toUpperCase();
   $('hud-lifetime').textContent = fmt(S.lifetime);
@@ -2168,6 +2169,38 @@ function rackRows() { return (S && S.rows) ? S.rows : 2; }
    front row is nearest the ground so it breaks low, the back row sits higher
    on the ground so it breaks high. A stacked pair therefore shares one axis
    and reads as two layers, never as one pile. */
+/* A shell's position is its own property, not its place in the array. That is
+   what lets one sit anywhere on the ground with gaps either side, instead of
+   the list collapsing everything leftward. Older saves have no slot, so they
+   get one derived from their old array order the first time they load. */
+function migrateSlots() {
+  if (!S || !S.plants) return;
+  let dirty = false;
+  const used = {};
+  S.plants.forEach(function (p, i) {
+    if (typeof p.slot === 'number') { used[p.slot] = 1; return; }
+    p.slot = i; used[i] = 1; dirty = true;
+  });
+  // Two shells can never share a tube, whatever a stale save claims.
+  const seen = {};
+  S.plants.forEach(function (p) {
+    if (seen[p.slot]) { p.slot = freeSlot(seen); dirty = true; }
+    seen[p.slot] = 1;
+  });
+  if (dirty) save();
+}
+function freeSlot(taken) {
+  const cap = showCapacity();
+  for (let i = 0; i < cap; i++) if (!taken[i]) { taken[i] = 1; return i; }
+  return cap - 1;
+}
+function slotTaken() {
+  const t = {};
+  (S && S.plants ? S.plants : []).forEach(function (p) { t[p.slot] = p; });
+  return t;
+}
+function nextFreeSlot() { return freeSlot(slotTaken()); }
+
 function slotOf(i) {
   const rows = rackRows();
   const row = i % rows;                   // 0 front, 1 middle, 2 back
@@ -2235,7 +2268,7 @@ function drawShow() {
   const rows = rackRows();
 
   // 1. tubes and their contents, back rows first so nearer rows overlap them
-  const order = list.map((p, i) => ({ p, s: slotOf(i) }));
+  const order = list.map((p) => ({ p, s: slotOf(typeof p.slot === 'number' ? p.slot : 0) }));
   for (const layer of [2, 1, 0].slice(3 - rows)) {
     for (const { p, s } of order) {
       if (s.row !== layer) continue;
@@ -2278,9 +2311,13 @@ function drawShow() {
   // sent anything yet. Once they have, a permanently pulsing plus reads as an
   // unfinished task rather than a hint, so it goes quiet and stays quiet.
   const teaching = (S.seedsPlanted || 0) === 0;
-  for (let i = list.length; i < cap; i++) {
+  // Empty means nothing is standing in it, not "past the end of the list".
+  const _taken = slotTaken();
+  const _firstFree = nextFreeSlot();
+  for (let i = 0; i < cap; i++) {
+    if (_taken[i]) continue;
     const s = slotOf(i);
-    const first = i === list.length;
+    const first = i === _firstFree;
     const hint = first && teaching;
     out += `<g style="cursor:pointer;" onclick="goPlant()">
       ${hint ? `<circle cx="${s.x}" cy="${s.tubeY + 10}" r="15" fill="#4cc9ff" opacity="0.13"/><circle cx="${s.x}" cy="${s.tubeY + 10}" r="16" fill="none" stroke="#4cc9ff" stroke-width="1.8" style="animation:ringpulse 1.9s ease-out infinite;transform-origin:center;"/>` : ''}
