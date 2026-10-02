@@ -104,11 +104,12 @@ function render() {
   $('vid-grid').innerHTML = VIDEOS.map(card).join('');
 }
 
+/* Order is PLAYLIST ORDER, deliberately not date. The feed returns entries in
+   playlist position, so dragging a video to the top of "Mike Appearances" in
+   YouTube puts it first here, and whatever sits in the first MAX positions is
+   what shows. Do not sort this — sorting would take the manual control away. */
 function paint(list) {
-  // The feed orders by playlist position, not date, so sort rather than trust it.
-  VIDEOS = (list || []).slice()
-    .sort((a, b) => new Date(b.published || 0) - new Date(a.published || 0))
-    .slice(0, MAX);
+  VIDEOS = (list || []).slice(0, MAX);
   render();
   $('vid-more').style.display = VIDEOS.length ? 'block' : 'none';
   sendHeight();
