@@ -15,20 +15,37 @@
 html,body{background:transparent;overflow:hidden;}
 body{font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;}
 
-/* Capped width. Without this the cards keep growing with the section, the
-   16:9 thumbnails get taller, and no single Wix element height fits. Capped,
-   the desktop height tops out and stays put. */
-.vid-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1000px;margin:0 auto;}
+/* Desktop: one row that scrolls sideways. The element height stays fixed no
+   matter how many appearances there are — the list grows horizontally, not
+   downward. Cards are a fixed width so the card height never changes either. */
+.vid-grid{display:flex;gap:14px;max-width:1000px;margin:0 auto;
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x proximity;scroll-behavior:smooth;
+  /* A little room top and sides so the hover lift and its shadow are not
+     clipped by the scroll container. */
+  padding:3px 3px 10px;-webkit-overflow-scrolling:touch;}
+.vid{flex:0 0 324px;scroll-snap-align:start;}
 
-/* Below 700px the three-across grid would stack into three tall cards, roughly
-   980px of page. A compact row instead — thumbnail beside the text — keeps all
-   three visible in about the same height as the desktop layout, so one element
-   height works nearly everywhere. */
+/* A visible but quiet scrollbar. Hiding it entirely would leave no hint that
+   there is more to see. */
+.vid-grid::-webkit-scrollbar{height:7px;}
+.vid-grid::-webkit-scrollbar-track{background:rgba(0,45,91,0.07);border-radius:4px;}
+.vid-grid::-webkit-scrollbar-thumb{background:rgba(0,45,91,0.32);border-radius:4px;}
+.vid-grid::-webkit-scrollbar-thumb:hover{background:rgba(0,45,91,0.5);}
+.vid-grid{scrollbar-width:thin;scrollbar-color:rgba(0,45,91,0.32) rgba(0,45,91,0.07);}
+
+/* Mobile: a compact list that scrolls up and down inside a fixed window.
+   Thumbnail beside the text, so roughly three and a bit rows are visible and
+   the rest is a scroll away. */
 @media(max-width:700px){
-  .vid-grid{grid-template-columns:1fr;gap:10px;}
-  .vid{flex-direction:row;}
+  .vid-grid{flex-direction:column;gap:10px;
+    overflow-x:hidden;overflow-y:auto;
+    max-height:330px;scroll-snap-type:y proximity;
+    padding-bottom:0;padding-right:5px;}
+  .vid{flex:0 0 auto;width:100%;flex-direction:row;}
   .vid-thumb{flex:0 0 132px;width:132px;}
   .vid-body{padding:9px 12px 9px 11px;justify-content:center;gap:4px;}
+  .vid-grid::-webkit-scrollbar{width:6px;height:auto;}
 }
 
 .vid{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s,transform 0.18s;}
@@ -68,13 +85,12 @@ body{font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;}
    and it shows up here within half an hour, from anybody's channel, with no
    deploy and no edit to this file. Remove it there and it disappears here.
 
-   MAX: how many to show. This is a Wix embed in a FIXED-HEIGHT iframe, so an
-        unbounded grid would clip as the playlist grows. Showing the newest N
-        keeps the height constant forever. 3 = one row on desktop; 6 = two
-        rows (raise the Wix element height to match if you change this). */
+   MAX: how many to show. The wall scrolls now — sideways on desktop, up and
+        down on mobile — so the element height no longer depends on this and
+        it can be generous. It is only here as a sanity cap. */
 const PLAYLIST = 'PLNsrEoxAO9cI';
 const API = 'https://bloomers-phone.ccm-inspired.workers.dev/videos';
-const MAX = 3;
+const MAX = 30;
 
 /* Fallback, so the embed is never an empty hole in the page if the playlist is
    empty or the Worker is unreachable. Snapshot as of 2026-10-02. */
@@ -99,7 +115,9 @@ const MANUAL = [
     published: '2026-09-19T10:02:55+00:00',
     link: 'https://www.clayviews.com/p/mike-sell-wants-to-go-to-congress',
     embed: 'https://www.clayviews.com/embed/podcast/mike-sell-wants-to-go-to-congress?autoplay=1',
-    thumb: 'https://substackcdn.com/image/fetch/$s_!pAmN!,w_1200,h_600,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-video.s3.amazonaws.com%2Fvideo_upload%2Fpost%2F216384270%2F245ab712-c684-428c-a5d3-a97d0d15491b%2Ftranscoded-1789779273.png'
+    // Our own cover art, served from this repo rather than Substack's
+    // auto-grabbed video frame. Relative so it works on whatever host.
+    thumb: 'img/clay-news-views-mike-sell.jpg'
   }
 ];
 

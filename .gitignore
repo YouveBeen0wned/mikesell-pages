@@ -7,3 +7,9 @@
 !.gitignore
 !voters/
 !voters/*.json
+
+# Artwork the pages reference (video wall thumbnails and the like)
+!img/
+!img/*.jpg
+!img/*.png
+!img/*.svg
