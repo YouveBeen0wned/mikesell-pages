@@ -82,11 +82,15 @@ function when(iso) {
 
 let VIDEOS = [];
 
+/* No loading="lazy" on the thumbnails. The grid is injected with innerHTML
+   after load, and in that case lazy evaluation can decide an image is
+   off-screen and never re-check, leaving the card permanently blank even
+   when it is plainly in view. Three images is not worth that risk. */
 function card(v, i) {
   const thumb = v.thumb || ('https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg');
   return `<div class="vid tappable" data-i="${i}">
     <div class="vid-thumb">
-      <img loading="lazy" src="${esc(thumb)}" alt="">
+      <img src="${esc(thumb)}" alt="" onerror="this.style.display='none'">
       <div class="vid-play"><span><svg width="15" height="17" viewBox="0 0 15 17" fill="#fff"><path d="M0 0 L15 8.5 L0 17 Z"/></svg></span></div>
     </div>
     <div class="vid-body">
