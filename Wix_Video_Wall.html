@@ -121,6 +121,15 @@ const MANUAL = [
   }
 ];
 
+/* Real dates for throwbacks and re-posts. The feed can only report when a video
+   was UPLOADED to YouTube, which for archive footage is today rather than when
+   it happened. Key is the YouTube video id, value is the date of the actual
+   event. Add a line here whenever you post something old. */
+const DATE_OVERRIDE = {
+  'MVXa20589Y0': '2018-02-15',   // Real Talk Real Change Throwbacks: Life Expectancy
+  'Hnu10QpF9Do': '2018-02-15',   // Real Talk Real Change Throwbacks: Gotta Act!
+};
+
 /* The feed reports whichever channel uploaded the video, which is right for a
    host's show but reads oddly for Mike's own channel handle. */
 const CHANNEL_ALIAS = { 'youvebeenowned': 'Mike Sell', 'mike sell for congress': 'Mike Sell' };
@@ -130,11 +139,16 @@ const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+/* Formatted in UTC, not the visitor's zone. A video published just after
+   midnight UTC would otherwise read a day earlier for everyone in the US,
+   disagreeing with the date YouTube or the host's own page shows. */
 function when(iso) {
   if (!iso) return '';
   const d = new Date(iso);
   if (isNaN(d)) return '';
-  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  return d.toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+  });
 }
 
 let VIDEOS = [];
@@ -165,7 +179,7 @@ function card(v, i) {
     <div class="vid-body">
       <div class="vid-src">${esc(label(v.channel))}</div>
       <div class="vid-title">${esc(v.title || 'Untitled')}</div>
-      <div class="vid-meta">${esc(when(v.published))}</div>
+      <div class="vid-meta">${esc(when(DATE_OVERRIDE[v.id] || v.published))}</div>
     </div></div>`;
 }
 
