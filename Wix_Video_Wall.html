@@ -64,6 +64,26 @@ const FALLBACK = [
   { id: 'hciHK3Xpfno', title: 'Different Parties, One Community. A Conversation with Mike Sell', channel: 'Clay County Speaks', published: '2026-09-15T00:21:34+00:00' }
 ];
 
+/* Appearances that are NOT on YouTube, so cannot live in the playlist. Each
+   one is pinned to a fixed slot in the wall by `pos` (1 = first card), and the
+   playlist fills in around them. Substack and Spotify both allow cross-origin
+   framing, so these play inline like any other card.
+     pos     - 1-based slot in the finished wall
+     embed   - iframe src; omit it and the card links out instead of playing
+     link    - where "open the source" goes
+   Add an entry here for a podcast, a Substack video, or a news segment. */
+const MANUAL = [
+  {
+    pos: 1,
+    title: 'Mike Sell Wants to Go to Congress Without a Donate Button',
+    channel: 'Clay News & Views',
+    published: '2026-09-19T10:02:55+00:00',
+    link: 'https://www.clayviews.com/p/mike-sell-wants-to-go-to-congress',
+    embed: 'https://www.clayviews.com/embed/podcast/mike-sell-wants-to-go-to-congress?autoplay=1',
+    thumb: 'https://substackcdn.com/image/fetch/$s_!pAmN!,w_1200,h_600,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-video.s3.amazonaws.com%2Fvideo_upload%2Fpost%2F216384270%2F245ab712-c684-428c-a5d3-a97d0d15491b%2Ftranscoded-1789779273.png'
+  }
+];
+
 /* The feed reports whichever channel uploaded the video, which is right for a
    host's show but reads oddly for Mike's own channel handle. */
 const CHANNEL_ALIAS = { 'youvebeenowned': 'Mike Sell', 'mike sell for congress': 'Mike Sell' };
@@ -86,12 +106,24 @@ let VIDEOS = [];
    after load, and in that case lazy evaluation can decide an image is
    off-screen and never re-check, leaving the card permanently blank even
    when it is plainly in view. Three images is not worth that risk. */
+/* A card can be a YouTube video (identified by `id`) or anything else with its
+   own embeddable player (`embed`). If it has neither, it links out. */
+const embedOf = (v) => v.embed
+  || (v.id ? 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?autoplay=1&rel=0' : '');
+const thumbOf = (v) => v.thumb
+  || (v.id ? 'https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg' : '');
+
 function card(v, i) {
-  const thumb = v.thumb || ('https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg');
-  return `<div class="vid tappable" data-i="${i}">
+  const playable = !!embedOf(v);
+  // Not playable in place, so the whole card becomes a link to the source.
+  const open = playable ? '' : ` onclick="window.open('${esc(v.link || '#')}','_blank','noopener')"`;
+  return `<div class="vid tappable" data-i="${i}"${open}>
     <div class="vid-thumb">
-      <img src="${esc(thumb)}" alt="" onerror="this.style.display='none'">
-      <div class="vid-play"><span><svg width="15" height="17" viewBox="0 0 15 17" fill="#fff"><path d="M0 0 L15 8.5 L0 17 Z"/></svg></span></div>
+      <img src="${esc(thumbOf(v))}" alt="" onerror="this.style.display='none'">
+      <div class="vid-play"><span>${playable
+        ? '<svg width="15" height="17" viewBox="0 0 15 17" fill="#fff"><path d="M0 0 L15 8.5 L0 17 Z"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2"><path d="M6 2h8v8M14 2L4 12"/></svg>'
+      }</span></div>
     </div>
     <div class="vid-body">
       <div class="vid-src">${esc(label(v.channel))}</div>
@@ -104,12 +136,30 @@ function render() {
   $('vid-grid').innerHTML = VIDEOS.map(card).join('');
 }
 
+/* Splice the hand-pinned appearances into the playlist's own order. Each MANUAL
+   entry claims its `pos` slot; the playlist items flow into whatever is left,
+   keeping their relative order. Two entries wanting the same slot are placed in
+   the order they appear in MANUAL rather than one silently overwriting the
+   other. */
+function merge(feed) {
+  const out = [];
+  const pinned = MANUAL.slice().sort((a, b) => (a.pos || 99) - (b.pos || 99));
+  const rest = feed.slice();
+  let p = 0;
+  for (let slot = 1; (p < pinned.length || rest.length) && out.length < MAX; slot++) {
+    if (p < pinned.length && (pinned[p].pos || 99) <= slot) out.push(pinned[p++]);
+    else if (rest.length) out.push(rest.shift());
+    else out.push(pinned[p++]);
+  }
+  return out;
+}
+
 /* Order is PLAYLIST ORDER, deliberately not date. The feed returns entries in
    playlist position, so dragging a video to the top of "Mike Appearances" in
    YouTube puts it first here, and whatever sits in the first MAX positions is
    what shows. Do not sort this — sorting would take the manual control away. */
 function paint(list) {
-  VIDEOS = (list || []).slice(0, MAX);
+  VIDEOS = merge(list || []).slice(0, MAX);
   render();
   $('vid-more').style.display = VIDEOS.length ? 'block' : 'none';
   sendHeight();
@@ -121,17 +171,18 @@ function paint(list) {
 function play(i) {
   const v = VIDEOS[i];
   if (!v) return;
+  const src = embedOf(v);
+  if (!src) return;   // link-out cards are handled by their own onclick
   // One at a time. Redrawing the grid resets every thumbnail, which also tears
   // down any player already running, then the new one goes in.
   render();
   const host = document.querySelector('.vid[data-i="' + i + '"]');
   if (!host) return;
   host.classList.remove('tappable');
-  // youtube-nocookie, and only after a real tap, so nothing tracks a visitor
-  // who merely loaded the page.
+  // Players load only after a real tap, so nothing tracks a visitor who merely
+  // loaded the page. YouTube goes through youtube-nocookie.
   host.querySelector('.vid-thumb').innerHTML =
-    '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id)
-    + '?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    '<iframe src="' + esc(src) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
 }
 
 $('vid-grid').addEventListener('click', (e) => {
