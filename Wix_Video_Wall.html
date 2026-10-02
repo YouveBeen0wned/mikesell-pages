@@ -94,14 +94,26 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
    API:      the Worker endpoint that proxies the feed. YouTube's RSS needs no
              key and no quota, but sends no CORS header, so a browser cannot
              read it directly and the Worker has to stand in front of it. */
-const PLAYLIST = '';   // <- paste the playlist id here
+const PLAYLIST = 'PLNsrEoxAO9cI';   // "Mike Appearances"
 const API = 'https://bloomers-phone.ccm-inspired.workers.dev/videos';
 
 /* Fallback. If the playlist is empty, the Worker is down, or the feed goes
    quiet, the page still shows something rather than an empty grid. Add known
-   appearances here as {id, title, channel} and they show when the live feed
-   returns nothing. */
-const FALLBACK = [];
+   appearances here as {id, title, channel, published} and they show when the
+   live feed returns nothing. Snapshot of the playlist as of 2026-10-02. */
+const FALLBACK = [
+  { id: 'h2gVvY-Vu08', title: 'Mike Sell Sits Down With Chuck Todd | Meet the Forwardists', channel: 'YouveBeenOwned', published: '2026-09-29T23:00:22+00:00' },
+  { id: 'hciHK3Xpfno', title: 'Different Parties, One Community. A Conversation with Mike Sell', channel: 'Clay County Speaks', published: '2026-09-15T00:21:34+00:00' }
+];
+
+/* The feed reports whichever channel uploaded the video, which is right for a
+   host's show but reads oddly for Mike's own channel handle. Map those to the
+   label a voter should see. Keys are lowercased. */
+const CHANNEL_ALIAS = {
+  'youvebeenowned': 'Mike Sell',
+  'mike sell for congress': 'Mike Sell'
+};
+const label = (c) => CHANNEL_ALIAS[String(c || '').toLowerCase()] || c || 'Appearance';
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) =>
@@ -123,7 +135,7 @@ function card(v, i) {
       <div class="vid-play"><span><svg width="15" height="17" viewBox="0 0 15 17" fill="#fff"><path d="M0 0 L15 8.5 L0 17 Z"/></svg></span></div>
     </div>
     <div class="vid-body">
-      <div class="vid-src">${esc(v.channel || 'Appearance')}</div>
+      <div class="vid-src">${esc(label(v.channel))}</div>
       <div class="vid-title">${esc(v.title || 'Untitled')}</div>
       <div class="vid-meta">${esc(when(v.published))}</div>
     </div></button>`;
@@ -132,7 +144,10 @@ function card(v, i) {
 let VIDEOS = [];
 
 function paint(list, note) {
-  VIDEOS = list || [];
+  // The playlist feed is usually already newest-first, but it orders by
+  // playlist position, not date, so sort rather than trust it.
+  VIDEOS = (list || []).slice().sort((a, b) =>
+    new Date(b.published || 0) - new Date(a.published || 0));
   $('vid-grid').innerHTML = VIDEOS.map(card).join('');
   $('vid-count').textContent = VIDEOS.length
     ? VIDEOS.length + (VIDEOS.length === 1 ? ' conversation' : ' conversations') + ', newest first'
