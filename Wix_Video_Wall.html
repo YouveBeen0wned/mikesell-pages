@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch — Mike Sell for Congress FL-CD4 2026</title>
+<style>
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
+
+.hero{background:linear-gradient(135deg,#002d5b 0%,#470D67 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero-eye{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;}
+.hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;line-height:1.2;margin-bottom:8px;}
+.hero p{font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;max-width:600px;}
+
+.main{padding:18px 20px 48px;}
+.res-count{font-size:11px;color:#9ca3af;margin-bottom:12px;}
+
+.vid-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:860px){.vid-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.vid-grid{grid-template-columns:1fr;}}
+
+.vid{background:#fff;border:1.5px solid #e2e8f0;border-radius:11px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:box-shadow 0.18s,transform 0.18s;text-align:left;padding:0;font:inherit;color:inherit;}
+.vid:hover{box-shadow:0 6px 20px rgba(0,0,0,0.10);transform:translateY(-2px);}
+.vid-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#0b1430;overflow:hidden;}
+.vid-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.vid-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.vid-play span{width:44px;height:44px;border-radius:50%;background:rgba(11,20,48,0.72);border:2px solid rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;}
+.vid-play svg{margin-left:3px;}
+.vid-body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:5px;flex:1;}
+.vid-title{font-family:'avenir-heavy',Arial,sans-serif;font-size:12.5px;line-height:1.4;color:#1a1a18;}
+.vid-meta{font-size:10px;color:#9ca3af;letter-spacing:0.03em;margin-top:auto;}
+.vid-src{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;letter-spacing:0.07em;text-transform:uppercase;color:#7C3AED;}
+
+/* Player overlay. Nothing loads from YouTube until a card is tapped. */
+.ov{position:fixed;inset:0;background:rgba(6,11,28,0.88);display:none;align-items:center;justify-content:center;z-index:50;padding:18px;}
+.ov.on{display:flex;}
+.ov-inner{width:100%;max-width:860px;}
+.ov-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;}
+.ov-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.ov-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px;}
+.ov-title{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#fff;line-height:1.4;}
+.ov-x{flex-shrink:0;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);color:#fff;border-radius:50px;padding:7px 15px;font-family:'avenir-heavy',Arial,sans-serif;font-size:11px;cursor:pointer;}
+
+.note{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #7C3AED;border-radius:10px;padding:13px 15px;font-size:11.5px;color:#6b7280;line-height:1.6;margin-top:18px;}
+
+.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer p{font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
+.footer a{color:#59D7EE;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eye"><a href="https://www.mikesell.org" target="_top" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.35);">Mike Sell for Congress</a> · FL-CD4 2026 · Forward Party</div>
+  <h1>The Conversations.</h1>
+  <p>Podcasts, forums and interviews. Long form, unedited, and not filtered through anybody else.</p>
+</div>
+
+<div class="main">
+  <div class="res-count" id="vid-count">Loading…</div>
+  <div class="vid-grid" id="vid-grid"></div>
+  <div class="note" id="vid-note" style="display:none;"></div>
+</div>
+
+<div class="ov" id="player" onclick="if(event.target===this)closePlayer()">
+  <div class="ov-inner">
+    <div class="ov-frame" id="player-frame"></div>
+    <div class="ov-bar">
+      <div class="ov-title" id="player-title"></div>
+      <button class="ov-x" onclick="closePlayer()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>Mike Sell for Congress</strong> &nbsp;·&nbsp; FL-CD4 · 2026 &nbsp;·&nbsp; Forward Party<br>
+  119 Center St S #143, Jacksonville FL 32234 &nbsp;·&nbsp; (904) 738-3264<br>
+  <a href="https://mikesell.org" target="_top">mikesell.org</a> &nbsp;·&nbsp; Paid for by Friends of Mike</p>
+</div>
+
+<script>
+/* ---------------- configuration ----------------
+   Curation is the playlist. Add an appearance to the playlist in YouTube and it
+   appears here within half an hour, from anybody's channel, with no deploy and
+   no edit to this file. Remove it there and it disappears here.
+
+   PLAYLIST: the YouTube playlist id, the PL... value in the playlist URL.
+   API:      the Worker endpoint that proxies the feed. YouTube's RSS needs no
+             key and no quota, but sends no CORS header, so a browser cannot
+             read it directly and the Worker has to stand in front of it. */
+const PLAYLIST = '';   // <- paste the playlist id here
+const API = 'https://bloomers-phone.ccm-inspired.workers.dev/videos';
+
+/* Fallback. If the playlist is empty, the Worker is down, or the feed goes
+   quiet, the page still shows something rather than an empty grid. Add known
+   appearances here as {id, title, channel} and they show when the live feed
+   returns nothing. */
+const FALLBACK = [];
+
+const $ = (id) => document.getElementById(id);
+const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function when(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function card(v, i) {
+  // youtube's own thumbnail host, or build the standard url from the id
+  const thumb = v.thumb || ('https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg');
+  return `<button class="vid" onclick="openPlayer(${i})">
+    <div class="vid-thumb">
+      <img loading="lazy" src="${esc(thumb)}" alt="">
+      <div class="vid-play"><span><svg width="15" height="17" viewBox="0 0 15 17" fill="#fff"><path d="M0 0 L15 8.5 L0 17 Z"/></svg></span></div>
+    </div>
+    <div class="vid-body">
+      <div class="vid-src">${esc(v.channel || 'Appearance')}</div>
+      <div class="vid-title">${esc(v.title || 'Untitled')}</div>
+      <div class="vid-meta">${esc(when(v.published))}</div>
+    </div></button>`;
+}
+
+let VIDEOS = [];
+
+function paint(list, note) {
+  VIDEOS = list || [];
+  $('vid-grid').innerHTML = VIDEOS.map(card).join('');
+  $('vid-count').textContent = VIDEOS.length
+    ? VIDEOS.length + (VIDEOS.length === 1 ? ' conversation' : ' conversations') + ', newest first'
+    : 'Nothing posted yet.';
+  if (note) { $('vid-note').style.display = 'block'; $('vid-note').innerHTML = note; }
+}
+
+/* Never dead-end. Any failure path falls through to whatever is in FALLBACK,
+   and says plainly that the live list could not be reached. */
+function load() {
+  if (!PLAYLIST) {
+    paint(FALLBACK, 'No playlist is configured yet, so this is showing the built-in list. Set <b>PLAYLIST</b> at the top of this file to the YouTube playlist id and the wall updates itself from then on.');
+    return;
+  }
+  fetch(API + '?list=' + encodeURIComponent(PLAYLIST))
+    .then((r) => r.ok ? r.json() : Promise.reject(r.status))
+    .then((d) => {
+      if (d && d.ok && d.items && d.items.length) paint(d.items, '');
+      else paint(FALLBACK, 'The playlist came back empty, so this is the built-in list.');
+    })
+    .catch(() => paint(FALLBACK, 'Could not reach the live list just now. Showing saved appearances instead.'));
+}
+
+function openPlayer(i) {
+  const v = VIDEOS[i];
+  if (!v) return;
+  // youtube-nocookie, and only after a real tap, so nothing tracks a visitor
+  // who merely loaded the page.
+  $('player-frame').innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'
+    + encodeURIComponent(v.id) + '?autoplay=1&rel=0" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  $('player-title').textContent = v.title || '';
+  $('player').classList.add('on');
+}
+function closePlayer() {
+  $('player').classList.remove('on');
+  $('player-frame').innerHTML = '';   // stops playback
+}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePlayer(); });
+
+load();
+
+/* Wix embeds this in a fixed-height iframe, so the parent has to be told how
+   tall the content actually is. */
+function sendHeight(){var h=document.documentElement.scrollHeight||document.body.scrollHeight;try{window.parent.postMessage({type:'iwResizeHeight',data:{height:h}},'*');}catch(e){}}
+window.addEventListener('load',sendHeight);
+window.addEventListener('resize',sendHeight);
+if(window.MutationObserver){new MutationObserver(sendHeight).observe(document.body,{childList:true,subtree:true,attributes:true});}
+</script>
+</body>
+</html>
