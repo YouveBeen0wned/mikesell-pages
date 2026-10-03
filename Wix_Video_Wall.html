@@ -34,13 +34,18 @@ body{font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;}
 .vid-grid::-webkit-scrollbar-thumb:hover{background:rgba(0,45,91,0.5);}
 .vid-grid{scrollbar-width:thin;scrollbar-color:rgba(0,45,91,0.32) rgba(0,45,91,0.07);}
 
-/* Mobile: a compact list that scrolls up and down inside a fixed window.
-   Thumbnail beside the text, so roughly three and a bit rows are visible and
-   the rest is a scroll away. */
+/* Mobile: a compact list that scrolls up and down inside the embed.
+   The scroll window is sized to the iframe itself (100vh) rather than a fixed
+   number of pixels. A hardcoded height taller than the Wix element would push
+   the last card past the bottom edge, where the iframe clips it and — because
+   the page itself cannot scroll — it becomes unreachable. Tied to 100vh, the
+   list always fits exactly whatever height the Wix element is given, and the
+   remainder scrolls. The subtraction is the "see every appearance" row. */
 @media(max-width:700px){
   .vid-grid{flex-direction:column;gap:10px;
     overflow-x:hidden;overflow-y:auto;
-    max-height:330px;scroll-snap-type:y proximity;
+    max-height:none;height:max(150px, calc(100vh - 40px));
+    scroll-snap-type:y proximity;
     padding-bottom:0;padding-right:5px;}
   .vid{flex:0 0 auto;width:100%;flex-direction:row;}
   .vid-thumb{flex:0 0 132px;width:132px;}
