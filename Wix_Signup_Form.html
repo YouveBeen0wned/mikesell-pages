@@ -3,110 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Join the campaign</title>
+<title>This is our movement</title>
 <style>
 @font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
 @font-face{font-family:'avenir-heavy';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/74290729-59ae-4129-87d0-2eec3974dce1/v1/avenir-lt-w01_85-heavy1475544.woff2') format('woff2');font-display:swap;}
 @font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{background:transparent;overflow-x:hidden;}
-body{font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;}
+body{font-family:'avenir-light',Arial,sans-serif;color:#0f2f5e;}
 
-.wrap{max-width:560px;margin:0 auto;}
-.card{background:#fff;border:1.5px solid #e2e8f0;border-radius:14px;padding:22px 22px 20px;}
+/* Palette lifted from the existing Wix block: pale periwinkle card, royal-blue
+   field outlines, deep purple action. */
+:root{
+  --card:#e7eefb; --navy:#0b2b5c; --accent:#2b7fd4;
+  --line:#1f6fd0; --purple:#4a176f; --mute:#4a6893;
+}
 
-h2{font-family:'clarendon-w01-medium',Georgia,serif;font-size:22px;line-height:1.25;color:#002d5b;margin-bottom:7px;}
-.sub{font-size:13px;line-height:1.6;color:#5b6470;margin-bottom:17px;}
+.card{background:var(--card);border-radius:16px;padding:30px 30px 24px;max-width:700px;margin:0 auto;}
 
-.row{display:flex;gap:11px;}
-@media(max-width:480px){.row{flex-direction:column;gap:13px;}}
-.fld{margin-bottom:13px;flex:1;min-width:0;}
-label{display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;letter-spacing:0.07em;
-  text-transform:uppercase;color:#6b7280;margin-bottom:5px;}
-input{width:100%;font-family:inherit;font-size:15px;color:#1a1a18;background:#fff;
-  border:1.5px solid #d7dee7;border-radius:9px;padding:11px 12px;transition:border-color .15s,box-shadow .15s;}
-input:focus{outline:none;border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,0.13);}
-input[aria-invalid="true"]{border-color:#dc2626;background:#fff7f7;}
-.err{display:none;font-size:11.5px;color:#dc2626;margin-top:4px;}
+h2{font-family:'clarendon-w01-medium',Georgia,serif;font-size:34px;line-height:1.15;
+   color:var(--navy);margin-bottom:16px;font-weight:400;}
+h2 em{font-style:italic;color:var(--accent);}
+
+.lede{font-size:20px;line-height:1.5;color:var(--navy);margin-bottom:18px;}
+.ask{font-size:15.5px;line-height:1.5;color:var(--mute);margin-bottom:16px;}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:560px){.grid{grid-template-columns:1fr;}}
+
+.fld{min-width:0;}
+input{width:100%;font-family:inherit;font-size:16px;color:var(--navy);background:#fff;
+  border:2px solid var(--line);border-radius:9px;padding:14px 15px;
+  transition:border-color .15s,box-shadow .15s;}
+input::placeholder{color:#8e97a6;}
+input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(74,23,111,0.15);}
+input[aria-invalid="true"]{border-color:#c0392b;background:#fffafa;}
+.err{display:none;font-size:12.5px;color:#c0392b;margin-top:5px;padding-left:2px;}
 .err.on{display:block;}
 
-/* Spam trap. Real people never see or fill this; most bots fill every field. */
+/* Spam trap. Invisible to people, irresistible to bots. */
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
 
-button{width:100%;font-family:'avenir-heavy',Arial,sans-serif;font-size:14.5px;letter-spacing:0.03em;
-  color:#fff;background:#002d5b;border:none;border-radius:50px;padding:14px 20px;cursor:pointer;
-  margin-top:4px;transition:background .15s,transform .08s;}
-button:hover:not(:disabled){background:#01407d;}
+button{width:100%;font-family:'avenir-light',Arial,sans-serif;font-size:17px;color:#fff;
+  background:var(--purple);border:2px solid var(--purple);border-radius:9px;padding:14px 15px;
+  cursor:pointer;transition:background .15s,transform .08s;}
+button:hover:not(:disabled){background:#5d2089;border-color:#5d2089;}
 button:active:not(:disabled){transform:translateY(1px);}
-button:disabled{opacity:0.62;cursor:default;}
+button:disabled{opacity:0.6;cursor:default;}
 
-.fine{font-size:10.5px;line-height:1.6;color:#9ca3af;margin-top:12px;text-align:center;}
-.fine a{color:#6b7280;}
+.fine{font-size:12.5px;line-height:1.55;color:#4a3a8f;margin-top:16px;}
+.fine a{color:#4a3a8f;}
 
-.note{display:none;font-size:13px;line-height:1.6;border-radius:9px;padding:11px 13px;margin-top:13px;}
+.note{display:none;font-size:14px;line-height:1.55;border-radius:9px;padding:12px 14px;
+  margin-top:14px;background:#fff3f3;border:2px solid #e8b4ae;color:#a8322a;}
 .note.on{display:block;}
-.note.bad{background:#fff5f5;border:1.5px solid #fecaca;color:#b91c1c;}
 
-.done{display:none;text-align:center;padding:14px 4px 6px;}
+.done{display:none;padding:6px 0 4px;}
 .done.on{display:block;}
-.done .tick{width:46px;height:46px;border-radius:50%;background:#ecfdf5;border:2px solid #10b981;
-  display:flex;align-items:center;justify-content:center;margin:0 auto 13px;}
-.done h3{font-family:'clarendon-w01-medium',Georgia,serif;font-size:19px;color:#002d5b;margin-bottom:6px;}
-.done p{font-size:13.5px;line-height:1.65;color:#5b6470;}
+.done h3{font-family:'clarendon-w01-medium',Georgia,serif;font-size:26px;color:var(--navy);
+  margin-bottom:8px;font-weight:400;}
+.done p{font-size:17px;line-height:1.55;color:var(--navy);}
+.done .tick{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--purple);
+  align-items:center;justify-content:center;vertical-align:-7px;margin-right:10px;}
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <div class="card">
-    <form id="f" novalidate>
-      <h2>Count me in.</h2>
-      <p class="sub">Add your name and we&rsquo;ll keep you posted &mdash; what we&rsquo;re working on,
-         where we&rsquo;ll be, and how you can help. No spam, and you can leave any time.</p>
+<div class="card">
+  <form id="f" novalidate>
+    <h2>This is <em>our</em> movement.</h2>
+    <p class="lede">There is only one way we will transform this country &mdash; and that is by
+      driving a progressive agenda forward together.</p>
+    <p class="ask">Add your name to tell Mike you&rsquo;re in.</p>
 
+    <div class="grid">
       <div class="fld">
-        <label for="nm">Your name</label>
-        <input id="nm" name="name" type="text" autocomplete="name" required
-               enterkeyhint="next" aria-describedby="e-nm">
+        <label for="em" class="hp">Email address</label>
+        <input id="em" name="email" type="email" placeholder="Email address"
+               autocomplete="email" inputmode="email" enterkeyhint="next" aria-describedby="e-em">
+        <div class="err" id="e-em">That email doesn&rsquo;t look right.</div>
+      </div>
+      <div class="fld">
+        <label for="zp" class="hp">Zip code</label>
+        <input id="zp" name="zip" type="text" placeholder="Zip code"
+               autocomplete="postal-code" inputmode="numeric" maxlength="5"
+               enterkeyhint="next" aria-describedby="e-zp">
+        <div class="err" id="e-zp">5 digits, please.</div>
+      </div>
+      <div class="fld">
+        <label for="nm" class="hp">Your name</label>
+        <input id="nm" name="name" type="text" placeholder="Your name"
+               autocomplete="name" enterkeyhint="done" aria-describedby="e-nm">
         <div class="err" id="e-nm">Please tell us your name.</div>
       </div>
-
-      <div class="row">
-        <div class="fld">
-          <label for="em">Email</label>
-          <input id="em" name="email" type="email" autocomplete="email" inputmode="email"
-                 required enterkeyhint="next" aria-describedby="e-em">
-          <div class="err" id="e-em">That email doesn&rsquo;t look right.</div>
-        </div>
-        <div class="fld" style="max-width:150px;">
-          <label for="zp">ZIP code</label>
-          <input id="zp" name="zip" type="text" autocomplete="postal-code" inputmode="numeric"
-                 maxlength="5" required enterkeyhint="done" aria-describedby="e-zp">
-          <div class="err" id="e-zp">5 digits, please.</div>
-        </div>
+      <div class="fld">
+        <button type="submit" id="go">Submit</button>
       </div>
-
-      <!-- Spam trap: hidden from people, irresistible to bots. -->
-      <div class="hp" aria-hidden="true">
-        <label for="company">Company</label>
-        <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
-      </div>
-
-      <button type="submit" id="go">Sign me up</button>
-      <div class="note bad" id="note"></div>
-
-      <p class="fine">We never sell or share your information.
-        <a href="https://www.mikesell.org/privacy" target="_top" rel="noopener">Privacy policy</a></p>
-    </form>
-
-    <div class="done" id="done">
-      <div class="tick">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"
-             stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-      </div>
-      <h3>You&rsquo;re on the list.</h3>
-      <p id="done-msg">Thanks for joining us. Watch your inbox &mdash; we&rsquo;ll be in touch soon.</p>
     </div>
+
+    <!-- Spam trap -->
+    <div class="hp" aria-hidden="true">
+      <label for="company">Company</label>
+      <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="note" id="note"></div>
+
+    <p class="fine">We never sell or share your information. Read our
+      <a href="https://www.mikesell.org/privacy" target="_top" rel="noopener">privacy policy</a>.</p>
+  </form>
+
+  <div class="done" id="done">
+    <h3><span class="tick"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff"
+      stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>You&rsquo;re in.</h3>
+    <p>Thanks for joining us. Watch your inbox &mdash; we&rsquo;ll be in touch soon.</p>
   </div>
 </div>
 
@@ -120,8 +130,10 @@ button:disabled{opacity:0.62;cursor:default;}
    so posting here records the person WITHOUT opening a chat session.
    Verified against the live bubble embed, 2026-10-11.
 
-   If a dedicated /subscribe route is ever added to the backend, change ENDPOINT
-   below and nothing else.
+   If a dedicated /subscribe route is ever added, change ENDPOINT and nothing
+   else. A phone field belongs here only once the backend can store one --
+   collecting SMS consent and then discarding the number would be worse than
+   not asking.
 ------------------------------------------------------------------------------ */
 const API_BASE = 'https://mikesell-bot-backend-production.up.railway.app';
 const ENDPOINT = API_BASE + '/start-chat';
@@ -136,27 +148,22 @@ function setErr(input, errId, bad) {
 }
 
 /* Deliberately permissive. An over-strict pattern rejects real addresses
-   (plus-addressing, new TLDs, long domains) and silently costs supporters. */
+   (plus-addressing, new TLDs) and silently costs supporters. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 function validate() {
-  const n = $('nm').value.trim();
-  const e = $('em').value.trim();
-  const z = $('zp').value.trim();
-  const okN = setErr($('nm'), 'e-nm', n.length < 2);
-  const okE = setErr($('em'), 'e-em', !EMAIL_RE.test(e));
-  const okZ = setErr($('zp'), 'e-zp', !/^\d{5}$/.test(z));
-  return okN && okE && okZ;
+  const okE = setErr($('em'), 'e-em', !EMAIL_RE.test($('em').value.trim()));
+  const okZ = setErr($('zp'), 'e-zp', !/^\d{5}$/.test($('zp').value.trim()));
+  const okN = setErr($('nm'), 'e-nm', $('nm').value.trim().length < 2);
+  return okE && okZ && okN;
 }
 
-// Clear an error as soon as the person starts fixing it.
 ['nm', 'em', 'zp'].forEach(function (id) {
   $(id).addEventListener('input', function () {
     if (this.getAttribute('aria-invalid') === 'true') validate();
   });
 });
 
-// Digits only in the ZIP, without fighting the caret.
 $('zp').addEventListener('input', function () {
   const v = this.value.replace(/\D/g, '').slice(0, 5);
   if (v !== this.value) this.value = v;
@@ -166,16 +173,16 @@ let sending = false;
 
 form.addEventListener('submit', async function (ev) {
   ev.preventDefault();
-  if (sending) return;                       // double-tap guard
+  if (sending) return;                        // double-tap guard
   $('note').classList.remove('on');
 
-  // Honeypot: a filled hidden field means a bot. Show the success state so the
-  // bot has nothing to learn, and post nothing.
+  // A filled honeypot means a bot. Show success so it learns nothing, post nothing.
   if ($('company').value) { succeed(); return; }
 
   if (!validate()) {
     const first = form.querySelector('[aria-invalid="true"]');
     if (first) first.focus();
+    sendHeight();
     return;
   }
 
@@ -183,7 +190,7 @@ form.addEventListener('submit', async function (ev) {
   const btn = $('go');
   const label = btn.textContent;
   btn.disabled = true;
-  btn.textContent = 'Signing you up…';
+  btn.textContent = 'Sending…';
 
   const payload = {
     name:  $('nm').value.trim(),
@@ -192,8 +199,8 @@ form.addEventListener('submit', async function (ev) {
   };
 
   try {
-    // 12s ceiling: a cold Railway container can take a few seconds, but a
-    // spinner that never resolves reads as broken.
+    // 12s ceiling: a cold container takes a few seconds, but a spinner that
+    // never resolves reads as broken.
     const ctl = new AbortController();
     const timer = setTimeout(function () { ctl.abort(); }, 12000);
     const r = await fetch(ENDPOINT, {
@@ -211,8 +218,7 @@ form.addEventListener('submit', async function (ev) {
     btn.textContent = label;
     // Never swallow a failure: a form that looks like it worked but dropped the
     // person is worse than one that admits it.
-    $('note').textContent =
-      'Something went wrong on our end and we could not save that. '
+    $('note').textContent = 'Something went wrong on our end and we could not save that. '
       + 'Please try again in a moment, or email us and we will add you by hand.';
     $('note').classList.add('on');
     sendHeight();
