@@ -11,8 +11,18 @@
 @font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{overflow-x:hidden;}
+/* ---- Shared content width -------------------------------------------------
+   These pages had assorted max-widths (520/600/860px) and NOT ONE auto margin,
+   so any capped element hugged the left edge while the sections around it ran
+   edge to edge. On a wide monitor that made text lines ~1800px long and the
+   layout look broken. Backgrounds stay full-bleed; only the content inside is
+   centred, via padding, so no markup changes. Matches the 4Ps hub. */
+:root{--maxw:1200px;}
+.hero,.pa-tabs,.main,.pa-section,.share-strip,.footer{padding-left:max(var(--pad,20px),calc((100%% - var(--maxw))/2));
+  padding-right:max(var(--pad,20px),calc((100%% - var(--maxw))/2));}
+
 body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
-.hero{background:linear-gradient(135deg,#002d5b 0%,#064e3b 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero{background:linear-gradient(135deg,#002d5b 0%,#064e3b 100%);padding:32px 28px 28px;position:relative;overflow:hidden;--pad:28px;}
 .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23ffffff' fill-opacity='0.06'/%3E%3C/svg%3E");pointer-events:none;}
 .hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;position:relative;}
 .hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;line-height:1.2;margin-bottom:8px;position:relative;}
@@ -29,7 +39,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 .pa-tab.active{color:#059669;border-bottom-color:#059669;}
 .pa-section{display:none;}
 .pa-section.active{display:block;}
-.main{padding:20px 20px 56px;}
+.main{padding:20px 20px 56px;--pad:20px;}
 .sec-hd{background:#fff;border:1.5px solid #e2e8f0;border-left:3px solid #059669;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:20px;}
 .sec-hd-title{font-family:'avenir-heavy',Arial,sans-serif;font-size:13px;color:#002d5b;margin-bottom:3px;}
 .sec-hd-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;}
@@ -104,7 +114,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
   .cut-row .card-sh-row{flex:1 0 100%;width:100%;padding-left:0;padding-right:0;margin-top:8px;}
 }
 .opp-card .card-sh-row{padding:8px 0 0;border-top:1.5px solid #f3f4f6;margin-top:auto;}
-.share-strip{background:#fff;border-top:1.5px solid #e2e8f0;padding:12px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.share-strip{background:#fff;border-top:1.5px solid #e2e8f0;padding:12px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;--pad:20px;}
 .share-strip-lbl{font-family:'avenir-heavy',Arial,sans-serif;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;white-space:nowrap;}
 .sh-icon{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:opacity 0.15s;flex-shrink:0;padding:0;text-decoration:none;vertical-align:middle;}
 .sh-icon:hover{opacity:0.80;}
@@ -114,7 +124,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 .sh-truth{background:#5448EE;}
 .sh-bsky{background:#0085FF;}
 .sh-sms{background:#34C759;}
-.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;--pad:24px;}
 .footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
 .footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
 .footer a{color:#34D399;text-decoration:none;}

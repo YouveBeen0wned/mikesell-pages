@@ -10,10 +10,20 @@
 @font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{overflow-x:hidden;}
+/* ---- Shared content width -------------------------------------------------
+   These pages had assorted max-widths (520/600/860px) and NOT ONE auto margin,
+   so any capped element hugged the left edge while the sections around it ran
+   edge to edge. On a wide monitor that made text lines ~1800px long and the
+   layout look broken. Backgrounds stay full-bleed; only the content inside is
+   centred, via padding, so no markup changes. Matches the 4Ps hub. */
+:root{--maxw:1200px;}
+.hero,.filter-band,.pa-tabs,.main,.footer{padding-left:max(var(--pad,20px),calc((100%% - var(--maxw))/2));
+  padding-right:max(var(--pad,20px),calc((100%% - var(--maxw))/2));}
+
 body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a18;}
 
 /* HERO */
-.hero{background:linear-gradient(135deg,#002d5b 0%,#6b21a8 100%);padding:32px 28px 28px;position:relative;overflow:hidden;}
+.hero{background:linear-gradient(135deg,#002d5b 0%,#6b21a8 100%);padding:32px 28px 28px;position:relative;overflow:hidden;--pad:28px;}
 .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;}
 .hero-eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;position:relative;}
 .hero h1{font-family:'clarendon-w01-medium',serif;font-size:28px;color:#fff;line-height:1.2;margin-bottom:8px;position:relative;}
@@ -21,7 +31,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 .hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.68);line-height:1.65;max-width:600px;position:relative;}
 
 /* FILTER BAND */
-.filter-band{background:#fff;padding:12px 20px;border-bottom:1.5px solid #e5e7eb;}
+.filter-band{background:#fff;padding:12px 20px;border-bottom:1.5px solid #e5e7eb;--pad:20px;}
 .search-bar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
 .srch{flex:1;min-width:160px;padding:8px 12px;border-radius:7px;border:1.5px solid #e2e8f0;background:#fff;color:#1a1a18;font-size:12px;font-family:'avenir-light',Arial,sans-serif;}
 .srch:focus{outline:none;border-color:#2563EB;}
@@ -42,7 +52,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 .pa-section.active{display:block;}
 
 /* MAIN */
-.main{padding:16px 20px 48px;}
+.main{padding:16px 20px 48px;--pad:20px;}
 
 /* PROCESS CARD GRID */
 .pc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
@@ -110,7 +120,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
 .dsh-sub{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:#6b7280;line-height:1.6;}
 
 /* FOOTER */
-.footer{background:#002d5b;padding:20px 24px;text-align:center;}
+.footer{background:#002d5b;padding:20px 24px;text-align:center;--pad:24px;}
 .footer p{font-family:'avenir-light',Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);line-height:1.8;}
 .footer strong{font-family:'avenir-heavy',Arial,sans-serif;color:#fff;}
 .footer a{color:#59D7EE;text-decoration:none;}
