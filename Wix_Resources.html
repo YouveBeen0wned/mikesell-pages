@@ -29,7 +29,9 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:17px;}
 html.big{font-size:21px;}
-html,body{overflow-x:hidden;background:#f6f3ee;}
+html{overflow-x:hidden;background:#f6f3ee;scrollbar-width:none;-ms-overflow-style:none;}
+html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0;}
+body{background:#f6f3ee;max-width:100%;}
 body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;color:#111;line-height:1.5;}
 :root{
   --ink:#1a1714;--soft:#4a443d;--rule:#882249;--head:#470d67;--paper:#fffdfa;
@@ -47,7 +49,7 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
 .hero{background:var(--head);padding-top:.85rem;padding-bottom:.9rem;border-bottom:2px solid var(--rule);}
 .hero .eye{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:#d9c7e8;margin-bottom:.4rem;}
 .hero .eye a{color:#fff;text-underline-offset:3px;}
-.hero h1{font-weight:700;color:#fff;font-size:clamp(1.3rem,5.4vw,2.1rem);line-height:1.15;margin-bottom:.35rem;letter-spacing:-.01em;}
+.hero h1{font-weight:700;color:#fff;font-size:clamp(1.05rem,3.6vw,1.45rem);line-height:1.15;margin-bottom:.35rem;letter-spacing:-.01em;}
 .hero p{color:#eadff2;font-size:clamp(.9rem,3.4vw,1.02rem);max-width:44rem;}
 
 /* ---- Urgent numbers: the loudest thing on the page. */
@@ -134,13 +136,15 @@ main{padding-top:1.1rem;padding-bottom:2.4rem;}
   display:flex;align-items:flex-start;gap:.45rem;}
 .card h3 svg{flex:0 0 auto;width:1.15rem;height:1.15rem;margin-top:.12rem;stroke:var(--co,#6b6459);
   fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
-.tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.45rem;}
+.card h3 .ttl{flex:1 1 auto;min-width:0;}
+.foot-row{display:flex;align-items:flex-end;justify-content:space-between;gap:.5rem;margin-top:auto;}
+.foot-row .where{margin-top:0;min-width:0;}
+.tags{display:flex;gap:.25rem;flex-wrap:wrap;justify-content:flex-end;flex:0 0 auto;margin-left:auto;padding-bottom:.3rem;}
 .tag{font-weight:700;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;
   color:var(--co,#5d564b);background:transparent;border:1px solid currentColor;
   border-radius:2px;padding:.1rem .4rem;opacity:.85;}
 .card .body{font-size:.92rem;line-height:1.55;color:var(--soft);white-space:pre-line;margin-bottom:.65rem;}
 .card .body .telin{color:var(--rule);font-weight:700;white-space:nowrap;text-underline-offset:3px;}
-.where{margin-top:.4rem;}
 .card .site{display:inline-block;font-size:.82rem;font-weight:700;color:var(--head);
   text-decoration:underline;text-underline-offset:3px;word-break:break-word;padding:.28rem .1rem;margin:0 -.1rem;}
 .card .site:hover{color:var(--rule);}
@@ -148,6 +152,9 @@ main{padding-top:1.1rem;padding-bottom:2.4rem;}
    Padded to about 33px tall. Short of the 44px guideline, which is the honest
    price of putting numbers inside sentences instead of in button rows; the
    line spacing around them keeps neighbouring links from being mis-tapped. */
+.card .body .mapin,.intro .mapin{color:var(--head);font-weight:700;text-decoration:underline;
+  text-underline-offset:3px;padding:.3rem .1rem;margin:0 -.1rem;}
+.card .body .mapin:hover,.intro .mapin:hover{background:#f1e9f6;}
 .card .body .telin,.intro .telin{color:var(--rule);font-weight:700;white-space:nowrap;
   text-decoration:underline;text-underline-offset:3px;padding:.3rem .1rem;margin:0 -.1rem;}
 .card .body .telin:hover,.intro .telin:hover{background:#fbeef3;}
@@ -263,8 +270,6 @@ main{padding-top:1.1rem;padding-bottom:2.4rem;}
      Phone numbers and hours change. If something here is wrong or missing, tell us below and we
      will fix it. Being on this list does not mean a group supports our campaign.</p>
 
-  <section class="allsrc" id="allsrc" aria-label="Sources"></section>
-
   <section class="sug" id="sug" aria-labelledby="sug-h">
     <h2 id="sug-h">Know a place that should be on this list?</h2>
     <p class="blurb">Tell us and we will check it and add it. A church kitchen, a food pantry,
@@ -301,6 +306,8 @@ main{padding-top:1.1rem;padding-bottom:2.4rem;}
       <p>Someone will check it and add it to the list. If you left an email, we may write back.</p>
     </div>
   </section>
+
+  <section class="allsrc" id="allsrc" aria-label="Sources"></section>
 </main>
 
 <footer class="foot pad">
@@ -381,11 +388,41 @@ function matches(it) {
    rather than an arbitrary single colour. Counties are also written out in
    words, so the colour is never the only way to know. */
 /* Notes are prose, but a phone number inside one still has to be dialable. */
-function linkify(t, who) {
-  return esc(t).replace(/(?:1-)?(?:\(\d{3}\)\s*|\d{3}-)\d{3}-\d{4}/g, function (m) {
+/* Whatever the device treats as "maps". iOS hands maps: to Apple Maps,
+   Android hands geo: to whatever the person set as default; anything else
+   falls back to a plain web map. Wrapped because UA sniffing can throw in
+   odd embedding contexts, and a thrown error here would blank the listings. */
+const MAPS = (function () {
+  try {
+    const ua = navigator.userAgent || '';
+    if (/iPad|iPhone|iPod/.test(ua)) return (q) => 'maps://?q=' + encodeURIComponent(q);
+    if (/Android/.test(ua)) return (q) => 'geo:0,0?q=' + encodeURIComponent(q);
+  } catch (e) {}
+  return (q) => 'https://maps.google.com/?q=' + encodeURIComponent(q);
+})();
+
+/* A street address: a number, up to four words, then a street type, with an
+   optional suite. Deliberately strict -- a false positive would send someone
+   to the wrong place, which is worse than a plain-text address. */
+const ADDR = /\b\d{2,6}\s+(?:[A-Za-z][\w.'-]*\s+){0,4}(?:St|Street|Ave|Avenue|Blvd|Boulevard|Rd|Road|Dr|Drive|Ct|Court|Way|Ln|Lane|Hwy|Highway|Pkwy|Parkway|Ter|Terrace|Pl|Place|Sq|Square)\b\.?(?:\s*,?\s*(?:Suite|Ste|Room|Rm|Unit|#)\s*[\w-]+)?/g;
+
+function linkAddresses(html, where) {
+  return html.replace(ADDR, function (m) {
+    // "611 E Adams St, Florida" lands anywhere in the state. The card knows
+    // its county, so use it -- a map pin on the wrong shelter is a real cost.
+    const q = m.replace(/\s+/g, ' ').trim()
+      + (where ? ', ' + where + ' County' : '') + ', Florida';
+    return '<a class="mapin" href="' + esc(MAPS(q)) + '" aria-label="Open '
+      + esc(m.trim()) + ' in maps">' + m + '</a>';
+  });
+}
+
+function linkify(t, who, where) {
+  let out = esc(t).replace(/(?:1-)?(?:\(\d{3}\)\s*|\d{3}-)\d{3}-\d{4}/g, function (m) {
     const lbl = who ? ' aria-label="Call ' + esc(who) + ' at ' + saydigits(m) + '"' : '';
     return '<a class="telin" href="tel:' + m.replace(/[^\d]/g, '') + '"' + lbl + '>' + m + '</a>';
   });
+  return linkAddresses(out, where);
 }
 
 function countyClass(cs) {
@@ -405,10 +442,10 @@ function card(it, icon, catName) {
       + ' (opens in a new tab)">' + esc(it.u.split(',')[0].trim()) + '</a>'
     : '';
   return '<li class="card' + countyClass(it.c) + '"><h3>' + svg(icon)
-    + '<span><span class="sr-only">' + esc(catName) + ': </span>' + esc(it.n) + '</span></h3>'
-    + (tags ? '<p class="tags">' + tags + '</p>' : '')
-    + '<p class="body">' + linkify(it.b.join('\n'), it.n) + '</p>'
-    + (site ? '<p class="where">' + site + '</p>' : '') + '</li>';
+    + '<span class="ttl"><span class="sr-only">' + esc(catName) + ': </span>' + esc(it.n) + '</span></h3>'
+    + '<p class="body">' + linkify(it.b.join('\n'), it.n, it.c[0]) + '</p>'
+    + ((site || tags) ? '<div class="foot-row">' + (site ? '<p class="where">' + site + '</p>' : '<span></span>')
+      + (tags ? '<span class="tags">' + tags + '</span>' : '') + '</div>' : '') + '</li>';
 }
 
 function render() {
