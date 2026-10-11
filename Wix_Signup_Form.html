@@ -24,17 +24,29 @@ body{font-family:'avenir-light',Arial,sans-serif;color:#0f2f5e;}
 .card{background:var(--card);border-radius:16px;max-width:700px;margin:0 auto;
   padding:clamp(18px, 5vw, 30px) clamp(18px, 5vw, 30px) clamp(16px, 4vw, 24px);}
 
-h2{font-family:'clarendon-w01-medium',Georgia,serif;font-size:clamp(24px, 6.6vw, 34px);
-   line-height:1.15;color:var(--navy);margin-bottom:clamp(10px, 2.5vw, 16px);font-weight:400;}
+h2{font-family:'clarendon-w01-medium',Georgia,serif;font-size:clamp(22px, 6vw, 34px);
+   line-height:1.15;color:var(--navy);margin-bottom:clamp(8px, 2.2vw, 16px);font-weight:400;}
 h2 em{font-style:italic;color:var(--accent);}
 
-.lede{font-size:clamp(15px, 4.2vw, 20px);line-height:1.45;color:var(--navy);
-  margin-bottom:clamp(11px, 3vw, 18px);}
-.ask{font-size:clamp(13.5px, 3.6vw, 15.5px);line-height:1.45;color:var(--mute);
-  margin-bottom:clamp(11px, 3vw, 16px);}
+.lede{font-size:clamp(14.5px, 3.9vw, 20px);line-height:1.42;color:var(--navy);
+  margin-bottom:clamp(9px, 2.6vw, 18px);}
+.ask{font-size:clamp(13px, 3.4vw, 15.5px);line-height:1.4;color:var(--mute);
+  margin-bottom:clamp(9px, 2.6vw, 16px);}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px, 2.6vw, 14px);}
-@media(max-width:560px){.grid{grid-template-columns:1fr;}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(9px, 2.4vw, 14px);}
+
+/* On a phone the form must be completable without scrolling, so it does NOT
+   simply stack into four rows. Email gets its own full-width row; name and ZIP
+   share the next (ZIP needs five characters, so it can be narrow); the button
+   spans the bottom. Three rows instead of four, which is about 55px saved
+   right where it matters. */
+@media(max-width:560px){
+  .grid{grid-template-columns:1.35fr 1fr;}
+  .f-email{grid-column:1 / -1;grid-row:1;}
+  .f-name {grid-column:1;grid-row:2;}
+  .f-zip  {grid-column:2;grid-row:2;}
+  .f-btn  {grid-column:1 / -1;grid-row:3;}
+}
 
 .fld{min-width:0;}
 /* font-size stays at 16px: anything smaller makes iOS Safari zoom the page in
@@ -58,7 +70,8 @@ button:hover:not(:disabled){background:#5d2089;border-color:#5d2089;}
 button:active:not(:disabled){transform:translateY(1px);}
 button:disabled{opacity:0.6;cursor:default;}
 
-.fine{font-size:12.5px;line-height:1.55;color:#4a3a8f;margin-top:16px;}
+.fine{font-size:clamp(11px, 2.9vw, 12.5px);line-height:1.5;color:#4a3a8f;
+  margin-top:clamp(10px, 2.8vw, 16px);}
 .fine a{color:#4a3a8f;}
 
 .note{display:none;font-size:14px;line-height:1.55;border-radius:9px;padding:12px 14px;
@@ -84,26 +97,26 @@ button:disabled{opacity:0.6;cursor:default;}
     <p class="ask">Add your name to tell Mike you&rsquo;re in.</p>
 
     <div class="grid">
-      <div class="fld">
+      <div class="fld f-email">
         <label for="em" class="hp">Email address</label>
         <input id="em" name="email" type="email" placeholder="Email address"
                autocomplete="email" inputmode="email" enterkeyhint="next" aria-describedby="e-em">
         <div class="err" id="e-em">That email doesn&rsquo;t look right.</div>
       </div>
-      <div class="fld">
+      <div class="fld f-zip">
         <label for="zp" class="hp">Zip code</label>
         <input id="zp" name="zip" type="text" placeholder="Zip code"
                autocomplete="postal-code" inputmode="numeric" maxlength="5"
                enterkeyhint="next" aria-describedby="e-zp">
         <div class="err" id="e-zp">5 digits, please.</div>
       </div>
-      <div class="fld">
+      <div class="fld f-name">
         <label for="nm" class="hp">Your name</label>
         <input id="nm" name="name" type="text" placeholder="Your name"
                autocomplete="name" enterkeyhint="done" aria-describedby="e-nm">
         <div class="err" id="e-nm">Please tell us your name.</div>
       </div>
-      <div class="fld">
+      <div class="fld f-btn">
         <button type="submit" id="go">Submit</button>
       </div>
     </div>
