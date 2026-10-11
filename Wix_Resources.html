@@ -59,6 +59,35 @@ body{font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;}
 .web{background:#fff;border-color:#cbd5e1;color:#334155;}
 .none{background:#fff;border:1.5px dashed #cbd5e1;border-radius:11px;padding:24px;text-align:center;color:#64748b;font-size:13.5px;}
 
+/* Suggestion box. Submissions go to a review queue, never straight to the page. */
+.sug{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:18px 18px 16px;margin-top:22px;}
+.sug h2{font-family:'clarendon-w01-medium',Georgia,serif;font-size:18px;color:var(--navy);font-weight:400;margin-bottom:4px;}
+.sug .sub{font-size:13px;color:#64748b;line-height:1.55;margin-bottom:14px;}
+.sug label{display:block;font-family:'avenir-heavy',Arial,sans-serif;font-size:10px;
+  letter-spacing:.06em;text-transform:uppercase;color:#6b7280;margin:0 0 5px;}
+.sug .opt{text-transform:none;letter-spacing:0;color:#9ca3af;font-family:'avenir-light',Arial,sans-serif;}
+.sug input,.sug select,.sug textarea{width:100%;font-family:inherit;font-size:16px;color:#0f172a;
+  background:#fff;border:1.5px solid #cbd5e1;border-radius:9px;padding:11px 12px;margin-bottom:11px;resize:vertical;}
+.sug input:focus,.sug select:focus,.sug textarea:focus{outline:none;border-color:var(--purple);
+  box-shadow:0 0 0 3px rgba(124,58,237,.13);}
+.sug input[aria-invalid="true"],.sug textarea[aria-invalid="true"]{border-color:#c0392b;background:#fffafa;}
+.sg2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+@media(max-width:560px){.sg2{grid-template-columns:1fr;gap:0;}}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+.sug button{font-family:'avenir-heavy',Arial,sans-serif;font-size:14px;color:#fff;background:var(--navy);
+  border:none;border-radius:50px;padding:12px 26px;cursor:pointer;}
+.sug button:hover:not(:disabled){background:#01407d;}
+.sug button:disabled{opacity:.6;cursor:default;}
+.s-note{display:none;font-size:13px;line-height:1.55;border-radius:9px;padding:11px 13px;margin-top:11px;
+  background:#fff5f5;border:1.5px solid #fecaca;color:#b91c1c;}
+.s-note.on{display:block;}
+.sug .fine{font-size:11.5px;line-height:1.6;color:#94a3b8;margin-top:12px;}
+.sug .fine a{color:#64748b;}
+.s-done{display:none;padding:4px 0;}
+.s-done.on{display:block;}
+.s-done h3{font-family:'clarendon-w01-medium',Georgia,serif;font-size:18px;color:var(--navy);font-weight:400;margin-bottom:6px;}
+.s-done p{font-size:13.5px;color:#475569;line-height:1.6;}
+
 .note{background:#fff;border:1.5px solid var(--line);border-left:3px solid var(--purple);
   border-radius:10px;padding:12px 14px;font-size:12px;color:#64748b;line-height:1.6;margin-top:16px;}
 
@@ -91,6 +120,45 @@ body{font-family:'avenir-light',Arial,sans-serif;color:#1a1a18;}
 <div class="main">
   <div class="count" id="count"></div>
   <div id="list"></div>
+  <div class="sug" id="sug">
+    <h2>Know somewhere that should be on this list?</h2>
+    <p class="sub">Tell us and we&rsquo;ll check it and add it. A church kitchen, a pantry,
+      a group that helped you &mdash; the best listings come from people who used them.</p>
+    <form id="sf">
+      <div class="sg2">
+        <div><label for="s-org">Name of the place or group</label>
+          <input id="s-org" maxlength="120" placeholder="e.g. St. Mary&rsquo;s Saturday pantry"></div>
+        <div><label for="s-county">County</label>
+          <select id="s-county">
+            <option value="">Not sure</option><option>Duval</option>
+            <option>Clay</option><option>Nassau</option><option>More than one</option>
+          </select></div>
+      </div>
+      <label for="s-what">What do they do, and who can use it?</label>
+      <textarea id="s-what" rows="3" maxlength="1200"
+        placeholder="What they offer, when they&rsquo;re open, anything someone would need to know before going."></textarea>
+      <div class="sg2">
+        <div><label for="s-contact">Their phone or website <span class="opt">if you know it</span></label>
+          <input id="s-contact" maxlength="160" placeholder="(904) 555-0100 or example.org"></div>
+        <div><label for="s-email">Your email <span class="opt">optional</span></label>
+          <input id="s-email" type="email" maxlength="160" placeholder="Only if we may ask you a question"></div>
+      </div>
+      <div class="hp" aria-hidden="true">
+        <label for="company">Company</label>
+        <input id="company" tabindex="-1" autocomplete="off">
+      </div>
+      <button type="submit" id="s-go">Send it in</button>
+      <div class="s-note" id="s-note"></div>
+      <p class="fine">This goes to the campaign, not onto the page &mdash; we check each one first.
+        <b>Please don&rsquo;t share your own situation or anyone&rsquo;s personal details here.</b>
+        If you need help right now, call <a href="tel:211">211</a>, or <a href="tel:988">988</a> in a crisis.</p>
+    </form>
+    <div class="s-done" id="s-done">
+      <h3>Thank you &mdash; we&rsquo;ve got it.</h3>
+      <p>Someone will check it and add it to the list. If you left an email we may follow up.</p>
+    </div>
+  </div>
+
   <div class="note">
     These listings were gathered from public sources and were accurate when collected.
     Hours and phone numbers change &mdash; if something here is out of date or missing,
@@ -168,6 +236,75 @@ function render() {
 }
 
 render();
+
+/* ---- Suggestion box -------------------------------------------------------
+   Posts to a moderated queue. Nothing submitted here is ever rendered to the
+   public by this page, so a bad submission cannot reach a visitor. */
+const SUGGEST_URL = 'https://bloomers-phone.ccm-inspired.workers.dev/suggest';
+let sending = false;
+
+document.getElementById('sf').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  if (sending) return;
+  const note = $('s-note');
+  note.classList.remove('on');
+
+  // Honeypot: filled means a bot. Show success, send nothing.
+  if ($('company').value) { sugDone(); return; }
+
+  const org = $('s-org').value.trim();
+  const what = $('s-what').value.trim();
+  // Need enough to act on: a name, or a real description.
+  const thin = !org && what.length < 10;
+  $('s-org').setAttribute('aria-invalid', thin ? 'true' : 'false');
+  $('s-what').setAttribute('aria-invalid', thin ? 'true' : 'false');
+  if (thin) {
+    note.textContent = 'Please tell us at least the name of the place, or what they do.';
+    note.classList.add('on');
+    $('s-org').focus();
+    sendHeight();
+    return;
+  }
+
+  sending = true;
+  const btn = $('s-go');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Sending…';
+
+  try {
+    const ctl = new AbortController();
+    const timer = setTimeout(function () { ctl.abort(); }, 12000);
+    const r = await fetch(SUGGEST_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        org: org, what: what,
+        county:  $('s-county').value,
+        contact: $('s-contact').value.trim(),
+        email:   $('s-email').value.trim(),
+      }),
+      signal: ctl.signal,
+    });
+    clearTimeout(timer);
+    if (r.status === 429) throw new Error('rate');
+    if (!r.ok) throw new Error('http_' + r.status);
+    sugDone();
+  } catch (err) {
+    sending = false;
+    btn.disabled = false; btn.textContent = label;
+    note.textContent = (err && err.message === 'rate')
+      ? 'That is a few submissions in a short time. Please try again a little later.'
+      : 'Something went wrong on our end and we could not send that. Please try again in a moment.';
+    note.classList.add('on');
+    sendHeight();
+  }
+});
+
+function sugDone() {
+  document.getElementById('sf').style.display = 'none';
+  $('s-done').classList.add('on');
+  sendHeight();
+}
 
 function sendHeight(){var h=document.documentElement.scrollHeight||document.body.scrollHeight;
   try{window.parent.postMessage({type:'iwResizeHeight',data:{height:h}},'*');}catch(e){}}
