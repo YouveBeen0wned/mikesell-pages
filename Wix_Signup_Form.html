@@ -19,21 +19,28 @@ body{font-family:'avenir-light',Arial,sans-serif;color:#0f2f5e;}
   --line:#1f6fd0; --purple:#4a176f; --mute:#4a6893;
 }
 
-.card{background:var(--card);border-radius:16px;padding:30px 30px 24px;max-width:700px;margin:0 auto;}
+/* Type scales with the viewport so the whole form fits a sensible embed height
+   on a phone. At 390px the headline would otherwise eat a third of the card. */
+.card{background:var(--card);border-radius:16px;max-width:700px;margin:0 auto;
+  padding:clamp(18px, 5vw, 30px) clamp(18px, 5vw, 30px) clamp(16px, 4vw, 24px);}
 
-h2{font-family:'clarendon-w01-medium',Georgia,serif;font-size:34px;line-height:1.15;
-   color:var(--navy);margin-bottom:16px;font-weight:400;}
+h2{font-family:'clarendon-w01-medium',Georgia,serif;font-size:clamp(24px, 6.6vw, 34px);
+   line-height:1.15;color:var(--navy);margin-bottom:clamp(10px, 2.5vw, 16px);font-weight:400;}
 h2 em{font-style:italic;color:var(--accent);}
 
-.lede{font-size:20px;line-height:1.5;color:var(--navy);margin-bottom:18px;}
-.ask{font-size:15.5px;line-height:1.5;color:var(--mute);margin-bottom:16px;}
+.lede{font-size:clamp(15px, 4.2vw, 20px);line-height:1.45;color:var(--navy);
+  margin-bottom:clamp(11px, 3vw, 18px);}
+.ask{font-size:clamp(13.5px, 3.6vw, 15.5px);line-height:1.45;color:var(--mute);
+  margin-bottom:clamp(11px, 3vw, 16px);}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px, 2.6vw, 14px);}
 @media(max-width:560px){.grid{grid-template-columns:1fr;}}
 
 .fld{min-width:0;}
+/* font-size stays at 16px: anything smaller makes iOS Safari zoom the page in
+   when a field is focused, which inside an iframe looks like the form jumping. */
 input{width:100%;font-family:inherit;font-size:16px;color:var(--navy);background:#fff;
-  border:2px solid var(--line);border-radius:9px;padding:14px 15px;
+  border:2px solid var(--line);border-radius:9px;padding:clamp(11px, 3vw, 14px) 15px;
   transition:border-color .15s,box-shadow .15s;}
 input::placeholder{color:#8e97a6;}
 input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(74,23,111,0.15);}
@@ -45,8 +52,8 @@ input[aria-invalid="true"]{border-color:#c0392b;background:#fffafa;}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
 
 button{width:100%;font-family:'avenir-light',Arial,sans-serif;font-size:17px;color:#fff;
-  background:var(--purple);border:2px solid var(--purple);border-radius:9px;padding:14px 15px;
-  cursor:pointer;transition:background .15s,transform .08s;}
+  background:var(--purple);border:2px solid var(--purple);border-radius:9px;
+  padding:clamp(11px, 3vw, 14px) 15px;cursor:pointer;transition:background .15s,transform .08s;}
 button:hover:not(:disabled){background:#5d2089;border-color:#5d2089;}
 button:active:not(:disabled){transform:translateY(1px);}
 button:disabled{opacity:0.6;cursor:default;}
