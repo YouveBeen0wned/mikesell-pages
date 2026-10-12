@@ -45,23 +45,35 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
 .skip:focus{left:12px;top:12px;}
 .pad{padding-left:max(18px,calc((100% - var(--maxw))/2));padding-right:max(18px,calc((100% - var(--maxw))/2));}
 
-/* ---- Masthead: flat block, crimson hairline, like the top of the handout. */
-.hero{background:var(--head);padding-top:.85rem;padding-bottom:.9rem;border-bottom:2px solid var(--rule);}
-.hero .eye{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:#d9c7e8;margin-bottom:.4rem;}
-.hero .eye a{color:#fff;text-underline-offset:3px;}
-.hero h1{font-weight:700;color:#fff;font-size:clamp(1.05rem,3.6vw,1.45rem);line-height:1.15;margin-bottom:.35rem;letter-spacing:-.01em;}
-.hero p{color:#eadff2;font-size:clamp(.9rem,3.4vw,1.02rem);max-width:44rem;}
+/* ---- Masthead: the same treatment as /4ps, /policies and the rest --
+   the blue-to-red gradient, the dotted overlay, Clarendon for the title and
+   Avenir for the eyebrow. The listings below stay in Atkinson Hyperlegible,
+   which is what the printed handouts use. */
+@font-face{font-family:'clarendon-w01-medium';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/230325db-0e45-4fc4-8302-d831f3c9b32f/v1/clarendon-w02-medium-693834.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'avenir-light';font-style:normal;font-weight:400;src:url('https://static.parastorage.com/fonts/v2/af36905f-3c92-4ef9-b0c1-f91432f16ac1/v1/avenir-lt-w01_35-light1475496.woff2') format('woff2');font-display:swap;}
+.hero{background:linear-gradient(135deg,#087DD6 0%,#8B0000 100%);position:relative;overflow:hidden;
+  padding-top:30px;padding-bottom:26px;}
+.hero::before{content:'';position:absolute;inset:0;opacity:.5;
+  background-image:radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px);background-size:20px 20px;}
+.hero .eye{font-family:'avenir-light',Arial,sans-serif;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:10px;position:relative;}
+.hero .eye a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35);}
+.hero h1{font-family:'clarendon-w01-medium',Georgia,serif;font-weight:700;color:#fff;
+  font-size:clamp(22px,5vw,32px);line-height:1.2;margin-bottom:8px;position:relative;letter-spacing:0;}
+.hero p{font-family:'avenir-light',Arial,sans-serif;font-size:13px;color:rgba(255,255,255,.68);
+  line-height:1.65;max-width:600px;position:relative;}
+@media(max-width:700px){.hero{padding-top:22px;padding-bottom:20px;}}
 
-/* ---- Urgent numbers: the loudest thing on the page. */
-.sos{background:var(--paper);border-bottom:1px solid var(--edge);padding-top:.6rem;padding-bottom:.6rem;
-  display:flex;gap:.5rem;}
-.sos a{flex:1 1 0;min-width:0;}
-.sos a{display:flex;align-items:center;gap:.75rem;text-decoration:none;min-height:52px;
-  background:#fff;border:1px solid #e8c9d4;border-left:5px solid var(--rule);border-radius:var(--r);
-  padding:.45rem .7rem;color:var(--ink);}
-.sos a:hover{background:#fdf3f6;}
-.sos .num{font-weight:700;font-size:1.75rem;line-height:1;color:var(--rule);letter-spacing:-.02em;}
-.sos .txt{font-size:.84rem;line-height:1.35;color:var(--soft);}
+/* ---- Urgent numbers: one slim strip. These have to be the first thing and
+   the easiest thing, but two bordered cards for six words was far more room
+   than the words deserve. */
+.sos{background:#fff;border-bottom:1px solid var(--edge);border-left:4px solid var(--rule);
+  padding-top:.25rem;padding-bottom:.25rem;display:flex;flex-wrap:wrap;align-items:center;gap:0 1.3rem;}
+.sos a{display:inline-flex;align-items:baseline;gap:.45rem;text-decoration:none;color:var(--ink);
+  padding:.3rem 0;min-height:38px;align-items:center;}
+.sos a:hover .num{text-decoration:underline;}
+.sos .num{font-weight:700;font-size:1.15rem;line-height:1;color:var(--rule);letter-spacing:-.01em;}
+.sos .txt{font-size:.78rem;line-height:1.2;color:var(--soft);white-space:nowrap;}
 
 /* ---- Controls ---- */
 .tools{background:var(--paper);border-bottom:1px solid var(--edge);padding-top:.75rem;padding-bottom:.85rem;}
@@ -96,6 +108,11 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
   .catsel{display:block;}
   .cats{display:none;}
 }
+
+/* The results panel, when it sits inside the topic index. */
+.cats > #list.inline{grid-column:1 / -1;padding:1rem 0 .4rem;border-bottom:1px solid var(--hair);}
+#list.inline .topic:last-child{margin-bottom:.6rem;}
+.catsel + #list.inline{margin-top:.9rem;}
 
 /* ---- Topic index: reads like a contents page, alphabetical. */
 .cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:0;margin-top:.8rem;
@@ -238,13 +255,14 @@ main{padding-top:1.1rem;padding-bottom:2.4rem;}
 </defs></svg>
 
 <header class="hero pad">
-  <p class="eye"><a href="https://www.mikesell.org" target="_top">Mike Sell for Congress</a> &middot; Florida&rsquo;s 4th District</p>
+  <p class="eye"><a href="https://www.mikesell.org" target="_top">Mike Sell for Congress</a> &middot; FL-CD4 2026 &middot; Forward Party</p>
   <h1>Help in Duval, Clay and Nassau</h1>
+  <p>Food, rent, power bills, doctors and legal help. Most of it is free, and most of it is one phone call away.</p>
 </header>
 
 <nav class="sos pad" aria-label="Urgent help">
-  <a href="tel:211"><span class="num">211</span><span class="txt">Not sure where to start</span></a>
-  <a href="tel:988"><span class="num">988</span><span class="txt">Crisis, any time</span></a>
+  <a href="tel:211"><span class="num">211</span><span class="txt">Where to start</span></a>
+  <a href="tel:988"><span class="num">988</span><span class="txt">Crisis help</span></a>
 </nav>
 
 <section class="tools pad" aria-label="Find help">
@@ -448,6 +466,48 @@ function card(it, icon, catName) {
       + (tags ? '<span class="tags">' + tags + '</span>' : '') + '</div>' : '') + '</li>';
 }
 
+/* Where the results live.
+   Picking a topic should show its listings right there, not send the reader
+   back down past the rest of the index. On the grid the panel is inserted
+   after the LAST button in the selected button's row, so it spans the full
+   width and pushes the remaining topics down. On a phone the grid is hidden
+   and the picker is a select, so the panel goes directly under the select.
+   "Everything" puts it back below the whole index, where it belongs. */
+const listEl = $('list');
+const listHome = document.createComment('list-home');
+listEl.parentNode.insertBefore(listHome, listEl);
+
+function placeList() {
+  const grid = $('cats');
+  const gridShown = grid.offsetParent !== null;
+
+  if (cat === 'All') {
+    listEl.classList.remove('inline');
+    if (listEl.previousSibling !== listHome) listHome.parentNode.insertBefore(listEl, listHome.nextSibling);
+    return;
+  }
+  if (!gridShown) {                      // phone: under the picker
+    const sel = $('catsel');
+    listEl.classList.add('inline');
+    if (sel.nextSibling !== listEl) sel.parentNode.insertBefore(listEl, sel.nextSibling);
+    return;
+  }
+  const btns = [...grid.querySelectorAll('.cat')];
+  const chosen = btns.find((b) => b.dataset.t === cat);
+  if (!chosen) return;
+  // Everything sharing a top edge is on the same row.
+  const row = btns.filter((b) => Math.abs(b.offsetTop - chosen.offsetTop) < 2);
+  const last = row[row.length - 1];
+  listEl.classList.add('inline');
+  if (last.nextSibling !== listEl) grid.insertBefore(listEl, last.nextSibling);
+}
+
+let _rz;
+window.addEventListener('resize', function () {
+  clearTimeout(_rz);
+  _rz = setTimeout(function () { placeList(); sendHeight(); }, 150);
+});
+
 function render() {
   let shown = 0;
   const html = DATA.map((c) => {
@@ -486,6 +546,7 @@ function render() {
     if (all.length) $('allsrc').innerHTML = '<h2>Where this came from</h2><p>' + esc(all.join(' · ')) + '</p>';
   }
   // No standing "165 places" banner: it tells the reader nothing they need.
+  placeList();
   $('count').textContent = (query || cat !== 'All')
     ? 'Showing ' + shown + ' of ' + TOTAL
     : '';
