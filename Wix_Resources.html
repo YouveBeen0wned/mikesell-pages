@@ -101,6 +101,10 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
   .cats{display:none;}
 }
 
+/* The chosen topic sits alone on the first row so its listings start directly
+   beneath it rather than beside an unrelated topic. */
+.cats.picked > .cat[aria-expanded="true"]{grid-column:1 / -1;}
+
 /* The results panel, when it sits inside the topic index. */
 .cats > #list.inline{grid-column:1 / -1;padding:1rem 0 .4rem;border-bottom:1px solid var(--hair);}
 #list.inline .topic:last-child{margin-bottom:.6rem;}
@@ -483,29 +487,32 @@ const listEl = $('list');
 const listHome = document.createComment('list-home');
 listEl.parentNode.insertBefore(listHome, listEl);
 
+/* The alphabetical order is the resting order. Once a topic is chosen it goes
+   to the top with its listings directly underneath, so the reader is not left
+   hunting for their own selection fourteen rows down -- which is exactly what
+   happened when the choice came from the dropdown. The rest keep their
+   alphabetical order below. */
+const CAT_ORDER = [...$('cats').querySelectorAll('.cat')];
+
 function placeList() {
   const grid = $('cats');
-  const gridShown = grid.offsetParent !== null;
 
   if (cat === 'All') {
+    CAT_ORDER.forEach((b) => grid.appendChild(b));          // back to A-Z
+    grid.classList.remove('picked');
     listEl.classList.remove('inline');
     if (listEl.previousSibling !== listHome) listHome.parentNode.insertBefore(listEl, listHome.nextSibling);
     return;
   }
-  if (!gridShown) {                      // phone: under the picker
-    const sel = $('catsel');
-    listEl.classList.add('inline');
-    if (sel.nextSibling !== listEl) sel.parentNode.insertBefore(listEl, sel.nextSibling);
-    return;
-  }
-  const btns = [...grid.querySelectorAll('.cat')];
-  const chosen = btns.find((b) => b.dataset.t === cat);
+
+  const chosen = CAT_ORDER.find((b) => b.dataset.t === cat);
   if (!chosen) return;
-  // Everything sharing a top edge is on the same row.
-  const row = btns.filter((b) => Math.abs(b.offsetTop - chosen.offsetTop) < 2);
-  const last = row[row.length - 1];
+
+  grid.classList.add('picked');
   listEl.classList.add('inline');
-  if (last.nextSibling !== listEl) grid.insertBefore(listEl, last.nextSibling);
+  grid.appendChild(chosen);                                  // chosen first...
+  grid.appendChild(listEl);                                  // ...then its listings
+  CAT_ORDER.forEach((b) => { if (b !== chosen) grid.appendChild(b); });
 }
 
 let _rz;
