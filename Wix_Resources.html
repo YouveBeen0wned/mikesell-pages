@@ -88,14 +88,6 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
   border:1.5px solid #c9c0b2;border-radius:var(--r);color:var(--soft);padding:.55rem 1rem;cursor:pointer;}
 .tbtn:hover{background:#f1ebe2;}
 .tbtn[aria-pressed="true"]{background:var(--ink);color:#fff;}
-.filters{display:flex;gap:.4rem;flex-wrap:wrap;}
-/* County buttons carry their own colour, so the key is the control itself. */
-.filters .tbtn[data-c="Duval"]{border-color:var(--duval);color:var(--duval);}
-.filters .tbtn[data-c="Clay"]{border-color:var(--clay);color:var(--clay);}
-.filters .tbtn[data-c="Nassau"]{border-color:var(--nassau);color:var(--nassau);}
-.filters .tbtn[data-c="Duval"][aria-pressed="true"]{background:var(--duval);color:#fff;}
-.filters .tbtn[data-c="Clay"][aria-pressed="true"]{background:var(--clay);color:#fff;}
-.filters .tbtn[data-c="Nassau"][aria-pressed="true"]{background:var(--nassau);color:#fff;}
 
 /* On a phone, 22 topic rows is ~500px of navigation before the first listing.
    A native select is one row, uses the OS picker older people already know,
@@ -121,10 +113,14 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
   background:transparent;border:0;border-bottom:1px solid var(--edge);padding:.45rem .3rem;cursor:pointer;
   font-family:inherit;font-weight:700;font-size:.88rem;color:var(--ink);line-height:1.2;}
 .cat:hover{background:#f1ebe2;}
-.cat[aria-pressed="true"]{background:var(--head);color:#fff;}
+.cat[aria-expanded="true"]{background:var(--head);color:#fff;}
+.cat .chev{width:1rem;height:1rem;flex:0 0 auto;margin-left:.35rem;opacity:.5;
+  transition:transform .15s;}
+.cat[aria-expanded="true"] .chev{transform:rotate(180deg);opacity:.9;}
+@media(prefers-reduced-motion:reduce){.cat .chev{transition:none;}}
 .cat svg{flex:0 0 auto;width:1.3rem;height:1.3rem;stroke:currentColor;fill:none;stroke-width:1.9;
   stroke-linecap:round;stroke-linejoin:round;}
-.cat .n{margin-left:auto;font-weight:400;font-size:.76rem;opacity:.65;padding-left:.4rem;}
+.cat .n{margin-left:auto;flex:0 0 auto;font-weight:400;font-size:.76rem;opacity:.65;padding-left:.4rem;}
 
 /* ---- Listings ---- */
 main{padding-top:1.1rem;padding-bottom:2.4rem;}
@@ -235,6 +231,7 @@ main{padding-top:1.1rem;padding-bottom:2.4rem;}
 <g id="i-vets"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.5 7.1 18.2l.9-5.5-4-3.9L9.5 8z"/></g>
 <g id="i-rights"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M7 7l-3 6h6z"/><path d="M17 7l-3 6h6z"/><path d="M8 21h8"/></g>
 <g id="i-neighbors"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 14.5c2.8 0 5 2.2 5 5"/></g>
+<g id="i-chev"><path d="M6 9l6 6 6-6"/></g>
 <g id="i-senior"><circle cx="11" cy="4.5" r="2.5"/><path d="M11 7v6l-2.5 8"/><path d="M11 13l3 3 .5 5"/><path d="M17 9v12"/><path d="M15.5 9h3"/></g>
 <g id="i-child"><circle cx="12" cy="6" r="3"/><path d="M12 9v7"/><path d="M8 12h8"/><path d="M12 16l-2.5 5"/><path d="M12 16l2.5 5"/></g>
 <g id="i-meal"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/></g>
@@ -352,13 +349,19 @@ const TOTAL = DATA.reduce((n, c) => n + c.sec.reduce((m, s) => m + s.items.lengt
 
 
 /* DATA is already in alphabetical order; "Everything" leads. */
+/* Each topic is a disclosure: it opens its listings underneath, and clicking
+   it again closes them. aria-expanded rather than aria-pressed, because that
+   is what it now does, and the chevron shows the same thing visually. */
 const catBtn = (c) => {
   const n = c.sec.reduce((m, s) => m + s.items.length, 0);
-  return '<button type="button" class="cat" data-t="' + esc(c.k) + '" aria-pressed="false">'
-    + svg(c.i) + '<span>' + esc(c.t) + '</span><span class="n">' + n + '</span></button>';
+  return '<button type="button" class="cat" data-t="' + esc(c.k)
+    + '" aria-expanded="false" aria-controls="list">'
+    + svg(c.i) + '<span>' + esc(c.t) + '</span><span class="n">' + n + '</span>'
+    + svg('i-chev', 'chev') + '</button>';
 };
-$('cats').innerHTML = '<button type="button" class="cat" data-t="All" aria-pressed="true">'
-  + svg('i-neighbors') + '<span>Everything</span><span class="n">' + TOTAL + '</span></button>'
+$('cats').innerHTML = '<button type="button" class="cat" data-t="All" aria-expanded="true"'
+  + ' aria-controls="list">' + svg('i-neighbors') + '<span>Everything</span>'
+  + '<span class="n">' + TOTAL + '</span>' + svg('i-chev', 'chev') + '</button>'
   + DATA.map(catBtn).join('');
 
 // The same choices as a native picker, for phones.
@@ -369,22 +372,25 @@ $('catsel').innerHTML = '<option value="All">Everything \u2014 ' + TOTAL + ' pla
     }).join('');
 $('catsel').addEventListener('change', function () {
   cat = this.value;
-  [...$('cats').querySelectorAll('button')].forEach((x) =>
-    x.setAttribute('aria-pressed', String(x.dataset.t === cat)));
+  syncCats();
   render();
 });
 
 
 
-function wire(host, attr, set) {
-  $(host).addEventListener('click', (e) => {
-    const b = e.target.closest('button'); if (!b) return;
-    set(b.dataset[attr]);
-    [...$(host).querySelectorAll('button')].forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-    render();
-  });
+function syncCats() {
+  [...$('cats').querySelectorAll('.cat')].forEach((x) =>
+    x.setAttribute('aria-expanded', String(x.dataset.t === cat)));
+  $('catsel').value = cat;
 }
-wire('cats', 't', (v) => { cat = v; $('catsel').value = v; });
+
+$('cats').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  // A second click on the open topic closes it again.
+  cat = (b.dataset.t === cat && cat !== 'All') ? 'All' : b.dataset.t;
+  syncCats();
+  render();
+});
 $('q').addEventListener('input', function () { query = this.value.trim().toLowerCase(); render(); });
 
 $('big').addEventListener('click', function () {
