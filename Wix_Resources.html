@@ -418,7 +418,14 @@ $('cats').addEventListener('click', (e) => {
   syncCats();
   render();
 });
-$('q').addEventListener('input', function () { query = this.value.trim().toLowerCase(); render(); });
+$('q').addEventListener('input', function () {
+  query = this.value.trim().toLowerCase();
+  // Searching means searching everything. Leaving a topic open would quietly
+  // scope the search to that topic, so "food" typed while Mental health was
+  // open returned nothing at all -- the box looked broken.
+  if (query && cat !== 'All') { cat = 'All'; syncCats(); }
+  render();
+});
 
 $('big').addEventListener('click', function () {
   const on = document.documentElement.classList.toggle('big');
