@@ -68,12 +68,21 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
    the easiest thing, but two bordered cards for six words was far more room
    than the words deserve. */
 .sos{background:#fff;border-bottom:1px solid var(--edge);border-left:4px solid var(--rule);
-  padding-top:.25rem;padding-bottom:.25rem;display:flex;flex-wrap:wrap;align-items:center;gap:0 1.3rem;}
-.sos a{display:inline-flex;align-items:baseline;gap:.45rem;text-decoration:none;color:var(--ink);
-  padding:.3rem 0;min-height:38px;align-items:center;}
+  padding-top:.25rem;padding-bottom:.25rem;display:flex;flex-wrap:wrap;align-items:center;gap:0 .8rem;}
+.sos a{display:inline-flex;align-items:center;gap:.35rem;text-decoration:none;color:var(--ink);
+  padding:.3rem 0;min-height:38px;white-space:nowrap;}
 .sos a:hover .num{text-decoration:underline;}
-.sos .num{font-weight:700;font-size:1.15rem;line-height:1;color:var(--rule);letter-spacing:-.01em;}
-.sos .txt{font-size:.78rem;line-height:1.2;color:var(--soft);white-space:nowrap;}
+.sos .num{font-weight:700;font-size:.95rem;line-height:1.2;color:var(--rule);}
+.sos .txt{font-weight:700;font-size:.85rem;line-height:1.2;color:var(--ink);}
+.sos .bar{color:var(--edge);}
+/* Below ~390px the two labels will not sit on one line. Rather than shrink
+   them, stack them -- each line stays a whole instruction -- and drop the
+   divider, which would otherwise dangle at the end of a row. */
+@media(max-width:389px){
+  .sos{flex-direction:column;align-items:flex-start;gap:0;}
+  .sos .bar{display:none;}
+  .sos a{min-height:36px;}
+}
 
 /* ---- Controls ---- */
 .tools{background:var(--paper);border-bottom:1px solid var(--edge);padding-top:.75rem;padding-bottom:.85rem;}
@@ -87,7 +96,6 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
 .tbtn{min-height:48px;font-family:inherit;font-weight:700;font-size:.84rem;background:#fff;
   border:1.5px solid #c9c0b2;border-radius:var(--r);color:var(--soft);padding:.55rem 1rem;cursor:pointer;}
 .tbtn:hover{background:#f1ebe2;}
-.tbtn[aria-pressed="true"]{background:var(--ink);color:#fff;}
 
 /* On a phone, 22 topic rows is ~500px of navigation before the first listing.
    A native select is one row, uses the OS picker older people already know,
@@ -96,6 +104,7 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
 .catsel{display:none;width:100%;font-family:inherit;font-size:1rem;min-height:52px;
   padding:.65rem .75rem;border:1.5px solid #c9c0b2;border-radius:var(--r);background:#fff;color:var(--ink);}
 .catsel:focus{outline:none;border-color:var(--rule);box-shadow:0 0 0 3px #f3dbe3;}
+.tbtn[aria-pressed="true"]{background:linear-gradient(135deg,#087DD6 0%,#8B0000 100%);border-color:#4a3a6e;color:#fff;}
 @media(max-width:700px){
   .catsel{display:block;}
   .cats{display:none;}
@@ -117,7 +126,7 @@ body{font-family:'Atkinson Hyperlegible',Verdana,system-ui,Arial,sans-serif;colo
   background:transparent;border:0;border-bottom:1px solid var(--edge);padding:.45rem .3rem;cursor:pointer;
   font-family:inherit;font-weight:700;font-size:.88rem;color:var(--ink);line-height:1.2;}
 .cat:hover{background:#f1ebe2;}
-.cat[aria-expanded="true"]{background:var(--head);color:#fff;}
+.cat[aria-expanded="true"]{background:linear-gradient(135deg,#087DD6 0%,#8B0000 100%);color:#fff;}
 .cat .chev{width:1rem;height:1rem;flex:0 0 auto;margin-left:.35rem;opacity:.5;
   transition:transform .15s;}
 .cat[aria-expanded="true"] .chev{transform:rotate(180deg);opacity:.9;}
@@ -262,8 +271,9 @@ main{padding-top:1.1rem;padding-bottom:2.4rem;}
 </header>
 
 <nav class="sos pad" aria-label="Urgent help">
-  <a href="tel:211"><span class="num">211</span><span class="txt">Where to start</span></a>
-  <a href="tel:988"><span class="num">988</span><span class="txt">Crisis help</span></a>
+  <a href="tel:211" aria-label="Where to start: call 2 1 1"><span class="txt">Where to start:</span> <span class="num">Call 211</span></a>
+  <span class="bar" aria-hidden="true">|</span>
+  <a href="tel:988" aria-label="Crisis help: call 9 8 8"><span class="txt">Crisis help:</span> <span class="num">Call 988</span></a>
 </nav>
 
 <section class="tools pad" aria-label="Find help">
