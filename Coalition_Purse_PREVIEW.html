@@ -673,7 +673,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
       <div class="ch-leg-i"><div class="ch-sw" style="background:rgba(93,202,165,0.45);"></div>Purse Plan: gap that remains (honest)</div>
     </div>
     <div class="chart-wrap" style="height:500px;"><canvas id="districtImpactChart"></canvas></div>
-    <div class="src-note">Today: current enrollment scaled to FL-CD4's 3.57% share of Florida's population. OBBBA column reflects enacted cuts and subsidy expirations. Purse Plan: ACA restoration + public option = 253K; SNAP fully protected = 130K; housing investment = 60K; VA MISSION Act = 32K; Title I expansion = 85K. Teal stack = gap that remains even under the plan. All estimates carry wide confidence intervals. Not a CBO score. Sources: KFF, CBO, FPI, HUD, VA OIG, RAND.</div>
+    <div class="src-note">Today: current enrollment scaled to FL-CD4's 3.57% share of Florida's population. OBBBA column reflects enacted cuts and subsidy expirations. Purse Plan: ACA restoration + public option = 143K; SNAP fully protected = 74K; housing investment = 34K; VA MISSION Act = 18K; Title I expansion = 48K. Teal stack = gap that remains even under the plan. All estimates carry wide confidence intervals. Not a CBO score. Sources: KFF, CBO, FPI, HUD, VA OIG, RAND.</div>
   </div>
 
   <div class="chart-card">
@@ -842,7 +842,6 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
   <div class="chart-card">
     <div class="ct">Federal funding reaching FL-CD4: verified grants vs. estimated pass-throughs</div>
     <div class="ch-leg">
-      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Medicare est. pass-through</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#7C3AED;"></div>Medicaid / CHIP est. pass-through</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Military / Defense (cumulative)</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>SNAP food benefits (est.)</div>
@@ -851,7 +850,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
       <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>HUD grants (verified)</div>
     </div>
     <div class="chart-wrap" style="height:360px;"><canvas id="jaxChart"></canvas></div>
-    <div class="src-note">HUD grants: City of Jacksonville 2025 Annual Action Plan (verified). Military: GovernmentContractsWon.com cumulative. Transportation: North Florida TPO TIP 2024-29. Medicare/Medicaid: CMS state totals x 3.57% FL-CD4 population share, flow to providers not residents directly. SNAP: FL statewide x 3.57% district share. All pass-throughs are estimates.</div>
+    <div class="src-note">HUD grants: City of Jacksonville 2025 Annual Action Plan (verified). Military: GovernmentContractsWon.com cumulative. Transportation: North Florida TPO TIP 2024-29. Medicaid / CHIP: $33.4B federal share of Florida's budget &times; 3.57%. SNAP: $6.64B Florida benefits (USDA OIG / CBPP FY2024) &times; 3.57%. Education Title I: $973.5M Florida FY2025 (CRS R48953) &times; 3.57%. Medicare omitted &mdash; no citable Florida total exists to apportion.</div>
   </div>
 
   <div class="chart-card">
@@ -1040,8 +1039,8 @@ new Chart(document.getElementById('districtImpactChart'), {
   data:{
     labels:['ACA coverage: Today','ACA coverage: Current Plan','ACA coverage: Purse Plan','SNAP food aid: Today','SNAP food aid: Current Plan','SNAP food aid: Purse Plan','Housing (renters): Today','Housing (renters): Current Plan','Housing (renters): Purse Plan','Veterans access: Today','Veterans access: Current Plan','Veterans access: Purse Plan','Education (Title I): Today','Education (Title I): Current Plan','Education (Title I): Purse Plan','Uninsured / paid leave: Today','Uninsured / paid leave: Current Plan','Uninsured / paid leave: Purse Plan'],
     datasets:[
-      {label:'Served / surviving / protected',data:[208,120,253,80,50,130,35,20,60,22,18,32,75,60,85,0,0,85],backgroundColor:['#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669'],borderWidth:0},
-      {label:'Underserved / residual gap',data:[88,0,43,50,0,0,40,0,15,10,0,0,20,0,10,153,0,68],backgroundColor:['#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)'],borderWidth:0}
+      {label:'Served / surviving / protected',data:[118,68,143,45,28,74,20,11,34,12,10,18,42,34,48,0,0,48],backgroundColor:['#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669','#888780','#A32D2D','#059669'],borderWidth:0},
+      {label:'Underserved / residual gap',data:[50,0,24,28,0,0,23,0,8,6,0,0,11,0,6,87,0,39],backgroundColor:['#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)','#d97706','transparent','rgba(93,202,165,0.45)'],borderWidth:0}
     ]
   },
   options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){if(c.parsed.x===0)return null;return ' ~'+c.parsed.x+'K people';}}}},scales:{x:{stacked:true,grid:{color:gc},ticks:{color:tc,callback:function(v){return v+'K';}},title:{display:true,text:'People (thousands)',color:tc,font:{size:10}}},y:{stacked:true,grid:{display:false},ticks:{color:tc,font:{size:10}}}}}

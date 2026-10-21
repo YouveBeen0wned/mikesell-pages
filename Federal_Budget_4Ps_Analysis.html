@@ -286,7 +286,6 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-
     <div class="chart-card">
       <div class="ct">Federal funding in FL-CD4 — verified grants vs. estimated pass-throughs</div>
       <div class="leg">
-        <div class="leg-i"><div class="sw" style="background:#1D9E75"></div>Medicare est. pass-through</div>
         <div class="leg-i"><div class="sw" style="background:#7F77DD"></div>Medicaid / CHIP est. pass-through</div>
         <div class="leg-i"><div class="sw" style="background:#E24B4A"></div>Military / Defense (cumulative)</div>
         <div class="leg-i"><div class="sw" style="background:#534AB7"></div>SNAP benefits (est.)</div>
@@ -295,7 +294,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-
         <div class="leg-i"><div class="sw" style="background:#1D9E75"></div>HUD grants — verified</div>
       </div>
       <div class="chart-wrap" style="height:360px;"><canvas id="jaxChart"></canvas></div>
-      <div class="src-note">HUD grants: City of Jacksonville 2025 Annual Action Plan (verified). Military: GovernmentContractsWon.com cumulative. Transportation: North Florida TPO TIP 2024-29. Medicare/Medicaid: CMS state totals × 3.57% FL-CD4 population share (769,221/21,538,187) — flow to providers, not residents directly. SNAP: FL statewide × 3.57% district share. All pass-throughs are estimates ± wide confidence intervals.</div>
+      <div class="src-note">HUD grants: City of Jacksonville 2025 Annual Action Plan (verified). Military: GovernmentContractsWon.com cumulative. Transportation: North Florida TPO TIP 2024-29. Medicaid / CHIP: $33.4B federal share of Florida's budget &times; 3.57%. SNAP: $6.64B Florida benefits (USDA OIG / CBPP FY2024) &times; 3.57%. Education Title I: $973.5M Florida FY2025 (CRS R48953) &times; 3.57%. Medicare omitted — no citable Florida total exists to apportion. All pass-throughs are estimates ± wide confidence intervals.</div>
     </div>
     <div class="chart-card">
       <div class="ct">Federal contracting in FL-CD4 — who captures the dollars</div>
@@ -697,8 +696,8 @@ new Chart(document.getElementById('perCapitaChart'), {
 new Chart(document.getElementById('jaxChart'), {
   type: 'bar',
   data: {
-    labels: ['Medicare\n(est. pass-through)','Medicaid / CHIP\n(est. pass-through)','Military contracts\n(cumulative)','SNAP benefits\n(est.)','Transportation\n(5-yr TIP)','Education Title I\n(est.)','HUD grants\n(verified)'],
-    datasets: [{ data:[2394,2104,850,284,178,50,14.5], backgroundColor:['#1D9E75','#7F77DD','#E24B4A','#534AB7','#BA7517','#378ADD','#1D9E75'], borderWidth:0 }]
+    labels: ['Medicaid / CHIP\n(est. pass-through)','Military contracts\n(cumulative)','SNAP benefits\n(est.)','Transportation\n(5-yr TIP)','Education Title I\n(est.)','HUD grants\n(verified)'],
+    datasets: [{ data:[1192,850,237,178,35,14.5], backgroundColor:['#7F77DD','#E24B4A','#534AB7','#BA7517','#378ADD','#1D9E75'], borderWidth:0 }]
   },
   options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(c){return ' ~$'+c.parsed.x+'M est. annual pass-through';}}} }, scales:{ x:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'M';}}}, y:{grid:{display:false},ticks:{color:tc,font:{size:11}}} } }
 });

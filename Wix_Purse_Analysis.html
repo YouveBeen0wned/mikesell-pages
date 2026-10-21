@@ -874,7 +874,6 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
   <div class="chart-card">
     <div class="ct">Federal funding reaching FL-CD4: verified grants vs. estimated pass-throughs</div>
     <div class="ch-leg">
-      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Medicare est. pass-through</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#7C3AED;"></div>Medicaid / CHIP est. pass-through</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Military / Defense (cumulative)</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>SNAP food benefits (est.)</div>
@@ -883,7 +882,7 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
       <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>HUD grants (verified)</div>
     </div>
     <div class="chart-wrap" style="height:360px;"><canvas id="jaxChart"></canvas></div>
-    <div class="src-note">HUD grants: City of Jacksonville 2025 Annual Action Plan (verified). Military: GovernmentContractsWon.com cumulative. Transportation: North Florida TPO TIP 2024-29. Medicare/Medicaid: CMS state totals x 3.57% FL-CD4 population share, flow to providers not residents directly. SNAP: FL statewide x 3.57% district share. All pass-throughs are estimates.</div>
+    <div class="src-note">HUD grants: City of Jacksonville 2025 Annual Action Plan (verified). Military: GovernmentContractsWon.com, cumulative. Transportation: North Florida TPO TIP 2024-29. Medicaid / CHIP: $33.4B federal share of Florida's budget &times; 3.57% &mdash; flows to providers, not to residents directly. SNAP: $6.64B in Florida benefits (USDA OIG / CBPP, FY2024) &times; 3.57%. Education Title I: $973.5M Florida FY2025 allocation (CRS R48953) &times; 3.57%. Medicare is deliberately omitted: CMS publishes only per-beneficiary standardized spending, so there is no citable Florida total to apportion, and Medicare dollars flow to providers rather than to a geographic district. Lines marked (est.) are population-proportional estimates, not verified grants.</div>
   </div>
 
   <div class="chart-card">
@@ -1205,8 +1204,8 @@ new Chart(document.getElementById('perCapitaChart'), {
 new Chart(document.getElementById('jaxChart'), {
   type:'bar',
   data:{
-    labels:['Medicare (est.)','Medicaid / CHIP (est.)','Military / Defense','SNAP (est.)','Transportation (5-yr)','Education Title I (est.)','HUD grants (verified)'],
-    datasets:[{data:[1400,700,5500,220,480,47,14.5],backgroundColor:['#059669','#7C3AED','#dc2626','#2563EB','#d97706','#59D7EE','#059669'],borderWidth:0,borderRadius:4}]
+    labels:['Military / Defense','Medicaid / CHIP (est.)','Transportation (5-yr)','SNAP (est.)','Education Title I (est.)','HUD grants (verified)'],
+    datasets:[{data:[5500,1192,480,237,35,14.5],backgroundColor:['#dc2626','#7C3AED','#d97706','#2563EB','#59D7EE','#059669'],borderWidth:0,borderRadius:4}]
   },
   options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' ~$'+c.parsed.x+'M';}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'M';}}},y:{grid:{display:false},ticks:{color:tc,font:{size:10}}}}}
 });

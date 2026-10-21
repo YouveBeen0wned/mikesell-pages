@@ -842,7 +842,6 @@ body{font-family:'avenir-light',Arial,sans-serif;background:#f5f7fa;color:#1a1a1
   <div class="chart-card">
     <div class="ct">Federal funding reaching FL-CD4: verified grants vs. estimated pass-throughs</div>
     <div class="ch-leg">
-      <div class="ch-leg-i"><div class="ch-sw" style="background:#059669;"></div>Medicare est. pass-through</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#7C3AED;"></div>Medicaid / CHIP est. pass-through</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#dc2626;"></div>Military / Defense (cumulative)</div>
       <div class="ch-leg-i"><div class="ch-sw" style="background:#2563EB;"></div>SNAP food benefits (est.)</div>
@@ -1086,8 +1085,8 @@ new Chart(document.getElementById('perCapitaChart'), {
 new Chart(document.getElementById('jaxChart'), {
   type:'bar',
   data:{
-    labels:['Medicare (est.)','Medicaid/CHIP (est.)','Military contracts','SNAP (est.)','Transportation TIP','Education Title I','HUD grants (verified)'],
-    datasets:[{data:[2394,2104,850,284,178,50,14.5],backgroundColor:['#059669','#7C3AED','#dc2626','#2563EB','#d97706','#59D7EE','#059669'],borderWidth:0,borderRadius:4}]
+    labels:['Medicaid/CHIP (est.)','Military contracts','SNAP (est.)','Transportation TIP','Education Title I','HUD grants (verified)'],
+    datasets:[{data:[1192,850,237,178,35,14.5],backgroundColor:['#7C3AED','#dc2626','#2563EB','#d97706','#59D7EE','#059669'],borderWidth:0,borderRadius:4}]
   },
   options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' ~$'+c.parsed.x+'M est. annual';}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,callback:function(v){return '$'+v+'M';}}},y:{grid:{display:false},ticks:{color:tc,font:{size:10}}}}}
 });
