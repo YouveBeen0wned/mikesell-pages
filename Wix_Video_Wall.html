@@ -170,7 +170,16 @@ let VIDEOS = [];
    own embeddable player (`embed`). If it has neither, it links out. */
 const embedOf = (v) => v.embed
   || (v.id ? 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?autoplay=1&rel=0' : '');
-const thumbOf = (v) => v.thumb
+/* Our own cover art for a YouTube video, keyed by video id. Checked BEFORE
+   v.thumb, because the feed always supplies YouTube's auto-grabbed frame --
+   which for a radio interview is just a still of someone mid-syllable. Drop a
+   720x405 JPEG in img/ and add a line here. */
+const THUMB_OVERRIDE = {
+  '2zt7OCGSq3g': 'img/wjct-first-coast-mike-sell.jpg',   // WJCT First Coast Connect
+};
+
+const thumbOf = (v) => (v.id && THUMB_OVERRIDE[v.id])
+  || v.thumb
   || (v.id ? 'https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg' : '');
 
 function card(v, i) {
